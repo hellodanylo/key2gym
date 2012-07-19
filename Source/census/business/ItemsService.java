@@ -282,7 +282,7 @@ public class ItemsService extends BusinessService {
             throw new BusinessException(bundle.getString("ItemIsSubscription"));
         }
         
-        if(!item.getFinancialActivities().isEmpty()) {
+        if(!item.getOrderLines().isEmpty()) {
             throw new BusinessException(MessageFormat.format(bundle.getString("ItemHasUnarchivedPurchases"), new Object[] {item.getTitle()}));
         }
         

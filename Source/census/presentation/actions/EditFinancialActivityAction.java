@@ -4,7 +4,7 @@
  */
 package census.presentation.actions;
 
-import census.business.FinancialActivitiesService;
+import census.business.OrdersService;
 import census.business.SessionsService;
 import census.business.StorageService;
 import census.business.api.ValidationException;
@@ -82,7 +82,7 @@ public class EditFinancialActivityAction extends CensusAction {
                     }
 
                     try {
-                        financialActivityId = FinancialActivitiesService.getInstance().findByClientIdAndDate(pickClientDialog.getClientId(), new DateMidnight(), true);
+                        financialActivityId = OrdersService.getInstance().findByClientIdAndDate(pickClientDialog.getClientId(), new DateMidnight(), true);
                     } catch (ValidationException ex) {
                         throw new RuntimeException(ex);
                     }

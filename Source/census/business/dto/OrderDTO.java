@@ -12,13 +12,13 @@ import org.joda.time.DateMidnight;
  *
  * @author daniel
  */
-public class FinancialActivityDTO {
+public class OrderDTO {
     
-    public FinancialActivityDTO() {
+    public OrderDTO() {
         
     }
 
-    public FinancialActivityDTO(Short id, DateMidnight date, BigDecimal payment) {
+    public OrderDTO(Short id, DateMidnight date, BigDecimal payment) {
         this.id = id;
         this.date = date;
         this.payment = payment;

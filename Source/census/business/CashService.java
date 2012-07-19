@@ -44,7 +44,7 @@ public class CashService extends BusinessService {
             throw new SecurityException(bundle.getString("AccessDenied"));
         }
 
-        BigDecimal cash = (BigDecimal) entityManager.createNamedQuery("FinancialActivity.sumPaymentsForDateRecorded") //NOI18N
+        BigDecimal cash = (BigDecimal) entityManager.createNamedQuery("OrderEntity.sumPaymentsForDateRecorded") //NOI18N
                 .setParameter("dateRecorded", date.toDate()) //NOI18N
                 .getSingleResult(); 
 

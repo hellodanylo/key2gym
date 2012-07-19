@@ -7,8 +7,7 @@ package census.business;
 import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.api.SecurityException;
-import census.business.dto.ClientDTO;
-import census.business.dto.FinancialActivityDTO;
+import census.business.dto.OrderDTO;
 import census.business.dto.ItemDTO;
 import census.persistence.*;
 import java.math.BigDecimal;
@@ -30,12 +29,12 @@ import org.joda.time.DateMidnight;
  * 
  * </ul>
  */
-public class FinancialActivitiesService extends BusinessService {
+public class OrdersService extends BusinessService {
 
     /*
      * Singleton instance
      */
-    private static FinancialActivitiesService instance;
+    private static OrdersService instance;
     
     /**
      * Finds a financial activity by the client and the date. If it does not
@@ -71,7 +70,7 @@ public class FinancialActivitiesService extends BusinessService {
         }
 
         Client client;
-        FinancialActivity financialActivity;
+        OrderEntity order;
 
         /*
          * Finds the client.
@@ -87,13 +86,13 @@ public class FinancialActivitiesService extends BusinessService {
          * today.
          */
         try {
-            financialActivity = (FinancialActivity) entityManager
-                    .createNamedQuery("FinancialActivity.findByClientAndDateRecorded") //NOI18N
+            order = (OrderEntity) entityManager
+                    .createNamedQuery("OrderEntity.findByClientAndDateRecorded") //NOI18N
                     .setParameter("client", client) //NOI18N
                     .setParameter("dateRecorded", date.toDate()) //NOI18N
                     .setMaxResults(1)
                     .getSingleResult();
-            return financialActivity.getId();
+            return order.getId();
         } catch (NoResultException ex) {
             /*
              * If none is found but a new one was requested, creates one.
@@ -101,17 +100,17 @@ public class FinancialActivitiesService extends BusinessService {
             if (createIfDoesNotExist) {
                 assertTransactionActive();
 
-                financialActivity = new FinancialActivity();
-                financialActivity.setClient(client);
-                financialActivity.setDate(date.toDate());
-                financialActivity.setPayment(BigDecimal.ZERO);
-                financialActivity.setId(getNextId());
+                order = new OrderEntity();
+                order.setClient(client);
+                order.setDate(date.toDate());
+                order.setPayment(BigDecimal.ZERO);
+                order.setId(getNextId());
 
                 // TODO: note change
-                entityManager.persist(financialActivity);
+                entityManager.persist(order);
                 entityManager.flush();
 
-                return financialActivity.getId();
+                return order.getId();
             }
         }
 
@@ -145,7 +144,7 @@ public class FinancialActivitiesService extends BusinessService {
         }
 
         Client client;
-        FinancialActivity financialActivity;
+        OrderEntity order;
 
         try {
             client = (Client) entityManager.createNamedQuery("Client.findByCard") //NOI18N
@@ -157,13 +156,13 @@ public class FinancialActivitiesService extends BusinessService {
         }
 
         try {
-            financialActivity = (FinancialActivity) entityManager
-                    .createNamedQuery("FinancialActivity.findByClientAndDateRecorded") //NOI18N
+            order = (OrderEntity) entityManager
+                    .createNamedQuery("OrderEntity.findByClientAndDateRecorded") //NOI18N
                     .setParameter("client", client) //NOI18N
                     .setParameter("dateRecorded", getToday()) //NOI18N
                     .setMaxResults(1)
                     .getSingleResult();
-            return financialActivity.getId();
+            return order.getId();
         } catch (NoResultException ex) {
             /*
              * If none is found but a new one was requested, create one.
@@ -171,17 +170,17 @@ public class FinancialActivitiesService extends BusinessService {
             if (createIfDoesNotExist) {
                 assertTransactionActive();
 
-                financialActivity = new FinancialActivity();
-                financialActivity.setClient(client);
-                financialActivity.setDate(getToday());
-                financialActivity.setPayment(BigDecimal.ZERO);
-                financialActivity.setId(getNextId());
+                order = new OrderEntity();
+                order.setClient(client);
+                order.setDate(getToday());
+                order.setPayment(BigDecimal.ZERO);
+                order.setId(getNextId());
 
                 // TODO: note change
-                entityManager.persist(financialActivity);
+                entityManager.persist(order);
                 entityManager.flush();
 
-                return financialActivity.getId();
+                return order.getId();
             }
         }
         return null;
@@ -217,7 +216,7 @@ public class FinancialActivitiesService extends BusinessService {
         }
 
         Attendance attendance = null;
-        FinancialActivity financialActivity = null;
+        OrderEntity order = null;
 
         attendance = (Attendance) entityManager.find(Attendance.class, attendanceId);
 
@@ -230,13 +229,13 @@ public class FinancialActivitiesService extends BusinessService {
         }
 
         try {
-            financialActivity = (FinancialActivity) entityManager
-                    .createNamedQuery("FinancialActivity.findByAttendance") //NOI18N
+            order = (OrderEntity) entityManager
+                    .createNamedQuery("OrderEntity.findByAttendance") //NOI18N
                     .setParameter("attendance", attendance) //NOI18N
                     .setMaxResults(1)
                     .getSingleResult();
             
-            return financialActivity.getId();
+            return order.getId();
         } catch (NoResultException ex) {
         }
 
@@ -266,15 +265,15 @@ public class FinancialActivitiesService extends BusinessService {
             throw new NullPointerException("The createIfDoesNotExist is null."); //NOI18N
         }
 
-        FinancialActivity financialActivity;
+        OrderEntity order;
 
         try {
-            financialActivity = (FinancialActivity)entityManager
-                    .createNamedQuery("FinancialActivity.findDefaultByDateRecorded") //NOI18N
+            order = (OrderEntity)entityManager
+                    .createNamedQuery("OrderEntity.findDefaultByDateRecorded") //NOI18N
                     .setParameter("dateRecorded", new Date()) //NOI18N
                     .setMaxResults(1)
                     .getSingleResult();
-            return financialActivity.getId();
+            return order.getId();
         } catch (NoResultException ex) {
             /*
              * If none was found but a new one was requested, create one.
@@ -282,16 +281,16 @@ public class FinancialActivitiesService extends BusinessService {
             if (createIfDoesNotExist) {
                 assertTransactionActive();
 
-                financialActivity = new FinancialActivity();
-                financialActivity.setId(getNextId());
-                financialActivity.setDate(new Date());
-                financialActivity.setPayment(BigDecimal.ZERO);
+                order = new OrderEntity();
+                order.setId(getNextId());
+                order.setDate(new Date());
+                order.setPayment(BigDecimal.ZERO);
 
                 // TODO: note change
-                entityManager.persist(financialActivity);
+                entityManager.persist(order);
                 entityManager.flush();
 
-                return financialActivity.getId();
+                return order.getId();
             }
         }
         return null;
@@ -311,7 +310,7 @@ public class FinancialActivitiesService extends BusinessService {
      * @throws SecurityException if current security rules restrict this operation
      * @throws NullPointerException if any of the arguments is null
      */
-    public List<FinancialActivityDTO> findAllByDate(DateMidnight date) throws SecurityException {
+    public List<OrderDTO> findAllByDate(DateMidnight date) throws SecurityException {
         assertSessionActive();
         
         if(date == null) {
@@ -323,15 +322,15 @@ public class FinancialActivitiesService extends BusinessService {
             throw new SecurityException(bundle.getString("AccessDenied"));
         }
 
-        List<FinancialActivity> financialActivities = entityManager
-                .createNamedQuery("FinancialActivity.findByDateRecorded") //NOI18N
+        List<OrderEntity> financialActivities = entityManager
+                .createNamedQuery("OrderEntity.findByDateRecorded") //NOI18N
                 .setParameter("dateRecorded", date.toDate()) //NOI18N
                 .getResultList();
         
-        List<FinancialActivityDTO> result = new LinkedList<>();
+        List<OrderDTO> result = new LinkedList<>();
         
-        for(FinancialActivity financialActivity : financialActivities) {
-            result.add(wrapFinancialActivity(financialActivity));
+        for(OrderEntity order : financialActivities) {
+            result.add(wrapOrderEntity(order));
         }
         
         return result;
@@ -347,7 +346,7 @@ public class FinancialActivitiesService extends BusinessService {
      * @throws NullPointerException if any of the arguments is null
      * @throws ValidationException if the beginning date is after the ending date, or the client's ID is invalid
      */
-    public List<FinancialActivityDTO> findForClientWithinPeriod(Short id, DateMidnight begin, DateMidnight end) throws ValidationException {
+    public List<OrderDTO> findForClientWithinPeriod(Short id, DateMidnight begin, DateMidnight end) throws ValidationException {
         assertSessionActive();
         
         if(id == null) {
@@ -372,17 +371,17 @@ public class FinancialActivitiesService extends BusinessService {
             throw new ValidationException(bundle.getString("ClientIDInvalid"));
         }
         
-        List<FinancialActivity> financialActivities = entityManager
-                .createNamedQuery("FinancialActivity.findByClientAndDateRecordedRangeOrderByDateRecordedDesc") //NOI18N
+        List<OrderEntity> financialActivities = entityManager
+                .createNamedQuery("OrderEntity.findByClientAndDateRecordedRangeOrderByDateRecordedDesc") //NOI18N
                 .setParameter("client", client) //NOI18N
                 .setParameter("rangeBegin", begin.toDate()) //NOI18N
                 .setParameter("rangeEnd", end.toDate()) //NOI18N
                 .getResultList();
         
-        List<FinancialActivityDTO> result = new LinkedList<>();
+        List<OrderDTO> result = new LinkedList<>();
         
-        for(FinancialActivity financialActivity : financialActivities) {
-            result.add(wrapFinancialActivity(financialActivity));
+        for(OrderEntity order : financialActivities) {
+            result.add(wrapOrderEntity(order));
         }
         
         return result;
@@ -396,7 +395,7 @@ public class FinancialActivitiesService extends BusinessService {
         }
         
         BigDecimal result = (BigDecimal)entityManager
-                .createNamedQuery("FinancialActivity.sumPaymentsForDateRecorded") //NOI18N
+                .createNamedQuery("OrderEntity.sumPaymentsForDateRecorded") //NOI18N
                 .setParameter("dateRecorded", date.toDate()) //NOI18N
                 .getSingleResult();
         
@@ -416,7 +415,7 @@ public class FinancialActivitiesService extends BusinessService {
      * @throws ValidationException if the financial activity's ID is invalid
      * @throws IllegalStateException if the session is not active
      */
-    public FinancialActivityDTO getById(Short id) throws ValidationException {
+    public OrderDTO getById(Short id) throws ValidationException {
         assertSessionActive();
         
         /*
@@ -428,23 +427,23 @@ public class FinancialActivitiesService extends BusinessService {
 
         /*
          * The idea is to get the financial acivity entity and build
-         * FinancialActivityDTO from it. The DTO contains some extra fields that
+         * OrderDTO from it. The DTO contains some extra fields that
          * the presentation might need.
          */
 
-        FinancialActivity financialActivity = entityManager.find(FinancialActivity.class, id);
+        OrderEntity order = entityManager.find(OrderEntity.class, id);
 
-        if (financialActivity == null) {
-            throw new ValidationException(bundle.getString("FinancialActivityIDInvalid"));
+        if (order == null) {
+            throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
         }
         
-        FinancialActivityDTO result = wrapFinancialActivity(financialActivity);
+        OrderDTO result = wrapOrderEntity(order);
         
         /*
          * Debt item
          */
-        if(financialActivity.getClient() != null && isToday(financialActivity.getDate())) {
-            BigDecimal possibleMoneyBalance = financialActivity.getClient().getMoneyBalance().add(result.getTotal());
+        if(order.getClient() != null && isToday(order.getDate())) {
+            BigDecimal possibleMoneyBalance = order.getClient().getMoneyBalance().add(result.getTotal());
             if(possibleMoneyBalance.compareTo(BigDecimal.ZERO) < 0) {
                 ItemDTO item = new ItemDTO(ItemDTO.FAKE_ID_DEBT, null, bundle.getString("Debt"), null, possibleMoneyBalance.negate().setScale(2));
                 result.getItems().add(item);
@@ -475,7 +474,7 @@ public class FinancialActivitiesService extends BusinessService {
      * @throws ValidationException if either of the IDs provided is invalid
      * @throws IllegalStateException if the transaction is not active; if no session is open
      */
-    public void addPurchase(Short financialActivityId, Short itemId)
+    public void addPurchase(Short orderId, Short itemId)
             throws BusinessException, IllegalArgumentException, IllegalStateException, ValidationException, SecurityException {
         assertSessionActive();
         assertTransactionActive();
@@ -483,7 +482,7 @@ public class FinancialActivitiesService extends BusinessService {
         /*
          * Arguments validation.
          */
-        if(financialActivityId == null) {
+        if(orderId == null) {
             throw new NullPointerException("The finacialActivityId is null."); //NOI18N
         }
         
@@ -491,19 +490,19 @@ public class FinancialActivitiesService extends BusinessService {
             throw new NullPointerException("The itemId is null."); //NOI18N
         }
 
-        FinancialActivity financialActivity;
+        OrderEntity order;
         Item item;
         
-        financialActivity = entityManager.find(FinancialActivity.class,
-                    financialActivityId);
+        order = entityManager.find(OrderEntity.class,
+                    orderId);
         
-        if(financialActivity == null) {
-            throw new ValidationException(bundle.getString("FinancialActivityIDInvalid"));
+        if(order == null) {
+            throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
         }
         
-        Boolean requiresAllPermissions = (financialActivity.getAttendance() != null 
-                && !financialActivity.getAttendance().getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN))
-                || !isToday(financialActivity.getDate());
+        Boolean requiresAllPermissions = (order.getAttendance() != null 
+                && !order.getAttendance().getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN))
+                || !isToday(order.getDate());
 
         if(requiresAllPermissions && !sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(bundle.getString("OperationDenied"));
@@ -515,7 +514,7 @@ public class FinancialActivitiesService extends BusinessService {
             throw new ValidationException(bundle.getString("ItemIDInvalid"));
         }
         
-        if(item.getItemSubscription() != null && financialActivity.getClient() == null) {
+        if(item.getItemSubscription() != null && order.getClient() == null) {
             throw new BusinessException(bundle.getString("OnlyClientsCanPurchaseSubscriptions"));
         }
         
@@ -539,9 +538,9 @@ public class FinancialActivitiesService extends BusinessService {
         /*
          * Business logic specific to financial activities associated with clients.
          */
-        if(financialActivity.getClient() != null) {
+        if(order.getClient() != null) {
             // TODO: note change
-            Client client = financialActivity.getClient();
+            Client client = order.getClient();
             
             /*
              * Charge the Client's account. Checks whether the new value
@@ -582,11 +581,32 @@ public class FinancialActivitiesService extends BusinessService {
             }
         }
 
-        // TODO: note change
-        financialActivity.getItems().add(item);
+        /*
+         * Attemps to find an order line with the same item.
+         */
+        OrderLine targetOrderLine = entityManager.find(OrderLine.class, new OrderLineId(orderId, itemId));
+        
+        /*
+         * Creates a new order line, if none with the same item was found.
+         */
+        if(targetOrderLine == null) {
+            targetOrderLine = new OrderLine();
+            targetOrderLine.setItem(item);
+            targetOrderLine.setOrder(order);
+            targetOrderLine.setQuantity((short)1);
+            entityManager.persist(targetOrderLine);
+            
+            List<OrderLine> orderLines = order.getOrderLines();
+            if(orderLines == null) {
+                orderLines = new LinkedList<>();
+            }
+            
+            orderLines.add(targetOrderLine);
+        } else {
+            targetOrderLine.setQuantity((short)(targetOrderLine.getQuantity()+1));
+        }
+        
         entityManager.flush();
-
-        return;
     }
 
     /**
@@ -606,7 +626,7 @@ public class FinancialActivitiesService extends BusinessService {
      * 
      * </ul>
      * 
-     * @param financialActivityId the financial activity's ID
+     * @param orderId the financial activity's ID
      * @param itemId the item's ID
      * @throws BusinessException if current business rules restrict this
      * operation
@@ -615,7 +635,7 @@ public class FinancialActivitiesService extends BusinessService {
      * @throws ValidationException if either of the IDs provided is invalid
      * @throws IllegalStateException if the transaction is not active, or if no session is open
      */
-    public void removePurchase(Short financialActivityId, Short itemId)
+    public void removePurchase(Short orderId, Short itemId)
             throws BusinessException, IllegalArgumentException, ValidationException, SecurityException {
         assertSessionActive();
         assertTransactionActive();
@@ -623,8 +643,8 @@ public class FinancialActivitiesService extends BusinessService {
         /*
          * Arguments validation.
          */
-        if(financialActivityId == null) {
-            throw new NullPointerException("The financialActivityId is null."); //NOI18N
+        if(orderId == null) {
+            throw new NullPointerException("The orderId is null."); //NOI18N
         }
         
         if(itemId == null) {
@@ -639,19 +659,19 @@ public class FinancialActivitiesService extends BusinessService {
         }
         
 
-        FinancialActivity financialActivity;
+        OrderEntity order;
         Item item;
 
-        financialActivity = entityManager.find(FinancialActivity.class,
-                    financialActivityId);
+        order = entityManager.find(OrderEntity.class,
+                    orderId);
         
-        if(financialActivity == null) {
-            throw new ValidationException(bundle.getString("FinancialActivityIDInvalid"));
+        if(order == null) {
+            throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
         }
         
-        Boolean requiresAllPermissions = (financialActivity.getAttendance() != null 
-                && !financialActivity.getAttendance().getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN))
-                || !isToday(financialActivity.getDate());
+        Boolean requiresAllPermissions = (order.getAttendance() != null 
+                && !order.getAttendance().getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN))
+                || !isToday(order.getDate());
 
         if(requiresAllPermissions && !sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(bundle.getString("OperationDenied"));
@@ -664,22 +684,22 @@ public class FinancialActivitiesService extends BusinessService {
         }
         
         
-        List<Item> items = financialActivity.getItems();
+        OrderLine targetOrderLine = entityManager.find(OrderLine.class, new OrderLineId(orderId, itemId));
 
-        if(!items.contains(item)) {
-            throw new BusinessException(bundle.getString("FinancialActivityDoesNotContainItem"));
+        if(targetOrderLine == null) {
+            throw new BusinessException(bundle.getString("OrderEntityDoesNotContainItem"));
         }
         
-        if(financialActivity.getAttendance() != null && item.getItemSubscription() != null) {
-            throw new BusinessException(bundle.getString("SubscriptionCanNotBeRemovedFromFinancialActivityWithAttendance"));
+        if(order.getAttendance() != null && item.getItemSubscription() != null) {
+            throw new BusinessException(bundle.getString("SubscriptionCanNotBeRemovedFromOrderEntityWithAttendance"));
         }
         
         /*
          * Business logic specific to Financial Activities associated with Clients.
          */
-        if(financialActivity.getClient() != null) {
+        if(order.getClient() != null) {
             // TODO: note change
-            Client client = financialActivity.getClient();
+            Client client = order.getClient();
             
             /*
              * Give money back to the Client.
@@ -715,52 +735,68 @@ public class FinancialActivitiesService extends BusinessService {
             item.setQuantity((short)(item.getQuantity()+1));
         }
         
-        // TODO: note change
-        financialActivity.getItems().remove(item);
+        /*
+         * Decreases the quantity on the order line, and removes it it the 
+         * quantity is now zero.
+         */
+        targetOrderLine.setQuantity((short)(targetOrderLine.getQuantity()-1));
+        if(targetOrderLine.getQuantity() == 0) {
+            entityManager.remove(targetOrderLine);
+        }
+        
         entityManager.flush();
     }
 
     /**
      * Finds all items purchased within the the financial activity.
      *
-     * @param financialActivityId the financial activity's ID
+     * @param orderId the financial activity's ID
      * @return a list of items purchased
      * @throws NullPointerException if the financial activity's ID is null
      * @throws ValidationException if the financial activity's ID is invalid
      * @throws IllegalStateException if the session is not active
      */
-    public List<ItemDTO> findPurchases(Short financialActivityId)
+    public List<ItemDTO> findPurchases(Short orderId)
             throws ValidationException {
         assertSessionActive();
         
-        if(financialActivityId == null) {
-            throw new NullPointerException("The financialActivityId is null."); //NOI18N
+        if(orderId == null) {
+            throw new NullPointerException("The orderId is null."); //NOI18N
         }
         
-        FinancialActivity financialActivity;
-        LinkedList<ItemDTO> items = new LinkedList<ItemDTO>();
+        OrderEntity order;
+        LinkedList<ItemDTO> items = new LinkedList<>();
 
-        financialActivity = entityManager.find(FinancialActivity.class,
-                    financialActivityId);
+        order = entityManager.find(OrderEntity.class,
+                    orderId);
         
-        if(financialActivity == null) {
-            throw new ValidationException(bundle.getString("FinancialActivityIDInvalid"));
+        if(order == null) {
+            throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
         }
         
+        /*
+         * We count the order's total to calculate the client's debt later.
+         */
         BigDecimal total = BigDecimal.ZERO;
         
-        for(Item item : financialActivity.getItems()) {
-            ItemDTO itemDTO = new ItemDTO(item.getId(), item.getBarcode(), item.getTitle(), item.getQuantity(), item.getPrice());
-            items.add(itemDTO);
-            total = total.add(item.getPrice());
+        if(order.getOrderLines() != null) {
+            for(OrderLine orderLine : order.getOrderLines()) {
+                Item item = orderLine.getItem();
+                ItemDTO itemDTO = new ItemDTO(item.getId(), item.getBarcode(), item.getTitle(), item.getQuantity(), item.getPrice());
+
+                for(int i = 0; i < orderLine.getQuantity();i++) {
+                    items.add(itemDTO);
+                    total = total.add(item.getPrice());
+                }
+            }
         }
         
         /*
          * Debt item
          */        
-        if(financialActivity.getClient() != null) {
-            BigDecimal possibleMoneyBalance = financialActivity.getClient()
-                    .getMoneyBalance().add(total.subtract(financialActivity.getPayment()));
+        if(order.getClient() != null) {
+            BigDecimal possibleMoneyBalance = order.getClient()
+                    .getMoneyBalance().add(total.subtract(order.getPayment()));
             if(possibleMoneyBalance.compareTo(BigDecimal.ZERO) < 0) {
                 ItemDTO item = new ItemDTO(ItemDTO.FAKE_ID_DEBT, null, bundle.getString("DebtTitle"), null, possibleMoneyBalance.negate().setScale(2));
                 items.addFirst(item);
@@ -784,7 +820,7 @@ public class FinancialActivitiesService extends BusinessService {
      * 
      * </ul>
      * 
-     * @param financialActivityId the financial activity's ID
+     * @param orderId the financial activity's ID
      * @param amount the amount paid
      * @throws BusinessException if current business rules restrict this
      * operation
@@ -793,7 +829,7 @@ public class FinancialActivitiesService extends BusinessService {
      * @throws SecurityException if current security rules restrict this operation
      * @throws IllegalStateException if the transaction or the session is not active
      */
-    public void recordPayment(Short financialActivityId, BigDecimal amount)
+    public void recordPayment(Short orderId, BigDecimal amount)
             throws BusinessException, IllegalArgumentException, ValidationException, SecurityException {
         assertSessionActive();
         assertTransactionActive();
@@ -801,8 +837,8 @@ public class FinancialActivitiesService extends BusinessService {
         /*
          * Checks the arguments.
          */
-        if(financialActivityId == null) {
-            throw new NullPointerException("The financialActivityId is null."); //NOI18N
+        if(orderId == null) {
+            throw new NullPointerException("The orderId is null."); //NOI18N
         }
         
         if(amount == null) {
@@ -812,15 +848,15 @@ public class FinancialActivitiesService extends BusinessService {
         /*
          * Finds the target Financial Activity.
          */
-        FinancialActivity financialActivity = entityManager.find(FinancialActivity.class, financialActivityId);
+        OrderEntity order = entityManager.find(OrderEntity.class, orderId);
         
-        if(financialActivity == null) {
-            throw new ValidationException(bundle.getString("FinancialActivityIDInvalid"));
+        if(order == null) {
+            throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
         }
         
-        Boolean requiresAllPermissions = (financialActivity.getAttendance() != null 
-                && !financialActivity.getAttendance().getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN))
-                || !isToday(financialActivity.getDate());
+        Boolean requiresAllPermissions = (order.getAttendance() != null 
+                && !order.getAttendance().getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN))
+                || !isToday(order.getDate());
 
         if(requiresAllPermissions && !sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(bundle.getString("OperationDenied"));
@@ -836,7 +872,7 @@ public class FinancialActivitiesService extends BusinessService {
         amount = amount.setScale(2);
         
         
-        BigDecimal newTotalPaymentMaid = financialActivity.getPayment().add(amount);
+        BigDecimal newTotalPaymentMaid = order.getPayment().add(amount);
         
         if (newTotalPaymentMaid.precision() > 5) {
             throw new ValidationException(bundle.getString("LimitReached"));
@@ -846,8 +882,8 @@ public class FinancialActivitiesService extends BusinessService {
          * If the financial activity is associted with a Client,
          * does some checks and alters the Client's money balance.
          */
-        if(financialActivity.getClient() != null) {
-            Client client = financialActivity.getClient();
+        if(order.getClient() != null) {
+            Client client = order.getClient();
             BigDecimal newMoneyBalance = client.getMoneyBalance().add(amount);
                 
             if (newMoneyBalance.precision() > 5) {
@@ -868,39 +904,39 @@ public class FinancialActivitiesService extends BusinessService {
         }
 
         // TODO: note change
-        financialActivity.setPayment(newTotalPaymentMaid);
+        order.setPayment(newTotalPaymentMaid);
         
     }
 
     /**
      * Returns the amount of payment associated with the financial activity.
      *
-     * @param financialActivityId the financial activity's ID
+     * @param orderId the financial activity's ID
      * @return the amount of payment
      * @throws NullPointerException if the financial activity's
      * ID is null
      * @throws ValidationException if the financial activity's ID is invalid
      * @throws IllegalStateException if the session is not active
      */
-    public BigDecimal getPayment(Integer financialActivityId) 
+    public BigDecimal getPayment(Integer orderId) 
             throws ValidationException {
         assertSessionActive();
         
         /*
          * Arguments validation.
          */
-        if(financialActivityId == null) {
-            throw new NullPointerException("The financialActivityId is null."); //NOI18N
+        if(orderId == null) {
+            throw new NullPointerException("The orderId is null."); //NOI18N
         }
         
-        FinancialActivity financialActivity = entityManager.find(FinancialActivity.class,
-                financialActivityId);
+        OrderEntity order = entityManager.find(OrderEntity.class,
+                orderId);
         
-        if(financialActivity == null) {
-            throw new ValidationException(bundle.getString("FinancialActivityIDInvalid"));
+        if(order == null) {
+            throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
         }
         
-        return financialActivity.getPayment();
+        return order.getPayment();
     }
 
     /**
@@ -911,7 +947,7 @@ public class FinancialActivitiesService extends BusinessService {
     public Short getNextId() {
         try {
             return new Integer((Short) entityManager
-                    .createNamedQuery("FinancialActivity.findAllIdsOrderByIdDesc") //NOI18N
+                    .createNamedQuery("OrderEntity.findAllIdsOrderByIdDesc") //NOI18N
                     .setMaxResults(1).getSingleResult() + 1)
                     .shortValue();
         } catch (NoResultException ex) {
@@ -919,56 +955,63 @@ public class FinancialActivitiesService extends BusinessService {
         }
     }
     
-    private FinancialActivityDTO wrapFinancialActivity(FinancialActivity financialActivity) {
+    private OrderDTO wrapOrderEntity(OrderEntity order) {
         
-        FinancialActivityDTO financialActivityDTO =
-                new FinancialActivityDTO(
-                financialActivity.getId(),
-                new DateMidnight(financialActivity.getDate()),
-                financialActivity.getPayment().setScale(2));
+        OrderDTO orderDTO =
+                new OrderDTO(
+                order.getId(),
+                new DateMidnight(order.getDate()),
+                order.getPayment().setScale(2));
         
         /*
          * Purchased items
          */
         List<ItemDTO> items = new LinkedList<>();
         
-        BigDecimal total = BigDecimal.ZERO.setScale(2);
+        /*
+         * We count the order's total to calculate the client's debt later.
+         */
+        BigDecimal total = BigDecimal.ZERO;
         
-        if(financialActivity.getItems() != null) {
-            for(Item item : financialActivity.getItems()) {
+        if(order.getOrderLines() != null) {
+            for(OrderLine orderLine : order.getOrderLines()) {
+                Item item = orderLine.getItem();
                 ItemDTO itemDTO = new ItemDTO(item.getId(), item.getBarcode(), item.getTitle(), item.getQuantity(), item.getPrice());
-                items.add(itemDTO);
-                total = total.add(item.getPrice());
+
+                for(int i = 0; i < orderLine.getQuantity();i++) {
+                    items.add(itemDTO);
+                    total = total.add(item.getPrice());
+                }
             }
         }
-        financialActivityDTO.setItems(items);
+        orderDTO.setItems(items);
         
         /*
          * Client
          */
-        if(financialActivity.getClient() != null) {
-            financialActivityDTO.setClientId(financialActivity.getClient().getId());
-            financialActivityDTO.setClientFullName(financialActivity.getClient().getFullName());
+        if(order.getClient() != null) {
+            orderDTO.setClientId(order.getClient().getId());
+            orderDTO.setClientFullName(order.getClient().getFullName());
         }
         
         /*
          * Attendance
          */
-        if(financialActivity.getAttendance() != null) {
-            financialActivityDTO.setAttendanceId(financialActivity.getAttendance().getId());
-            financialActivityDTO.setKeyTitle(financialActivity.getAttendance().getKey().getTitle());
+        if(order.getAttendance() != null) {
+            orderDTO.setAttendanceId(order.getAttendance().getId());
+            orderDTO.setKeyTitle(order.getAttendance().getKey().getTitle());
         }
         /*
          * Total
          */
-        financialActivityDTO.setTotal(total);
+        orderDTO.setTotal(total);
         
         /*
          * Due
          */
-        financialActivityDTO.setDue(total.subtract(financialActivity.getPayment()));
+        orderDTO.setDue(total.subtract(order.getPayment()));
         
-        return financialActivityDTO;
+        return orderDTO;
     }
 
     /**
@@ -1016,9 +1059,9 @@ public class FinancialActivitiesService extends BusinessService {
      *
      * @return the instance
      */
-    public static FinancialActivitiesService getInstance() {
+    public static OrdersService getInstance() {
         if (instance == null) {
-            instance = new FinancialActivitiesService();
+            instance = new OrdersService();
         }
         return instance;
     }

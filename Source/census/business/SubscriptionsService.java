@@ -253,7 +253,7 @@ public class SubscriptionsService extends BusinessService {
             throw new ValidationException("The subscription's ID is invalid.");
         }
         
-        if(!itemSubscription.getItem().getFinancialActivities().isEmpty()) {
+        if(!itemSubscription.getItem().getOrderLines().isEmpty()) {
             throw new BusinessException("The '" 
                     + itemSubscription.getItem().getTitle() 
                     + "' subscription has unarchived purchases. It can not be removed now.");

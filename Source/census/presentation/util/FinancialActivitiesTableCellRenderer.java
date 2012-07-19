@@ -5,7 +5,7 @@
 
 package census.presentation.util;
 
-import census.business.dto.FinancialActivityDTO;
+import census.business.dto.OrderDTO;
 import java.awt.Color;
 import java.awt.Component;
 import java.math.BigDecimal;
@@ -33,7 +33,7 @@ public class FinancialActivitiesTableCellRenderer implements TableCellRenderer {
         }
         
         if (row != -1) {
-            FinancialActivityDTO financialActivity = ((FinancialActivitiesTableModel)table.getModel()).getFinancialActivityAt(row);
+            OrderDTO financialActivity = ((FinancialActivitiesTableModel)table.getModel()).getFinancialActivityAt(row);
             renderer.setBackground(financialActivity.getTotal().compareTo(financialActivity.getPayment()) > 0
                     ? unpaidFinancialActivityColor : Color.white);
         }

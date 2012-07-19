@@ -8,6 +8,7 @@ import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.AttendanceDTO;
+import census.business.dto.ItemDTO;
 import census.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -121,7 +122,7 @@ public class AttendancesService extends BusinessService {
             }
         }
         
-        Short financialActivityId = FinancialActivitiesService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), Boolean.TRUE);
+        Short orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), Boolean.TRUE);
         Short itemId = Short.valueOf(((Property)entityManager
                 .createNamedQuery("Property.findByName") //NOI18N
                 .setParameter("name", "time_range_mismatch_penalty_item_id") //NOI18N
@@ -130,7 +131,7 @@ public class AttendancesService extends BusinessService {
                 
         try {       
             for(int i = 0; i < over;i++) {
-                FinancialActivitiesService.getInstance().addPurchase(financialActivityId, itemId);
+                OrdersService.getInstance().addPurchase(orderId, itemId);
             }
         } catch (SecurityException ex) {
             throw new RuntimeException("Unexpected SecurityException.");
@@ -166,7 +167,7 @@ public class AttendancesService extends BusinessService {
             throws BusinessException, ValidationException {
         Attendance attendance;
         Key key;
-        FinancialActivity financialActivity;
+        OrderEntity order;
 
         assertSessionActive();
         assertTransactionActive();
@@ -187,25 +188,30 @@ public class AttendancesService extends BusinessService {
         attendance.setDatetimeEnd(Attendance.DATETIME_END_UNKNOWN);
         attendance.setKey(key);
 
-        financialActivity = new FinancialActivity();
-        financialActivity.setId(FinancialActivitiesService.getInstance().getNextId());
-        financialActivity.setAttendance(attendance);
-        financialActivity.setDate(attendance.getDatetimeBegin());
-        financialActivity.setPayment(BigDecimal.ZERO);
+        order = new OrderEntity();
+        order.setId(OrdersService.getInstance().getNextId());
+        order.setAttendance(attendance);
+        order.setDate(attendance.getDatetimeBegin());
+        order.setPayment(BigDecimal.ZERO);
 
         ItemSubscription itemSubscription = findValidAnonymousSubscriptionForNow();
         if (itemSubscription == null) {
             throw new BusinessException(bundle.getString("AttendanceAnonymousSubscriptionNotAvailable"));
         }
+        
+        OrderLine orderLine = new OrderLine();
+        orderLine.setItem(itemSubscription.getItem());
+        orderLine.setOrder(order);
+        orderLine.setQuantity((short)1);
+        
+        List<OrderLine> orderLines = new LinkedList<>();
+        orderLines.add(orderLine);
+        order.setOrderLines(orderLines);
 
-        financialActivity.setItems(new LinkedList<Item>());
-        financialActivity.getItems().add(itemSubscription.getItem());
+        attendance.setOrder(order);
 
-        attendance.setFinancialAcitivity(financialActivity);
-
-        // TODO: note change
-
-        entityManager.persist(financialActivity);
+        entityManager.persist(orderLine);
+        entityManager.persist(order);
         entityManager.persist(attendance);
         entityManager.flush();
 
@@ -430,18 +436,24 @@ public class AttendancesService extends BusinessService {
             throw new BusinessException(bundle.getString("AttendanceAlreadyClosed"));
         }
 
-        FinancialActivity financialActivity = attendance.getFinancialAcitivity();
+        OrderEntity order = attendance.getOrder();
 
-        if (financialActivity != null) {
-            List<Item> items = financialActivity.getItems();
+        if (order != null) {
             BigDecimal total = BigDecimal.ZERO;
 
-            for (Item item : items) {
-                total = total.add(item.getPrice());
+            if(order.getOrderLines() != null) {
+                for(OrderLine orderLine : order.getOrderLines()) {
+                    Item item = orderLine.getItem();
+                    ItemDTO itemDTO = new ItemDTO(item.getId(), item.getBarcode(), item.getTitle(), item.getQuantity(), item.getPrice());
+
+                    for(int i = 0; i < orderLine.getQuantity();i++) {
+                        total = total.add(item.getPrice());
+                    }
+                }
             }
 
-            if (attendance.getClient() == null && total.compareTo(financialActivity.getPayment()) != 0) {
-                throw new BusinessException(bundle.getString("FullPaymentRequiredToCloseAnonymousAttendance"));
+            if (attendance.getClient() == null && total.compareTo(order.getPayment()) != 0) {
+                throw new BusinessException(bundle.getString("ExactPaymentRequiredToCloseAnonymousAttendance"));
             }
         }
 

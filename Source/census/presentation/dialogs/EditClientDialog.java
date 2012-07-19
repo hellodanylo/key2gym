@@ -7,7 +7,7 @@ package census.presentation.dialogs;
 import census.business.AttendancesService;
 import census.business.ClientProfilesService;
 import census.business.ClientsService;
-import census.business.FinancialActivitiesService;
+import census.business.OrdersService;
 import census.business.FreezesService;
 import census.business.SessionsService;
 import census.business.api.BusinessException;
@@ -15,7 +15,7 @@ import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.AttendanceDTO;
 import census.business.dto.ClientProfileDTO;
-import census.business.dto.FinancialActivityDTO;
+import census.business.dto.OrderDTO;
 import census.business.dto.ItemDTO;
 import census.presentation.CensusFrame;
 import census.presentation.util.AttendancesTableModel;
@@ -80,7 +80,7 @@ public class EditClientDialog extends CensusDialog {
         clientProfilesService = ClientProfilesService.getInstance();
         attendancesService = AttendancesService.getInstance();
         freezesService = FreezesService.getInstance();
-        financialActivitiesService = FinancialActivitiesService.getInstance();
+        financialActivitiesService = OrdersService.getInstance();
 
         initComponents();
     }
@@ -492,7 +492,7 @@ public class EditClientDialog extends CensusDialog {
         /*
          * Purchases tab
          */
-        List<FinancialActivityDTO> financialActivitiesDTO;
+        List<OrderDTO> financialActivitiesDTO;
         DateMidnight end = new DateMidnight();
         DateMidnight begin;
         if (purchasesFilterComboBox.getSelectedIndex() == 0) {
@@ -514,7 +514,7 @@ public class EditClientDialog extends CensusDialog {
         DefaultMutableTreeNode topNode = new DefaultMutableTreeNode();
         DefaultMutableTreeNode dateNode;
         DefaultMutableTreeNode itemNode;
-        for (FinancialActivityDTO financialActivityDTO : financialActivitiesDTO) {
+        for (OrderDTO financialActivityDTO : financialActivitiesDTO) {
             String text = MessageFormat.format(bundle.getString("Text.FinancialActivity.withDateAndTotalAndPaid"),
                     new Object[]{financialActivityDTO.getDate().toString("dd-MM-yyyy"),
                         financialActivityDTO.getTotal().toPlainString(),
@@ -540,7 +540,7 @@ public class EditClientDialog extends CensusDialog {
     private ClientProfilesService clientProfilesService;
     private AttendancesService attendancesService;
     private FreezesService freezesService;
-    private FinancialActivitiesService financialActivitiesService;
+    private OrdersService financialActivitiesService;
     /*
      * GUI variables
      */

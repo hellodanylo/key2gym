@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -16,7 +15,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "item_itm")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Item.findAll", query = "SELECT i FROM Item i"),
     @NamedQuery(name = "Item.findPure", query = "SELECT i FROM Item i WHERE i.id NOT IN (SELECT s.item.id FROM ItemSubscription s)"),
@@ -32,7 +30,7 @@ public class Item implements Serializable {
    private static final long serialVersionUID = 1L;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_itm")
     private Short id;
@@ -54,15 +52,12 @@ public class Item implements Serializable {
     @Column(name = "price")
     private BigDecimal price;
     
+    @OneToMany(mappedBy="item")
+    private List<OrderLine> orderLines;
+    
     @JoinColumn(name="id_itm", referencedColumnName="iditm_its")
     @OneToOne(mappedBy="item", cascade={CascadeType.REMOVE})
     private ItemSubscription itemSubscription;
-    
-    @JoinTable(name = "financial_activity_purchase_fnp", 
-        inverseJoinColumns = {@JoinColumn(name = "idfna_fnp", referencedColumnName = "id_fna")}, 
-        joinColumns = { @JoinColumn(name = "iditm_fnp", referencedColumnName = "id_itm")})
-    @ManyToMany
-    private List<FinancialActivity> financialActivities;
     
     public Item() {
     }
@@ -127,12 +122,12 @@ public class Item implements Serializable {
         this.quantity = quantity;
     }
 
-    public List<FinancialActivity> getFinancialActivities() {
-        return financialActivities;
+    public List<OrderLine> getOrderLines() {
+        return orderLines;
     }
 
-    public void setFinancialActivities(List<FinancialActivity> financialActivities) {
-        this.financialActivities = financialActivities;
+    public void setOrderLines(List<OrderLine> orderLines) {
+        this.orderLines = orderLines;
     }
     
     
@@ -159,6 +154,6 @@ public class Item implements Serializable {
 
     @Override
     public String toString() {
-        return "census.pu.Item[ id=" + id + " ]";
+        return "census.persistence.Item[ id=" + id + " ]";
     }    
 }

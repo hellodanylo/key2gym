@@ -52,7 +52,7 @@ public class Attendance implements Serializable {
     private Key key;
     
     @OneToOne(mappedBy = "attendance")
-    private FinancialActivity financialAcitivity;
+    private OrderEntity orderEntity;
         
     @JoinColumn(name = "idcln_atd", referencedColumnName = "id_cln")
     @ManyToOne(optional = false)
@@ -65,8 +65,8 @@ public class Attendance implements Serializable {
         this.id = idAtd;
     }
 
-    public Attendance(Short idAtd, Date datetimeBegin, Date datetimeEnd) {
-        this.id = idAtd;
+    public Attendance(Short id, Date datetimeBegin, Date datetimeEnd) {
+        this.id = id;
         this.datetimeBegin = datetimeBegin;
         this.datetimeEnd = datetimeEnd;
     }
@@ -111,13 +111,12 @@ public class Attendance implements Serializable {
         this.key = key;
     }
 
-    @XmlTransient
-    public FinancialActivity getFinancialAcitivity() {
-        return financialAcitivity;
+    public OrderEntity getOrder() {
+        return orderEntity;
     }
 
-    public void setFinancialAcitivity(FinancialActivity financialAcitivity) {
-        this.financialAcitivity= financialAcitivity;
+    public void setOrder(OrderEntity order) {
+        this.orderEntity= order;
     }
 
     @Override

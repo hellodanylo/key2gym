@@ -4,16 +4,14 @@
  */
 package census.presentation.dialogs;
 
-import census.business.AttendancesService;
-import census.business.ClientsService;
-import census.business.FinancialActivitiesService;
-import census.business.ItemsService;
+import census.business.*;
 import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.AttendanceDTO;
 import census.business.dto.ClientDTO;
 import census.business.dto.ItemDTO;
+import census.business.dto.OrderDTO;
 import census.presentation.CensusFrame;
 import census.presentation.util.ItemListCellRenderer;
 import census.presentation.util.ItemsTableModel;
@@ -64,7 +62,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
      */
     public EditFinancialActivityDialog(JFrame parent) {
         super(parent, true);
-        finanancialActivitiesService = FinancialActivitiesService.getInstance();
+        finanancialActivitiesService = OrdersService.getInstance();
         clientsService = ClientsService.getInstance();
         attendancesService = AttendancesService.getInstance();
         itemsService = ItemsService.getInstance();
@@ -83,7 +81,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        financialActivity = new census.business.dto.FinancialActivityDTO();
+        financialActivity = new OrderDTO();
         itemsTableScrollPane = new javax.swing.JScrollPane();
         itemsTable = new javax.swing.JTable();
         itemsComboBox = new javax.swing.JComboBox();
@@ -555,7 +553,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
     /*
      * Business
      */
-    private FinancialActivitiesService finanancialActivitiesService;
+    private OrdersService finanancialActivitiesService;
     private ClientsService clientsService;
     private AttendancesService attendancesService;
     private ItemsService itemsService;
@@ -568,7 +566,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
     private javax.swing.JTextField dateTextField;
     private javax.swing.JLabel dueLabel;
     private javax.swing.JTextField dueTextField;
-    private census.business.dto.FinancialActivityDTO financialActivity;
+    private OrderDTO financialActivity;
     private javax.swing.JComboBox itemsComboBox;
     private javax.swing.JTable itemsTable;
     private javax.swing.JScrollPane itemsTableScrollPane;

@@ -5,11 +5,11 @@
 package census.presentation.blocks;
 
 import census.business.CashService;
-import census.business.FinancialActivitiesService;
+import census.business.OrdersService;
 import census.business.SessionsService;
 import census.business.StorageService;
 import census.business.api.SecurityException;
-import census.business.dto.FinancialActivityDTO;
+import census.business.dto.OrderDTO;
 import census.presentation.actions.CensusAction;
 import census.presentation.actions.EditFinancialActivityAction;
 import census.presentation.util.FinancialActivitiesTableCellRenderer;
@@ -37,7 +37,7 @@ public class FinancialActivitiesPanel extends javax.swing.JPanel {
      * Creates new form FinancialActivitiesPanel
      */
     public FinancialActivitiesPanel() {
-        financialActivitiesService = FinancialActivitiesService.getInstance();
+        financialActivitiesService = OrdersService.getInstance();
         cashService = CashService.getInstance();
 
         initComponents();
@@ -147,7 +147,7 @@ public class FinancialActivitiesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_financialActivitiesTableFocusLost
 
     private void updateGUI() throws SecurityException {
-        List<FinancialActivityDTO> financialActivities = financialActivitiesService.findAllByDate(date);
+        List<OrderDTO> financialActivities = financialActivitiesService.findAllByDate(date);
         financialActivitiesTableModel.setFinancialActivities(financialActivities);
 
         BigDecimal total = financialActivitiesService.getTotalForDate(date);
@@ -157,7 +157,7 @@ public class FinancialActivitiesPanel extends javax.swing.JPanel {
         cashTextField.setText(cash.toPlainString());
     }
     
-    public FinancialActivityDTO getSelectedFinancialActivity() {
+    public OrderDTO getSelectedFinancialActivity() {
         int index = financialActivitiesTable.getSelectedRow();
         
         if(index == -1) {
@@ -185,7 +185,7 @@ public class FinancialActivitiesPanel extends javax.swing.JPanel {
     /*
      * Business
      */
-    private FinancialActivitiesService financialActivitiesService;
+    private OrdersService financialActivitiesService;
     private CashService cashService;
 
     private class CustomObserver implements Observer {

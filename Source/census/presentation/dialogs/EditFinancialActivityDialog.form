@@ -2,7 +2,7 @@
 
 <Form version="1.3" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <NonVisualComponents>
-    <Component class="census.business.dto.FinancialActivityDTO" name="financialActivity">
+    <Component class="census.business.dto.OrderDTO" name="financialActivity">
     </Component>
   </NonVisualComponents>
   <Properties>

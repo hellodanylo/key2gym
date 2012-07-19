@@ -5,7 +5,7 @@
 package census.presentation.dialogs;
 
 import census.business.AttendancesService;
-import census.business.FinancialActivitiesService;
+import census.business.OrdersService;
 import census.business.KeysService;
 import census.business.api.BusinessException;
 import census.business.api.ValidationException;
@@ -220,7 +220,7 @@ public class PickFinancialActivityDialog extends CensusDialog {
                 KeyDTO key = (KeyDTO)attendancesComboBox.getSelectedItem();
                 try {
                     AttendancesService attendancesService = AttendancesService.getInstance();
-                    FinancialActivitiesService financialActivitiesService = FinancialActivitiesService.getInstance();
+                    OrdersService financialActivitiesService = OrdersService.getInstance();
                     
                     Short attendanceId = attendancesService.findOpenAttendanceByKey(key.getId());
                     AttendanceDTO attendanceDTO = attendancesService.getAttendanceById(attendanceId);
@@ -242,7 +242,7 @@ public class PickFinancialActivityDialog extends CensusDialog {
              * A default financial activity is needed.
              */
             } else {
-                financialActivityId = FinancialActivitiesService.getInstance().findCurrentDefault(true);
+                financialActivityId = OrdersService.getInstance().findCurrentDefault(true);
             }
         } catch(ValidationException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);

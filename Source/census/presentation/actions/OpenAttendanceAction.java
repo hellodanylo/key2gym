@@ -5,7 +5,7 @@
 package census.presentation.actions;
 
 import census.business.ClientsService;
-import census.business.FinancialActivitiesService;
+import census.business.OrdersService;
 import census.business.SessionsService;
 import census.business.StorageService;
 import census.business.api.BusinessException;
@@ -80,9 +80,9 @@ public class OpenAttendanceAction extends CensusAction implements Observer {
 
                 try {
                     if (openAttendanceDialog.isAnonymous()) {
-                        activityId = FinancialActivitiesService.getInstance().findForAttendanceById(openAttendanceDialog.getAttendanceId());
+                        activityId = OrdersService.getInstance().findForAttendanceById(openAttendanceDialog.getAttendanceId());
                     } else {
-                        activityId = FinancialActivitiesService.getInstance().findByClientIdAndDate(openAttendanceDialog.getClientId(), new DateMidnight(), true);
+                        activityId = OrdersService.getInstance().findByClientIdAndDate(openAttendanceDialog.getClientId(), new DateMidnight(), true);
                     }
                 } catch (ValidationException ex) {
                     throw new RuntimeException(ex);

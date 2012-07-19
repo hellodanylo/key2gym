@@ -12,7 +12,7 @@ import census.business.api.SessionListener;
 import census.business.api.ValidationException;
 import census.business.dto.AdministratorDTO;
 import census.business.dto.AttendanceDTO;
-import census.business.dto.FinancialActivityDTO;
+import census.business.dto.OrderDTO;
 import census.presentation.blocks.AttendancesPanel;
 import census.presentation.blocks.CloseableTabComponent;
 import census.presentation.blocks.FinancialActivitiesPanel;
@@ -134,7 +134,7 @@ public class CensusFrame extends JFrame {
         return null;
     }
     
-    public FinancialActivityDTO getSelectedFinancialActivity() {
+    public OrderDTO getSelectedFinancialActivity() {
         Component component = workspacesTabbedPane.getSelectedComponent();
         
         if(component instanceof FinancialActivitiesPanel) {

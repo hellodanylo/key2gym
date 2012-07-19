@@ -10,7 +10,8 @@
     <class>census.persistence.Client</class>
     <class>census.persistence.AdSource</class>
     <class>census.persistence.Attendance</class>
-    <class>census.persistence.FinancialActivity</class>
+    <class>census.persistence.OrderEntity</class>
+    <class>census.persistence.OrderLine</class>
     <class>census.persistence.Administrator</class>
     <class>census.persistence.Session</class>
     <class>census.persistence.ClientFreeze</class>

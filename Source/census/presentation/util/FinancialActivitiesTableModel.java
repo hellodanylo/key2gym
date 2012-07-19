@@ -5,7 +5,7 @@
 package census.presentation.util;
 
 import census.business.dto.AttendanceDTO;
-import census.business.dto.FinancialActivityDTO;
+import census.business.dto.OrderDTO;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -19,24 +19,24 @@ public class FinancialActivitiesTableModel extends AbstractTableModel {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public enum Column {ID, SUBJECT, TOTAL, PAID};
-    private List<FinancialActivityDTO> financialActivities;
+    private List<OrderDTO> financialActivities;
     private Column[] columns;
 
     public FinancialActivitiesTableModel(Column[] columns) {
-        this(columns, new LinkedList<FinancialActivityDTO>());
+        this(columns, new LinkedList<OrderDTO>());
     }
 
-    public FinancialActivitiesTableModel(Column[] columns, List<FinancialActivityDTO> attendances) {
+    public FinancialActivitiesTableModel(Column[] columns, List<OrderDTO> attendances) {
         this.columns = columns;
         this.financialActivities = attendances;
     }
 
-    public void setFinancialActivities(List<FinancialActivityDTO> financialActivities) {
+    public void setFinancialActivities(List<OrderDTO> financialActivities) {
         this.financialActivities = financialActivities;
         fireTableDataChanged();
     }
 
-    public FinancialActivityDTO getFinancialActivityAt(int index) {
+    public OrderDTO getFinancialActivityAt(int index) {
         return financialActivities.get(index);
     }
 
@@ -52,7 +52,7 @@ public class FinancialActivitiesTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        FinancialActivityDTO financialActivity = financialActivities.get(rowIndex);
+        OrderDTO financialActivity = financialActivities.get(rowIndex);
         if (columns[columnIndex].equals(Column.ID)) {
             return financialActivity.getId().toString();
         } else if (columns[columnIndex].equals(Column.SUBJECT)) {

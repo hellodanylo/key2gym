@@ -8,7 +8,7 @@ import census.presentation.dialogs.RegisterClientDialog;
 import census.presentation.dialogs.OpenAttendanceDialog;
 import census.presentation.dialogs.EditFinancialActivityDialog;
 import census.presentation.dialogs.CensusDialog;
-import census.business.FinancialActivitiesService;
+import census.business.OrdersService;
 import census.business.SessionsService;
 import census.business.StorageService;
 import census.business.api.BusinessException;
@@ -74,7 +74,7 @@ public class RegisterClientAction extends CensusAction implements Observer {
                 EditFinancialActivityDialog editFinancialActivityDialog = new EditFinancialActivityDialog(getFrame());
 
                 try {
-                    editFinancialActivityDialog.setFinancialActivityId(FinancialActivitiesService.getInstance().findByClientIdAndDate(registerClientDialog.getClientId(), new DateMidnight(), true));
+                    editFinancialActivityDialog.setFinancialActivityId(OrdersService.getInstance().findByClientIdAndDate(registerClientDialog.getClientId(), new DateMidnight(), true));
                 } catch (ValidationException ex) {
                     throw new RuntimeException(ex);
                 }

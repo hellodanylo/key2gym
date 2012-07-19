@@ -43,7 +43,7 @@ public class Client {
     private BigDecimal moneyBalance;
     
     @OneToMany(mappedBy = "client")
-    private List<FinancialActivity> financialAcitivitiesList;
+    private List<OrderEntity> orderEntities;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
     private List<Attendance> attendancesList;
@@ -172,12 +172,12 @@ public class Client {
         this.card = card;
     }
 
-    public List<FinancialActivity> getFinancialAcitivities() {
-        return financialAcitivitiesList;
+    public List<OrderEntity> getFinancialAcitivities() {
+        return orderEntities;
     }
 
-    public void setFinancialAcitivities(List<FinancialActivity> financialAcitivityCollection) {
-        this.financialAcitivitiesList = financialAcitivityCollection;
+    public void setFinancialAcitivities(List<OrderEntity> financialAcitivityCollection) {
+        this.orderEntities = financialAcitivityCollection;
     }
 
     public List<ClientFreeze> getFreezes() {

@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ItemSubscription.findByTermMonths", query = "SELECT i FROM ItemSubscription i WHERE i.termMonths = :termMonths"),
     @NamedQuery(name = "ItemSubscription.findByTermYears", query = "SELECT i FROM ItemSubscription i WHERE i.termYears = :termYears"),
     @NamedQuery(name = "ItemSubscription.findAnonymousByTimeRange", query = "SELECT i FROM ItemSubscription i WHERE i.units = 1 AND i.termDays = 1 AND i.termMonths = 0 AND i.termYears = 0 AND i.timeRange = :timeRange"),
-    @NamedQuery(name = "ItemSubscriptionAndDateRecorded.findByClientOrderByDateRecordedDesc", query="SELECT i, f.dateRecorded FROM ItemSubscription i, FinancialActivity f WHERE i.item MEMBER OF f.items AND f.client = :client ORDER BY f.dateRecorded DESC")})
+    @NamedQuery(name = "ItemSubscriptionAndDateRecorded.findByClientOrderByDateRecordedDesc", query="SELECT i, o.dateRecorded FROM ItemSubscription i, OrderLine ol, OrderEntity o WHERE i.item = ol.item AND ol.orderEntity.client = :client ORDER BY o.dateRecorded DESC")})
 
 public class ItemSubscription implements Serializable {
     private static final long serialVersionUID = 1L;
