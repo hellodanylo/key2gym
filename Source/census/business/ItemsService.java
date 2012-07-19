@@ -9,6 +9,7 @@ import census.business.api.ValidationException;
 import census.business.api.SecurityException;
 import census.business.dto.ItemDTO;
 import census.persistence.Item;
+import census.persistence.Property;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.LinkedList;
@@ -93,8 +94,20 @@ public class ItemsService extends BusinessService {
         List<ItemDTO> result = new LinkedList<>();
         List<Item> items = entityManager.createNamedQuery("Item.findAvailable") //NOI18N
                 .getResultList();
+        
+        Property property = (Property)entityManager
+                .createNamedQuery("Property.findByName")
+                .setParameter("name", "time_range_mismatch_penalty_item_id")
+                .getSingleResult();
+        Short penaltyItemId = Short.valueOf(property.getValue());
 
         for (Item item : items) {
+            /*
+             * Skips the time range mismatch penalty item.
+             */
+            if(item.getId().equals(penaltyItemId))
+                continue;
+            
             result.add(wrapItem(item));
         }
         return result;
@@ -130,8 +143,8 @@ public class ItemsService extends BusinessService {
         List<Item> items = entityManager
                 .createNamedQuery("Item.findPure") //NOI18N
                 .getResultList(); 
-
-        for (Item item : items) {
+               
+        for (Item item : items) {            
             result.add(wrapItem(item));
         }
 
@@ -150,9 +163,21 @@ public class ItemsService extends BusinessService {
         List<ItemDTO> result = new LinkedList<>();
         List<Item> items = entityManager
                 .createNamedQuery("Item.findPureAvailable") //NOI18N
-                .getResultList(); 
+                .getResultList();
+        
+        Property property = (Property)entityManager
+                .createNamedQuery("Property.findByName")
+                .setParameter("name", "time_range_mismatch_penalty_item_id")
+                .getSingleResult();
+        Short penaltyItemId = Short.valueOf(property.getValue());
 
         for (Item item : items) {
+            /*
+             * Skips the time range mismatch penalty item.
+             */
+            if(item.getId().equals(penaltyItemId))
+                continue;
+            
             result.add(wrapItem(item));
         }
 
