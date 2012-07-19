@@ -701,6 +701,13 @@ public class FinancialActivitiesService extends BusinessService {
             }
         }
         
+        /*
+         * Restores the item's quantity. It's impossible to get overflow here,
+         * for if the item's quantity counter is being restored to the state
+         * it already had before the item was purchased.
+         */
+        item.setQuantity((short)(item.getQuantity()+1));
+        
         // TODO: note change
         financialActivity.getItems().remove(item);
         entityManager.flush();
