@@ -364,7 +364,11 @@ public class ItemsService extends BusinessService {
 
         if (value.scale() > 2) {
             throw new ValidationException(bundle.getString("TwoDigitsAfterDecimalPointMax"));
-        } else if (value.precision() > 5) {
+        }
+        
+        value = value.setScale(2);
+        
+        if (value.precision() > 5) {
             throw new ValidationException(bundle.getString("ThreeDigitsBeforeDecimalPointMax"));
         } else if (value.compareTo(new BigDecimal(0)) < 0) {
             throw new ValidationException(bundle.getString("PriceCanNotBeNegative"));

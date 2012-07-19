@@ -187,8 +187,12 @@ public class CashService extends BusinessService {
 
         if (value.scale() > 2) {
             throw new ValidationException(bundle.getString("TwoDigitsAfterDecimalPointMax"));
-        } else if (value.precision() > 5) {
-            throw new ValidationException(bundle.getString("ThreeDigitsBeforeDecimalPointMax"));
+        }
+        
+        value = value.setScale(2);
+        
+        if (value.precision() > 6) {
+            throw new ValidationException(bundle.getString("LimitReached"));
         }
     }
     /*

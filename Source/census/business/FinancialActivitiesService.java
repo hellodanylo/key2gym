@@ -544,9 +544,14 @@ public class FinancialActivitiesService extends BusinessService {
             Client client = financialActivity.getClient();
             
             /*
-             * Charge the Client's account.
+             * Charge the Client's account. Checks whether the new value
+             * will overreach the precision limit.
              */
-            client.setMoneyBalance(client.getMoneyBalance().subtract(item.getPrice()));
+            BigDecimal newMoneyBalance = client.getMoneyBalance().subtract(item.getPrice());
+            if (newMoneyBalance.precision() > 5) {
+                throw new ValidationException(bundle.getString("LimitReached"));
+            }
+            client.setMoneyBalance(newMoneyBalance);
             
             if(item.getItemSubscription() != null) {
                /*
@@ -821,27 +826,45 @@ public class FinancialActivitiesService extends BusinessService {
             throw new SecurityException(bundle.getString("OperationDenied"));
         }
         
+        /*
+         * Normalizes the scale, and throws an exception, if the scale is 
+         * to big.
+         */
+        if (amount.scale() > 2) {
+            throw new ValidationException(bundle.getString("TwoDigitsAfterDecimalPointMax"));
+        }
+        amount = amount.setScale(2);
+        
+        
         BigDecimal newTotalPaymentMaid = financialActivity.getPayment().add(amount);
+        
+        if (newTotalPaymentMaid.precision() > 5) {
+            throw new ValidationException(bundle.getString("LimitReached"));
+        }
         
         /*
          * If the financial activity is associted with a Client,
          * does some checks and alters the Client's money balance.
          */
         if(financialActivity.getClient() != null) {
-                Client client = financialActivity.getClient();
-                BigDecimal newMoneyBalance = client.getMoneyBalance().add(amount);
+            Client client = financialActivity.getClient();
+            BigDecimal newMoneyBalance = client.getMoneyBalance().add(amount);
                 
-                if(newTotalPaymentMaid.compareTo(BigDecimal.ZERO) < 0) {
-                    if(newMoneyBalance.add(amount).compareTo(BigDecimal.ZERO) < 0) {
-                        throw new BusinessException(bundle.getString("ClientNotEnoughMoneyToWithdraw"));
-                    }
+            if (newMoneyBalance.precision() > 5) {
+                throw new ValidationException(bundle.getString("LimitReached"));
+            }
+                
+            if(newTotalPaymentMaid.compareTo(BigDecimal.ZERO) < 0) {
+                if(newMoneyBalance.add(amount).compareTo(BigDecimal.ZERO) < 0) {
+                    throw new BusinessException(bundle.getString("ClientNotEnoughMoneyToWithdraw"));
                 }
+            }
                 
-                /*
-                 * Changes the client's money balance.
-                 * TODO: note change
-                 */
-                client.setMoneyBalance(newMoneyBalance);
+            /*
+             * Changes the client's money balance.
+             * TODO: note change
+             */
+            client.setMoneyBalance(newMoneyBalance);
         }
 
         // TODO: note change

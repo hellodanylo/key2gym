@@ -341,6 +341,19 @@ public class ClientsService extends BusinessService {
         if(client.getMoneyBalance() == null) {
             throw new NullPointerException("The client.getMoneyBalance() is null."); //NOI18N
         }
+        
+        /*
+         * Normalizes the scale, and throws an exception, if the scale is 
+         * to big.
+         */
+        if (client.getMoneyBalance().scale() > 2) {
+            throw new ValidationException(bundle.getString("Message.MoneyBalanceCanHasTwoDigitsAfterDecimalPointMax"));
+        }
+        client.setMoneyBalance(client.getMoneyBalance().setScale(2));
+        
+        if (client.getMoneyBalance().precision() > 5) {
+            throw new ValidationException(bundle.getString("LimitReached"));
+        }
         originalClient.setMoneyBalance(client.getMoneyBalance());
         
         if(originalClient.getRegistrationDate() == null) {

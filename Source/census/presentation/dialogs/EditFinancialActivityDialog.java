@@ -422,11 +422,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
             }
             Short itemId = ((ItemDTO) selectedItem).getId();
 
-            try {
-                finanancialActivitiesService.addPurchase(financialActivity.getId(), itemId);
-            } catch (ValidationException ex) {
-                throw new RuntimeException(ex);
-            }
+            finanancialActivitiesService.addPurchase(financialActivity.getId(), itemId);
         } catch (BusinessException | ValidationException | SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
         } catch (RuntimeException ex) {
@@ -491,15 +487,11 @@ public class EditFinancialActivityDialog extends CensusDialog {
                 throw new BusinessException(bundle.getString("Message.FullPaymenIsForced"));
             }
 
-            try {
-                finanancialActivitiesService.recordPayment(financialActivity.getId(), newPayment);
-            } catch (ValidationException ex) {
-                throw new RuntimeException(ex);
-            }
+            finanancialActivitiesService.recordPayment(financialActivity.getId(), newPayment);
         } catch (NumberFormatException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(bundle.getString("Message.NewPaymentFieldContainInvalidValue")));
             return;
-        } catch (BusinessException|SecurityException ex) {
+        } catch (BusinessException|ValidationException|SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (RuntimeException ex) {
