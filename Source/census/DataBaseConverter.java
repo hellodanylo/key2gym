@@ -356,15 +356,17 @@ public class DataBaseConverter {
                 }
             }
 
-            executeUpdate("INSERT INTO `financial_activity_fna` (`id_fna` ,`date_recorded`, `idcln_fna`, `idatd_fna`, `payment`)"
+            executeUpdate("INSERT INTO `order_ord` (`id_ord` ,`date_recorded`, `idcln_ord`, `idatd_ord`, `payment`)"
                     + " VALUES ('" + id + "','" + new SimpleDateFormat("yyyy-MM-dd").format(date) + "'," + clientId + "," + attendanceId + ",'" + amount.toPlainString() + "')");
 
-            ResultSet subresult = executeQuery("SELECT * FROM `payment_item` WHERE `payment_id` = " + id);
-
-            while (subresult.next()) {
-                Short itemId = subresult.getShort("item_id");
-
-                executeUpdate("INSERT INTO `financial_activity_purchase_fnp` (`idfna_fnp`, `iditm_fnp`) VALUES('" + id + "','" + itemId + "')");
+            ResultSet orderLines = executeQuery("SELECT DISTINCT `item_id` FROM `payment_item` WHERE `payment_id` = " + id);
+            
+            while (orderLines.next()) {
+                Short itemId = orderLines.getShort("item_id");
+                ResultSet quantity = executeQuery("SELECT COUNT(*) as `quantity` FROM `payment_item` WHERE `payment_id` = " + id + " AND `item_id` = " + itemId);
+                quantity.first();
+                
+                executeUpdate("INSERT INTO `order_line_orl` (`idord_orl`, `iditm_orl`, `quantity`) VALUES('" + id + "','" + itemId + "','"+quantity.getShort("quantity")+"')");
             }
 
             counter++;
