@@ -170,12 +170,13 @@ public class CensusFrame extends JFrame {
         actionsToolBar = new javax.swing.JToolBar();
         openAttendanceButton = new javax.swing.JButton();
         closeAttendanceButton = new javax.swing.JButton();
-        attendanceClientSeparator = new javax.swing.JToolBar.Separator();
+        attendancesClientsSeparator = new javax.swing.JToolBar.Separator();
         registerClientButton = new javax.swing.JButton();
         editClientButton = new javax.swing.JButton();
-        clientFinancialActivitySeparator = new javax.swing.JToolBar.Separator();
+        clientsFinancesSeparator = new javax.swing.JToolBar.Separator();
         editFinancialActivityButton = new javax.swing.JButton();
         workspacesTabbedPane = new javax.swing.JTabbedPane();
+        bannerLabel = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         sessionMenu = new javax.swing.JMenu();
         toggleSessionMenuItem = new javax.swing.JMenuItem();
@@ -219,7 +220,7 @@ public class CensusFrame extends JFrame {
         closeAttendanceButton.setMargin(new java.awt.Insets(0, 10, 0, 10));
         closeAttendanceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         actionsToolBar.add(closeAttendanceButton);
-        actionsToolBar.add(attendanceClientSeparator);
+        actionsToolBar.add(attendancesClientsSeparator);
 
         registerClientButton.setAction(registerClientAction);
         registerClientButton.setFocusable(false);
@@ -235,13 +236,18 @@ public class CensusFrame extends JFrame {
         editClientButton.setPreferredSize(new java.awt.Dimension(100, 94));
         editClientButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         actionsToolBar.add(editClientButton);
-        actionsToolBar.add(clientFinancialActivitySeparator);
+        actionsToolBar.add(clientsFinancesSeparator);
 
         editFinancialActivityButton.setAction(editFinancialActivityAction);
         editFinancialActivityButton.setFocusable(false);
         editFinancialActivityButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editFinancialActivityButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         actionsToolBar.add(editFinancialActivityButton);
+
+        bannerLabel.setBackground(new java.awt.Color(55, 85, 111));
+        bannerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        bannerLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/census/presentation/resources/banner.png"))); // NOI18N
+        bannerLabel.setOpaque(true);
 
         sessionMenu.setText(bundle.getString("Menu.Session")); // NOI18N
 
@@ -324,16 +330,18 @@ public class CensusFrame extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(actionsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 865, Short.MAX_VALUE)
+            .addComponent(actionsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
             .addComponent(workspacesTabbedPane)
+            .addComponent(bannerLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(actionsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(actionsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bannerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -404,10 +412,11 @@ public class CensusFrame extends JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar actionsToolBar;
-    private javax.swing.JToolBar.Separator attendanceClientSeparator;
+    private javax.swing.JToolBar.Separator attendancesClientsSeparator;
     private javax.swing.JMenuItem attendancesWindowMenuItem;
-    private javax.swing.JToolBar.Separator clientFinancialActivitySeparator;
+    private javax.swing.JLabel bannerLabel;
     private javax.swing.JMenuItem clientsEditMenuItem;
+    private javax.swing.JToolBar.Separator clientsFinancesSeparator;
     private javax.swing.JMenu clientsMenu;
     private javax.swing.JMenuItem clientsRegisterMenuItem;
     private census.presentation.actions.CloseAttendanceAction closeAttendanceAction;
