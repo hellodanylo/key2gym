@@ -11,53 +11,53 @@ import census.business.api.ValidationException;
 import census.business.dto.AttendanceDTO;
 import census.business.dto.ClientDTO;
 import census.business.dto.ItemDTO;
-import census.business.dto.OrderDTO;
 import census.presentation.CensusFrame;
 import census.presentation.util.ItemListCellRenderer;
 import census.presentation.util.ItemsTableModel;
 import census.presentation.util.ItemsTableModel.Column;
+import census.presentation.util.MutableListModel;
 import java.awt.Color;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.table.TableColumn;
 
 /**
  * This dialog allows user to view and edit a financial activity. It implements
  * the following features:
- * 
+ *
  * <ul>
- * 
- * <il> Basic information </il>
- * <il> Payment information
- * <il> Purchases
- * 
+ *
+ * <il> Basic information </il> <il> Payment information <il> Purchases
+ *
  * </ul>
- * 
- * Session variables:
- * <ul>
- * 
- * <li> financialActivityId - the ID of financial activity to be shown and edited </li>
- * <li> fullPaymentForced - if true, the dialog won't exit with RESULT_OK, if the 
- * user did not record full payment.
-
+ *
+ * Session variables: <ul>
+ *
+ * <li> financialActivityId - the ID of financial activity to be shown and
+ * edited </li> <li> fullPaymentForced - if true, the dialog won't exit with
+ * RESULT_OK, if the user did not record full payment.
+ *
  * </ul>
- * 
- * A transaction is required to be active, and a session to be open, upon the 
- * dialog's creation. 
- * 
- * This dialog supports hot swapping. The session variables can be set and reset 
- * after the <code>setVisible(true)</code> was called.
- * 
+ *
+ * A transaction is required to be active, and a session to be open, upon the
+ * dialog's creation.
+ *
+ * This dialog supports hot swapping. The session variables can be set and reset
+ * after the
+ * <code>setVisible(true)</code> was called.
+ *
  * @author Danylo Vashchilenko
  */
 public class EditFinancialActivityDialog extends CensusDialog {
 
     /**
      * Constructs from a parent frame.
-     * 
+     *
      * @param parent the frame to use when positioning itself
      */
     public EditFinancialActivityDialog(JFrame parent) {
@@ -68,6 +68,22 @@ public class EditFinancialActivityDialog extends CensusDialog {
         itemsService = ItemsService.getInstance();
 
         initComponents();
+
+        itemsList.addFocusListener(new FocusAdapter() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                purchasesTable.clearSelection();
+            }
+        });
+
+        purchasesTable.addFocusListener(new FocusAdapter() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                itemsList.clearSelection();
+            }
+        });
 
         setLocationRelativeTo(parent);
     }
@@ -81,10 +97,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        financialActivity = new OrderDTO();
-        itemsTableScrollPane = new javax.swing.JScrollPane();
-        itemsTable = new javax.swing.JTable();
-        itemsComboBox = new javax.swing.JComboBox();
+        financialActivity = new census.business.dto.OrderDTO();
         addItemButton = new javax.swing.JButton();
         removeItemButton = new javax.swing.JButton();
         basicInformationPanel = new javax.swing.JPanel();
@@ -103,30 +116,24 @@ public class EditFinancialActivityDialog extends CensusDialog {
         dueTextField = new javax.swing.JTextField();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        purchasingSplitPane = new javax.swing.JSplitPane();
+        purchasesScrollPane = new javax.swing.JScrollPane();
+        purchasesTable = new javax.swing.JTable();
+        itemsScrollPane = new javax.swing.JScrollPane();
+        itemsList = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(bundle.getString("Title.FinancialActivity")); // NOI18N
         setResizable(false);
 
-        Column[] itemsTableColumns = new Column[] {
-            Column.TITLE,
-            Column.PRICE
-        };
-
-        itemsTableModel = new ItemsTableModel(itemsTableColumns);
-        itemsTable.setModel(itemsTableModel);
-        itemsTableScrollPane.setViewportView(itemsTable);
-
-        itemsComboBox.setRenderer(new ItemListCellRenderer());
-
-        addItemButton.setText("+");
+        addItemButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/census/presentation/resources/plus16.png"))); // NOI18N
         addItemButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addItemButtonActionPerformed(evt);
             }
         });
 
-        removeItemButton.setText("-");
+        removeItemButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/census/presentation/resources/remove16.png"))); // NOI18N
         removeItemButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeItemButtonActionPerformed(evt);
@@ -154,8 +161,8 @@ public class EditFinancialActivityDialog extends CensusDialog {
                     .addComponent(dateLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(basicInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
-                    .addComponent(subjectTextField))
+                    .addComponent(dateTextField)
+                    .addComponent(subjectTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         basicInformationPanelLayout.setVerticalGroup(
@@ -193,6 +200,9 @@ public class EditFinancialActivityDialog extends CensusDialog {
         paymentTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 paymentTextFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                paymentTextFieldFocusLost(evt);
             }
         });
 
@@ -257,33 +267,61 @@ public class EditFinancialActivityDialog extends CensusDialog {
             }
         });
 
+        purchasingSplitPane.setDividerLocation(100);
+        purchasingSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        Column[] itemsTableColumns = new Column[] {
+            Column.TITLE,
+            Column.PRICE
+        };
+
+        purchasesTableModel = new ItemsTableModel(itemsTableColumns);
+        purchasesTable.setModel(purchasesTableModel);
+        int[] widths = new int[]{300, 152};
+        TableColumn column = null;
+        for (int i = 0; i < widths.length; i++) {
+            column = purchasesTable.getColumnModel().getColumn(i);
+            column.setPreferredWidth(widths[i]);
+        }
+        purchasesScrollPane.setViewportView(purchasesTable);
+
+        purchasingSplitPane.setLeftComponent(purchasesScrollPane);
+
+        itemsListModel = new MutableListModel<>();
+        itemsList.setModel(itemsListModel);
+        itemsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        itemsList.setCellRenderer(new ItemListCellRenderer());
+        itemsScrollPane.setViewportView(itemsList);
+
+        purchasingSplitPane.setBottomComponent(itemsScrollPane);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(basicInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(paymentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(basicInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(paymentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(itemsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(purchasingSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(removeItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(itemsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(200, 200, 200)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(addItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(removeItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(95, 95, 95))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelButton, okButton});
@@ -292,23 +330,22 @@ public class EditFinancialActivityDialog extends CensusDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(itemsTableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(itemsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(addItemButton)
-                            .addComponent(removeItemButton)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(basicInformationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(paymentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(paymentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(purchasingSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(addItemButton)
+                            .addComponent(removeItemButton))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
                     .addComponent(cancelButton))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -335,91 +372,116 @@ public class EditFinancialActivityDialog extends CensusDialog {
          * Due
          */
         dueTextField.setForeground(financialActivity.getDue().compareTo(BigDecimal.ZERO) > 0 ? new Color(168, 0, 0) : new Color(98, 179, 0));
+        dueTextField.setBackground(financialActivity.getDue().compareTo(BigDecimal.ZERO) > 0 ? new Color(255, 173, 206) : new Color(211, 255, 130));
+        
         dueTextField.setText(financialActivity.getDue().toPlainString());
 
         /*
          * Payment
          */
-        if(!softReset) {
+        if (!softReset) {
             paymentTextField.setText("0.00"); //NOI18N
-            paymentTextField.requestFocusInWindow();
         }
 
         /*
          * Items list. It has to be reloaded for some items could have gone out
-         * of stock since last update. However, we want to preserve the 
-         * selected item for convinience.
+         * of stock since last update. However, we want to preserve the selected
+         * item for convinience.
          */
         List<ItemDTO> items;
-        if(financialActivity.getClientId() == null) {
+        int index = itemsList.getSelectedIndex();
+        if (financialActivity.getClientId() == null) {
             items = itemsService.getPureItemsAvailable();
         } else {
             items = itemsService.getItemsAvailable();
         }
-        itemsComboBox.setModel(new DefaultComboBoxModel(items.toArray()));
-        
-        /*
-         * Items table
-         */
-        itemsTableModel.setItems(financialActivity.getItems());
+        itemsListModel.set(items);
+        if (index >= items.size()) {
+            index--;
+        }
+        itemsList.setSelectedIndex(index);
 
         /*
-         * Subject
+         * Purchases table. It has to be reloaded for some items could have been
+         * bought or returned since last update. However, we want to preserve
+         * the selected item for convinience.
          */
-        String subject;
-        if (financialActivity.getClientId() == null) {
-            if (financialActivity.getAttendanceId() != null) {
-                AttendanceDTO attendance;
+        items = financialActivity.getItems();
+        index = purchasesTable.getSelectedRow();
+        purchasesTableModel.setItems(items);
+        if (index >= items.size()) {
+            index--;
+        }
+        purchasesTable.getSelectionModel().setSelectionInterval(index, index);
+
+        /*
+         * We update basic information only upon hard resets for it could not
+         * have changed since last update.
+         */
+        if(!softReset) {
+            String subject;
+            if (financialActivity.getClientId() == null) {
+                if (financialActivity.getAttendanceId() != null) {
+                    AttendanceDTO attendance;
+                    try {
+                        attendance = attendancesService.getAttendanceById(financialActivity.getAttendanceId());
+                    } catch (SecurityException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    subject = MessageFormat.format(bundle.getString("Text.Attendance.withIDAndKey"),
+                            new Object[]{
+                                attendance.getId(),
+                                attendance.getKeyTitle()
+                            });
+                } else {
+                    subject = bundle.getString("Text.Other");
+                }
+            } else {
+                ClientDTO client;
                 try {
-                    attendance = attendancesService.getAttendanceById(financialActivity.getAttendanceId());
-                } catch (SecurityException ex) {
+                    client = clientsService.getById(financialActivity.getClientId());
+                } catch (ValidationException ex) {
                     throw new RuntimeException(ex);
                 }
-                subject = MessageFormat.format(bundle.getString("Text.Attendance.withIDAndKey"), 
-                        new Object[] { 
-                            attendance.getId(), 
-                            attendance.getKeyTitle()
-                        }
-                );
-            } else {
-                subject = bundle.getString("Text.Other");
+                subject = MessageFormat.format(bundle.getString("Text.Client.withFullNameAndID"),
+                        new Object[]{
+                            client.getFullName(),
+                            client.getId()
+                        });
             }
-        } else {
-            ClientDTO client;
-            try {
-                client = clientsService.getById(financialActivity.getClientId());
-            } catch (ValidationException ex) {
-                throw new RuntimeException(ex);
-            }
-            subject = MessageFormat.format(bundle.getString("Text.Client.withFullNameAndID"), 
-                    new Object[]{
-                        client.getFullName(),
-                        client.getId()
-                    }
-            );
-        }
-        subjectTextField.setText(subject);
+            subjectTextField.setText(subject);
+            subjectTextField.getCaret().setDot(0);
 
-        /*
-         * Date
-         */
-        dateTextField.setText(financialActivity.getDate().toString("dd-MM-yyyy")); //NOI18N
+            /*
+            * Date
+            */
+            dateTextField.setText(financialActivity.getDate().toString("dd-MM-yyyy")); //NOI18N
+        }
     }
-    
+
     /**
      * Processes an Add button click event
-     * 
-     * @param evt an optional ActionEvent 
+     *
+     * @param evt an optional ActionEvent
      */
     private void addItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemButtonActionPerformed
-        ItemDTO selectedItem = (ItemDTO)itemsComboBox.getSelectedItem();
+
+        ItemDTO item = null;
+
+        item = (ItemDTO) itemsList.getSelectedValue();
+        if (item == null) {
+            int index = purchasesTable.getSelectedRow();
+            if (index != -1) {
+                item = (ItemDTO) financialActivity.getItems().get(index);
+            } else {
+                ValidationException ex = new ValidationException(bundle.getString("Message.SelectItemFirst"));
+                CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+                return;
+            }
+        }
 
         try {
-            if (selectedItem == null) {
-                throw new ValidationException(bundle.getString("Message.SelectItemFirst"));
-            }
-            Short itemId = ((ItemDTO) selectedItem).getId();
-
+            Short itemId = item.getId();
             finanancialActivitiesService.addPurchase(financialActivity.getId(), itemId);
         } catch (BusinessException | ValidationException | SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
@@ -440,31 +502,38 @@ public class EditFinancialActivityDialog extends CensusDialog {
 
     /**
      * Processes a Remove button click.
-     * 
-     * @param evt an optional ActionEvent 
+     *
+     * @param evt an optional ActionEvent
      */
     private void removeItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeItemButtonActionPerformed
-        /*
-         * There can be several items selected, all of which need to be removed.
-         */
-        for (Integer index : itemsTable.getSelectedRows()) {
-            
-            Short itemId = ((ItemDTO) financialActivity.getItems().get(index)).getId();
-            
-            try {
-                    finanancialActivitiesService.removePurchase(financialActivity.getId(), itemId);
-            } catch (BusinessException|SecurityException ex) {
+
+        ItemDTO item = null;
+
+        item = (ItemDTO) itemsList.getSelectedValue();
+        if (item == null) {
+            int index = purchasesTable.getSelectedRow();
+            if (index != -1) {
+                item = (ItemDTO) financialActivity.getItems().get(index);
+            } else {
+                ValidationException ex = new ValidationException(bundle.getString("Message.SelectItemFirst"));
                 CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
-            } catch (ValidationException|RuntimeException ex) {
-                /*
-                 * The exception is unexpected. We got to shutdown the dialog
-                 * for the state of the transaction is now unknown.
-                 */
-                setResult(RESULT_EXCEPTION);
-                setException(new RuntimeException(ex));
-                dispose();
                 return;
             }
+        }
+
+        try {
+            finanancialActivitiesService.removePurchase(financialActivity.getId(), item.getId());
+        } catch (BusinessException | SecurityException ex) {
+            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+        } catch (ValidationException | RuntimeException ex) {
+            /*
+             * The exception is unexpected. We got to shutdown the dialog for
+             * the state of the transaction is now unknown.
+             */
+            setResult(RESULT_EXCEPTION);
+            setException(new RuntimeException(ex));
+            dispose();
+            return;
         }
 
         // Reloads the financial activity and updates GUI
@@ -473,8 +542,8 @@ public class EditFinancialActivityDialog extends CensusDialog {
 
     /**
      * Processes an OK button click
-     * 
-     * @param evt an optional event 
+     *
+     * @param evt an optional event
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
@@ -489,7 +558,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
         } catch (NumberFormatException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(bundle.getString("Message.NewPaymentFieldContainInvalidValue")));
             return;
-        } catch (BusinessException|ValidationException|SecurityException ex) {
+        } catch (BusinessException | ValidationException | SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (RuntimeException ex) {
@@ -516,40 +585,44 @@ public class EditFinancialActivityDialog extends CensusDialog {
         paymentTextField.setSelectionStart(0);
         paymentTextField.setSelectionEnd(paymentTextField.getDocument().getLength());
     }//GEN-LAST:event_paymentTextFieldFocusGained
-    
+
+    private void paymentTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_paymentTextFieldFocusLost
+        paymentTextField.setSelectionEnd(0);
+        paymentTextField.setSelectionEnd(0);
+    }//GEN-LAST:event_paymentTextFieldFocusLost
+
     /**
-     * Sets the financial activity's ID. This method causes all components to
-     * be reloaded in order to correspond with the new financial activity.
-     * 
-     * @param financialActivityId the 
-     * @see EditFinancialActivityDialog for details about hot swapping 
+     * Sets the financial activity's ID. This method causes all components to be
+     * reloaded in order to correspond with the new financial activity.
+     *
+     * @param financialActivityId the
+     * @see EditFinancialActivityDialog for details about hot swapping
      */
     public void setFinancialActivityId(Short financialActivityId) {
         this.financialActivityId = financialActivityId;
-        
+
         updateGUI(false);
     }
-    
+
     public Boolean isFullPaymentForced() {
         return fullPaymentForced;
     }
 
     public void setFullPaymentForced(Boolean fullPaymentForced) {
         this.fullPaymentForced = fullPaymentForced;
-    }
+    } 
 
     public Short getFinancialActivityId() {
         return financialActivityId;
     }
-    
     /*
      * Presentation
      */
-    private ItemsTableModel itemsTableModel;
+    private ItemsTableModel purchasesTableModel;
+    private MutableListModel<ItemDTO> itemsListModel;
     private Short financialActivityId;
     private Boolean fullPaymentForced;
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
-    
     /*
      * Business
      */
@@ -557,7 +630,6 @@ public class EditFinancialActivityDialog extends CensusDialog {
     private ClientsService clientsService;
     private AttendancesService attendancesService;
     private ItemsService itemsService;
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addItemButton;
     private javax.swing.JPanel basicInformationPanel;
@@ -566,16 +638,18 @@ public class EditFinancialActivityDialog extends CensusDialog {
     private javax.swing.JTextField dateTextField;
     private javax.swing.JLabel dueLabel;
     private javax.swing.JTextField dueTextField;
-    private OrderDTO financialActivity;
-    private javax.swing.JComboBox itemsComboBox;
-    private javax.swing.JTable itemsTable;
-    private javax.swing.JScrollPane itemsTableScrollPane;
+    private census.business.dto.OrderDTO financialActivity;
+    private javax.swing.JList itemsList;
+    private javax.swing.JScrollPane itemsScrollPane;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel paidLabel;
     private javax.swing.JTextField paidTextField;
     private javax.swing.JLabel paymentLabel;
     private javax.swing.JPanel paymentPanel;
     private javax.swing.JTextField paymentTextField;
+    private javax.swing.JScrollPane purchasesScrollPane;
+    private javax.swing.JTable purchasesTable;
+    private javax.swing.JSplitPane purchasingSplitPane;
     private javax.swing.JButton removeItemButton;
     private javax.swing.JLabel subjectLabel;
     private javax.swing.JTextField subjectTextField;

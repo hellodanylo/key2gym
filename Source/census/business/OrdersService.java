@@ -971,7 +971,7 @@ public class OrdersService extends BusinessService {
         /*
          * We count the order's total to calculate the client's debt later.
          */
-        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal total = BigDecimal.ZERO.setScale(2);
         
         if(order.getOrderLines() != null) {
             for(OrderLine orderLine : order.getOrderLines()) {
