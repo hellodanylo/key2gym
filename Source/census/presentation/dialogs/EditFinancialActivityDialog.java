@@ -556,7 +556,9 @@ public class EditFinancialActivityDialog extends CensusDialog {
 
             finanancialActivitiesService.recordPayment(financialActivity.getId(), newPayment);
         } catch (NumberFormatException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(bundle.getString("Message.NewPaymentFieldContainInvalidValue")));
+            String message = MessageFormat.format(bundle.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"),
+                    bundle.getString("Text.NewPayment"));
+            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(message));
             return;
         } catch (BusinessException | ValidationException | SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
