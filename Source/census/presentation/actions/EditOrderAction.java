@@ -10,9 +10,9 @@ import census.business.StorageService;
 import census.business.api.ValidationException;
 import census.presentation.CensusFrame;
 import census.presentation.dialogs.CensusDialog;
-import census.presentation.dialogs.EditFinancialActivityDialog;
+import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.dialogs.PickClientDialog;
-import census.presentation.dialogs.PickFinancialActivityDialog;
+import census.presentation.dialogs.PickOrderDialog;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
 import java.util.Observable;
@@ -27,18 +27,18 @@ import org.joda.time.DateMidnight;
  *
  * @author daniel
  */
-public class EditFinancialActivityAction extends CensusAction {
+public class EditOrderAction extends CensusAction {
     
     private ResourceBundle bundle;
 
-    public EditFinancialActivityAction() {
+    public EditOrderAction() {
         if (!Beans.isDesignTime()) {
             update(null, null);
         }
     
         bundle  = ResourceBundle.getBundle("census/presentation/resources/Strings");
-        setText(bundle.getString("Text.FinancialActivity"));
-        setIcon(new ImageIcon(getClass().getResource("/census/presentation/resources/financialActivity.png")));
+        setText(bundle.getString("Text.Orders"));
+        setIcon(new ImageIcon(getClass().getResource("/census/presentation/resources/order.png")));
     }
 
     @Override
@@ -54,9 +54,9 @@ public class EditFinancialActivityAction extends CensusAction {
             
             if(e.getActionCommand().equals(ACTION_CONTEXT)) {
                 financialActivityId = CensusFrame.getInstance()
-                        .getSelectedFinancialActivity().getId();
+                        .getSelectedOrder().getId();
             } else {
-                PickFinancialActivityDialog pickFinancialActivityDialog = new PickFinancialActivityDialog(getFrame());
+                PickOrderDialog pickFinancialActivityDialog = new PickOrderDialog(getFrame());
                 pickFinancialActivityDialog.setVisible(true);
 
                 if (pickFinancialActivityDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
@@ -92,8 +92,8 @@ public class EditFinancialActivityAction extends CensusAction {
             
             }
 
-            EditFinancialActivityDialog editFinancialActivityDialog = new EditFinancialActivityDialog(getFrame());
-            editFinancialActivityDialog.setFinancialActivityId(financialActivityId);
+            EditOrderDialog editFinancialActivityDialog = new EditOrderDialog(getFrame());
+            editFinancialActivityDialog.setOrderId(financialActivityId);
             editFinancialActivityDialog.setFullPaymentForced(false);
             editFinancialActivityDialog.setVisible(true);
 

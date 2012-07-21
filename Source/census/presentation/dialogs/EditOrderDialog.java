@@ -27,7 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.table.TableColumn;
 
 /**
- * This dialog allows user to view and edit a financial activity. It implements
+ * This dialog allows user to view and edit a order. It implements
  * the following features:
  *
  * <ul>
@@ -38,7 +38,7 @@ import javax.swing.table.TableColumn;
  *
  * Session variables: <ul>
  *
- * <li> financialActivityId - the ID of financial activity to be shown and
+ * <li> orderId - the ID of order to be shown and
  * edited </li> <li> fullPaymentForced - if true, the dialog won't exit with
  * RESULT_OK, if the user did not record full payment.
  *
@@ -53,16 +53,16 @@ import javax.swing.table.TableColumn;
  *
  * @author Danylo Vashchilenko
  */
-public class EditFinancialActivityDialog extends CensusDialog {
+public class EditOrderDialog extends CensusDialog {
 
     /**
      * Constructs from a parent frame.
      *
      * @param parent the frame to use when positioning itself
      */
-    public EditFinancialActivityDialog(JFrame parent) {
+    public EditOrderDialog(JFrame parent) {
         super(parent, true);
-        finanancialActivitiesService = OrdersService.getInstance();
+        ordersService = OrdersService.getInstance();
         clientsService = ClientsService.getInstance();
         attendancesService = AttendancesService.getInstance();
         itemsService = ItemsService.getInstance();
@@ -97,7 +97,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        financialActivity = new census.business.dto.OrderDTO();
+        order = new census.business.dto.OrderDTO();
         addItemButton = new javax.swing.JButton();
         removeItemButton = new javax.swing.JButton();
         basicInformationPanel = new javax.swing.JPanel();
@@ -123,7 +123,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
         itemsList = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(bundle.getString("Title.FinancialActivity")); // NOI18N
+        setTitle(bundle.getString("Title.Order")); // NOI18N
         setResizable(false);
 
         addItemButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/census/presentation/resources/plus16.png"))); // NOI18N
@@ -306,18 +306,15 @@ public class EditFinancialActivityDialog extends CensusDialog {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(basicInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(paymentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(purchasingSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(purchasingSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(addItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -345,7 +342,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
                     .addComponent(cancelButton))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
@@ -353,7 +350,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
 
     private void updateGUI(boolean softReset) {
         try {
-            financialActivity = finanancialActivitiesService.getById(financialActivityId);
+            order = ordersService.getById(orderId);
         } catch (ValidationException ex) {
             throw new RuntimeException(ex);
         }
@@ -361,20 +358,20 @@ public class EditFinancialActivityDialog extends CensusDialog {
         /*
          * Total
          */
-        totalTextField.setText(financialActivity.getTotal().toPlainString());
+        totalTextField.setText(order.getTotal().toPlainString());
 
         /*
          * Paid
          */
-        paidTextField.setText(financialActivity.getPayment().toPlainString());
+        paidTextField.setText(order.getPayment().toPlainString());
 
         /*
          * Due
          */
-        dueTextField.setForeground(financialActivity.getDue().compareTo(BigDecimal.ZERO) > 0 ? new Color(168, 0, 0) : new Color(98, 179, 0));
-        dueTextField.setBackground(financialActivity.getDue().compareTo(BigDecimal.ZERO) > 0 ? new Color(255, 173, 206) : new Color(211, 255, 130));
+        dueTextField.setForeground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ? new Color(168, 0, 0) : new Color(98, 179, 0));
+        dueTextField.setBackground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ? new Color(255, 173, 206) : new Color(211, 255, 130));
         
-        dueTextField.setText(financialActivity.getDue().toPlainString());
+        dueTextField.setText(order.getDue().toPlainString());
 
         /*
          * Payment
@@ -390,7 +387,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
          */
         List<ItemDTO> items;
         int index = itemsList.getSelectedIndex();
-        if (financialActivity.getClientId() == null) {
+        if (order.getClientId() == null) {
             items = itemsService.getPureItemsAvailable();
         } else {
             items = itemsService.getItemsAvailable();
@@ -406,7 +403,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
          * bought or returned since last update. However, we want to preserve
          * the selected item for convinience.
          */
-        items = financialActivity.getItems();
+        items = order.getItems();
         index = purchasesTable.getSelectedRow();
         purchasesTableModel.setItems(items);
         if (index >= items.size()) {
@@ -420,11 +417,11 @@ public class EditFinancialActivityDialog extends CensusDialog {
          */
         if(!softReset) {
             String subject;
-            if (financialActivity.getClientId() == null) {
-                if (financialActivity.getAttendanceId() != null) {
+            if (order.getClientId() == null) {
+                if (order.getAttendanceId() != null) {
                     AttendanceDTO attendance;
                     try {
-                        attendance = attendancesService.getAttendanceById(financialActivity.getAttendanceId());
+                        attendance = attendancesService.getAttendanceById(order.getAttendanceId());
                     } catch (SecurityException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -439,7 +436,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
             } else {
                 ClientDTO client;
                 try {
-                    client = clientsService.getById(financialActivity.getClientId());
+                    client = clientsService.getById(order.getClientId());
                 } catch (ValidationException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -455,7 +452,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
             /*
             * Date
             */
-            dateTextField.setText(financialActivity.getDate().toString("dd-MM-yyyy")); //NOI18N
+            dateTextField.setText(order.getDate().toString("dd-MM-yyyy")); //NOI18N
         }
     }
 
@@ -472,7 +469,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
         if (item == null) {
             int index = purchasesTable.getSelectedRow();
             if (index != -1) {
-                item = (ItemDTO) financialActivity.getItems().get(index);
+                item = (ItemDTO) order.getItems().get(index);
             } else {
                 ValidationException ex = new ValidationException(bundle.getString("Message.SelectItemFirst"));
                 CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
@@ -482,7 +479,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
 
         try {
             Short itemId = item.getId();
-            finanancialActivitiesService.addPurchase(financialActivity.getId(), itemId);
+            ordersService.addPurchase(order.getId(), itemId);
         } catch (BusinessException | ValidationException | SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
         } catch (RuntimeException ex) {
@@ -513,7 +510,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
         if (item == null) {
             int index = purchasesTable.getSelectedRow();
             if (index != -1) {
-                item = (ItemDTO) financialActivity.getItems().get(index);
+                item = (ItemDTO) order.getItems().get(index);
             } else {
                 ValidationException ex = new ValidationException(bundle.getString("Message.SelectItemFirst"));
                 CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
@@ -522,7 +519,7 @@ public class EditFinancialActivityDialog extends CensusDialog {
         }
 
         try {
-            finanancialActivitiesService.removePurchase(financialActivity.getId(), item.getId());
+            ordersService.removePurchase(order.getId(), item.getId());
         } catch (BusinessException | SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
         } catch (ValidationException | RuntimeException ex) {
@@ -536,8 +533,8 @@ public class EditFinancialActivityDialog extends CensusDialog {
             return;
         }
 
-        // Reloads the financial activity and updates GUI
-        setFinancialActivityId(financialActivityId);
+        // Reloads the order and updates GUI
+        setOrderId(orderId);
     }//GEN-LAST:event_removeItemButtonActionPerformed
 
     /**
@@ -550,11 +547,11 @@ public class EditFinancialActivityDialog extends CensusDialog {
         try {
             BigDecimal newPayment = new BigDecimal(paymentTextField.getText().trim());
 
-            if (isFullPaymentForced() && financialActivity.getDue().compareTo(newPayment) != 0) {
+            if (isFullPaymentForced() && order.getDue().compareTo(newPayment) != 0) {
                 throw new BusinessException(bundle.getString("Message.FullPaymenIsForced"));
             }
 
-            finanancialActivitiesService.recordPayment(financialActivity.getId(), newPayment);
+            ordersService.recordPayment(order.getId(), newPayment);
         } catch (NumberFormatException ex) {
             String message = MessageFormat.format(bundle.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"),
                     bundle.getString("Text.NewPayment"));
@@ -594,14 +591,14 @@ public class EditFinancialActivityDialog extends CensusDialog {
     }//GEN-LAST:event_paymentTextFieldFocusLost
 
     /**
-     * Sets the financial activity's ID. This method causes all components to be
-     * reloaded in order to correspond with the new financial activity.
+     * Sets the order's ID. This method causes all components to be
+     * reloaded in order to correspond with the new order.
      *
-     * @param financialActivityId the
-     * @see EditFinancialActivityDialog for details about hot swapping
+     * @param orderId the
+     * @see EditOrderDialog for details about hot swapping
      */
-    public void setFinancialActivityId(Short financialActivityId) {
-        this.financialActivityId = financialActivityId;
+    public void setOrderId(Short orderId) {
+        this.orderId = orderId;
 
         updateGUI(false);
     }
@@ -614,21 +611,21 @@ public class EditFinancialActivityDialog extends CensusDialog {
         this.fullPaymentForced = fullPaymentForced;
     } 
 
-    public Short getFinancialActivityId() {
-        return financialActivityId;
+    public Short getOrderId() {
+        return orderId;
     }
     /*
      * Presentation
      */
     private ItemsTableModel purchasesTableModel;
     private MutableListModel<ItemDTO> itemsListModel;
-    private Short financialActivityId;
+    private Short orderId;
     private Boolean fullPaymentForced;
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
     /*
      * Business
      */
-    private OrdersService finanancialActivitiesService;
+    private OrdersService ordersService;
     private ClientsService clientsService;
     private AttendancesService attendancesService;
     private ItemsService itemsService;
@@ -640,10 +637,10 @@ public class EditFinancialActivityDialog extends CensusDialog {
     private javax.swing.JTextField dateTextField;
     private javax.swing.JLabel dueLabel;
     private javax.swing.JTextField dueTextField;
-    private census.business.dto.OrderDTO financialActivity;
     private javax.swing.JList itemsList;
     private javax.swing.JScrollPane itemsScrollPane;
     private javax.swing.JButton okButton;
+    private census.business.dto.OrderDTO order;
     private javax.swing.JLabel paidLabel;
     private javax.swing.JTextField paidTextField;
     private javax.swing.JLabel paymentLabel;

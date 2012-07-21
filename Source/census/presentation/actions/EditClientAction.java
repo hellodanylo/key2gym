@@ -81,9 +81,7 @@ public class EditClientAction extends CensusAction implements Observer {
         } catch (RuntimeException ex) {
             Logger.getLogger(RegisterClientAction.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-            if (storageService != null) {
-                storageService.rollbackTransaction();
-            }
+            storageService.rollbackTransaction();
             return;
         }
     }

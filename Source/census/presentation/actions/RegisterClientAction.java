@@ -6,7 +6,7 @@ package census.presentation.actions;
 
 import census.presentation.dialogs.RegisterClientDialog;
 import census.presentation.dialogs.OpenAttendanceDialog;
-import census.presentation.dialogs.EditFinancialActivityDialog;
+import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.dialogs.CensusDialog;
 import census.business.OrdersService;
 import census.business.SessionsService;
@@ -67,14 +67,14 @@ public class RegisterClientAction extends CensusAction implements Observer {
             }
 
             /*
-             * If requested, creates and launches EditFinancialActivityDialog
+             * If requested, creates and launches EditOrderDialog
              */
             if (registerClientDialog.isEditFinancialActivityDialogRequested()) {
 
-                EditFinancialActivityDialog editFinancialActivityDialog = new EditFinancialActivityDialog(getFrame());
+                EditOrderDialog editFinancialActivityDialog = new EditOrderDialog(getFrame());
 
                 try {
-                    editFinancialActivityDialog.setFinancialActivityId(OrdersService.getInstance().findByClientIdAndDate(registerClientDialog.getClientId(), new DateMidnight(), true));
+                    editFinancialActivityDialog.setOrderId(OrdersService.getInstance().findByClientIdAndDate(registerClientDialog.getClientId(), new DateMidnight(), true));
                 } catch (ValidationException ex) {
                     throw new RuntimeException(ex);
                 }

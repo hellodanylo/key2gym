@@ -17,15 +17,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "order_ord")
 @NamedQueries({
-    @NamedQuery(name = "OrderEntity.findAll", query = "SELECT f FROM OrderEntity f"),
-    @NamedQuery(name = "OrderEntity.findByClientAndDateRecordedRangeOrderByDateRecordedDesc", query = "SELECT f FROM OrderEntity f WHERE f.client = :client AND f.dateRecorded BETWEEN :rangeBegin AND :rangeEnd ORDER BY f.dateRecorded DESC"),
-    @NamedQuery(name = "OrderEntity.findAllIdsOrderByIdDesc", query = "SELECT f.id FROM OrderEntity f ORDER BY f.id DESC"),
-    @NamedQuery(name = "OrderEntity.findById", query = "SELECT f FROM OrderEntity f WHERE f.id = :id"),
-    @NamedQuery(name = "OrderEntity.findByClientAndDateRecorded", query = "SELECT f FROM OrderEntity f WHERE f.client = :client AND f.dateRecorded = :dateRecorded"),
-    @NamedQuery(name = "OrderEntity.findByAttendance", query = "SELECT f FROM OrderEntity f WHERE f.attendance = :attendance"),
-    @NamedQuery(name = "OrderEntity.findDefaultByDateRecorded", query = "SELECT f FROM OrderEntity f WHERE f.attendance IS NULL AND f.client IS NULL AND f.dateRecorded = :dateRecorded"),
-    @NamedQuery(name = "OrderEntity.findByDateRecorded", query = "SELECT f FROM OrderEntity f WHERE f.dateRecorded = :dateRecorded"),
-    @NamedQuery(name = "OrderEntity.sumPaymentsForDateRecorded", query = "SELECT SUM(f.payment) FROM OrderEntity f WHERE f.dateRecorded = :dateRecorded")})
+    @NamedQuery(name = "OrderEntity.findAll", query = "SELECT o FROM OrderEntity o"),
+    @NamedQuery(name = "OrderEntity.findByClientAndDateRecordedRangeOrderByDateRecordedDesc", query = "SELECT o FROM OrderEntity o WHERE o.client = :client AND o.dateRecorded BETWEEN :rangeBegin AND :rangeEnd ORDER BY o.dateRecorded DESC"),
+    @NamedQuery(name = "OrderEntity.findAllIdsOrderByIdDesc", query = "SELECT o.id FROM OrderEntity o ORDER BY o.id DESC"),
+    @NamedQuery(name = "OrderEntity.findById", query = "SELECT o FROM OrderEntity o WHERE o.id = :id"),
+    @NamedQuery(name = "OrderEntity.findByClientAndDateRecorded", query = "SELECT o FROM OrderEntity o WHERE o.client = :client AND o.dateRecorded = :dateRecorded"),
+    @NamedQuery(name = "OrderEntity.findByAttendance", query = "SELECT o FROM OrderEntity o WHERE o.attendance = :attendance"),
+    @NamedQuery(name = "OrderEntity.findDefaultByDateRecorded", query = "SELECT o FROM OrderEntity o WHERE o.attendance IS NULL AND o.client IS NULL AND o.dateRecorded = :dateRecorded"),
+    @NamedQuery(name = "OrderEntity.findByDateRecordedOrderByDateRecordedDesc", query = "SELECT o FROM OrderEntity o WHERE o.dateRecorded = :dateRecorded ORDER BY o.dateRecorded DESC"),
+    @NamedQuery(name = "OrderEntity.sumPaymentsForDateRecorded", query = "SELECT SUM(o.payment) FROM OrderEntity o WHERE o.dateRecorded = :dateRecorded")})
 public class OrderEntity implements Serializable {
     
     @Id

@@ -23,15 +23,15 @@ import javax.swing.JOptionPane;
  *
  * @author Danylo Vashchilenko
  */
-public class OpenFinancialActivitiesWindowAction extends CensusAction {
+public class OpenOrdersWindowAction extends CensusAction {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
     
-   public OpenFinancialActivitiesWindowAction() {
+   public OpenOrdersWindowAction() {
         if (!Beans.isDesignTime()) {
             update(null, null);
         }
         
-        setText(bundle.getString("Text.FinancialActivities"));
+        setText(bundle.getString("Text.Orders"));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class OpenFinancialActivitiesWindowAction extends CensusAction {
                 return;
             }
             
-            CensusFrame.getInstance().openFinancialActivitiesTabForDate(pickDateDialog.getDate());
+            CensusFrame.getInstance().openOrdersTabForDate(pickDateDialog.getDate());
 
 
         } catch(SecurityException ex) {

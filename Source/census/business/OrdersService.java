@@ -323,7 +323,7 @@ public class OrdersService extends BusinessService {
         }
 
         List<OrderEntity> financialActivities = entityManager
-                .createNamedQuery("OrderEntity.findByDateRecorded") //NOI18N
+                .createNamedQuery("OrderEntity.findByDateRecordedOrderByDateRecordedDesc") //NOI18N
                 .setParameter("dateRecorded", date.toDate()) //NOI18N
                 .getResultList();
         

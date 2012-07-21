@@ -15,13 +15,13 @@ import javax.swing.JFrame;
  *
  * @author daniel
  */
-public class RaisePermissionsLevelDialog extends CensusDialog {
+public class RaiseAdministratorDialog extends CensusDialog {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     /**
-     * Creates new form RaisePermissionsLevelDialog
+     * Creates new form RaiseAdministratorDialog
      */
-    public RaisePermissionsLevelDialog(JFrame parent) {
+    public RaiseAdministratorDialog(JFrame parent) {
         super(parent, true);
         initComponents();
         

@@ -15,7 +15,7 @@ import census.business.dto.AttendanceDTO;
 import census.business.dto.OrderDTO;
 import census.presentation.blocks.AttendancesPanel;
 import census.presentation.blocks.CloseableTabComponent;
-import census.presentation.blocks.FinancialActivitiesPanel;
+import census.presentation.blocks.OrdersPanel;
 import census.presentation.blocks.ItemsPanel;
 import census.presentation.util.CensusExceptionListener;
 import census.presentation.util.NotificationException;
@@ -47,7 +47,7 @@ public class CensusFrame extends JFrame {
         sessionsService = SessionsService.getInstance();
         sessionsService.addListener(new CustomListener());
         attendancesPanels = new HashMap<>();
-        financialActivitiesPanels = new HashMap<>();
+        ordersPanels = new HashMap<>();
         bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
         initComponents();
@@ -86,30 +86,30 @@ public class CensusFrame extends JFrame {
         workspacesTabbedPane.setTabComponentAt(workspacesTabbedPane.indexOfComponent(attendancesPanel), tabComponent);
         workspacesTabbedPane.setSelectedComponent(attendancesPanel);
     }
-    public void openFinancialActivitiesTabForDate(DateMidnight date) throws SecurityException {
-        if (financialActivitiesPanels.containsKey(date)) {
-            workspacesTabbedPane.setSelectedComponent(financialActivitiesPanels.get(date));
+    public void openOrdersTabForDate(DateMidnight date) throws SecurityException {
+        if (ordersPanels.containsKey(date)) {
+            workspacesTabbedPane.setSelectedComponent(ordersPanels.get(date));
             return;
         }
 
-        final FinancialActivitiesPanel financialActivitiesPanel = new FinancialActivitiesPanel();
-        financialActivitiesPanel.setDate(date);
+        final OrdersPanel ordersPanel = new OrdersPanel();
+        ordersPanel.setDate(date);
 
-        workspacesTabbedPane.addTab(null, financialActivitiesPanel);
-        financialActivitiesPanels.put(date, financialActivitiesPanel);
+        workspacesTabbedPane.addTab(null, ordersPanel);
+        ordersPanels.put(date, ordersPanel);
 
         CloseableTabComponent tabComponent = new CloseableTabComponent();
-        tabComponent.setText(MessageFormat.format(bundle.getString("Text.FinancialActivitiesFor.withDate"), new Object[] {date.toString("dd-MM-yyyy")}));
+        tabComponent.setText(MessageFormat.format(bundle.getString("Text.OrdersFor.withDate"), new Object[] {date.toString("dd-MM-yyyy")}));
         tabComponent.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                financialActivitiesPanels.remove(financialActivitiesPanel.getDate());
-                workspacesTabbedPane.remove(financialActivitiesPanel);
+                ordersPanels.remove(ordersPanel.getDate());
+                workspacesTabbedPane.remove(ordersPanel);
             }
         });
-        workspacesTabbedPane.setTabComponentAt(workspacesTabbedPane.indexOfComponent(financialActivitiesPanel), tabComponent);
-        workspacesTabbedPane.setSelectedComponent(financialActivitiesPanel);
+        workspacesTabbedPane.setTabComponentAt(workspacesTabbedPane.indexOfComponent(ordersPanel), tabComponent);
+        workspacesTabbedPane.setSelectedComponent(ordersPanel);
     }
 
     public void openItemsTab() {
@@ -134,11 +134,11 @@ public class CensusFrame extends JFrame {
         return null;
     }
     
-    public OrderDTO getSelectedFinancialActivity() {
+    public OrderDTO getSelectedOrder() {
         Component component = workspacesTabbedPane.getSelectedComponent();
         
-        if(component instanceof FinancialActivitiesPanel) {
-            return ((FinancialActivitiesPanel)component).getSelectedFinancialActivity();
+        if(component instanceof OrdersPanel) {
+            return ((OrdersPanel)component).getSelectedOrder();
         }
         
         return null;
@@ -157,9 +157,9 @@ public class CensusFrame extends JFrame {
         freezeClientAction = new census.presentation.actions.FreezeClientAction();
         manageCashAction = new census.presentation.actions.ManageCashAction();
         manageFreezesAction = new census.presentation.actions.ManageFreezesAction();
-        editFinancialActivityAction = new census.presentation.actions.EditFinancialActivityAction();
+        editOrderAction = new census.presentation.actions.EditOrderAction();
         openAttendancesWindowAction = new census.presentation.actions.OpenAttendancesWindowAction();
-        openFinancialActivitiesWindowAction = new census.presentation.actions.OpenFinancialActivitiesWindowAction();
+        openOrdersWindowAction = new census.presentation.actions.OpenOrdersWindowAction();
         editClientAction = new census.presentation.actions.EditClientAction();
         closeAttendanceAction = new census.presentation.actions.CloseAttendanceAction();
         openAttendanceAction = new census.presentation.actions.OpenAttendanceAction();
@@ -238,9 +238,10 @@ public class CensusFrame extends JFrame {
         actionsToolBar.add(editClientButton);
         actionsToolBar.add(clientsFinancesSeparator);
 
-        editFinancialActivityButton.setAction(editFinancialActivityAction);
+        editFinancialActivityButton.setAction(editOrderAction);
         editFinancialActivityButton.setFocusable(false);
         editFinancialActivityButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editFinancialActivityButton.setMargin(new java.awt.Insets(0, 10, 0, 10));
         editFinancialActivityButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         actionsToolBar.add(editFinancialActivityButton);
 
@@ -272,7 +273,7 @@ public class CensusFrame extends JFrame {
         eventMenu.add(eventLeavingMenuItem);
         eventMenu.add(eventLeavingPurchaseSeparator);
 
-        eventPurchaseMenuItem.setAction(editFinancialActivityAction);
+        eventPurchaseMenuItem.setAction(editOrderAction);
         eventPurchaseMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.ALT_MASK));
         eventMenu.add(eventPurchaseMenuItem);
 
@@ -318,7 +319,7 @@ public class CensusFrame extends JFrame {
         attendancesWindowMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.ALT_MASK));
         windowMenu.add(attendancesWindowMenuItem);
 
-        financialActivitiesWindowMenuItem.setAction(openFinancialActivitiesWindowAction);
+        financialActivitiesWindowMenuItem.setAction(openOrdersWindowAction);
         financialActivitiesWindowMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.ALT_MASK));
         windowMenu.add(financialActivitiesWindowMenuItem);
 
@@ -353,7 +354,7 @@ public class CensusFrame extends JFrame {
         public void sessionOpened() {
             try {
                 openAttendancesTabForDate(new DateMidnight());
-                openFinancialActivitiesTabForDate(new DateMidnight());
+                openOrdersTabForDate(new DateMidnight());
             } catch (SecurityException ex) {
                 Logger.getLogger(CensusFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -370,7 +371,7 @@ public class CensusFrame extends JFrame {
         public void sessionClosed() {
             workspacesTabbedPane.removeAll();
             attendancesPanels.clear();
-            financialActivitiesPanels.clear();
+            ordersPanels.clear();
             itemsPanel = null;
 
             setTitle(bundle.getString("Title.Census"));
@@ -387,7 +388,7 @@ public class CensusFrame extends JFrame {
      * Presentation
      */
     private Map<DateMidnight, AttendancesPanel> attendancesPanels;
-    private Map<DateMidnight, FinancialActivitiesPanel> financialActivitiesPanels;
+    private Map<DateMidnight, OrdersPanel> ordersPanels;
     private ItemsPanel itemsPanel;
     private ResourceBundle bundle;
     /*
@@ -423,8 +424,8 @@ public class CensusFrame extends JFrame {
     private javax.swing.JButton closeAttendanceButton;
     private census.presentation.actions.EditClientAction editClientAction;
     private javax.swing.JButton editClientButton;
-    private census.presentation.actions.EditFinancialActivityAction editFinancialActivityAction;
     private javax.swing.JButton editFinancialActivityButton;
+    private census.presentation.actions.EditOrderAction editOrderAction;
     private javax.swing.JMenuItem eventEntryMenuItem;
     private javax.swing.JMenuItem eventLeavingMenuItem;
     private javax.swing.JPopupMenu.Separator eventLeavingPurchaseSeparator;
@@ -448,7 +449,7 @@ public class CensusFrame extends JFrame {
     private census.presentation.actions.OpenAttendanceAction openAttendanceAction;
     private javax.swing.JButton openAttendanceButton;
     private census.presentation.actions.OpenAttendancesWindowAction openAttendancesWindowAction;
-    private census.presentation.actions.OpenFinancialActivitiesWindowAction openFinancialActivitiesWindowAction;
+    private census.presentation.actions.OpenOrdersWindowAction openOrdersWindowAction;
     private census.presentation.actions.RegisterClientAction registerClientAction;
     private javax.swing.JButton registerClientButton;
     private javax.swing.JMenu sessionMenu;

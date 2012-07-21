@@ -107,7 +107,7 @@ public class RegisterClientDialog extends CensusDialog {
             }
         });
 
-        openFinancialActivityCheckBox.setText(bundle.getString("CheckBox.OpenFinancialActivityUponCompletion")); // NOI18N
+        openFinancialActivityCheckBox.setText(bundle.getString("CheckBox.OpenOrderUponCompletion")); // NOI18N
 
         openAttendanceCheckBox.setText(bundle.getString("CheckBox.OpenAttendanceUponCompletion")); // NOI18N
 
@@ -159,7 +159,7 @@ public class RegisterClientDialog extends CensusDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
+                .addContainerGap(19, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(clientPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -195,7 +195,7 @@ public class RegisterClientDialog extends CensusDialog {
             }
         } catch (SecurityException ex) {
             // Should not be thrown with current implemetation
-            setResult(EditFinancialActivityDialog.RESULT_EXCEPTION);
+            setResult(EditOrderDialog.RESULT_EXCEPTION);
             setException(new RuntimeException(ex));
             dispose();
             return;
@@ -210,7 +210,7 @@ public class RegisterClientDialog extends CensusDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(EditFinancialActivityDialog.RESULT_EXCEPTION);
+            setResult(EditOrderDialog.RESULT_EXCEPTION);
             setException(ex);
             dispose();
             return;

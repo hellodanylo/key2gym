@@ -27,7 +27,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -80,7 +79,7 @@ public class EditClientDialog extends CensusDialog {
         clientProfilesService = ClientProfilesService.getInstance();
         attendancesService = AttendancesService.getInstance();
         freezesService = FreezesService.getInstance();
-        financialActivitiesService = OrdersService.getInstance();
+        ordersService = OrdersService.getInstance();
 
         initComponents();
     }
@@ -119,10 +118,11 @@ public class EditClientDialog extends CensusDialog {
         freezesTable = new javax.swing.JTable();
         freezeNoteScrollPane = new javax.swing.JScrollPane();
         freezeNoteTextArea = new javax.swing.JTextArea();
-        purchasesTabPanel = new javax.swing.JPanel();
+        ordersTabPanel = new javax.swing.JPanel();
         purchasesTreeScrollPane = new javax.swing.JScrollPane();
         purchasesTree = new javax.swing.JTree();
         purchasesFilterComboBox = new javax.swing.JComboBox();
+        purchasesFilterLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -135,7 +135,7 @@ public class EditClientDialog extends CensusDialog {
         });
 
         cancelButton.setText(bundle.getString("Button.Cancel")); // NOI18N
-        cancelButton.setActionCommand("cancel");
+        cancelButton.setActionCommand("null");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -228,7 +228,7 @@ public class EditClientDialog extends CensusDialog {
         });
         freezesTableScrollPane.setViewportView(freezesTable);
 
-        freezeNoteScrollPane.setBorder(javax.swing.BorderFactory.createTitledBorder("Note"));
+        freezeNoteScrollPane.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("Text.Note"))); // NOI18N
 
         freezeNoteTextArea.setColumns(20);
         freezeNoteTextArea.setRows(5);
@@ -276,26 +276,32 @@ public class EditClientDialog extends CensusDialog {
             }
         });
 
-        javax.swing.GroupLayout purchasesTabPanelLayout = new javax.swing.GroupLayout(purchasesTabPanel);
-        purchasesTabPanel.setLayout(purchasesTabPanelLayout);
-        purchasesTabPanelLayout.setHorizontalGroup(
-            purchasesTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        purchasesFilterLabel.setText(bundle.getString("Label.Filter")); // NOI18N
+
+        javax.swing.GroupLayout ordersTabPanelLayout = new javax.swing.GroupLayout(ordersTabPanel);
+        ordersTabPanel.setLayout(ordersTabPanelLayout);
+        ordersTabPanelLayout.setHorizontalGroup(
+            ordersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(purchasesTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
-            .addGroup(purchasesTabPanelLayout.createSequentialGroup()
+            .addGroup(ordersTabPanelLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(purchasesFilterLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(purchasesFilterComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        purchasesTabPanelLayout.setVerticalGroup(
-            purchasesTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, purchasesTabPanelLayout.createSequentialGroup()
-                .addGap(0, 26, Short.MAX_VALUE)
-                .addComponent(purchasesFilterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        ordersTabPanelLayout.setVerticalGroup(
+            ordersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ordersTabPanelLayout.createSequentialGroup()
+                .addGap(0, 14, Short.MAX_VALUE)
+                .addGroup(ordersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(purchasesFilterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(purchasesFilterLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(purchasesTreeScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(purchasesTreeScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        tabbedPane.addTab(bundle.getString("Tab.FinancialActivities"), purchasesTabPanel); // NOI18N
+        tabbedPane.addTab(bundle.getString("Tab.Orders"), ordersTabPanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -356,7 +362,7 @@ public class EditClientDialog extends CensusDialog {
              * GUI garantess that restricted operations can not be permored, so
              * this is probably a bug.
              */
-            setResult(EditFinancialActivityDialog.RESULT_EXCEPTION);
+            setResult(EditOrderDialog.RESULT_EXCEPTION);
             setException(new RuntimeException(ex));
             dispose();
             return;
@@ -368,7 +374,7 @@ public class EditClientDialog extends CensusDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(EditFinancialActivityDialog.RESULT_EXCEPTION);
+            setResult(EditOrderDialog.RESULT_EXCEPTION);
             setException(ex);
             dispose();
             return;
@@ -492,7 +498,7 @@ public class EditClientDialog extends CensusDialog {
         /*
          * Purchases tab
          */
-        List<OrderDTO> financialActivitiesDTO;
+        List<OrderDTO> ordersDTO;
         DateMidnight end = new DateMidnight();
         DateMidnight begin;
         if (purchasesFilterComboBox.getSelectedIndex() == 0) {
@@ -506,7 +512,7 @@ public class EditClientDialog extends CensusDialog {
         }
 
         try {
-            financialActivitiesDTO = financialActivitiesService.findForClientWithinPeriod(clientId, begin, end);
+            ordersDTO = ordersService.findForClientWithinPeriod(clientId, begin, end);
         } catch (ValidationException ex) {
             throw new RuntimeException(ex);
         }
@@ -514,15 +520,15 @@ public class EditClientDialog extends CensusDialog {
         DefaultMutableTreeNode topNode = new DefaultMutableTreeNode();
         DefaultMutableTreeNode dateNode;
         DefaultMutableTreeNode itemNode;
-        for (OrderDTO financialActivityDTO : financialActivitiesDTO) {
-            String text = MessageFormat.format(bundle.getString("Text.FinancialActivity.withDateAndTotalAndPaid"),
-                    new Object[]{financialActivityDTO.getDate().toString("dd-MM-yyyy"),
-                        financialActivityDTO.getTotal().toPlainString(),
-                        financialActivityDTO.getPayment().toPlainString()
+        for (OrderDTO orderDTO : ordersDTO) {
+            String text = MessageFormat.format(bundle.getString("Text.Order.withDateAndTotalAndPaid"),
+                    new Object[]{orderDTO.getDate().toString("dd-MM-yyyy"), //NOI18N
+                        orderDTO.getTotal().toPlainString(),
+                        orderDTO.getPayment().toPlainString()
                     });
             dateNode = new DefaultMutableTreeNode(text);
 
-            for (ItemDTO item : financialActivityDTO.getItems()) {
+            for (ItemDTO item : orderDTO.getItems()) {
                 itemNode = new DefaultMutableTreeNode(item.getTitle());
                 dateNode.add(itemNode);
             }
@@ -540,7 +546,7 @@ public class EditClientDialog extends CensusDialog {
     private ClientProfilesService clientProfilesService;
     private AttendancesService attendancesService;
     private FreezesService freezesService;
-    private OrdersService financialActivitiesService;
+    private OrdersService ordersService;
     /*
      * GUI variables
      */
@@ -566,9 +572,10 @@ public class EditClientDialog extends CensusDialog {
     private javax.swing.JTable freezesTable;
     private javax.swing.JScrollPane freezesTableScrollPane;
     private javax.swing.JButton okButton;
+    private javax.swing.JPanel ordersTabPanel;
     private javax.swing.JPanel profileTabPanel;
     private javax.swing.JComboBox purchasesFilterComboBox;
-    private javax.swing.JPanel purchasesTabPanel;
+    private javax.swing.JLabel purchasesFilterLabel;
     private javax.swing.JTree purchasesTree;
     private javax.swing.JScrollPane purchasesTreeScrollPane;
     private javax.swing.JTabbedPane tabbedPane;

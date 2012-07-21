@@ -10,11 +10,11 @@
     </Component>
     <Component class="census.presentation.actions.ManageFreezesAction" name="manageFreezesAction">
     </Component>
-    <Component class="census.presentation.actions.EditFinancialActivityAction" name="editFinancialActivityAction">
+    <Component class="census.presentation.actions.EditOrderAction" name="editOrderAction">
     </Component>
     <Component class="census.presentation.actions.OpenAttendancesWindowAction" name="openAttendancesWindowAction">
     </Component>
-    <Component class="census.presentation.actions.OpenFinancialActivitiesWindowAction" name="openFinancialActivitiesWindowAction">
+    <Component class="census.presentation.actions.OpenOrdersWindowAction" name="openOrdersWindowAction">
     </Component>
     <Component class="census.presentation.actions.EditClientAction" name="editClientAction">
     </Component>
@@ -93,7 +93,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="eventPurchaseMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="editFinancialActivityAction"/>
+                  <ComponentRef name="editOrderAction"/>
                 </Property>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Alt+Q"/>
@@ -202,7 +202,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="financialActivitiesWindowMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="openFinancialActivitiesWindowAction"/>
+                  <ComponentRef name="openOrdersWindowAction"/>
                 </Property>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Alt+2"/>
@@ -327,10 +327,13 @@
         <Component class="javax.swing.JButton" name="editFinancialActivityButton">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection component="editFinancialActivityAction" type="bean"/>
+              <Connection component="editOrderAction" type="bean"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+              <Insets value="[0, 10, 0, 10]"/>
+            </Property>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
         </Component>

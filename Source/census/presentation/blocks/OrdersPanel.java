@@ -11,7 +11,7 @@ import census.business.StorageService;
 import census.business.api.SecurityException;
 import census.business.dto.OrderDTO;
 import census.presentation.actions.CensusAction;
-import census.presentation.actions.EditFinancialActivityAction;
+import census.presentation.actions.EditOrderAction;
 import census.presentation.util.FinancialActivitiesTableCellRenderer;
 import census.presentation.util.FinancialActivitiesTableModel;
 import census.presentation.util.FinancialActivitiesTableModel.Column;
@@ -30,13 +30,13 @@ import org.joda.time.DateMidnight;
  *
  * @author Danylo Vashchilenko
  */
-public class FinancialActivitiesPanel extends javax.swing.JPanel {
+public class OrdersPanel extends javax.swing.JPanel {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     /**
-     * Creates new form FinancialActivitiesPanel
+     * Creates new form OrdersPanel
      */
-    public FinancialActivitiesPanel() {
+    public OrdersPanel() {
         financialActivitiesService = OrdersService.getInstance();
         cashService = CashService.getInstance();
 
@@ -50,7 +50,7 @@ public class FinancialActivitiesPanel extends javax.swing.JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() > 1) {
-                    new EditFinancialActivityAction().actionPerformed(new ActionEvent(this, 0, CensusAction.ACTION_CONTEXT));
+                    new EditOrderAction().actionPerformed(new ActionEvent(this, 0, CensusAction.ACTION_CONTEXT));
                 }
             }
         });
@@ -157,7 +157,7 @@ public class FinancialActivitiesPanel extends javax.swing.JPanel {
         cashTextField.setText(cash.toPlainString());
     }
     
-    public OrderDTO getSelectedFinancialActivity() {
+    public OrderDTO getSelectedOrder() {
         int index = financialActivitiesTable.getSelectedRow();
         
         if(index == -1) {

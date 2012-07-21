@@ -69,7 +69,9 @@
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Cancel" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
-        <Property name="actionCommand" type="java.lang.String" value="cancel"/>
+        <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="census/Census.properties" key="" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>
@@ -237,7 +239,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Note"/>
+                    <TitledBorder title="Note">
+                      <ResourceString PropertyName="titleX" bundle="census/presentation/resources/Strings.properties" key="Text.Note" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
               </Properties>
@@ -258,12 +262,12 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="purchasesTabPanel">
+        <Container class="javax.swing.JPanel" name="ordersTabPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Financial Activities">
+              <JTabbedPaneConstraints tabName="Orders">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="census/presentation/resources/Strings.properties" key="Tab.FinancialActivities" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="census/presentation/resources/Strings.properties" key="Tab.Orders" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -272,8 +276,10 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="purchasesTreeScrollPane" alignment="0" pref="428" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Component id="purchasesTreeScrollPane" pref="428" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="purchasesFilterLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="purchasesFilterComboBox" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -283,10 +289,13 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="26" max="32767" attributes="0"/>
-                      <Component id="purchasesFilterComboBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="14" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="purchasesFilterComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="purchasesFilterLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="purchasesTreeScrollPane" min="-2" pref="407" max="-2" attributes="0"/>
+                      <Component id="purchasesTreeScrollPane" min="-2" pref="419" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -321,6 +330,13 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="String[] periods = new String[]{&#xa;    bundle.getString(&quot;Text.Last7Days&quot;),&#xa;    bundle.getString(&quot;Text.LastMonth&quot;),&#xa;    bundle.getString(&quot;Text.Last3Months&quot;),&#xa;    bundle.getString(&quot;Text.All&quot;)&#xa;};"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="purchasesFilterLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="census/presentation/resources/Strings.properties" key="Label.Filter" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

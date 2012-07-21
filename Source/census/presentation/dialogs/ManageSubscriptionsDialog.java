@@ -302,7 +302,7 @@ public class ManageSubscriptionsDialog extends CensusDialog {
                  * The exception is unexpected. We got to shutdown the dialog
                  * for the state of the transaction is now unknown.
                  */
-                setResult(EditFinancialActivityDialog.RESULT_EXCEPTION);
+                setResult(EditOrderDialog.RESULT_EXCEPTION);
                 setException(ex);
                 dispose();
                 return;
@@ -340,7 +340,7 @@ public class ManageSubscriptionsDialog extends CensusDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(EditFinancialActivityDialog.RESULT_EXCEPTION);
+            setResult(EditOrderDialog.RESULT_EXCEPTION);
             setException(ex);
             dispose();
             return;

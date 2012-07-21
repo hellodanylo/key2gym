@@ -24,16 +24,16 @@ import org.joda.time.DateMidnight;
  *
  * @author Danylo Vashchilenko
  */
-public class PickFinancialActivityDialog extends CensusDialog {
+public class PickOrderDialog extends CensusDialog {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
     
     /**
-     * Creates new form PickFinancialActivityDialog
+     * Creates new form PickOrderDialog
      * 
      * @param parent the frame the dialog should align with
      * @param session the session used by the dialog and its caller
      */
-    public PickFinancialActivityDialog(JFrame parent) {
+    public PickOrderDialog(JFrame parent) {
         super(parent, true);
         
         initComponents();
@@ -70,7 +70,7 @@ public class PickFinancialActivityDialog extends CensusDialog {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(bundle.getString("Title.PickFinancialActivity")); // NOI18N
+        setTitle(bundle.getString("Title.PickOrder")); // NOI18N
         setResizable(false);
 
         modeButtonGroup.add(clientRadioButton);
@@ -83,7 +83,7 @@ public class PickFinancialActivityDialog extends CensusDialog {
         });
 
         modeButtonGroup.add(attendanceRadioButton);
-        attendanceRadioButton.setText(bundle.getString("Text.Attendance")); // NOI18N
+        attendanceRadioButton.setText(bundle.getString("Label.Key")); // NOI18N
         attendanceRadioButton.setActionCommand("attendance");
         attendanceRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,14 +121,10 @@ public class PickFinancialActivityDialog extends CensusDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(clientRadioButton)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(attendanceRadioButton)
-                            .addComponent(otherRadioButton))
-                        .addGap(209, 209, 209))))
+                    .addComponent(clientRadioButton)
+                    .addComponent(attendanceRadioButton)
+                    .addComponent(otherRadioButton))
+                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -139,7 +135,7 @@ public class PickFinancialActivityDialog extends CensusDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addComponent(attendancesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 59, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

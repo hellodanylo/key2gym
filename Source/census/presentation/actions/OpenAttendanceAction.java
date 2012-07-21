@@ -13,7 +13,7 @@ import census.business.api.ValidationException;
 import census.business.dto.ClientDTO;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.CensusFrame;
-import census.presentation.dialogs.EditFinancialActivityDialog;
+import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.dialogs.OpenAttendanceDialog;
 import census.presentation.util.NotificationException;
 import java.awt.event.ActionEvent;
@@ -76,7 +76,7 @@ public class OpenAttendanceAction extends CensusAction implements Observer {
             if (openAttendanceDialog.isFinancialActivityDialogRequested()) {
 
                 Short activityId = null;
-                EditFinancialActivityDialog editFinancialActivityDialog = new EditFinancialActivityDialog(getFrame());
+                EditOrderDialog editFinancialActivityDialog = new EditOrderDialog(getFrame());
 
                 try {
                     if (openAttendanceDialog.isAnonymous()) {
@@ -88,7 +88,7 @@ public class OpenAttendanceAction extends CensusAction implements Observer {
                     throw new RuntimeException(ex);
                 }
 
-                editFinancialActivityDialog.setFinancialActivityId(activityId);
+                editFinancialActivityDialog.setOrderId(activityId);
                 editFinancialActivityDialog.setFullPaymentForced(false);
                 
                 editFinancialActivityDialog.setVisible(true);

@@ -404,9 +404,10 @@ public class AttendancesService extends BusinessService {
      *
      * <ul>
      *
-     * <li> The attendance has to be open. <li> If the attendance is anonymous,
-     * it has to have full payment recorded in the associated financial
-     * activity.
+     * <li> The attendance has to be open. </li>
+     * 
+     * <li> If the attendance is anonymous,
+     * it has to have full payment recorded in the associated order. </li>
      *
      * </ul>
      *

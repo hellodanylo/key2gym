@@ -13,7 +13,7 @@ import census.business.api.ValidationException;
 import census.business.dto.AttendanceDTO;
 import census.presentation.CensusFrame;
 import census.presentation.dialogs.CensusDialog;
-import census.presentation.dialogs.EditFinancialActivityDialog;
+import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.dialogs.PickAttendanceDialog;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
@@ -99,8 +99,8 @@ public class CloseAttendanceAction extends CensusAction implements Observer {
             
             if(financialActivityId != null) {
                            
-                EditFinancialActivityDialog efaDialog = new EditFinancialActivityDialog(getFrame());
-                efaDialog.setFinancialActivityId(financialActivityId);
+                EditOrderDialog efaDialog = new EditOrderDialog(getFrame());
+                efaDialog.setOrderId(financialActivityId);
                 efaDialog.setFullPaymentForced(isAnonymous);
                 efaDialog.setVisible(true);
 

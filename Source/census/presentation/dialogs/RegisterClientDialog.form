@@ -51,7 +51,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace pref="18" max="32767" attributes="0"/>
+              <EmptySpace pref="19" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="clientPanel" min="-2" max="-2" attributes="0"/>
@@ -166,7 +166,7 @@
         <Component class="javax.swing.JCheckBox" name="openFinancialActivityCheckBox">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="census/presentation/resources/Strings.properties" key="CheckBox.OpenFinancialActivityUponCompletion" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="census/presentation/resources/Strings.properties" key="CheckBox.OpenOrderUponCompletion" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
