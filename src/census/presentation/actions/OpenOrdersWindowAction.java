@@ -15,9 +15,8 @@ import java.awt.event.ActionEvent;
 import java.beans.Beans;
 import java.util.Observable;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -56,9 +55,9 @@ public class OpenOrdersWindowAction extends CensusAction {
         } catch(SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
         } catch (RuntimeException ex) {
-            Logger.getLogger(RegisterClientAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-        }
+            return;}
     }
 
     @Override

@@ -23,10 +23,10 @@ import java.text.MessageFormat;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 import org.joda.time.Days;
 
@@ -37,6 +37,7 @@ import org.joda.time.Days;
  */
 public class OpenAttendanceAction extends CensusAction implements Observer {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private Logger logger = Logger.getLogger(OpenAttendanceAction.class.getName());
 
     public OpenAttendanceAction() {
         if(!Beans.isDesignTime()) {
@@ -132,10 +133,11 @@ public class OpenAttendanceAction extends CensusAction implements Observer {
             JOptionPane.showMessageDialog(getFrame(), ex.getMessage(), "Message", JOptionPane.INFORMATION_MESSAGE);
             return;
         } catch (RuntimeException ex) {
-            Logger.getLogger(RegisterClientAction.class.getName()).log(Level.SEVERE, null, ex);
-            if(StorageService.getInstance().isTransactionActive())
-                StorageService.getInstance().rollbackTransaction();
+            logger.error("RuntimeException", ex);
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            if(StorageService.getInstance().isTransactionActive()) {
+                StorageService.getInstance().rollbackTransaction();
+            }
             return;
         }
 

@@ -14,8 +14,6 @@ import java.beans.Beans;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -56,9 +54,11 @@ public class ManageFreezesAction extends CensusAction implements Observer {
             storageService.commitTransaction();
 
         } catch (RuntimeException ex) {
-            Logger.getLogger(RegisterClientAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-            storageService.rollbackTransaction();
+            if(StorageService.getInstance().isTransactionActive()) {
+                StorageService.getInstance().rollbackTransaction();
+            }
             return;
         }
     }

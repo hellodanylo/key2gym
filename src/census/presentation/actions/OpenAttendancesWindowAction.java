@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package census.presentation.actions;
 
 import census.business.SessionsService;
@@ -14,22 +13,22 @@ import java.awt.event.ActionEvent;
 import java.beans.Beans;
 import java.util.Observable;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
 public class OpenAttendancesWindowAction extends CensusAction {
+
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public OpenAttendancesWindowAction() {
         if (!Beans.isDesignTime()) {
             update(null, null);
         }
-        
+
         setText(bundle.getString("Text.Attendances"));
     }
 
@@ -48,15 +47,16 @@ public class OpenAttendancesWindowAction extends CensusAction {
             if (pickDateDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
                 return;
             }
-            
+
             CensusFrame.getInstance().openAttendancesTabForDate(pickDateDialog.getDate());
 
 
-        } catch(SecurityException ex) {
+        } catch (SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
         } catch (RuntimeException ex) {
-            Logger.getLogger(RegisterClientAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            return;
         }
     }
 
@@ -68,5 +68,4 @@ public class OpenAttendancesWindowAction extends CensusAction {
         Boolean open = SessionsService.getInstance().hasOpenSession();
         setEnabled(open);
     }
-    
 }

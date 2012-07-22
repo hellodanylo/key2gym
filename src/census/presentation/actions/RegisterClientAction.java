@@ -18,10 +18,9 @@ import java.beans.Beans;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 
 /**
@@ -117,9 +116,11 @@ public class RegisterClientAction extends CensusAction implements Observer {
             JOptionPane.showMessageDialog(getFrame(), ex.getMessage(), "Message", JOptionPane.INFORMATION_MESSAGE);
             return;
         } catch (RuntimeException ex) {
-            Logger.getLogger(RegisterClientAction.class.getName()).log(Level.SEVERE, null, ex);
-            storageService.rollbackTransaction();
+            Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            if(StorageService.getInstance().isTransactionActive()) {
+                StorageService.getInstance().rollbackTransaction();
+            }
             return;
         }
     }
