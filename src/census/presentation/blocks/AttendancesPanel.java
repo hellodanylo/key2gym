@@ -12,13 +12,12 @@ import census.business.dto.AttendanceDTO;
 import census.presentation.util.AttendancesTableCellRenderer;
 import census.presentation.util.AttendancesTableModel;
 import census.presentation.util.AttendancesTableModel.Column;
-import census.presentation.util.FillPainter;
-import census.presentation.util.WatermarkViewport;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import javax.swing.JPanel;
+import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 
 /**
@@ -155,7 +154,7 @@ public class AttendancesPanel extends JPanel{
                 try {
                     updateGUI();
                 } catch(SecurityException ex) {
-                    // TODO: process exception
+                    Logger.getLogger(this.getClass().getName()).error("Unexpected SecurityException", ex);
                 }
             }
         }

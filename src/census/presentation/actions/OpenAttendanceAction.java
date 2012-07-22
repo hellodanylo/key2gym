@@ -53,9 +53,6 @@ public class OpenAttendanceAction extends CensusAction implements Observer {
     public void actionPerformed(ActionEvent e) {
         try {
             
-            if(true)
-                throw new RuntimeException("Text runtime ex");
-            
             StorageService storageService = StorageService.getInstance();
 
             storageService.beginTransaction();
