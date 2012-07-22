@@ -16,6 +16,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 
@@ -66,10 +67,10 @@ public class SessionsService extends Observable {
 
             entityManager.persist(session);
 
-            openSession = session;
+            session = session;
         } else {
-            openSession = sessions.get(0);
-            openSession.setDatetimeEnd(null);
+            session = sessions.get(0);
+            session.setDatetimeEnd(null);
         }
 
         entityManager.flush();
@@ -80,6 +81,9 @@ public class SessionsService extends Observable {
         for (SessionListener listener : listeners) {
             listener.sessionOpened();
         }
+
+        logger.info("Current session is now associated with "
+                + administrator.getFullName() + " (" + administrator.getId() + ")");
     }
 
     /**
@@ -88,12 +92,12 @@ public class SessionsService extends Observable {
      * @return true, if there is an open session
      */
     public Boolean hasOpenSession() {
-        return openSession != null;
+        return session != null;
     }
 
     public Short getTopmostAdministratorId() {
         if (raisedAdministrator == null) {
-            return openSession.getAdministrator().getId();
+            return session.getAdministrator().getId();
         } else {
             return raisedAdministrator.getId();
         }
@@ -103,7 +107,7 @@ public class SessionsService extends Observable {
 
         Administrator administrator = authenticateAdministrator(username, password);
 
-        if (openSession.getAdministrator().equals(administrator)) {
+        if (session.getAdministrator().equals(administrator)) {
             throw new BusinessException(bundle.getString("CurrentSessionWasOpennedBySameAdministrator"));
         }
 
@@ -115,6 +119,9 @@ public class SessionsService extends Observable {
         for (SessionListener listener : listeners) {
             listener.sessionUpdated();
         }
+
+        logger.info("Current session is now associated with "
+                + administrator.getFullName() + " (" + administrator.getId() + ")");
     }
 
     public Boolean hasRaisedAdministrator() {
@@ -134,6 +141,9 @@ public class SessionsService extends Observable {
         for (SessionListener listener : listeners) {
             listener.sessionUpdated();
         }
+
+        logger.info("Current session is now associated with "
+                + session.getAdministrator().getFullName() + " (" + session.getAdministrator().getId() + ")");
     }
 
     /**
@@ -147,14 +157,14 @@ public class SessionsService extends Observable {
             throw new IllegalStateException(bundle.getString("TransactionNotActive"));
         }
 
-        if (openSession == null) {
+        if (session == null) {
             throw new IllegalStateException(bundle.getString("NoOpenSessions"));
         }
 
         raisedAdministrator = null;
 
-        openSession.setDatetimeEnd(new Date());
-        openSession = null;
+        session.setDatetimeEnd(new Date());
+        session = null;
 
         StorageService.getInstance().getEntityManager().flush();
 
@@ -164,6 +174,8 @@ public class SessionsService extends Observable {
         for (SessionListener listener : listeners) {
             listener.sessionClosed();
         }
+
+        logger.info("Current session is now not associtead with any administrator.");
     }
 
     /**
@@ -174,13 +186,13 @@ public class SessionsService extends Observable {
      * @return the number representing the administrator's permissions level.
      */
     public Short getPermissionsLevel() {
-        if (openSession == null) {
+        if (session == null) {
             throw new IllegalStateException("There isn't any open sessions.");
         }
         if (raisedAdministrator != null) {
             return raisedAdministrator.getPermissionsLevel();
         }
-        return openSession.getAdministrator().getPermissionsLevel();
+        return session.getAdministrator().getPermissionsLevel();
     }
 
     /**
@@ -298,9 +310,10 @@ public class SessionsService extends Observable {
     private DateTime recoverAttemptsTime;
     private Short attemptsLeft;
     private static final short ATTEMPTS_LIMIT = 5;
-    private Session openSession;
+    private Session session;
     private Administrator raisedAdministrator;
     private Set<SessionListener> listeners;
+    private static final Logger logger = Logger.getLogger(SessionsService.class.getName());
     /*
      * Permissions levels
      */

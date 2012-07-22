@@ -98,7 +98,6 @@ public class RegisterClientAction extends CensusAction implements Observer {
                 OpenAttendanceDialog openAttendanceDialog = new OpenAttendanceDialog(getFrame());
 
                 openAttendanceDialog.setClientId(registerClientDialog.getClientId());
-                openAttendanceDialog.setClientLocked(true);
                 openAttendanceDialog.setVisible(true);
 
                 if (openAttendanceDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {

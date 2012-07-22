@@ -66,6 +66,7 @@ public class EditOrderDialog extends CensusDialog {
         clientsService = ClientsService.getInstance();
         attendancesService = AttendancesService.getInstance();
         itemsService = ItemsService.getInstance();
+        fullPaymentForced = false;
 
         initComponents();
 

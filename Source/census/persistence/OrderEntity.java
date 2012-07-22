@@ -24,7 +24,7 @@ import javax.persistence.*;
     @NamedQuery(name = "OrderEntity.findByClientAndDateRecorded", query = "SELECT o FROM OrderEntity o WHERE o.client = :client AND o.dateRecorded = :dateRecorded"),
     @NamedQuery(name = "OrderEntity.findByAttendance", query = "SELECT o FROM OrderEntity o WHERE o.attendance = :attendance"),
     @NamedQuery(name = "OrderEntity.findDefaultByDateRecorded", query = "SELECT o FROM OrderEntity o WHERE o.attendance IS NULL AND o.client IS NULL AND o.dateRecorded = :dateRecorded"),
-    @NamedQuery(name = "OrderEntity.findByDateRecordedOrderByDateRecordedDesc", query = "SELECT o FROM OrderEntity o WHERE o.dateRecorded = :dateRecorded ORDER BY o.dateRecorded DESC"),
+    @NamedQuery(name = "OrderEntity.findByDateRecordedOrderByIdDesc", query = "SELECT o FROM OrderEntity o WHERE o.dateRecorded = :dateRecorded ORDER BY o.id DESC"),
     @NamedQuery(name = "OrderEntity.sumPaymentsForDateRecorded", query = "SELECT SUM(o.payment) FROM OrderEntity o WHERE o.dateRecorded = :dateRecorded")})
 public class OrderEntity implements Serializable {
     

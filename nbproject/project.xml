@@ -6,6 +6,7 @@
             <name>Census</name>
             <source-roots>
                 <root id="src.dir" name="Source"/>
+                <root id="res.dir" name="Resources"/>
             </source-roots>
             <test-roots/>
         </data>

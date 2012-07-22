@@ -51,6 +51,10 @@ public class OpenAttendanceAction extends CensusAction implements Observer {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
+            
+            if(true)
+                throw new RuntimeException("Text runtime ex");
+            
             StorageService storageService = StorageService.getInstance();
 
             storageService.beginTransaction();
@@ -129,7 +133,8 @@ public class OpenAttendanceAction extends CensusAction implements Observer {
             return;
         } catch (RuntimeException ex) {
             Logger.getLogger(RegisterClientAction.class.getName()).log(Level.SEVERE, null, ex);
-            StorageService.getInstance().rollbackTransaction();
+            if(StorageService.getInstance().isTransactionActive())
+                StorageService.getInstance().rollbackTransaction();
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
             return;
         }

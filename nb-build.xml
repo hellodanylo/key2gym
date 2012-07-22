@@ -76,5 +76,11 @@
 	   <echo>Build #${build.number}</echo>
            <echo>Have fun with it!</echo>
 	</target>
+        
+        <target name="-post-jar">
+            <copy todir="${dist.dir}/">
+                <fileset dir="${res.dir}" includes="*/**" />
+            </copy>
+        </target>
 
 </project>

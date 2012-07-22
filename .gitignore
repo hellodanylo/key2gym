@@ -2,3 +2,4 @@ Binary/
 Distribution/
 MySQL/
 build.number
+.fuse*

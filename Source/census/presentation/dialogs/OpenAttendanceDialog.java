@@ -24,6 +24,7 @@ import javax.swing.JFrame;
  * @author daniel
  */
 public class OpenAttendanceDialog extends CensusDialog {
+
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     /**
@@ -40,46 +41,6 @@ public class OpenAttendanceDialog extends CensusDialog {
          */
         initComponents();
         setLocationRelativeTo(parent);
-
-        if (!Beans.isDesignTime()) {
-            List keys = KeysService.getInstance().getKeysAvailable();
-            if (keys.isEmpty()) {
-                throw new BusinessException(bundle.getString("Message.NoKeyIsAvailable"));
-            }
-
-            keysComboBox.setRenderer(new KeyListCellRenderer());
-            keysComboBox.setModel(new DefaultComboBoxModel(keys.toArray()));
-            keysComboBox.setSelectedIndex(0);
-
-            /*
-             * Update the form accordingly to the session
-             */
-            openFinancialActivityRadioButton.setSelected(isFinancialActivityDialogRequested());
-            if (getClientId() != null) {
-                idTextField.setText(getClientId().toString());
-                clientIdRadioButton.doClick();
-                if (isClientLocked()) {
-                    clientIdRadioButton.setEnabled(false);
-                    clientCardRadioButton.setEnabled(false);
-                    anonymousRadioButton.setEnabled(false);
-                    idTextField.setEditable(false);
-                    cardTextField.setEditable(false);
-                }
-            } else if (getClientCard() != null) {
-                cardTextField.setText(getClientCard().toString());
-                clientCardRadioButton.doClick();
-                if (isClientLocked()) {
-                    clientIdRadioButton.setEnabled(false);
-                    clientCardRadioButton.setEnabled(false);
-                    anonymousRadioButton.setEnabled(false);
-                    idTextField.setEditable(false);
-                    cardTextField.setEditable(false);
-                }
-            } else {
-                clientCardRadioButton.doClick();
-            }
-            //CensusFrame.getGlobalCensusExceptionListenersStack().push(new CensusDialogExceptionListener());
-        }
     }
 
     /**
@@ -265,6 +226,61 @@ public class OpenAttendanceDialog extends CensusDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void updateGUI() throws BusinessException {
+        List keys = KeysService.getInstance().getKeysAvailable();
+        if (keys.isEmpty()) {
+            throw new BusinessException(bundle.getString("Message.NoKeyIsAvailable"));
+        }
+
+        keysComboBox.setRenderer(new KeyListCellRenderer());
+        keysComboBox.setModel(new DefaultComboBoxModel(keys.toArray()));
+        keysComboBox.setSelectedIndex(0);
+
+        /*
+         * Update the form accordingly to the session
+         */
+        openFinancialActivityRadioButton.setSelected(isFinancialActivityDialogRequested());
+        if (getClientId() != null) {
+            idTextField.setText(getClientId().toString());
+            clientIdRadioButton.doClick();
+            if (isClientLocked()) {
+                clientIdRadioButton.setEnabled(false);
+                clientCardRadioButton.setEnabled(false);
+                anonymousRadioButton.setEnabled(false);
+                idTextField.setEditable(false);
+                cardTextField.setEditable(false);
+            }
+        } else if (getClientCard() != null) {
+            cardTextField.setText(getClientCard().toString());
+            clientCardRadioButton.doClick();
+            if (isClientLocked()) {
+                clientIdRadioButton.setEnabled(false);
+                clientCardRadioButton.setEnabled(false);
+                anonymousRadioButton.setEnabled(false);
+                idTextField.setEditable(false);
+                cardTextField.setEditable(false);
+            }
+        } else {
+            clientCardRadioButton.doClick();
+        }
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        if (visible) {
+            if (!Beans.isDesignTime()) {
+                try {
+                    updateGUI();
+                } catch (BusinessException ex) {
+                    CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+                    setResult(RESULT_CANCEL);
+                    return;
+                }
+            }
+        }
+        super.setVisible(true);
+    }
+    
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         Short attendanceId;
         Short selectedKeyId;
@@ -329,10 +345,7 @@ public class OpenAttendanceDialog extends CensusDialog {
                 attendanceId = attendancesService.openClientAttendance(clientId, selectedKeyId);
             }
 
-        } catch (BusinessException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
-            return;
-        } catch (ValidationException ex) {
+        } catch (BusinessException | ValidationException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (RuntimeException ex) {
@@ -384,12 +397,6 @@ public class OpenAttendanceDialog extends CensusDialog {
             idTextField.setText("");
         }
     }//GEN-LAST:event_checkBoxesActionPerformed
-
-    @Override
-    public void dispose() {
-        //CensusFrame.getGlobalCensusExceptionListenersStack().pop();
-        super.dispose();
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel additionalActionsPanel;
     private javax.swing.JRadioButton anonymousRadioButton;

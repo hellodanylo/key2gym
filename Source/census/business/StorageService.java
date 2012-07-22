@@ -18,10 +18,6 @@ public class StorageService extends Observable{
     private static StorageService instance;
     
     protected StorageService() {
-        /**
-         * Startup things:
-         * create a cash adjustment for today
-         */
         entityManager = Persistence.createEntityManagerFactory("Census PU")
                 .createEntityManager();
     }

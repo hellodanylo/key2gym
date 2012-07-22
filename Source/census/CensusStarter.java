@@ -1,50 +1,70 @@
-/**
- * This file is part of Census.
+/*
+ * Copyright 2012 Danylo Vashchilenko
  *
- * Census is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
- * Census is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License along with
- * Census. If not, see <http://www.gnu.org/licenses/>.
- *
- * Copyright © 2011 Daniel Vashchilenko
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census;
 
+import census.business.StorageService;
 import census.presentation.CensusFrame;
 import java.util.Locale;
-import java.util.logging.Logger;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
- * @author danny
+ * This is the main class of the application.
  *
+ * It's responsible for the following tasks:
+ *
+ * <ul>
+ *
+ * <li> Initializing Logging system </li>
+ *
+ * <li> Showing CensusFrame </li>
+ *
+ * </ul>
+ *
+ * @author Danylo Vashchilenko
  */
 public class CensusStarter {
 
+    private static final Logger logger = Logger.getLogger(CensusStarter.class.getName());
+
     /**
-     * @param args
+     * Arguments passed to the application.
+     *
+     * @param args an array of arguments
      */
     public static void main(String[] args) {
-
-
-        // logger
-        logger_ = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
-        Locale.setDefault(new Locale("ru", "RU"));
-
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /*
-         * If Nimbus (introduced in Java SE 6) is not available, stay with the
-         * default look and feel. For details see
-         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         * Configures the logger using 'log.properties' which should be on the
+         * CLASSPATH.
          */
+        PropertyConfigurator.configure(CensusStarter.class.getClassLoader().getResourceAsStream("log.properties"));
+
+        logger.info("Starting...");
+        
+        /*
+         * Storage service starts up the first call of StorageService.getInstance().
+         */
+        StorageService.getInstance();
+
+        //<editor-fold defaultstate="collapsed" desc="Debugging code">
+        Locale.setDefault(new Locale("ru", "RU"));
+        //</editor-fold>
+
+        //<editor-fold defaultstate="collapsed" desc="Changes the L&F to Nimbus">
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -53,13 +73,11 @@ public class CensusStarter {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CensusFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            logger.fatal("Failed to change the L&F!");
         }
         //</editor-fold>
 
-        /*
-         * Creates and display a CensusFrame.
-         */
+        //<editor-fold defaultstate="collapsed" desc="Creates and launches a CensusFrame">
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             @Override
@@ -67,12 +85,8 @@ public class CensusStarter {
                 CensusFrame.getInstance().setVisible(true);
             }
         });
-    }
-    
-    public static Logger getLogger() {
-        return logger_;
-    }
-    
+        //</editor-fold>
 
-    private static Logger logger_;
+        logger.info("Started!");
+    }
 }
