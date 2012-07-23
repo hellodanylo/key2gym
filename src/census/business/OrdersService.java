@@ -736,11 +736,13 @@ public class OrdersService extends BusinessService {
         }
         
         /*
-         * Decreases the quantity on the order line, and removes it it the 
+         * Decreases the quantity on the order line, and removes, it if the 
          * quantity is now zero.
          */
         targetOrderLine.setQuantity((short)(targetOrderLine.getQuantity()-1));
         if(targetOrderLine.getQuantity() == 0) {
+            // EntityManager won't remove this relationship upon EntityManager.remove call
+            order.getOrderLines().remove(targetOrderLine);
             entityManager.remove(targetOrderLine);
         }
         
