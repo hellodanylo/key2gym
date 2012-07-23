@@ -8,10 +8,9 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -101,7 +100,7 @@ public class ClientProfile implements Serializable {
         try {
             defaultBirthday = new SimpleDateFormat("dd-MM-yyyy").parse("16-05-2096");
         } catch (ParseException ex) {
-            Logger.getLogger(ClientProfile.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientProfile.class.getName()).error("Failed to create default birthday value!", ex);
             defaultBirthday = null;
         }
     }

@@ -27,11 +27,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.FocusManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 
 
@@ -356,7 +355,7 @@ public class CensusFrame extends JFrame {
                 openAttendancesTabForDate(new DateMidnight());
                 openOrdersTabForDate(new DateMidnight());
             } catch (SecurityException ex) {
-                Logger.getLogger(CensusFrame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(this.getClass().getName()).error("Unexpected SecurityException", ex);
             }
 
             openItemsTab();

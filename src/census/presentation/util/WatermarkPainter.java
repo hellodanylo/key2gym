@@ -43,6 +43,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.imageio.ImageIO;
 import java.net.URL;
+import org.apache.log4j.Logger;
 
 /**
  * This class is the abstract base class for objects that know
@@ -164,7 +165,7 @@ public abstract class WatermarkPainter implements ActionListener, HierarchyListe
             // use ImageIO to read in the image
             image = ImageIO.read(imageURL);
         } catch (Exception ioe) {
-            ioe.printStackTrace();
+            Logger.getLogger(WatermarkPainter.class.getName()).error("Unexpected Exception", ioe);
         }
 
         return image;
