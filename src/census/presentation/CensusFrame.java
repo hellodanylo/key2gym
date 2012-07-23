@@ -386,6 +386,8 @@ public class CensusFrame extends JFrame {
     @Override
     public void dispose() {
         Logger.getLogger(this.getClass().getName()).info("Shutting down...");
+        
+        super.dispose();
     }
 
     /*

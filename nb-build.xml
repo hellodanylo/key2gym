@@ -77,7 +77,7 @@
            <echo>Have fun with it!</echo>
 	</target>
         
-        <target depends="compile" name="jar">
+        <target depends="compile" name="jar" description="Builds the distribution">
             <!-- Generates the manifest file from the project's properties -->
             <jar basedir="${build.classes.dir}" file="${dist.jar}">
                 <manifest>
@@ -104,8 +104,14 @@
             
             <!-- Generates build file -->
             <touch file="${dist.dir}/build"/>
-            <echo output="${dist.dir}/build">Census v2.0.0</echo>
+            <echo output="${dist.dir}/build" message="Census v${version}"/>
             
         </target>
 
+        <target name="release" depends="jar" description="Converts the distribution into a portable zip file.">
+            <echo message="Preparing release of Census ${version}" />
+            <zip destfile="${dist.dir}/Census_v${version}.zip">
+                <fileset dir="${dist.dir}" />
+            </zip>
+        </target>
 </project>
