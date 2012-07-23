@@ -20,7 +20,7 @@
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="eclipselink.logging.logger" value="org.eclipse.persistence.logging.CommonsLoggingSessionLog"/>
-      <property name="eclipselink.logging.level" value="INFO"/>
+      <property name="eclipselink.logging.level" value="CONFIG"/>
     </properties>
   </persistence-unit>
 </persistence>
