@@ -51,7 +51,7 @@ public class CensusFrame extends JFrame {
 
         initComponents();
 
-        getGlobalCensusExceptionListenersStack().push(new CensusFrameExceptionListener());
+        getGlobalCensusExceptionListenersStack().push(new MessageDialogExceptionListener());
 
         setLocationRelativeTo(null);
     }
@@ -200,7 +200,7 @@ public class CensusFrame extends JFrame {
         attendancesWindowMenuItem = new javax.swing.JMenuItem();
         financialActivitiesWindowMenuItem = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(bundle.getString("Title.Census")); // NOI18N
 
         actionsToolBar.setFloatable(false);
@@ -339,7 +339,7 @@ public class CensusFrame extends JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(actionsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bannerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -381,6 +381,11 @@ public class CensusFrame extends JFrame {
             AdministratorDTO administrator = AdministratorsService.getInstance().getById(sessionsService.getTopmostAdministratorId());
             setTitle(MessageFormat.format(bundle.getString("Title.Census.withAdministrator"), new Object[] {administrator.getFullName()}));
         }
+    }
+    
+    @Override
+    public void dispose() {
+        Logger.getLogger(this.getClass().getName()).info("Shutting down...");
     }
 
     /*
@@ -472,7 +477,7 @@ public class CensusFrame extends JFrame {
 
     }
 
-    public class CensusFrameExceptionListener implements CensusExceptionListener {
+    private class MessageDialogExceptionListener implements CensusExceptionListener {
 
         public Component getComponent() {
             return FocusManager.getCurrentManager().getFocusedWindow();
