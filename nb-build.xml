@@ -99,8 +99,13 @@
             
             <!-- Copies mysql files to the distribution -->
             <copy todir="${dist.dir}/mysql">
-                <fileset dir="${mysql.dir}" />
+                <fileset dir="${mysql.dir}" excludes="**/*.mwb*" />
             </copy>
-
+            
+            <!-- Generates build file -->
+            <touch file="${dist.dir}/build"/>
+            <echo output="${dist.dir}/build">Census v2.0.0</echo>
+            
+        </target>
 
 </project>
