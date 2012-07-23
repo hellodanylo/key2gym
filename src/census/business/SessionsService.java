@@ -60,14 +60,12 @@ public class SessionsService extends Observable {
                 .getResultList();
 
         if (sessions.isEmpty()) {
-            Session session = new Session();
+            session = new Session();
             session.setAdministrator(administrator);
             session.setDatetimeBegin(new Date());
             session.setDatetimeEnd(null);
 
             entityManager.persist(session);
-
-            session = session;
         } else {
             session = sessions.get(0);
             session.setDatetimeEnd(null);

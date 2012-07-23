@@ -40,7 +40,7 @@ public abstract class BusinessService {
      */
     protected void assertTransactionActive() {
         if (!storageService.isTransactionActive()) {
-            throw new IllegalStateException("The transaction has to be active"); //NOI18N
+            throw new IllegalStateException("The transaction has to be active."); //NOI18N
         }
     }
 
