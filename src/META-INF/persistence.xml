@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="Census PU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>census.persistence.Key</class>
+    <class>census.persistence.Item</class>
+    <class>census.persistence.ItemSubscription</class>
+    <class>census.persistence.TimeRange</class>
+    <class>census.persistence.ClientProfile</class>
+    <class>census.persistence.Client</class>
+    <class>census.persistence.AdSource</class>
+    <class>census.persistence.Attendance</class>
+    <class>census.persistence.OrderEntity</class>
+    <class>census.persistence.OrderLine</class>
+    <class>census.persistence.Administrator</class>
+    <class>census.persistence.Session</class>
+    <class>census.persistence.ClientFreeze</class>
+    <class>census.persistence.Property</class>
+    <class>census.persistence.CashAdjustment</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://192.168.1.2:3306/census?useUnicode=true&amp;connectionCollation=utf8_general_ci&amp;characterSetResults=utf8"/>
+      <property name="javax.persistence.jdbc.password" value="test"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="eclipselink.logging.logger" value="org.eclipse.persistence.logging.CommonsLoggingSessionLog"/>
+      <property name="eclipselink.logging.level" value="INFO"/>
+    </properties>
+  </persistence-unit>
+</persistence>

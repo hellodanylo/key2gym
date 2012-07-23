@@ -76,5 +76,26 @@
 	   <echo>Build #${build.number}</echo>
            <echo>Have fun with it!</echo>
 	</target>
+        
+        <target depends="compile" name="jar">
+            <!-- Generates the manifest file from the project's properties -->
+            <jar basedir="${build.classes.dir}" file="${dist.jar}">
+                <manifest>
+                    <attribute name="Class-path" value="${jar.classpath}" />
+                    <attribute name="Main-class" value="${main.class}" />
+                    <attribute name="SplashScreen-Image" value="${jar.splash}" />
+                </manifest>
+            </jar>
+            
+            <!-- Copies libraries to the distribution -->
+            <copy todir="${dist.dir}/lib">
+                <fileset dir="${lib.dir}" />
+            </copy>
+            
+            <!-- Copies configuration files to the distribution -->
+            <copy todir="${dist.dir}/etc">
+                <fileset dir="${etc.dir}" />
+            </copy>
+        </target>
 
 </project>
