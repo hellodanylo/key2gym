@@ -2,3 +2,8 @@ Binary/
 Distribution/
 MySQL/
 build.number
+
+# upstream changes to simplify switching
+dist/
+bin/
+.fuse*
