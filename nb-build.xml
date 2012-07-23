@@ -96,6 +96,11 @@
             <copy todir="${dist.dir}/etc">
                 <fileset dir="${etc.dir}" />
             </copy>
-        </target>
+            
+            <!-- Copies mysql files to the distribution -->
+            <copy todir="${dist.dir}/mysql">
+                <fileset dir="${mysql.dir}" />
+            </copy>
+
 
 </project>
