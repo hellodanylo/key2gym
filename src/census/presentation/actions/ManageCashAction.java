@@ -15,6 +15,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
+import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 
 /**
