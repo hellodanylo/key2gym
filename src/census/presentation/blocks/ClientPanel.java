@@ -58,46 +58,43 @@ public class ClientPanel extends javax.swing.JPanel {
 
             bindingGroup = new BindingGroup();
 
-            Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, client,
+            Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
                     BeanProperty.create("id"), idTextField, BeanProperty.create("text"), "id");
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, client,
-                    BeanProperty.create("fullName"), fullNameTextField, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"), "fullName");
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+                    BeanProperty.create("fullName"), fullNameTextField, BeanProperty.create("text"), "fullName");
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, client,
-                    BeanProperty.create("card"), cardTextField, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"), "card");
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+                    BeanProperty.create("card"), cardTextField, BeanProperty.create("text"), "card");
             binding.setConverter(new CardIntegerToStringConverter("Card"));
-            binding.addBindingListener(censusBindingListener);
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, client,
-                    BeanProperty.create("note"), noteTextArea, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"), "note");
-            binding.addBindingListener(censusBindingListener);
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+                    BeanProperty.create("note"), noteTextArea, BeanProperty.create("text"), "note");
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, client,
-                    BeanProperty.create("registrationDate"), registrationDateField, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"), "registrationDate");
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+                    BeanProperty.create("registrationDate"), registrationDateField, BeanProperty.create("text"), "registrationDate");
             binding.setConverter(new DateMidnightToStringConverter("Registration Date", "dd-MM-yyyy"));
-            binding.addBindingListener(censusBindingListener);
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, client,
-                    BeanProperty.create("expirationDate"), expirationDateField, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"), "expirationDate");
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+                    BeanProperty.create("expirationDate"), expirationDateField, BeanProperty.create("text"), "expirationDate");
             binding.setConverter(new DateMidnightToStringConverter("Expiration Date", "dd-MM-yyyy"));
-            binding.addBindingListener(censusBindingListener);
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, client,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
                     BeanProperty.create("attendancesBalance"), attendancesBalanceField, BeanProperty.create("value"), "attendancesBalance");
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, client,
-                    BeanProperty.create("moneyBalance"), moneyBalanceField, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"), "moneyBalance");
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+                    BeanProperty.create("moneyBalance"), moneyBalanceField, BeanProperty.create("text"), "moneyBalance");
             binding.setConverter(new MoneyBigDecimalToStringConverter("Money Balance"));
-            binding.addBindingListener(censusBindingListener);
             bindingGroup.addBinding(binding);
+            
+            bindingGroup.addBindingListener(censusBindingListener);
 
             bindingGroup.bind();
         } else {
