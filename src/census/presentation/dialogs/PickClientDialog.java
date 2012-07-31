@@ -156,6 +156,7 @@ public class PickClientDialog extends CensusDialog {
         clientsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         clientsTableScrollPane.setViewportView(clientsTable);
 
+        getRootPane().setDefaultButton(okButton);
         okButton.setText(bundle.getString("Button.Ok")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

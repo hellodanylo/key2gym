@@ -57,17 +57,20 @@
     <Component class="javax.swing.JButton" name="okButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Ok" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Ok" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="getRootPane().setDefaultButton(okButton);"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="cancelButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Cancel" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Cancel" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
         <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="census/Census.properties" key="" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
@@ -86,7 +89,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Client">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="census/presentation/resources/Strings.properties" key="Tab.Client" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Tab.Client" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -103,7 +106,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="clientPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="156" max="32767" attributes="0"/>
+                      <EmptySpace pref="142" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -118,7 +121,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Profile">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="census/presentation/resources/Strings.properties" key="Text.Profile" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Text.Profile" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -142,7 +145,7 @@
                       <Component id="attachedCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="clientProfilePanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="31" max="32767" attributes="0"/>
+                      <EmptySpace pref="15" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -153,7 +156,7 @@
             <Component class="javax.swing.JCheckBox" name="attachedCheckBox">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="census/presentation/resources/Strings.properties" key="Text.Attached" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Text.Attached" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -167,7 +170,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Attendances">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="census/presentation/resources/Strings.properties" key="Tab.Attendances" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Tab.Attendances" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -189,7 +192,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Freezes">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="census/presentation/resources/Strings.properties" key="Tab.Freezes" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Tab.Freezes" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -212,7 +215,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="freezesTableScrollPane" pref="339" max="32767" attributes="0"/>
+                      <Component id="freezesTableScrollPane" pref="332" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="freezeNoteScrollPane" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -240,7 +243,7 @@
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                     <TitledBorder title="Note">
-                      <ResourceString PropertyName="titleX" bundle="census/presentation/resources/Strings.properties" key="Text.Note" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                      <ResourceString PropertyName="titleX" bundle="src/census/presentation/resources/Strings.properties" key="Text.Note" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
                     </TitledBorder>
                   </Border>
                 </Property>
@@ -267,7 +270,7 @@
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Orders">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="census/presentation/resources/Strings.properties" key="Tab.Orders" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Tab.Orders" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -289,7 +292,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="14" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="purchasesFilterComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="purchasesFilterLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -334,7 +337,7 @@
             <Component class="javax.swing.JLabel" name="purchasesFilterLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="census/presentation/resources/Strings.properties" key="Label.Filter" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Filter" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>

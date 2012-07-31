@@ -134,6 +134,7 @@ public class PickAttendanceDialog extends CensusDialog {
 
         keysComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        getRootPane().setDefaultButton(okButton);
         okButton.setText(bundle.getString("Button.Ok")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -8,7 +8,7 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-      <ResourceString bundle="census/presentation/resources/Strings.properties" key="Title.Order" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+      <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Title.Order" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
     </Property>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
@@ -114,7 +114,7 @@
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
             <TitledBorder title="Basic Information">
-              <ResourceString PropertyName="titleX" bundle="census/presentation/resources/Strings.properties" key="Text.BasicInformation" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString PropertyName="titleX" bundle="src/census/presentation/resources/Strings.properties" key="Text.BasicInformation" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -160,14 +160,14 @@
         <Component class="javax.swing.JLabel" name="subjectLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="census/presentation/resources/Strings.properties" key="Label.Subject" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Subject" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="dateLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="census/presentation/resources/Strings.properties" key="Label.Date" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Date" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -188,7 +188,7 @@
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
             <TitledBorder title="Payment">
-              <ResourceString PropertyName="titleX" bundle="census/presentation/resources/Strings.properties" key="Text.Payment" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString PropertyName="titleX" bundle="src/census/presentation/resources/Strings.properties" key="Text.Payment" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -248,7 +248,7 @@
         <Component class="javax.swing.JLabel" name="totalLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="census/presentation/resources/Strings.properties" key="Label.Total" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Total" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -264,7 +264,7 @@
         <Component class="javax.swing.JLabel" name="paidLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="census/presentation/resources/Strings.properties" key="Label.Paid" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Paid" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -280,7 +280,7 @@
         <Component class="javax.swing.JLabel" name="paymentLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="census/presentation/resources/Strings.properties" key="Label.Payment" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Payment" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -299,7 +299,7 @@
         <Component class="javax.swing.JLabel" name="dueLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="census/presentation/resources/Strings.properties" key="Label.Due" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Due" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -317,17 +317,20 @@
     <Component class="javax.swing.JButton" name="okButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Ok" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Ok" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="getRootPane().setDefaultButton(okButton);"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="cancelButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Cancel" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Cancel" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>

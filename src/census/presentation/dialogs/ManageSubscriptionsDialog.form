@@ -4,7 +4,7 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-      <ResourceString bundle="census/presentation/resources/Strings.properties" key="Title.ManageSubscriptions" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+      <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Title.ManageSubscriptions" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
     </Property>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
@@ -113,7 +113,7 @@
           <Image iconType="3" name="/census/presentation/resources/plus32.png"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Add" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Add" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -123,7 +123,7 @@
     <Component class="javax.swing.JButton" name="cancelButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Cancel" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Cancel" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -136,7 +136,7 @@
           <Image iconType="3" name="/census/presentation/resources/edit32.png"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Edit" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Edit" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -149,7 +149,7 @@
           <Image iconType="3" name="/census/presentation/resources/remove32.png"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Remove" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Remove" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -159,12 +159,15 @@
     <Component class="javax.swing.JButton" name="okButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Ok" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Ok" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="getRootPane().setDefaultButton(okButton);"/>
+      </AuxValues>
     </Component>
     <Container class="javax.swing.JPanel" name="editingPanel">
       <Properties>
@@ -214,7 +217,7 @@
         <Component class="javax.swing.JButton" name="subscriptionApplyButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Apply" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Apply" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -224,7 +227,7 @@
         <Component class="javax.swing.JButton" name="subscriptionCancelButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="census/presentation/resources/Strings.properties" key="Button.Cancel" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Button.Cancel" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>

@@ -100,6 +100,7 @@ public class PickOrderDialog extends CensusDialog {
             }
         });
 
+        getRootPane().setDefaultButton(okButton);
         okButton.setText(bundle.getString("Button.Ok")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
