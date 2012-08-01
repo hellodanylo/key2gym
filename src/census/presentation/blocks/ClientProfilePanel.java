@@ -92,60 +92,60 @@ public class ClientProfilePanel extends javax.swing.JPanel {
             bindingGroup = new BindingGroup();
             censusBindingListener = new CensusBindingListener();
 
-            Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("address"), addressTextField, BeanProperty.create("text"), "address"); //NOI18N
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("telephone"), telephoneTextField, BeanProperty.create("text"), "telephone"); //NOI18N
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("sex"), sexComboBox, BeanProperty.create("selectedItem"), "sex"); //NOI18N
             binding.setSourceNullValue(2);
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("birthday"), birthdayTextField, BeanProperty.create("text"), "birthday"); //NOI18N
             binding.setConverter(new DateMidnightToStringConverter("date", "dd-MM-yyyy")); //NOI18N
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("goal"), goalTextField, BeanProperty.create("text"), "goal"); //NOI18N
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("possibleAttendanceRate"), possibleAttendanceRateTextField, BeanProperty.create("text"), "possibleAttendanceRate"); //NOI18N
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("healthRestrictions"), healthRestrictionsTextField, BeanProperty.create("text"), "healthRestrictions"); //NOI18N
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("specialWishes"), specialWishesTextField, BeanProperty.create("text"), "specialWishes"); //NOI18N
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("favouriteSport"), favouriteSportTextField, BeanProperty.create("text"), "favouriteSport"); //NOI18N
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("fitnessExperience"), fintessExperienceComboBox, BeanProperty.create("selectedItem"), "fitnessExperience"); //NOI18N
             binding.setSourceNullValue(0);
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("height"), heightSpinner, BeanProperty.create("value"), "height"); //NOI18N
             binding.setSourceNullValue((short) 175);
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("weight"), weightSpinner, BeanProperty.create("value"), "weight"); //NOI18N
             binding.setSourceNullValue((short) 70);
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, clientProfile,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("adSourceId"), adSourceComboBox, BeanProperty.create("selectedItem"), "adSource"); //NOI18N
             binding.setSourceNullValue(0);
             binding.setConverter(new Converter<Short, AdSource>() {

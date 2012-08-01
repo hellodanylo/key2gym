@@ -4,7 +4,6 @@
  */
 package census.presentation.blocks;
 
-import census.CensusStarter;
 import census.business.SessionsService;
 import census.business.dto.ClientDTO;
 import census.presentation.util.CardIntegerToStringConverter;
@@ -12,9 +11,9 @@ import census.presentation.util.CensusBindingListener;
 import census.presentation.util.DateMidnightToStringConverter;
 import census.presentation.util.MoneyBigDecimalToStringConverter;
 import java.beans.Beans;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import org.jdesktop.beansbinding.*;
+import org.jdesktop.beansbinding.Binding.SyncFailure;
 
 /**
  *
@@ -50,46 +49,46 @@ public class ClientPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void setClient(ClientDTO client) {
-        this.client = client;
+    public void setClient(ClientDTO newClient) {
+        this.client = newClient;
 
         if (bindingGroup == null) {
             censusBindingListener = new CensusBindingListener();
 
             bindingGroup = new BindingGroup();
 
-            Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+            Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
                     BeanProperty.create("id"), idTextField, BeanProperty.create("text"), "id");
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
                     BeanProperty.create("fullName"), fullNameTextField, BeanProperty.create("text"), "fullName");
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
                     BeanProperty.create("card"), cardTextField, BeanProperty.create("text"), "card");
             binding.setConverter(new CardIntegerToStringConverter("Card"));
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
                     BeanProperty.create("note"), noteTextArea, BeanProperty.create("text"), "note");
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
                     BeanProperty.create("registrationDate"), registrationDateField, BeanProperty.create("text"), "registrationDate");
             binding.setConverter(new DateMidnightToStringConverter("Registration Date", "dd-MM-yyyy"));
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
                     BeanProperty.create("expirationDate"), expirationDateField, BeanProperty.create("text"), "expirationDate");
             binding.setConverter(new DateMidnightToStringConverter("Expiration Date", "dd-MM-yyyy"));
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
                     BeanProperty.create("attendancesBalance"), attendancesBalanceField, BeanProperty.create("value"), "attendancesBalance");
             bindingGroup.addBinding(binding);
 
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ, client,
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
                     BeanProperty.create("moneyBalance"), moneyBalanceField, BeanProperty.create("text"), "moneyBalance");
             binding.setConverter(new MoneyBigDecimalToStringConverter("Money Balance"));
             bindingGroup.addBinding(binding);
