@@ -71,12 +71,7 @@
     nbproject/build-impl.xml file. 
 
     -->
-        <target name="-pre-compile">
-           <buildnumber />
-	   <echo>Build #${build.number}</echo>
-           <echo>Have fun with it!</echo>
-	</target>
-        
+    
         <target depends="compile" name="jar" description="Builds the distribution">
             <!-- Generates the manifest file from the project's properties -->
             <jar basedir="${build.classes.dir}" file="${dist.jar}">
@@ -104,7 +99,8 @@
             
             <!-- Generates build file -->
             <touch file="${dist.dir}/build"/>
-            <echo output="${dist.dir}/build" message="Census v${version}"/>
+            <tstamp />
+            <echo output="${dist.dir}/build" message="Census v${version} (${TODAY}, ${TSTAMP})"/>
             
         </target>
 
