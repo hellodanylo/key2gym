@@ -58,6 +58,7 @@ public class PickClientDialog extends CensusDialog {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(bundle.getString("Title.PickClient")); // NOI18N
         setResizable(false);
 
         searchCriteriasPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("Text.SearchCriterias"))); // NOI18N
