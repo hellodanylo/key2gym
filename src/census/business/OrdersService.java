@@ -694,6 +694,13 @@ public class OrdersService extends BusinessService {
             throw new BusinessException(bundle.getString("SubscriptionCanNotBeRemovedFromOrderEntityWithAttendance"));
         }
         
+        Property timeRangeMismatch = (Property)entityManager.createNamedQuery("Property.findByName")
+                .setParameter("name", "time_range_mismatch_penalty_item_id")
+                .getSingleResult();
+        if(targetOrderLine.getItem().getId().toString().equals(timeRangeMismatch.getValue())) {
+            throw new BusinessException(bundle.getString("ItemEnforcedCanNotBeRemoved"));
+        }
+        
         /*
          * Business logic specific to Financial Activities associated with Clients.
          */
