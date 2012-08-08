@@ -94,13 +94,13 @@ public class AttendancesService extends BusinessService {
         attendance.setDatetimeBegin(new Date());
         attendance.setDatetimeEnd(Attendance.DATETIME_END_UNKNOWN);
         
-        Object[] subscriptions = (Object[])entityManager
+        Object[] itemSubscriptions = (Object[])entityManager
                 .createNamedQuery("ItemSubscriptionAndDateRecorded.findByClientOrderByDateRecordedDesc") //NOI18N
                 .setParameter("client", client) //NOI18N
                 .setMaxResults(1)
                 .getSingleResult();
-        
-        ItemSubscription itemSubscription = (ItemSubscription)subscriptions[0];
+         
+         ItemSubscription itemSubscription = (ItemSubscription)itemSubscriptions[0]; 
         
         List<TimeSplit> timeSplits = entityManager
                 .createNamedQuery("TimeSplit.findAll") //NOI18N
@@ -127,19 +127,21 @@ public class AttendancesService extends BusinessService {
             begin = end;
         }
         
-        Short orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), Boolean.TRUE);
-        Short itemId = Short.valueOf(((Property)entityManager
-                .createNamedQuery("Property.findByName") //NOI18N
-                .setParameter("name", "time_range_mismatch_penalty_item_id") //NOI18N
-                .getSingleResult())
-                .getValue());
-                
-        try {       
-            for(int i = 0; i < penalty;i++) {
-                OrdersService.getInstance().addPurchase(orderId, itemId);
+        if(penalty > 0) {
+            Short orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), Boolean.TRUE);
+            Short itemId = Short.valueOf(((Property)entityManager
+                    .createNamedQuery("Property.findByName") //NOI18N
+                    .setParameter("name", "time_range_mismatch_penalty_item_id") //NOI18N
+                    .getSingleResult())
+                    .getValue());
+
+            try {       
+                for(int i = 0; i < penalty;i++) {
+                    OrdersService.getInstance().addPurchase(orderId, itemId);
+                }
+            } catch (SecurityException ex) {
+                throw new RuntimeException("Unexpected SecurityException.");
             }
-        } catch (SecurityException ex) {
-            throw new RuntimeException("Unexpected SecurityException.");
         }
 
         // TODO: note changes
