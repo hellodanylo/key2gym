@@ -117,7 +117,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Additional actions">
+            <TitledBorder title="&lt;Text.AdditionalActions&gt;">
               <ResourceString PropertyName="titleX" bundle="src/census/presentation/resources/Strings.properties" key="Text.AdditionalActions" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
