@@ -35,11 +35,11 @@ import org.joda.time.Days;
  *
  * @author daniel
  */
-public class OpenAttendanceAction extends CensusAction implements Observer {
+public class CheckInAction extends CensusAction implements Observer {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
-    private Logger logger = Logger.getLogger(OpenAttendanceAction.class.getName());
+    private Logger logger = Logger.getLogger(CheckInAction.class.getName());
 
-    public OpenAttendanceAction() {
+    public CheckInAction() {
         if(!Beans.isDesignTime()) {
             update(null, null);
         }

@@ -8,6 +8,7 @@ import census.business.AttendancesService;
 import census.business.OrdersService;
 import census.business.SessionsService;
 import census.business.StorageService;
+import census.business.api.SecurityException;
 import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.dto.AttendanceDTO;
@@ -29,10 +30,10 @@ import org.joda.time.DateMidnight;
  *
  * @author daniel
  */
-public class CloseAttendanceAction extends CensusAction implements Observer {
+public class CheckOutAction extends CensusAction implements Observer {
     
     private ResourceBundle bundle;
-    public CloseAttendanceAction() {
+    public CheckOutAction() {
         if(!Beans.isDesignTime()) {
             update(null, null);
         }
@@ -79,37 +80,37 @@ public class CloseAttendanceAction extends CensusAction implements Observer {
             }
             
             Short attendanceId = pickAttendanceDialog.getAttendanceId();
-            Short financialActivityId;
-            Boolean isAnonymous;
             
-            try {
-                isAnonymous = AttendancesService.getInstance().isAnonymous(attendanceId);
-                if(isAnonymous) {
-                    financialActivityId = OrdersService.getInstance().findForAttendanceById(attendanceId);
-                } else {
-                    financialActivityId = OrdersService.getInstance().findByClientIdAndDate(AttendancesService.getInstance().getAttendanceById(attendanceId).getClientId(), new DateMidnight(), pickAttendanceDialog.isEditFinancialActivityDialogRequested());
-                }
-            } catch (ValidationException ex) {
-                throw new RuntimeException(ex);
-            } catch (census.business.api.SecurityException ex) {
-                throw new RuntimeException(ex);
-            }
-            
-            
-            if(financialActivityId != null) {
-                           
-                EditOrderDialog efaDialog = new EditOrderDialog(getFrame());
-                efaDialog.setOrderId(financialActivityId);
-                efaDialog.setFullPaymentForced(isAnonymous);
-                efaDialog.setVisible(true);
+            if(pickAttendanceDialog.isEditOrderDialogRequested()) {
+                Short financialActivityId;
+                Boolean isAnonymous;
 
-                if (efaDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
-                    throw efaDialog.getException();
+                try {
+                    isAnonymous = AttendancesService.getInstance().isAnonymous(attendanceId);
+                    if(isAnonymous) {
+                        financialActivityId = OrdersService.getInstance().findForAttendanceById(attendanceId);
+                    } else {
+                        financialActivityId = OrdersService.getInstance().findByClientIdAndDate(AttendancesService.getInstance().getAttendanceById(attendanceId).getClientId(), new DateMidnight(), true);
+                    }
+                } catch (ValidationException | SecurityException ex) {
+                    throw new RuntimeException(ex);
                 }
 
-                if (efaDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
-                    storageService.rollbackTransaction();
-                    return;
+                if(financialActivityId != null) {
+
+                    EditOrderDialog editOrderDialog = new EditOrderDialog(getFrame());
+                    editOrderDialog.setOrderId(financialActivityId);
+                    editOrderDialog.setFullPaymentForced(isAnonymous);
+                    editOrderDialog.setVisible(true);
+
+                    if (editOrderDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                        throw editOrderDialog.getException();
+                    }
+
+                    if (editOrderDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+                        storageService.rollbackTransaction();
+                        return;
+                    }
                 }
             }
             

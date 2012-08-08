@@ -160,8 +160,8 @@ public class CensusFrame extends JFrame {
         openAttendancesWindowAction = new census.presentation.actions.OpenAttendancesWindowAction();
         openOrdersWindowAction = new census.presentation.actions.OpenOrdersWindowAction();
         editClientAction = new census.presentation.actions.EditClientAction();
-        closeAttendanceAction = new census.presentation.actions.CloseAttendanceAction();
-        openAttendanceAction = new census.presentation.actions.OpenAttendanceAction();
+        closeAttendanceAction = new census.presentation.actions.CheckOutAction();
+        openAttendanceAction = new census.presentation.actions.CheckInAction();
         registerClientAction = new census.presentation.actions.RegisterClientAction();
         manageItemsAction = new census.presentation.actions.ManageItemsAction();
         manageSubscriptionsAction = new census.presentation.actions.ManageSubscriptionsAction();
@@ -426,7 +426,7 @@ public class CensusFrame extends JFrame {
     private javax.swing.JToolBar.Separator clientsFinancesSeparator;
     private javax.swing.JMenu clientsMenu;
     private javax.swing.JMenuItem clientsRegisterMenuItem;
-    private census.presentation.actions.CloseAttendanceAction closeAttendanceAction;
+    private census.presentation.actions.CheckOutAction closeAttendanceAction;
     private javax.swing.JButton closeAttendanceButton;
     private census.presentation.actions.EditClientAction editClientAction;
     private javax.swing.JButton editClientButton;
@@ -452,7 +452,7 @@ public class CensusFrame extends JFrame {
     private javax.swing.JPopupMenu.Separator manageSubscriptionsCashSeparator;
     private javax.swing.JMenuItem manageSubscriptionsMenuItem;
     private javax.swing.JMenuBar menuBar;
-    private census.presentation.actions.OpenAttendanceAction openAttendanceAction;
+    private census.presentation.actions.CheckInAction openAttendanceAction;
     private javax.swing.JButton openAttendanceButton;
     private census.presentation.actions.OpenAttendancesWindowAction openAttendancesWindowAction;
     private census.presentation.actions.OpenOrdersWindowAction openOrdersWindowAction;

@@ -34,7 +34,7 @@ public class PickAttendanceDialog extends CensusDialog {
         attendanceId = null;
         keyId = null;
         attendanceLocked = null;
-        editFinancialActivityDialogRequested = false;
+        editOrderDialogRequested = false;
 
         initComponents();
         setLocationRelativeTo(parent);
@@ -104,7 +104,7 @@ public class PickAttendanceDialog extends CensusDialog {
                 }
             }
 
-            if (isEditFinancialActivityDialogRequested()) {
+            if (isEditOrderDialogRequested()) {
                 openFinancialActivityCheckBox.doClick();
             }
         }
@@ -245,7 +245,7 @@ public class PickAttendanceDialog extends CensusDialog {
         setResult(CensusDialog.RESULT_OK);
         setAttendanceId(attendanceId);
         setKeyId(keyId);
-        setEditFinancialActivityDialogRequested(openFinancialActivityCheckBox.isSelected());
+        setEditOrderDialogRequested(openFinancialActivityCheckBox.isSelected());
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -253,10 +253,6 @@ public class PickAttendanceDialog extends CensusDialog {
         setResult(RESULT_CANCEL);
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
-    private Boolean attendanceLocked;
-    private Short attendanceId;
-    private Short keyId;
-    private Boolean editFinancialActivityDialogRequested;
 
     public Short getAttendanceId() {
         return attendanceId;
@@ -282,13 +278,19 @@ public class PickAttendanceDialog extends CensusDialog {
         this.attendanceLocked = attendanceLocked;
     }
 
-    public Boolean isEditFinancialActivityDialogRequested() {
-        return editFinancialActivityDialogRequested;
+    public Boolean isEditOrderDialogRequested() {
+        return editOrderDialogRequested;
     }
 
-    public void setEditFinancialActivityDialogRequested(Boolean editFinancialActivityDialogRequested) {
-        this.editFinancialActivityDialogRequested = editFinancialActivityDialogRequested;
+    public void setEditOrderDialogRequested(Boolean requested) {
+        this.editOrderDialogRequested = requested;
     }
+    
+    private Boolean attendanceLocked;
+    private Short attendanceId;
+    private Short keyId;
+    private Boolean editOrderDialogRequested;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel keyLabel;

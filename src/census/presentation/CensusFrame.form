@@ -18,9 +18,9 @@
     </Component>
     <Component class="census.presentation.actions.EditClientAction" name="editClientAction">
     </Component>
-    <Component class="census.presentation.actions.CloseAttendanceAction" name="closeAttendanceAction">
+    <Component class="census.presentation.actions.CheckOutAction" name="closeAttendanceAction">
     </Component>
-    <Component class="census.presentation.actions.OpenAttendanceAction" name="openAttendanceAction">
+    <Component class="census.presentation.actions.CheckInAction" name="openAttendanceAction">
     </Component>
     <Component class="census.presentation.actions.RegisterClientAction" name="registerClientAction">
     </Component>
