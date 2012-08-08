@@ -236,7 +236,7 @@ public class PickAttendanceDialog extends CensusDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(OpenAttendanceDialog.RESULT_EXCEPTION);
+            setResult(CheckInDialog.RESULT_EXCEPTION);
             setException(ex);
             dispose();
             return;

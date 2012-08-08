@@ -23,14 +23,14 @@ import javax.swing.JFrame;
  *
  * @author daniel
  */
-public class OpenAttendanceDialog extends CensusDialog {
+public class CheckInDialog extends CensusDialog {
 
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     /**
-     * Creates new form OpenAttendanceDialog
+     * Creates new form CheckInDialog
      */
-    public OpenAttendanceDialog(JFrame parent) throws BusinessException {
+    public CheckInDialog(JFrame parent) throws BusinessException {
         super(parent, true);
 
         financialActivityDialogRequested = false;
@@ -305,7 +305,7 @@ public class OpenAttendanceDialog extends CensusDialog {
                  * Anonymous attendance
                  */
                 try {
-                    attendanceId = attendancesService.openAnonymousAttendance(selectedKeyId);
+                    attendanceId = attendancesService.checkInAnonym(selectedKeyId);
                 } catch (ValidationException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -343,7 +343,7 @@ public class OpenAttendanceDialog extends CensusDialog {
                  * key's ID is invalid, which should be wrapped into a runtime
                  * exception. however, we can not tell by design.
                  */
-                attendanceId = attendancesService.openClientAttendance(clientId, selectedKeyId);
+                attendanceId = attendancesService.checkInClient(clientId, selectedKeyId);
             }
 
         } catch (BusinessException | ValidationException ex) {

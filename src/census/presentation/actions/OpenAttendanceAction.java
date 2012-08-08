@@ -14,7 +14,7 @@ import census.business.dto.ClientDTO;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.CensusFrame;
 import census.presentation.dialogs.EditOrderDialog;
-import census.presentation.dialogs.OpenAttendanceDialog;
+import census.presentation.dialogs.CheckInDialog;
 import census.presentation.util.NotificationException;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
@@ -60,7 +60,7 @@ public class OpenAttendanceAction extends CensusAction implements Observer {
             /*
              * OpenAttendance
              */
-            OpenAttendanceDialog openAttendanceDialog = new OpenAttendanceDialog(getFrame());
+            CheckInDialog openAttendanceDialog = new CheckInDialog(getFrame());
             openAttendanceDialog.setVisible(true);
 
             if (openAttendanceDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {

@@ -5,7 +5,7 @@
 package census.presentation.actions;
 
 import census.presentation.dialogs.RegisterClientDialog;
-import census.presentation.dialogs.OpenAttendanceDialog;
+import census.presentation.dialogs.CheckInDialog;
 import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.dialogs.CensusDialog;
 import census.business.OrdersService;
@@ -91,10 +91,10 @@ public class RegisterClientAction extends CensusAction implements Observer {
             }
 
             /*
-             * If requested, creates and lanches OpenAttendanceDialog
+             * If requested, creates and lanches CheckInDialog
              */
             if (registerClientDialog.isOpenAttendanceDialogRequested()) {
-                OpenAttendanceDialog openAttendanceDialog = new OpenAttendanceDialog(getFrame());
+                CheckInDialog openAttendanceDialog = new CheckInDialog(getFrame());
 
                 openAttendanceDialog.setClientId(registerClientDialog.getClientId());
                 openAttendanceDialog.setVisible(true);

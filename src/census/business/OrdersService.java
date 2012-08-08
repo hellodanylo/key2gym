@@ -910,13 +910,6 @@ public class OrdersService extends BusinessService {
             client.setMoneyBalance(newMoneyBalance);
         }
 
-        /*
-         * We don't need empty orders.
-         */
-        if (order.getOrderLines().isEmpty() && order.getPayment().compareTo(BigDecimal.ZERO) == 0) {
-            entityManager.remove(order);
-        }
-
         // TODO: note change
         order.setPayment(newTotalPaymentMaid);
 

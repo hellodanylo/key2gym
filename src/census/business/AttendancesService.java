@@ -26,7 +26,7 @@ import org.joda.time.LocalTime;
 public class AttendancesService extends BusinessService {
 
     /**
-     * Opens an attendance and associates it with the client.
+     * Checks in a client.
      *
      * <ul>
      *
@@ -45,7 +45,7 @@ public class AttendancesService extends BusinessService {
      * @throws IllegalStateException if the transaction or the session is not
      * active
      */
-    public Short openClientAttendance(Short clientId, Short keyId)
+    public Short checkInClient(Short clientId, Short keyId)
             throws BusinessException, ValidationException {
         Client client;
         Key key;
@@ -152,7 +152,7 @@ public class AttendancesService extends BusinessService {
     }
 
     /**
-     * Opens an anonymous attendance.
+     * Checks in an anonym.
      *
      * <ul>
      *
@@ -170,7 +170,7 @@ public class AttendancesService extends BusinessService {
      * @throws IllegalStateException if the transaction or the session is not
      * active
      */
-    public Short openAnonymousAttendance(Short keyId)
+    public Short checkInAnonym(Short keyId)
             throws BusinessException, ValidationException {
         Attendance attendance;
         Key key;

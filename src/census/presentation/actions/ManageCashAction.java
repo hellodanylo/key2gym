@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package census.presentation.actions;
 
 import census.business.SessionsService;
 import census.business.StorageService;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.dialogs.ManageCashDialog;
+import census.presentation.dialogs.PickDateDialog;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
 import java.util.Observable;
@@ -23,13 +23,14 @@ import org.joda.time.DateMidnight;
  * @author Danylo Vashchilenko
  */
 public class ManageCashAction extends CensusAction implements Observer {
+
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
-     public ManageCashAction() {
-        if(!Beans.isDesignTime()) {
+    public ManageCashAction() {
+        if (!Beans.isDesignTime()) {
             update(null, null);
         }
-        
+
         setText(bundle.getString("Text.Cash"));
     }
 
@@ -41,8 +42,20 @@ public class ManageCashAction extends CensusAction implements Observer {
             storageService = StorageService.getInstance();
             storageService.beginTransaction();
 
+            PickDateDialog pickDateDialog = new PickDateDialog(getFrame());
+            pickDateDialog.setVisible(true);
+
+            if (pickDateDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                throw pickDateDialog.getException();
+            }
+
+            if (pickDateDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+                storageService.rollbackTransaction();
+                return;
+            }
+
             ManageCashDialog manageCashDialog = new ManageCashDialog(getFrame());
-            manageCashDialog.setDate(new DateMidnight());
+            manageCashDialog.setDate(pickDateDialog.getDate());
             manageCashDialog.setVisible(true);
 
             if (manageCashDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
@@ -59,7 +72,7 @@ public class ManageCashAction extends CensusAction implements Observer {
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-            if(StorageService.getInstance().isTransactionActive()) {
+            if (StorageService.getInstance().isTransactionActive()) {
                 StorageService.getInstance().rollbackTransaction();
             }
             return;
@@ -71,9 +84,8 @@ public class ManageCashAction extends CensusAction implements Observer {
         if (o == null) {
             SessionsService.getInstance().addObserver(this);
         }
-        Boolean hasSessionAndAllPermissions = SessionsService.getInstance().hasOpenSession() &&
-                SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL);
+        Boolean hasSessionAndAllPermissions = SessionsService.getInstance().hasOpenSession()
+                && SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL);
         setEnabled(hasSessionAndAllPermissions);
     }
-
 }
