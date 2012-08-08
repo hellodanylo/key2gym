@@ -5,7 +5,7 @@
 
 package census.presentation.util;
 
-import census.business.dto.TimeRangeDTO;
+import census.business.dto.TimeSplitDTO;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -14,13 +14,13 @@ import javax.swing.JList;
  *
  * @author Danylo Vashchilenko
  */
-public class TimeRangeListCellRenderer extends DefaultListCellRenderer {
+public class TimeSplitListCellRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if(value instanceof TimeRangeDTO) {
-            TimeRangeDTO timeRange = (TimeRangeDTO)value;
-            value = timeRange.getBegin().toString("HH-mm-ss") + " - " + timeRange.getEnd().toString("HH-mm-ss");
+        if(value instanceof TimeSplitDTO) {
+            TimeSplitDTO timeSplit = (TimeSplitDTO)value;
+            value = timeSplit.getTitle();
         }
         return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     }

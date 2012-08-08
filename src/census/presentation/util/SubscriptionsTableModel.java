@@ -5,9 +5,9 @@
 
 package census.presentation.util;
 
-import census.business.TimeRangesService;
+import census.business.TimeSplitsService;
 import census.business.dto.SubscriptionDTO;
-import census.business.dto.TimeRangeDTO;
+import census.business.dto.TimeSplitDTO;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.table.AbstractTableModel;
@@ -23,11 +23,11 @@ public class SubscriptionsTableModel extends AbstractTableModel {
     
     private Column[] columns;
     private List<SubscriptionDTO> subscriptions;
-    private List<TimeRangeDTO> timeRanges;
+    private List<TimeSplitDTO> timeRanges;
     
     public SubscriptionsTableModel(Column[] columns) {
         this.columns = columns;
-        timeRanges = TimeRangesService.getInstance().getAllTimeRanges();
+        timeRanges = TimeSplitsService.getInstance().getAllTimeRanges();
     }
     
     public void setSubscriptions(List<SubscriptionDTO> subscriptions) {
@@ -95,11 +95,9 @@ public class SubscriptionsTableModel extends AbstractTableModel {
         }  else if (columns[columnIndex].equals(Column.TERM_YEARS)) {
             return sub.getTermYears().toString();
         }  else if (columns[columnIndex].equals(Column.TIME_RANGE)) {
-            for(TimeRangeDTO timeRange : timeRanges) {
+            for(TimeSplitDTO timeRange : timeRanges) {
                 if(timeRange.getId().equals(sub.getTimeRangeId())) {
-                    return timeRange.getBegin().toString("HH-mm-ss") 
-                            + " - " 
-                            + timeRange.getEnd().toString("HH-mm-ss");
+                    return timeRange.getTitle();
                 }
             }
             return "";

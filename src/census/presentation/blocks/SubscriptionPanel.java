@@ -4,12 +4,12 @@
  */
 package census.presentation.blocks;
 
-import census.business.TimeRangesService;
+import census.business.TimeSplitsService;
 import census.business.api.ValidationException;
 import census.business.dto.SubscriptionDTO;
-import census.business.dto.TimeRangeDTO;
+import census.business.dto.TimeSplitDTO;
 import census.presentation.util.CensusBindingListener;
-import census.presentation.util.TimeRangeListCellRenderer;
+import census.presentation.util.TimeSplitListCellRenderer;
 import java.beans.Beans;
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -27,7 +27,7 @@ public class SubscriptionPanel extends javax.swing.JPanel {
 
     private BindingGroup bindingGroup;
     private CensusBindingListener censusBindingListener;
-    private List<TimeRangeDTO> timeRanges;
+    private List<TimeSplitDTO> timeRanges;
     
     /**
      * Creates new form SubscriptionPanel
@@ -36,7 +36,7 @@ public class SubscriptionPanel extends javax.swing.JPanel {
         if(Beans.isDesignTime()) {
             timeRanges = new LinkedList<>();
         } else {
-            timeRanges = TimeRangesService.getInstance().getAllTimeRanges();
+            timeRanges = TimeSplitsService.getInstance().getAllTimeRanges();
             if(timeRanges.isEmpty()) {
                 throw new RuntimeException("There is not any time ranges found.");
             }
@@ -182,11 +182,11 @@ public class SubscriptionPanel extends javax.swing.JPanel {
                     subscription, BeanProperty.create("timeRangeId"), timeRangeComboBox, BeanProperty.create("selectedItem"), "timeRange");
             binding.setSourceNullValue(timeRanges.get(0));
             binding.setSourceUnreadableValue(timeRanges.get(0));
-            binding.setConverter(new Converter<Short, TimeRangeDTO>() {
+            binding.setConverter(new Converter<Short, TimeSplitDTO>() {
 
                 @Override
-                public TimeRangeDTO convertForward(Short value) {
-                    for(TimeRangeDTO timeRange : timeRanges) {
+                public TimeSplitDTO convertForward(Short value) {
+                    for(TimeSplitDTO timeRange : timeRanges) {
                         if(timeRange.getId().equals(value)) {
                             return timeRange;
                         }
@@ -195,7 +195,7 @@ public class SubscriptionPanel extends javax.swing.JPanel {
                 }
 
                 @Override
-                public Short convertReverse(TimeRangeDTO value) {
+                public Short convertReverse(TimeSplitDTO value) {
                     return value.getId();
                 }
 
@@ -288,7 +288,7 @@ public class SubscriptionPanel extends javax.swing.JPanel {
         timeRangeLabel.setText(bundle.getString("Label.TimeRange")); // NOI18N
 
         timeRangeComboBox.setModel(new DefaultComboBoxModel(timeRanges.toArray()));
-        timeRangeComboBox.setRenderer(new TimeRangeListCellRenderer());
+        timeRangeComboBox.setRenderer(new TimeSplitListCellRenderer());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

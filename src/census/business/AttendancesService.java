@@ -102,24 +102,29 @@ public class AttendancesService extends BusinessService {
         
         ItemSubscription itemSubscription = (ItemSubscription)subscriptions[0];
         
-        List<TimeRange> timeRanges = entityManager
-                .createNamedQuery("TimeRange.findAll") //NOI18N
+        List<TimeSplit> timeSplits = entityManager
+                .createNamedQuery("TimeSplit.findAll") //NOI18N
                 .getResultList();
-        int over = -1;
+        
+        int penalty = -1;
+        
         LocalTime now = new LocalTime();
-        for (TimeRange timeRange : timeRanges) {
-            LocalTime begin = new LocalTime(timeRange.getTimeBegin().getTime());
-            LocalTime end = new LocalTime(timeRange.getTimeEnd().getTime());
+        LocalTime begin = now;
+        
+        for (TimeSplit timeSplit : timeSplits) {
+            LocalTime end = new LocalTime(timeSplit.getTime());
 
-            if(timeRange.equals(itemSubscription.getTimeRange())) {
-                over = 0;
-            } else if(over != -1) {
-                over++;
+            if(timeSplit.equals(itemSubscription.getTimeSplit())) {
+                penalty = 0;
+            } else if(penalty != -1) {
+                penalty++;
             } 
             
-            if(now.isAfter(begin) && now.isBefore(end)) {
+            if(now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
                 break;
             }
+            
+            begin = end;
         }
         
         Short orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), Boolean.TRUE);
@@ -130,7 +135,7 @@ public class AttendancesService extends BusinessService {
                 .getValue());
                 
         try {       
-            for(int i = 0; i < over;i++) {
+            for(int i = 0; i < penalty;i++) {
                 OrdersService.getInstance().addPurchase(orderId, itemId);
             }
         } catch (SecurityException ex) {
@@ -506,17 +511,19 @@ public class AttendancesService extends BusinessService {
      * 
      * @return the current time range or null, if none is found
      */
-    private TimeRange findCurrentTimeRange() {
-        List<TimeRange> timeRanges = entityManager.createNamedQuery("TimeRange.findAll") //NOI18N
+    private TimeSplit findCurrentTimeSplit() {
+        List<TimeSplit> timeSplits = entityManager.createNamedQuery("TimeSplit.findAllOrderByTime") //NOI18N
                 .getResultList();
-        LocalTime time = new LocalTime();
-        for (TimeRange timeRange : timeRanges) {
-            LocalTime begin = new LocalTime(timeRange.getTimeBegin().getTime());
-            LocalTime end = new LocalTime(timeRange.getTimeEnd().getTime());
+        LocalTime now = new LocalTime();
+        LocalTime begin = now;
+        for (TimeSplit timeSplit : timeSplits) {
+            LocalTime end = new LocalTime(timeSplit.getTime());
 
-            if (time.compareTo(begin) >= 0 && time.compareTo(end) <= 0) {
-                return timeRange;
+            if (now.compareTo(begin) >= 0 && now.compareTo(end) <= 0) {
+                return timeSplit;
             }
+            
+            begin = end;
         }
         
         return null;
@@ -528,19 +535,19 @@ public class AttendancesService extends BusinessService {
      * @return the subscription, or null if none is found
      */
     private ItemSubscription findValidAnonymousSubscriptionForNow() {
-        TimeRange currentTimeRange = findCurrentTimeRange();
+        TimeSplit currentTimeSplit = findCurrentTimeSplit();
 
         /*
          * No time range is available
          */
-        if (currentTimeRange == null) {
+        if (currentTimeSplit == null) {
             return null;
         }
 
         ItemSubscription itemSubscription;
         try {
-            itemSubscription = (ItemSubscription) entityManager.createNamedQuery("ItemSubscription.findAnonymousByTimeRange") //NOI18N
-                    .setParameter("timeRange", currentTimeRange) //NOI18N
+            itemSubscription = (ItemSubscription) entityManager.createNamedQuery("ItemSubscription.findAnonymousByTimeSplit") //NOI18N
+                    .setParameter("timeSplit", currentTimeSplit) //NOI18N
                     .getSingleResult();
         } catch (NoResultException ex) {
             return null;

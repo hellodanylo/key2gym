@@ -11,22 +11,22 @@ import org.joda.time.LocalTime;
  *
  * @author Danylo Vashchilenko
  */
-public class TimeRangeDTO {
+public class TimeSplitDTO {
 
-    public LocalTime getBegin() {
-        return begin;
+    public LocalTime getTime() {
+        return time;
     }
 
-    public void setBegin(LocalTime begin) {
-        this.begin = begin;
+    public void setTime(LocalTime time) {
+        this.time = time;
     }
 
-    public LocalTime getEnd() {
-        return end;
+    public String getTitle() {
+        return title;
     }
 
-    public void setEnd(LocalTime end) {
-        this.end = end;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Short getId() {
@@ -38,6 +38,6 @@ public class TimeRangeDTO {
     }
     
     Short id;
-    LocalTime begin;
-    LocalTime end;
+    LocalTime time;
+    String title;
 }

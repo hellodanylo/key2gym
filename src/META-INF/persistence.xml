@@ -5,7 +5,6 @@
     <class>census.persistence.Key</class>
     <class>census.persistence.Item</class>
     <class>census.persistence.ItemSubscription</class>
-    <class>census.persistence.TimeRange</class>
     <class>census.persistence.ClientProfile</class>
     <class>census.persistence.Client</class>
     <class>census.persistence.AdSource</class>
@@ -17,6 +16,7 @@
     <class>census.persistence.ClientFreeze</class>
     <class>census.persistence.Property</class>
     <class>census.persistence.CashAdjustment</class>
+    <class>census.persistence.TimeSplit</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="eclipselink.logging.logger" value="org.eclipse.persistence.logging.CommonsLoggingSessionLog"/>

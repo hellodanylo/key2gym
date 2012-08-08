@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ItemSubscription.findByTermDays", query = "SELECT i FROM ItemSubscription i WHERE i.termDays = :termDays"),
     @NamedQuery(name = "ItemSubscription.findByTermMonths", query = "SELECT i FROM ItemSubscription i WHERE i.termMonths = :termMonths"),
     @NamedQuery(name = "ItemSubscription.findByTermYears", query = "SELECT i FROM ItemSubscription i WHERE i.termYears = :termYears"),
-    @NamedQuery(name = "ItemSubscription.findAnonymousByTimeRange", query = "SELECT i FROM ItemSubscription i WHERE i.units = 1 AND i.termDays = 1 AND i.termMonths = 0 AND i.termYears = 0 AND i.timeRange = :timeRange"),
+    @NamedQuery(name = "ItemSubscription.findAnonymousByTimeSplit", query = "SELECT i FROM ItemSubscription i WHERE i.units = 1 AND i.termDays = 1 AND i.termMonths = 0 AND i.termYears = 0 AND i.timeSplit = :timeSplit"),
     @NamedQuery(name = "ItemSubscriptionAndDateRecorded.findByClientOrderByDateRecordedDesc", query="SELECT i, o.dateRecorded FROM ItemSubscription i, OrderLine ol, OrderEntity o WHERE i.item = ol.item AND ol.orderEntity.client = :client ORDER BY o.dateRecorded DESC")})
 
 public class ItemSubscription implements Serializable {
@@ -49,9 +49,9 @@ public class ItemSubscription implements Serializable {
     @Column(name = "term_years")
     private short termYears;
     
-    @JoinColumn(name = "idtmr_its", referencedColumnName = "id_tmr")
+    @JoinColumn(name = "idtsp_its", referencedColumnName = "id_tsp")
     @ManyToOne(optional = false)
-    private TimeRange timeRange;
+    private TimeSplit timeSplit;
     
     @JoinColumn(name = "iditm_its", referencedColumnName = "id_itm", nullable=false, insertable=false, updatable=false)
     @OneToOne(cascade={CascadeType.REMOVE}, optional = false)
@@ -112,12 +112,12 @@ public class ItemSubscription implements Serializable {
         this.termYears = termYears;
     }
 
-    public TimeRange getTimeRange() {
-        return timeRange;
+    public TimeSplit getTimeSplit() {
+        return timeSplit;
     }
 
-    public void setTimeRange(TimeRange timeRange) {
-        this.timeRange = timeRange;
+    public void setTimeSplit(TimeSplit timeSplit) {
+        this.timeSplit = timeSplit;
     }
 
     public Item getItem() {
@@ -150,7 +150,7 @@ public class ItemSubscription implements Serializable {
 
     @Override
     public String toString() {
-        return "census.pu.ItemSubscription[ id=" + id + " ]";
+        return "census.persistence.ItemSubscription[ id=" + id + " ]";
     }
     
 }

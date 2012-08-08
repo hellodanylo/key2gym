@@ -10,7 +10,7 @@ import census.business.api.SecurityException;
 import census.business.dto.SubscriptionDTO;
 import census.persistence.Item;
 import census.persistence.ItemSubscription;
-import census.persistence.TimeRange;
+import census.persistence.TimeSplit;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,7 +80,7 @@ public class SubscriptionsService extends BusinessService {
         if(subscription.getTimeRangeId() == null) {
             throw new NullPointerException("The subscription.getTimeRangeId() is null.");
         }
-        TimeRange timeRange = entityManager.find(TimeRange.class, subscription.getTimeRangeId());
+        TimeSplit timeRange = entityManager.find(TimeSplit.class, subscription.getTimeRangeId());
         
         if(timeRange == null) {
             throw new ValidationException("The time range's ID is invalid");
@@ -92,7 +92,7 @@ public class SubscriptionsService extends BusinessService {
                 subscription.getTermDays(),
                 subscription.getTermMonths(),
                 subscription.getTermYears());
-        entityItemSubscription.setTimeRange(timeRange);
+        entityItemSubscription.setTimeSplit(timeRange);
         
         // note change
         entityManager.persist(entityItem);
@@ -128,7 +128,7 @@ public class SubscriptionsService extends BusinessService {
             subscriptionDTO.setTermDays(itemSubscription.getTermDays());
             subscriptionDTO.setTermMonths(itemSubscription.getTermMonths());
             subscriptionDTO.setTermYears(itemSubscription.getTermYears());
-            subscriptionDTO.setTimeRangeId(itemSubscription.getTimeRange().getId());
+            subscriptionDTO.setTimeRangeId(itemSubscription.getTimeSplit().getId());
             subscriptionDTO.setUnits(itemSubscription.getUnits());
             
             result.add(subscriptionDTO);
@@ -194,7 +194,7 @@ public class SubscriptionsService extends BusinessService {
         if(subscription.getTimeRangeId() == null) {
             throw new NullPointerException("The subscription.getTimeRangeId() is null.");
         }
-        TimeRange timeRange = entityManager.find(TimeRange.class, subscription.getTimeRangeId());
+        TimeSplit timeRange = entityManager.find(TimeSplit.class, subscription.getTimeRangeId());
         if(timeRange == null) {
             throw new ValidationException("The time range's ID is invalid");
         }
@@ -205,7 +205,7 @@ public class SubscriptionsService extends BusinessService {
                 subscription.getTermDays(),
                 subscription.getTermMonths(),
                 subscription.getTermYears());
-        entityItemSubscription.setTimeRange(timeRange);
+        entityItemSubscription.setTimeSplit(timeRange);
         entityItemSubscription.setItem(entityItem);
         
         entityItem.setItemSubscription(entityItemSubscription);
