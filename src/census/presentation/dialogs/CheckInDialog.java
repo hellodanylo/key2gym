@@ -305,7 +305,7 @@ public class CheckInDialog extends CensusDialog {
                  * Anonymous attendance
                  */
                 try {
-                    attendanceId = attendancesService.checkInAnonym(selectedKeyId);
+                    attendanceId = attendancesService.checkInCasualClient(selectedKeyId);
                 } catch (ValidationException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -343,7 +343,7 @@ public class CheckInDialog extends CensusDialog {
                  * key's ID is invalid, which should be wrapped into a runtime
                  * exception. however, we can not tell by design.
                  */
-                attendanceId = attendancesService.checkInClient(clientId, selectedKeyId);
+                attendanceId = attendancesService.checkInRegisteredClient(clientId, selectedKeyId);
             }
 
         } catch (BusinessException | ValidationException ex) {

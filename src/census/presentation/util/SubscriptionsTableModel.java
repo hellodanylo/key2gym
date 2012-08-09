@@ -27,7 +27,7 @@ public class SubscriptionsTableModel extends AbstractTableModel {
     
     public SubscriptionsTableModel(Column[] columns) {
         this.columns = columns;
-        timeRanges = TimeSplitsService.getInstance().getAllTimeRanges();
+        timeRanges = TimeSplitsService.getInstance().getAll();
     }
     
     public void setSubscriptions(List<SubscriptionDTO> subscriptions) {
@@ -96,7 +96,7 @@ public class SubscriptionsTableModel extends AbstractTableModel {
             return sub.getTermYears().toString();
         }  else if (columns[columnIndex].equals(Column.TIME_RANGE)) {
             for(TimeSplitDTO timeRange : timeRanges) {
-                if(timeRange.getId().equals(sub.getTimeRangeId())) {
+                if(timeRange.getId().equals(sub.getTimeSplitId())) {
                     return timeRange.getTitle();
                 }
             }

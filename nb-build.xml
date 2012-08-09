@@ -97,6 +97,11 @@
                 <fileset dir="${mysql.dir}" excludes="**/*.mwb*" />
             </copy>
             
+            <!-- Copies documentation files to the distribution -->
+            <copy todir="${dist.dir}/doc">
+                <fileset dir="${doc.dir}" />
+            </copy>
+            
             <!-- Generates build file -->
             <touch file="${dist.dir}/build"/>
             <tstamp>

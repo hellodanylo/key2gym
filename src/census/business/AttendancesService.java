@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census.business;
 
@@ -8,7 +19,6 @@ import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.AttendanceDTO;
-import census.business.dto.ItemDTO;
 import census.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -26,14 +36,14 @@ import org.joda.time.LocalTime;
 public class AttendancesService extends BusinessService {
 
     /**
-     * Checks in a client.
-     *
+     * Checks in a registered client.
+     * <p>
+     * 
      * <ul>
-     *
-     * <li>The client's attendances balance has to be more than 0 <li>The
-     * expiration date has to be no sooner than tomorrow <li>The key has to have
-     * 0 open attendances associated with it
-     *
+     * <li> The client's attendances balance has to be more than 0 </li>
+     * <li> The expiration date has to be at least tomorrow </li>
+     * <li> The key has to have 0 open attendances associated with it </li>
+
      * </ul>
      *
      * @param clientId the client's ID
@@ -42,17 +52,20 @@ public class AttendancesService extends BusinessService {
      * @throws NullPointerException if any of the arguments is null
      * @throws BusinessException if current business rules restrict this
      * operation
-     * @throws IllegalStateException if the transaction or the session is not
-     * active
+     * @throws IllegalStateException if the transaction is not active; if no 
+     * session is not open
      */
-    public Short checkInClient(Short clientId, Short keyId)
+    public Short checkInRegisteredClient(Short clientId, Short keyId)
             throws BusinessException, ValidationException {
         Client client;
         Key key;
 
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
 
+        /*
+         * Arguments validation.
+         */
         if (clientId == null) {
             throw new NullPointerException("The clientId is null."); //NOI18N
         }
@@ -62,13 +75,11 @@ public class AttendancesService extends BusinessService {
         }
 
         client = (Client) entityManager.find(Client.class, clientId);
-        
         if(client == null) {
             throw new ValidationException(bundle.getString("ClientIDInvalid"));
         }
 
         key = entityManager.find(Key.class, keyId);
-
         if (key == null) {
             throw new ValidationException(bundle.getString("KeyIDInvalid"));
         }
@@ -77,37 +88,48 @@ public class AttendancesService extends BusinessService {
             throw new BusinessException(bundle.getString("KeyNotAvailable"));
         }
 
+        /*
+         * Client should have attendances.
+         */
         if (client.getAttendancesBalance() < 1) {
             throw new BusinessException(bundle.getString("ClientNoAttendancesLeft"));
         }
 
+        /*
+         * Client's can't be expired.
+         */
         if (client.getExpirationDate().compareTo(new Date()) < 0) {
             throw new BusinessException(bundle.getString("ClientSubscriptionExpired"));
         }
 
         client.setAttendancesBalance((short) (client.getAttendancesBalance() - 1));
 
+        /*
+         * Builds an attendance record.
+         */
         Attendance attendance = new Attendance();
-        attendance.setId(getNextId());
         attendance.setClient(client);
         attendance.setKey(key);
         attendance.setDatetimeBegin(new Date());
         attendance.setDatetimeEnd(Attendance.DATETIME_END_UNKNOWN);
         
-        Object[] itemSubscriptions = (Object[])entityManager
-                .createNamedQuery("ItemSubscriptionAndDateRecorded.findByClientOrderByDateRecordedDesc") //NOI18N
+        /*
+         * Finds the client's current subscription.
+         */
+        ItemSubscription itemSubscription = (ItemSubscription)entityManager
+                .createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
                 .setParameter("client", client) //NOI18N
                 .setMaxResults(1)
                 .getSingleResult();
-         
-         ItemSubscription itemSubscription = (ItemSubscription)itemSubscriptions[0]; 
-        
+
         List<TimeSplit> timeSplits = entityManager
                 .createNamedQuery("TimeSplit.findAll") //NOI18N
                 .getResultList();
         
-        int penalty = -1;
-        
+        /*
+         * Calculates the qunatity of penalties to apply.
+         */
+        int penalties = -1;
         LocalTime now = new LocalTime();
         LocalTime begin = now;
         
@@ -115,9 +137,9 @@ public class AttendancesService extends BusinessService {
             LocalTime end = new LocalTime(timeSplit.getTime());
 
             if(timeSplit.equals(itemSubscription.getTimeSplit())) {
-                penalty = 0;
-            } else if(penalty != -1) {
-                penalty++;
+                penalties = 0;
+            } else if(penalties != -1) {
+                penalties++;
             } 
             
             if(now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
@@ -127,16 +149,19 @@ public class AttendancesService extends BusinessService {
             begin = end;
         }
         
-        if(penalty > 0) {
-            Short orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), Boolean.TRUE);
-            Short itemId = Short.valueOf(((Property)entityManager
+        /*
+         * If there are penalties to apply, does it.
+         */
+        if(penalties > 0) {
+            Short orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), true);
+            Short itemId = ((Property)entityManager
                     .createNamedQuery("Property.findByName") //NOI18N
                     .setParameter("name", "time_range_mismatch_penalty_item_id") //NOI18N
                     .getSingleResult())
-                    .getValue());
+                    .getShort();
 
             try {       
-                for(int i = 0; i < penalty;i++) {
+                for(int i = 0; i < penalties;i++) {
                     OrdersService.getInstance().addPurchase(orderId, itemId, null);
                 }
             } catch (SecurityException ex) {
@@ -144,7 +169,6 @@ public class AttendancesService extends BusinessService {
             }
         }
 
-        // TODO: note changes
         entityManager.persist(attendance);
         entityManager.flush();
 
@@ -152,13 +176,12 @@ public class AttendancesService extends BusinessService {
     }
 
     /**
-     * Checks in an anonym.
-     *
+     * Checks in a casual client.
+     * <p>
+     * 
      * <ul>
-     *
      * <li>There should be a subscription having 1 attendance unit, a term of 1
-     * day and a time range allowing to open an attendance right now.
-     *
+     * day, allowing to open an attendance right now without penalties </li>
      * </ul>
      *
      * @param keyId the key's ID.
@@ -167,18 +190,21 @@ public class AttendancesService extends BusinessService {
      * @throws ValidationExceltion if the key's ID is invalid
      * @throws BusinessException if current business rules restrict this
      * operation
-     * @throws IllegalStateException if the transaction or the session is not
-     * active
+     * @throws IllegalStateException if the transaction is not active; if no session
+     * is open
      */
-    public Short checkInAnonym(Short keyId)
+    public Short checkInCasualClient(Short keyId)
             throws BusinessException, ValidationException {
         Attendance attendance;
         Key key;
         OrderEntity order;
 
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
 
+        /*
+         * Arguments validation.
+         */
         if (keyId == null) {
             throw new NullPointerException("The keyId is null."); //NOI18N
         }
@@ -189,8 +215,10 @@ public class AttendancesService extends BusinessService {
             throw new ValidationException(bundle.getString("KeyIDInvalid"));
         }
 
+        /*
+         * Build an attendance record.
+         */
         attendance = new Attendance();
-        attendance.setId(getNextId());
         attendance.setDatetimeBegin(new Date());
         attendance.setDatetimeEnd(Attendance.DATETIME_END_UNKNOWN);
         attendance.setKey(key);
@@ -201,7 +229,7 @@ public class AttendancesService extends BusinessService {
         order.setDate(attendance.getDatetimeBegin());
         order.setPayment(BigDecimal.ZERO);
 
-        ItemSubscription itemSubscription = findValidAnonymousSubscriptionForNow();
+        ItemSubscription itemSubscription = findValidCasualSubscription();
         if (itemSubscription == null) {
             throw new BusinessException(bundle.getString("AttendanceAnonymousSubscriptionNotAvailable"));
         }
@@ -226,27 +254,20 @@ public class AttendancesService extends BusinessService {
     }
 
     /**
-     * Finds an attendance by its ID.
-     *
-     * <ul>
-     *
-     * <li>The permission level has to be ALL to access attendances open in the
-     * past.
-     *
-     * </ul>
+     * Gets an attendance by its ID.
+     * <p>
      *
      * @param attendanceId the attendance's ID
-     * @return the attendance, or null, if none was found
+     * @return the attendance, or null, if the ID is invalid
      * @throws NullPointerException if attendanceId is null
-     * @throws ValidationException if attendanceId invalid
      * @throws SecurityException if current security rules restrict this
      * operation
-     * @throws IllegalStateException if the session is not active
+     * @throws IllegalStateException if no session is open
      */
     public AttendanceDTO getAttendanceById(Short attendanceId)
             throws IllegalArgumentException, SecurityException {
 
-        assertSessionActive();
+        assertOpenSessionExists();
 
         if (attendanceId == null) {
             throw new NullPointerException("The attendanceId is null."); //NOI18N
@@ -257,35 +278,18 @@ public class AttendancesService extends BusinessService {
         if (attendance == null) {
             return null;
         }
-
-        if (attendance.getDatetimeBegin().before(new DateMidnight().toDate()) &&
-            SessionsService.getInstance().getPermissionsLevel() != SessionsService.PL_ALL) {
-            throw new SecurityException(bundle.getString("AccessDenied"));
-        }
-
-        AttendanceDTO attendanceDTO = new AttendanceDTO();
-
-        attendanceDTO.setClientFullName(attendance.getClient() == null ? null : attendance.getClient().getFullName());
-        attendanceDTO.setClientId(attendance.getClient() == null ? null : attendance.getClient().getId());
-        attendanceDTO.setId(attendanceId);
-        attendanceDTO.setDateTimeBegin(new DateTime(attendance.getDatetimeBegin()));
-        attendanceDTO.setDateTimeEnd(attendance.getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN)
-                ? null
-                : new DateTime(attendance.getDatetimeEnd()));
-        attendanceDTO.setKeyId(attendance.getKey().getId());
-        attendanceDTO.setKeyTitle(attendance.getKey().getTitle());
-
+        
+        AttendanceDTO attendanceDTO = wrapAttendance(attendance);
         return attendanceDTO;
     }
 
     /**
      * Finds all attendance that were open on the date.
-     *
+     * <p>
+     * 
      * <ul>
-     *
-     * <li>The permission level has to be ALL to access attendances open not
-     * today.
-     *
+     * <li> The permission level has to be ALL to access attendances open not
+     * today </li>
      * </ul>
      *
      * @param date the date
@@ -293,13 +297,16 @@ public class AttendancesService extends BusinessService {
      * @throws NullPointerException if the date is null
      * @throws SecurityException if current security rules restrict this
      * operation
-     * @throws IllegalStateException if the session is not active
+     * @throws IllegalStateException if no session is open
      */
     public List<AttendanceDTO> findAttendancesByDate(DateMidnight date)
             throws SecurityException {
 
-        assertSessionActive();
+        assertOpenSessionExists();
 
+        /*
+         * Arguments validation.
+         */
         if (date == null) {
             throw new NullPointerException("The date is null."); //NOI18N
         }
@@ -315,18 +322,7 @@ public class AttendancesService extends BusinessService {
         List<AttendanceDTO> result = new LinkedList<>();
 
         for (Attendance attendance : attendances) {
-            AttendanceDTO attendanceDTO = new AttendanceDTO();
-            attendanceDTO.setId(attendance.getId());
-            attendanceDTO.setDateTimeBegin(new DateTime(attendance.getDatetimeBegin()));
-            attendanceDTO.setClientId(attendance.getClient() == null ? null : attendance.getClient().getId());
-            attendanceDTO.setClientFullName(attendance.getClient() == null ? null : attendance.getClient().getFullName());
-            attendanceDTO.setKeyId(attendance.getKey().getId());
-            attendanceDTO.setKeyTitle(attendance.getKey().getTitle());
-            attendanceDTO.setDateTimeEnd(attendance.getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN)
-                    ? null
-                    : new DateTime(attendance.getDatetimeEnd()));
-
-            result.add(attendanceDTO);
+            result.add(wrapAttendance(attendance));
         }
 
         return result;
@@ -339,12 +335,12 @@ public class AttendancesService extends BusinessService {
      * @return the list of the client's attendances
      * @throws NullPointerException if the id is null
      * @throws ValidationException if the client's ID is invalid
-     * @throws IllegalStateException if the session is not active
+     * @throws IllegalStateException if no session is open
      */
     public List<AttendanceDTO> findAttendancesByClient(Short id)
             throws ValidationException {
 
-        assertSessionActive();
+        assertOpenSessionExists();
 
         if (id == null) {
             throw new NullPointerException("The id is null."); //NOI18N
@@ -364,34 +360,29 @@ public class AttendancesService extends BusinessService {
         List<AttendanceDTO> result = new LinkedList<>();
 
         for (Attendance attendance : attendances) {
-            AttendanceDTO attendanceDTO = new AttendanceDTO();
-            attendanceDTO.setId(attendance.getId());
-            attendanceDTO.setDateTimeBegin(new DateTime(attendance.getDatetimeBegin()));
-            attendanceDTO.setClientId(attendance.getClient() == null ? null : attendance.getClient().getId());
-            attendanceDTO.setClientFullName(attendance.getClient() == null ? null : attendance.getClient().getFullName());
-            attendanceDTO.setKeyId(attendance.getKey().getId());
-            attendanceDTO.setKeyTitle(attendance.getKey().getTitle());
-            attendanceDTO.setDateTimeEnd(attendance.getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN)
-                    ? null
-                    : new DateTime(attendance.getDatetimeEnd()));
-
-            result.add(attendanceDTO);
+            result.add(wrapAttendance(attendance));
         }
 
         return result;
     }
 
     /**
-     * Gets whether the attendance is anonymous.
+     * Gets whether the attendance is casual.
+     * <p>
+     * 
+     * <ul> 
+     * <li>The attendance is casual, if it does not have a client associated
+     * with it</li>
+     * </ul>
      *
      * @param attendanceId the attendance's ID
-     * @return true, if the attendance is anonymous; false, otherwise
-     * @throws IllegalStateException if the session is not active
+     * @return true, if the attendance is casual; false, otherwise
+     * @throws IllegalStateException if no session is open
      * @throws NullPointerException if the attendanceId is null
      * @throws ValidationException if the attendance's ID is invalid
      */
-    public Boolean isAnonymous(Short attendanceId) throws ValidationException {
-        assertSessionActive();
+    public Boolean isCasual(Short attendanceId) throws ValidationException {
+        assertOpenSessionExists();
 
         if (attendanceId == null) {
             throw new NullPointerException("The attendanceId is null."); //NOI18N
@@ -407,15 +398,13 @@ public class AttendancesService extends BusinessService {
     }
 
     /**
-     * Closes an attendance.
-     *
-     * <ul>
-     *
-     * <li> The attendance has to be open. </li>
+     * Checks out a client.
+     * <p>
      * 
-     * <li> If the attendance is anonymous,
-     * it has to have full payment recorded in the associated order. </li>
-     *
+     * <ul>
+     * <li> The attendance has to be open. </li>
+     * <li> If the attendance is anonymous, it has to have full payment 
+     * recorded in the associated order. </li>
      * </ul>
      *
      * @param attendanceId the attendance's ID
@@ -425,10 +414,10 @@ public class AttendancesService extends BusinessService {
      * @throws IllegalStateException if the transaction or the session is not
      * active operation
      */
-    public void closeAttendance(Short attendanceId)
+    public void checkOut(Short attendanceId)
             throws BusinessException, ValidationException {
 
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
 
         if (attendanceId == null) {
@@ -446,28 +435,18 @@ public class AttendancesService extends BusinessService {
 
         OrderEntity order = attendance.getOrder();
 
+        /*
+         * If there is an order associeated with the attendance, the attendance
+         * is anonymous, and, therefore, the order should have a full payment.
+         */
         if (order != null) {
-            BigDecimal total = BigDecimal.ZERO;
-
-            if(order.getOrderLines() != null) {
-                for(OrderLine orderLine : order.getOrderLines()) {
-                    Item item = orderLine.getItem();
-                    ItemDTO itemDTO = new ItemDTO(item.getId(), item.getBarcode(), item.getTitle(), item.getQuantity(), item.getPrice());
-
-                    for(int i = 0; i < orderLine.getQuantity();i++) {
-                        total = total.add(item.getPrice());
-                    }
-                }
-            }
-
-            if (attendance.getClient() == null && total.compareTo(order.getPayment()) != 0) {
+            if (order.getTotal().compareTo(order.getPayment()) != 0) {
                 throw new BusinessException(bundle.getString("ExactPaymentRequiredToCloseAnonymousAttendance"));
             }
         }
-
-        // TODO: note change
+        
         attendance.setDatetimeEnd(new Date());
-
+        
         entityManager.flush();
     }
 
@@ -480,12 +459,15 @@ public class AttendancesService extends BusinessService {
      * @throws ValidationException if the key's ID is invalid
      * @throws BusinessException there isn't any open attendances with the key
      * provided
-     * @throws IllegalStateException if the session is not active
+     * @throws IllegalStateException if no session is open
      */
     public Short findOpenAttendanceByKey(Short keyId) throws ValidationException, BusinessException {
 
-        assertSessionActive();
+        assertOpenSessionExists();
 
+        /*
+         * Arguments validation.
+         */
         if (keyId == null) {
             throw new NullPointerException("The keyId is null."); // NOI18N
         }
@@ -507,21 +489,44 @@ public class AttendancesService extends BusinessService {
 
         return attendance.getId();
     }
+    
+    /**
+     * Builds an attendance DTO from an attendance entity.
+     * 
+     * @param attendance the entity to build DTO from
+     * @return the DTO
+     */
+    private AttendanceDTO wrapAttendance(Attendance attendance) {
+        AttendanceDTO attendanceDTO = new AttendanceDTO();
+        attendanceDTO.setId(attendance.getId());
+        attendanceDTO.setDateTimeBegin(new DateTime(attendance.getDatetimeBegin()));
+        attendanceDTO.setClientId(attendance.getClient() == null ? null : attendance.getClient().getId());
+        attendanceDTO.setClientFullName(attendance.getClient() == null ? null : attendance.getClient().getFullName());
+        attendanceDTO.setKeyId(attendance.getKey().getId());
+        attendanceDTO.setKeyTitle(attendance.getKey().getTitle());
+        attendanceDTO.setDateTimeEnd(attendance.getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN)
+                ? null
+                : new DateTime(attendance.getDatetimeEnd()));
+
+        return attendanceDTO;
+    }
 
     /**
-     * Finds the current time range.
+     * Finds the current time split.
      * 
-     * @return the current time range or null, if none is found
+     * @return the current time split or null, if none is found
      */
     private TimeSplit findCurrentTimeSplit() {
         List<TimeSplit> timeSplits = entityManager.createNamedQuery("TimeSplit.findAll") //NOI18N
                 .getResultList();
+        
         LocalTime now = new LocalTime();
         LocalTime begin = now;
+        
         for (TimeSplit timeSplit : timeSplits) {
             LocalTime end = new LocalTime(timeSplit.getTime());
 
-            if (now.compareTo(begin) >= 0 && now.compareTo(end) <= 0) {
+            if (now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
                 return timeSplit;
             }
             
@@ -536,11 +541,11 @@ public class AttendancesService extends BusinessService {
      *
      * @return the subscription, or null if none is found
      */
-    private ItemSubscription findValidAnonymousSubscriptionForNow() {
+    private ItemSubscription findValidCasualSubscription() {
         TimeSplit currentTimeSplit = findCurrentTimeSplit();
 
         /*
-         * No time range is available
+         * No subscription can be valid now, if the current time split is null.
          */
         if (currentTimeSplit == null) {
             return null;
@@ -548,34 +553,16 @@ public class AttendancesService extends BusinessService {
 
         ItemSubscription itemSubscription;
         try {
-            itemSubscription = (ItemSubscription) entityManager.createNamedQuery("ItemSubscription.findAnonymousByTimeSplit") //NOI18N
+            itemSubscription = (ItemSubscription) entityManager.createNamedQuery("ItemSubscription.findCasualByTimeSplit") //NOI18N
                     .setParameter("timeSplit", currentTimeSplit) //NOI18N
                     .getSingleResult();
         } catch (NoResultException ex) {
-            return null;
+            itemSubscription = null;
         }
         return itemSubscription;
     }
-
-    /**
-     * Gets the next attendance's ID.
-     *
-     * @throws IllegalStateException if the session is not active
-     * @return the ID the next attendance will have
-     */
-    public Short getNextId() {
-        // TODO: get rid of this method in favor of generation
-        assertSessionActive();
-        try {
-            Short id = (Short) entityManager.createNamedQuery("Attendance.findAllIdsOrderByIdDesc") //NOI18N
-                    .setMaxResults(1).getSingleResult();
-            return (short) (id + 1);
-        } catch (NoResultException ex) {
-            return 1;
-        }
-    }
     
-    /*
+    /**
      * Singleton instance.
      */
     private static AttendancesService instance;

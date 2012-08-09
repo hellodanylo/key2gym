@@ -22,8 +22,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ItemSubscription.findByTermDays", query = "SELECT i FROM ItemSubscription i WHERE i.termDays = :termDays"),
     @NamedQuery(name = "ItemSubscription.findByTermMonths", query = "SELECT i FROM ItemSubscription i WHERE i.termMonths = :termMonths"),
     @NamedQuery(name = "ItemSubscription.findByTermYears", query = "SELECT i FROM ItemSubscription i WHERE i.termYears = :termYears"),
-    @NamedQuery(name = "ItemSubscription.findAnonymousByTimeSplit", query = "SELECT i FROM ItemSubscription i WHERE i.units = 1 AND i.termDays = 1 AND i.termMonths = 0 AND i.termYears = 0 AND i.timeSplit = :timeSplit"),
-    @NamedQuery(name = "ItemSubscriptionAndDateRecorded.findByClientOrderByDateRecordedDesc", query="SELECT i, o.dateRecorded FROM ItemSubscription i, OrderLine ol, OrderEntity o WHERE i.item = ol.item AND ol.orderEntity.client = :client ORDER BY o.dateRecorded DESC")})
+    @NamedQuery(name = "ItemSubscription.findCasualByTimeSplit", query = "SELECT i FROM ItemSubscription i WHERE i.units = 1 AND i.termDays = 1 AND i.termMonths = 0 AND i.termYears = 0 AND i.timeSplit = :timeSplit"),
+    @NamedQuery(name = "ItemSubscription.findByClientOrderByDateRecordedDesc", query="SELECT i FROM ItemSubscription i, OrderLine ol, OrderEntity o WHERE i.item = ol.item AND ol.orderEntity.client = :client ORDER BY o.dateRecorded DESC")})
 
 public class ItemSubscription implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -30,6 +30,8 @@
     </Component>
     <Component class="census.presentation.actions.ToggleSessionAction" name="toggleSessionAction">
     </Component>
+    <Component class="census.presentation.actions.OpenItemsWindowAction" name="openItemsWindowAction">
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="menuBar">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="sessionMenu">
@@ -209,6 +211,13 @@
                 </Property>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                  <ComponentRef name="openItemsWindowAction"/>
+                </Property>
+              </Properties>
+            </MenuItem>
           </SubComponents>
         </Menu>
       </SubComponents>
@@ -249,7 +258,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="actionsToolBar" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="workspacesTabbedPane" pref="253" max="32767" attributes="0"/>
+              <Component id="workspacesTabbedPane" pref="252" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="bannerLabel" min="-2" pref="96" max="-2" attributes="0"/>
           </Group>

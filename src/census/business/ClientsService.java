@@ -31,7 +31,7 @@ public class ClientsService extends BusinessService {
      * @return a template client
      */
     public ClientDTO getTemplateClient() {
-        assertSessionActive();
+        assertOpenSessionExists();
 
         ClientDTO client = new ClientDTO();
 
@@ -74,7 +74,7 @@ public class ClientsService extends BusinessService {
      */
     public Short registerClient(ClientDTO client, Boolean useSecuredProperties) throws BusinessException, ValidationException, SecurityException {
         assertTransactionActive();
-        assertSessionActive();
+        assertOpenSessionExists();
         
         if (client == null) {
             throw new NullPointerException("The client is null."); //NOI18N
@@ -148,7 +148,7 @@ public class ClientsService extends BusinessService {
      * @throws ValidationException if the client's ID is invalid
      */
     public ClientDTO getById(Short clientId) throws ValidationException {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         if (clientId == null) {
             throw new NullPointerException("The clientId is null."); //NOI18N
@@ -182,7 +182,7 @@ public class ClientsService extends BusinessService {
      * @throws NullPointerException if the card is null
      */
     public Short findByCard(Integer card){
-        assertSessionActive();
+        assertOpenSessionExists();
         
         if (card == null) {
             throw new NullPointerException("The card is null."); //NOI18N
@@ -221,7 +221,7 @@ public class ClientsService extends BusinessService {
      * @throws NullPointerException if either fullName or exactMatch is null
      */
     public List<ClientDTO> findByFullName(String fullName, Boolean exactMatch) throws IllegalArgumentException {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         if (fullName == null) {
             throw new IllegalArgumentException("The fullName is null."); //NOI18N
@@ -287,7 +287,7 @@ public class ClientsService extends BusinessService {
      */
     public void updateClient(ClientDTO client, Boolean useSecuredProperties) throws SecurityException, ValidationException {
         assertTransactionActive();
-        assertSessionActive();
+        assertOpenSessionExists();
 
         if (client == null) {
             throw new NullPointerException("The client is null."); //NOI18N
@@ -379,7 +379,7 @@ public class ClientsService extends BusinessService {
      * @throws IllegalStateException if the session is not active
      */
     public Boolean hasDebt(Short clientId) throws ValidationException {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         if (clientId == null) {
             throw new NullPointerException("The clientId is null."); //NOI18N
@@ -400,7 +400,7 @@ public class ClientsService extends BusinessService {
      * @return the next client's ID
      */
     public Short getNextId() {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         try {
             return new Integer(1 + (Short) entityManager

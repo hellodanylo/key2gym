@@ -113,6 +113,16 @@ public class OrderEntity implements Serializable {
     public void setAttendance(Attendance attendance) {
         this.attendance = attendance;
     }
+    
+    public BigDecimal getTotal() {
+        BigDecimal total = BigDecimal.ZERO.setScale(2);
+        
+        for(OrderLine orderLine : orderLines) { 
+            total = total.add(orderLine.getTotal());
+        }
+        
+        return total;
+    }
 
     @Override
     public int hashCode() {

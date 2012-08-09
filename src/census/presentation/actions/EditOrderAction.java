@@ -86,7 +86,7 @@ public class EditOrderAction extends CensusAction {
                         throw new RuntimeException(ex);
                     }
                 } else {
-                    financialActivityId = pickFinancialActivityDialog.getFinancialActivityId();
+                    financialActivityId = pickFinancialActivityDialog.getOrderId();
                 }
             
             }

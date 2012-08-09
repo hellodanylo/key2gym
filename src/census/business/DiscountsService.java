@@ -17,7 +17,7 @@ import java.util.List;
 public class DiscountsService extends BusinessService {
     
     public List<DiscountDTO> findAll() {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         List<Discount> discountEntities = entityManager.createNamedQuery("Discount.findAll")
                 .getResultList();

@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census.business;
 
@@ -19,22 +30,21 @@ public class CashService extends BusinessService {
 
     /**
      * Returns final cash for the date.
-     *
+     * <p>
+     * 
      * <ul>
-     *
-     * <li> If the date is not today, the permissions level has to be PL_ALL.
-     *
+     * <li> If the date is not today, the permissions level has to be PL_ALL </li>
      * </ul>
      *
      * @param date the date to look up
-     * @throws IllegalStateException if the session is not active
+     * @throws IllegalStateException if no session is open
      * @throws NullPointerException if the date is null
      * @throws SecurityException if current security rules restrict this
      * operation
      * @return the final cash for the date
      */
     public BigDecimal getCashByDate(DateMidnight date) throws SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
 
         if (date == null) {
             throw new NullPointerException("The date is null."); //NOI18N
@@ -50,7 +60,7 @@ public class CashService extends BusinessService {
 
         /*
          * The sum aggregate function returns null, when there is not 
-         * any financial activities.
+         * any orders.
          */
         if(cash == null) {
             cash = BigDecimal.ZERO;
@@ -66,17 +76,16 @@ public class CashService extends BusinessService {
     }
 
     /**
-     * Records the cash adjustment. If the records already exists, it will be
+     * Records the cash adjustment. If the record already exists, it will be
      * updated. Otherwise, it will be created.
-     *
+     * <p>
+     * 
      * <ul>
-     *
-     * <li> The permissions level has to be PL_ALL
-     *
+     * <li> The permissions level has to be PL_ALL </li>
      * </ul>
      *
      * @param cashAdjustment the cash adjustment
-     * @throws IllegalStateException if no transaction is active; if no session
+     * @throws IllegalStateException if the transaction is not active; if no session
      * is open
      * @throws SecurityException if current security rules restrict this
      * operation
@@ -85,7 +94,7 @@ public class CashService extends BusinessService {
      * @throws ValidationException if any of the required properties is invalid
      */
     public void recordCashAdjustment(CashAdjustmentDTO cashAdjustment) throws SecurityException, ValidationException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
 
         if (!SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL)) {
@@ -133,11 +142,10 @@ public class CashService extends BusinessService {
     /**
      * Gets the cash adjustment by the date. If it does not exists, it will
      * be created.
-     *
+     * <p>
+     * 
      * <ul>
-     *
-     * <li> The permissions level has to be PL_ALL.</li>
-     *
+     * <li> The permissions level has to be PL_ALL</li>
      * </ul>
      *
      * @param date the date
@@ -149,8 +157,7 @@ public class CashService extends BusinessService {
      * @return the cash adjustment
      */
     public CashAdjustmentDTO getAdjustmentByDate(DateMidnight date) throws SecurityException {
-        assertSessionActive();
-        assertTransactionActive();
+        assertOpenSessionExists();
 
         if (!SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(bundle.getString("AccessDenied"));
@@ -163,6 +170,8 @@ public class CashService extends BusinessService {
         CashAdjustment cashAdjustmentEntity = entityManager.find(CashAdjustment.class, date.toDate());
 
         if (cashAdjustmentEntity == null) {
+            assertTransactionActive();
+                    
             cashAdjustmentEntity = new CashAdjustment();
             cashAdjustmentEntity.setAmount(BigDecimal.ZERO);
             cashAdjustmentEntity.setDateRecorded(date.toDate());
@@ -180,6 +189,12 @@ public class CashService extends BusinessService {
         return cashAdjustmentDTO;
     }
 
+    /**
+     * Validates a money amount.
+     * 
+     * @param value the amount to validate
+     * @throws ValidationException if the amount is invalid
+     */
     private void validateAmount(BigDecimal value) throws ValidationException {
         if (value == null) {
             throw new NullPointerException("The amount is null."); //NOI18N
@@ -195,7 +210,8 @@ public class CashService extends BusinessService {
             throw new ValidationException(bundle.getString("LimitReached"));
         }
     }
-    /*
+    
+    /**
      * Singleton instance.
      */
     private static CashService instance;

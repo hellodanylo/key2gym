@@ -49,7 +49,7 @@ public class SubscriptionsService extends BusinessService {
      * @throws SecurityException if current business rules restrict this operation
      */
     public void addSubscription(SubscriptionDTO subscription) throws ValidationException, SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
@@ -77,10 +77,10 @@ public class SubscriptionsService extends BusinessService {
         validateTerm(subscription.getTermYears());
         validateUnits(subscription.getUnits());
         
-        if(subscription.getTimeRangeId() == null) {
+        if(subscription.getTimeSplitId() == null) {
             throw new NullPointerException("The subscription.getTimeRangeId() is null.");
         }
-        TimeSplit timeRange = entityManager.find(TimeSplit.class, subscription.getTimeRangeId());
+        TimeSplit timeRange = entityManager.find(TimeSplit.class, subscription.getTimeSplitId());
         
         if(timeRange == null) {
             throw new ValidationException("The time range's ID is invalid");
@@ -128,7 +128,7 @@ public class SubscriptionsService extends BusinessService {
             subscriptionDTO.setTermDays(itemSubscription.getTermDays());
             subscriptionDTO.setTermMonths(itemSubscription.getTermMonths());
             subscriptionDTO.setTermYears(itemSubscription.getTermYears());
-            subscriptionDTO.setTimeRangeId(itemSubscription.getTimeSplit().getId());
+            subscriptionDTO.setTimeSplitId(itemSubscription.getTimeSplit().getId());
             subscriptionDTO.setUnits(itemSubscription.getUnits());
             
             result.add(subscriptionDTO);
@@ -155,7 +155,7 @@ public class SubscriptionsService extends BusinessService {
      * @throws SecurityException if current security rules restrict this operation
      */
     public void updateSubscription(SubscriptionDTO subscription) throws ValidationException, SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
@@ -191,10 +191,10 @@ public class SubscriptionsService extends BusinessService {
         validateTerm(subscription.getTermYears());
         validateUnits(subscription.getUnits());
         
-        if(subscription.getTimeRangeId() == null) {
+        if(subscription.getTimeSplitId() == null) {
             throw new NullPointerException("The subscription.getTimeRangeId() is null.");
         }
-        TimeSplit timeRange = entityManager.find(TimeSplit.class, subscription.getTimeRangeId());
+        TimeSplit timeRange = entityManager.find(TimeSplit.class, subscription.getTimeSplitId());
         if(timeRange == null) {
             throw new ValidationException("The time range's ID is invalid");
         }
@@ -236,7 +236,7 @@ public class SubscriptionsService extends BusinessService {
      * 
      */
     public void removeSubscription(Short id) throws ValidationException, BusinessException, SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
        
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {

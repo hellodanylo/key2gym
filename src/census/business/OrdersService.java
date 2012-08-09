@@ -55,7 +55,7 @@ public class OrdersService extends BusinessService {
     public Short findByClientIdAndDate(Short clientId, DateMidnight date, Boolean createIfDoesNotExist)
             throws ValidationException {
 
-        assertSessionActive();
+        assertOpenSessionExists();
 
         if (clientId == null) {
             throw new NullPointerException("The clientId is null."); //NOI18N
@@ -131,7 +131,7 @@ public class OrdersService extends BusinessService {
      */
     public Short findCurrentForClientByCard(Integer card, Boolean createIfDoesNotExist)
             throws IllegalArgumentException, IllegalStateException, ValidationException {
-        assertSessionActive();
+        assertOpenSessionExists();
 
         if (card == null) {
             throw new NullPointerException("The card is null."); //NOI18N
@@ -202,7 +202,7 @@ public class OrdersService extends BusinessService {
     public Short findForAttendanceById(Short attendanceId)
             throws IllegalArgumentException, IllegalStateException, ValidationException, BusinessException {
 
-        assertSessionActive();
+        assertOpenSessionExists();
 
         /*
          * Arguments validation.
@@ -305,7 +305,7 @@ public class OrdersService extends BusinessService {
      * @throws NullPointerException if any of the arguments is null
      */
     public List<OrderDTO> findAllByDate(DateMidnight date) throws SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
 
         if (date == null) {
             throw new NullPointerException("The begin is null."); //NOI18N
@@ -342,7 +342,7 @@ public class OrdersService extends BusinessService {
      * date, or the client's ID is invalid
      */
     public List<OrderDTO> findForClientWithinPeriod(Short id, DateMidnight begin, DateMidnight end) throws ValidationException {
-        assertSessionActive();
+        assertOpenSessionExists();
 
         if (id == null) {
             throw new NullPointerException("The id is null."); //NOI18N
@@ -382,7 +382,7 @@ public class OrdersService extends BusinessService {
     }
 
     public BigDecimal getTotalForDate(DateMidnight date) {
-        assertSessionActive();
+        assertOpenSessionExists();
 
         if (date == null) {
             throw new NullPointerException("The date is null."); //NOI18N
@@ -409,7 +409,7 @@ public class OrdersService extends BusinessService {
      * @throws IllegalStateException if the session is not active
      */
     public OrderDTO getById(Short id) throws ValidationException {
-        assertSessionActive();
+        assertOpenSessionExists();
 
         /*
          * Arguments validation.
@@ -476,7 +476,7 @@ public class OrdersService extends BusinessService {
      */
     public void addPurchase(Short orderId, Short itemId, Short discountId)
             throws BusinessException, IllegalArgumentException, IllegalStateException, ValidationException, SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
 
         /*
@@ -670,7 +670,7 @@ public class OrdersService extends BusinessService {
      */
     public void removePurchase(Short orderLineId)
             throws BusinessException, IllegalArgumentException, ValidationException, SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
 
         /*
@@ -710,7 +710,7 @@ public class OrdersService extends BusinessService {
         }
 
         Property timeRangeMismatch = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
-        if (orderLine.getItem().getId().toString().equals(timeRangeMismatch.getValue())) {
+        if (orderLine.getItem().getId().toString().equals(timeRangeMismatch.getString())) {
             throw new BusinessException(bundle.getString("ItemEnforcedCanNotBeRemoved"));
         }
 
@@ -781,7 +781,7 @@ public class OrdersService extends BusinessService {
      */
 //    public List<ItemDTO> findPurchases(Short orderId)
 //            throws ValidationException {
-//        assertSessionActive();
+//        assertOpenSessionExists();
 //
 //        if (orderId == null) {
 //            throw new NullPointerException("The orderId is null."); //NOI18N
@@ -854,7 +854,7 @@ public class OrdersService extends BusinessService {
      */
     public void recordPayment(Short orderId, BigDecimal amount)
             throws BusinessException, IllegalArgumentException, ValidationException, SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
 
         /*
@@ -941,7 +941,7 @@ public class OrdersService extends BusinessService {
      */
     public BigDecimal getPayment(Integer orderId)
             throws ValidationException {
-        assertSessionActive();
+        assertOpenSessionExists();
 
         /*
          * Arguments validation.

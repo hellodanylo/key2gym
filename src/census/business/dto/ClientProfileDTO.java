@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package census.business.dto;
@@ -17,8 +28,8 @@ public class ClientProfileDTO {
         
     }
 
-    public ClientProfileDTO(Short id, Sex sex, DateMidnight birthday, String address, String telephone, String goal, String possibleAttendanceRate, String healthRestrictions, String favouriteSport, FitnessExperience fitnessExperience, String specialWishes, Short height, Short weight, Short adSourceId) {
-        this.id = id;
+    public ClientProfileDTO(Short clientId, Sex sex, DateMidnight birthday, String address, String telephone, String goal, String possibleAttendanceRate, String healthRestrictions, String favouriteSport, FitnessExperience fitnessExperience, String specialWishes, Short height, Short weight, Short adSourceId) {
+        this.clientId = clientId;
         this.sex = sex;
         this.birthday = birthday;
         this.address = address;
@@ -106,14 +117,6 @@ public class ClientProfileDTO {
         this.height = height;
     }
 
-    public Short getId() {
-        return id;
-    }
-
-    public void setId(Short id) {
-        this.id = id;
-    }
-
     public String getPossibleAttendanceRate() {
         return possibleAttendanceRate;
     }
@@ -154,7 +157,6 @@ public class ClientProfileDTO {
         this.weight = weight;
     }
     
-    private Short id;
     private Sex sex;
     private String address;
     private String telephone;

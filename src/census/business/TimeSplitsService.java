@@ -28,8 +28,8 @@ public class TimeSplitsService extends BusinessService {
      * @throws IllegalStateException if the session is not active
      * @return a list of time ranges
      */
-    public List<TimeSplitDTO> getAllTimeRanges() {
-        assertSessionActive();
+    public List<TimeSplitDTO> getAll() {
+        assertOpenSessionExists();
         
         List<TimeSplitDTO> result = new LinkedList<TimeSplitDTO>();
         List<TimeSplit> timeSplits = entityManager

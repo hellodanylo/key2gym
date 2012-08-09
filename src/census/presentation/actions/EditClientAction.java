@@ -31,8 +31,8 @@ public class EditClientAction extends CensusAction implements Observer {
             update(null, null);
         }
         bundle  = ResourceBundle.getBundle("census/presentation/resources/Strings");
-        setText(bundle.getString("Text.Edit"));
-        setIcon(new ImageIcon(getClass().getResource("/census/presentation/resources/edit64.png")));
+        setText(bundle.getString("Text.Find"));
+        setIcon(new ImageIcon(getClass().getResource("/census/presentation/resources/search64.png")));
 
     }
 

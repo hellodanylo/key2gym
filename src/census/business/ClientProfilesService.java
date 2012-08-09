@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census.business;
 
@@ -17,21 +28,17 @@ import org.joda.time.Instant;
 
 /**
  *
- * @author daniel
+ * @author Danylo Vashchilenko
  */
 public class ClientProfilesService extends BusinessService {
 
-    private static ClientProfilesService instance;
-
     /**
-     * Attaches a client profile to the client. 
+     * Updates a client profile. 
+     * <p>
      * 
      * <ul>
-     * 
-     * <li> The client profile's ID is also the client's ID.
-     * 
-     * <li> If the client already has a profile, it will be updated.
-     * 
+     * <li> The client profile's ID is also the client's ID </li>
+     * <li> If the client does not have a profile, it will be created </li>
      * </ul>
      *
      * @param clientProfile the Client Profile
@@ -42,14 +49,14 @@ public class ClientProfilesService extends BusinessService {
      * operation
      * @throws ValidationException if any of the required properties is invalid
      */
-    public void attachClientProfile(ClientProfileDTO clientProfile) throws BusinessException, ValidationException {
+    public void updateClientProfile(ClientProfileDTO clientProfile) throws BusinessException, ValidationException {
         assertTransactionActive();
-        assertSessionActive();
+        assertOpenSessionExists();
         
         if (clientProfile == null) {
             throw new NullPointerException("The clientProfile is null."); //NOI18N
-        } else if(clientProfile.getId() == null) {
-            throw new NullPointerException("The clientProfile.getId() is null."); //NOI18N
+        } else if(clientProfile.getClientId() == null) {
+            throw new NullPointerException("The clientProfile.getClientId() is null."); //NOI18N
         } else if (clientProfile.getAddress() == null) {
             throw new NullPointerException("The clientProfile.getAddress() is null."); //NOI18N
         } else if (clientProfile.getTelephone() == null) {
@@ -85,7 +92,7 @@ public class ClientProfilesService extends BusinessService {
          */
         ClientProfile entityClientProfile = 
                 new ClientProfile(
-                clientProfile.getId(), 
+                clientProfile.getClientId(), 
                 ClientProfile.Sex.values()[clientProfile.getSex().ordinal()], 
                 clientProfile.getBirthday().toDate(), 
                 clientProfile.getAddress(), 
@@ -100,35 +107,33 @@ public class ClientProfilesService extends BusinessService {
                 clientProfile.getWeight(), 
                 clientProfile.getAdSourceId());
         
-        // TODO: note change
-        if(entityManager.find(ClientProfile.class, clientProfile.getId()) == null) {
+        if(entityManager.find(ClientProfile.class, clientProfile.getClientId()) == null) {
             entityManager.persist(entityClientProfile);
         } else {
             entityManager.merge(entityClientProfile);
         }
+        
         entityManager.flush();
     }
     
     /**
-     * Detaches the profile from the client by its id.
+     * Detaches the profile from the client by its ID.
+     * <p>
      * 
      * <ul>
-     * 
-     * <li> The permissions level has to be PL_ALL
-     * 
-     * <li> The client has to have a profile attached
-     * 
+     * <li> The permissions level has to be PL_ALL </li>
+     * <li> The client has to have a profile attached </li>
      * </ul>
      * 
      * @param id the client's ID whose profile to detach
-     * @throws IllegalStateException if the session or the transaction is not active
+     * @throws IllegalStateException if the transaction is not active; if no session is open
      * @throws SecurityException if current security rules restrict this operation
      * @throws NullPointerException if the id is null
      * @throws ValidationException if the id is invalid
      * @throws BusinessException if current business rules restrict this operation
      */
     public void detachClientProfile(Short id) throws SecurityException, ValidationException, BusinessException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
@@ -149,7 +154,6 @@ public class ClientProfilesService extends BusinessService {
             throw new BusinessException(bundle.getString("ClientHasNoProfile"));
         }
         
-        // TODO: note change
         entityManager.remove(client.getClientProfile());
         entityManager.flush();
     }
@@ -160,10 +164,10 @@ public class ClientProfilesService extends BusinessService {
      * @param id the client profile's ID
      * @return the client profile
      * @throws ValidationException the ID is invalid 
-     * @throws IllegalStateException if the session is not active
+     * @throws IllegalStateException if no session is open
      */
     public ClientProfileDTO getById(Short id) throws ValidationException {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         if(id == null) {
             throw new NullPointerException("The id is null."); //NOI18N
@@ -201,24 +205,6 @@ public class ClientProfilesService extends BusinessService {
             public void validate(DateMidnight value) throws ValidationException {
                 if (value != null && value.isAfter(new Instant())) {
                     throw new ValidationException(bundle.getString("ClientProfileBirthdayMustBeInPast"));
-                }
-            }
-        };
-    }
-
-    private Validator getIdValidator() {
-        return new Validator<Short>() {
-
-            @Override
-            public void validate(Short value) throws ValidationException {
-                if (value == null) {
-                    throw new NullPointerException("The clientProfile's ID is null."); //NOI18N
-                }
-
-                ClientProfile clientProfile = entityManager.find(ClientProfile.class, value);
-
-                if (clientProfile != null) {
-                    throw new ValidationException(bundle.getString("ClientProfileAlreadyAttached"));
                 }
             }
         };
@@ -273,6 +259,11 @@ public class ClientProfilesService extends BusinessService {
             }
         };
     }
+    
+    /**
+     * Singleton instance.
+     */
+    private static ClientProfilesService instance;
 
     /**
      * Gets an instance of this class.

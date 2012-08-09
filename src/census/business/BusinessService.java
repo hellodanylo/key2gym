@@ -1,18 +1,28 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census.business;
 
-import census.CensusStarter;
 import java.util.ResourceBundle;
 import javax.persistence.EntityManager;
 
 /**
- * This is the main class for all classes proving business services.
+ * This is the parent class of all classes providing business services.
  * 
- * This class does not define the API to access a business service. It just gives
- * some common ground to all business services.
+ * This class does not define the API to access a business service. It provides
+ * common functionality to all business services.
  * 
  * @author Danylo Vashchilenko
  */
@@ -47,9 +57,9 @@ public abstract class BusinessService {
     /**
      * Makes sure that there is an open session.
      * 
-     * @throws IllegalStateException if the session is not active
+     * @throws IllegalStateException if no session is open
      */
-    protected void assertSessionActive() {
+    protected void assertOpenSessionExists() {
         if (!sessionService.hasOpenSession()) {
             throw new IllegalStateException("A session has to be open."); //NOI18N
         }

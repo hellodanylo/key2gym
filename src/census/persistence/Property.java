@@ -66,12 +66,20 @@ public class Property implements Serializable {
         this.name = name;
     }
 
-    public String getValue() {
+    public String getString() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setString(String value) {
         this.value = value;
+    }
+    
+    public Short getShort() {
+        return Short.valueOf(value);
+    }
+    
+    public Integer getInteger() {
+        return Integer.valueOf(value);
     }
 
     @Override

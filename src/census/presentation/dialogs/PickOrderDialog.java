@@ -228,9 +228,9 @@ public class PickOrderDialog extends CensusDialog {
                         /*
                          * The API requires to pass only anonymous attendances to findForAttendanceById
                          */
-                        financialActivityId = financialActivitiesService.findForAttendanceById(attendanceId);
+                        orderId = financialActivitiesService.findForAttendanceById(attendanceId);
                     } else {
-                        financialActivityId = financialActivitiesService.findByClientIdAndDate(attendanceDTO.getClientId(), new DateMidnight(), true);
+                        orderId = financialActivitiesService.findByClientIdAndDate(attendanceDTO.getClientId(), new DateMidnight(), true);
                     }
                 /*
                  * All exceptions are unexpected, and, therefore, are bugs. 
@@ -242,7 +242,7 @@ public class PickOrderDialog extends CensusDialog {
              * A default financial activity is needed.
              */
             } else {
-                financialActivityId = OrdersService.getInstance().findCurrentDefault(true);
+                orderId = OrdersService.getInstance().findCurrentDefault(true);
             }
         } catch(ValidationException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
@@ -260,20 +260,20 @@ public class PickOrderDialog extends CensusDialog {
         
         setResult(RESULT_OK);
         setClient(false);
-        setFinancialActivityId(financialActivityId);
+        setOrderId(orderId);
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
 
-    private Short financialActivityId;
+    private Short orderId;
     private Boolean client;
 
-    public Short getFinancialActivityId() {
-        return financialActivityId;
+    public Short getOrderId() {
+        return orderId;
     }
 
-    public void setFinancialActivityId(Short financialActivityId) {
-        this.financialActivityId = financialActivityId;
+    public void setOrderId(Short financialActivityId) {
+        this.orderId = financialActivityId;
     }
     
     public Boolean isClient() {

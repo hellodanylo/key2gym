@@ -49,7 +49,7 @@ public class ItemsService extends BusinessService {
      * @throws SecurityException if current security rules restrict this operation
      */
     public void addItem(ItemDTO item) throws ValidationException, SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
 
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
@@ -89,7 +89,7 @@ public class ItemsService extends BusinessService {
      * @return the list of items available
      */
     public List<ItemDTO> getItemsAvailable() {
-        assertSessionActive();
+        assertOpenSessionExists();
 
         List<ItemDTO> result = new LinkedList<>();
         List<Item> items = entityManager.createNamedQuery("Item.findAvailable") //NOI18N
@@ -99,7 +99,7 @@ public class ItemsService extends BusinessService {
                 .createNamedQuery("Property.findByName")
                 .setParameter("name", "time_range_mismatch_penalty_item_id")
                 .getSingleResult();
-        Short penaltyItemId = Short.valueOf(property.getValue());
+        Short penaltyItemId = Short.valueOf(property.getString());
 
         for (Item item : items) {
             /*
@@ -169,7 +169,7 @@ public class ItemsService extends BusinessService {
                 .createNamedQuery("Property.findByName")
                 .setParameter("name", "time_range_mismatch_penalty_item_id")
                 .getSingleResult();
-        Short penaltyItemId = Short.valueOf(property.getValue());
+        Short penaltyItemId = Short.valueOf(property.getString());
 
         for (Item item : items) {
             /*
@@ -202,7 +202,7 @@ public class ItemsService extends BusinessService {
      * @throws SecurityException if current security rules restrict this operation 
      */
     public void updateItem(ItemDTO item) throws ValidationException, SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
@@ -261,7 +261,7 @@ public class ItemsService extends BusinessService {
      * @throws SecurityException if current security rules restrict this operation
      */
     public void removeItem(Short itemId) throws ValidationException, BusinessException, SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {

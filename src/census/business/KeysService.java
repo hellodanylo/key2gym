@@ -27,7 +27,7 @@ public class KeysService extends BusinessService {
      * @return the list of keys available 
      */
     public List<KeyDTO> getKeysAvailable() {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         List<KeyDTO> result = new LinkedList();
         List<Key> keys;
@@ -49,7 +49,7 @@ public class KeysService extends BusinessService {
      * @return the list of keys taken 
      */
     public List<KeyDTO> getKeysTaken() {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         List<KeyDTO> result = new LinkedList<>();
         List<Key> keys;

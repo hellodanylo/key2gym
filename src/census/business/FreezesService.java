@@ -48,7 +48,7 @@ public class FreezesService extends BusinessService {
      * operation
      */
     public void addFreeze(Short clientId, Short days, String note) throws ValidationException, BusinessException, census.business.api.SecurityException {
-        assertSessionActive();
+        assertOpenSessionExists();
         assertTransactionActive();
 
         if (clientId == null) {
@@ -120,7 +120,7 @@ public class FreezesService extends BusinessService {
      * @return the list of all freezes for the client
      */
     public List<FreezeDTO> findFreezesForClient(Short clientId) throws ValidationException {
-        assertSessionActive();
+        assertOpenSessionExists();
 
         if (clientId == null) {
             throw new NullPointerException("The clientId is null."); //NOI18N
@@ -161,7 +161,7 @@ public class FreezesService extends BusinessService {
      * @throws BusinessException if any of the arguments is invalid
      */
     public List<FreezeDTO> findByDateIssuedRange(DateMidnight begin, DateMidnight end) throws SecurityException, ValidationException {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(bundle.getString("AccessDenied"));
@@ -207,7 +207,7 @@ public class FreezesService extends BusinessService {
      * @return the list of all freezes 
      */
     public List<FreezeDTO> findAll() {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         List<ClientFreeze> freezes = entityManager
                 .createNamedQuery("ClientFreeze.findAll") //NOI18N
@@ -240,7 +240,7 @@ public class FreezesService extends BusinessService {
      * @throws BusinessException if current business rules restrict this operation
      */
     public void remove(Short id) throws SecurityException, ValidationException, BusinessException {
-        assertSessionActive();
+        assertOpenSessionExists();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(bundle.getString("OperationDenied"));

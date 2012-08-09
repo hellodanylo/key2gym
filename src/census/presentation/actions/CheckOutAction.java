@@ -86,7 +86,7 @@ public class CheckOutAction extends CensusAction implements Observer {
                 Boolean isAnonymous;
 
                 try {
-                    isAnonymous = AttendancesService.getInstance().isAnonymous(attendanceId);
+                    isAnonymous = AttendancesService.getInstance().isCasual(attendanceId);
                     if(isAnonymous) {
                         financialActivityId = OrdersService.getInstance().findForAttendanceById(attendanceId);
                     } else {
@@ -118,7 +118,7 @@ public class CheckOutAction extends CensusAction implements Observer {
              * Finally, closes the attendance.
              */
             try {
-                AttendancesService.getInstance().closeAttendance(attendanceId);
+                AttendancesService.getInstance().checkOut(attendanceId);
             } catch (ValidationException ex) {
                 throw new RuntimeException(ex);
             }

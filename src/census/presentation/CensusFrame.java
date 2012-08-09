@@ -111,7 +111,7 @@ public class CensusFrame extends JFrame {
         workspacesTabbedPane.setSelectedComponent(ordersPanel);
     }
 
-    public void openItemsTab() {
+    public void openItemsTab() {        
         if (itemsPanel != null) {
             workspacesTabbedPane.setSelectedComponent(itemsPanel);
             return;
@@ -119,7 +119,21 @@ public class CensusFrame extends JFrame {
 
         itemsPanel = new ItemsPanel();
         itemsPanel.setItems(ItemsPanel.Items.PURE);
+
         workspacesTabbedPane.addTab(bundle.getString("Text.Items"), itemsPanel);
+
+        CloseableTabComponent tabComponent = new CloseableTabComponent();
+        tabComponent.setText(bundle.getString("Text.Items"));
+        tabComponent.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                workspacesTabbedPane.remove(itemsPanel);
+                itemsPanel = null;
+            }
+        });
+        workspacesTabbedPane.setTabComponentAt(workspacesTabbedPane.indexOfComponent(itemsPanel), tabComponent);
+        workspacesTabbedPane.setSelectedComponent(itemsPanel);
     }
 
     public AttendanceDTO getSelectedAttendance() {
@@ -166,6 +180,7 @@ public class CensusFrame extends JFrame {
         manageItemsAction = new census.presentation.actions.ManageItemsAction();
         manageSubscriptionsAction = new census.presentation.actions.ManageSubscriptionsAction();
         toggleSessionAction = new census.presentation.actions.ToggleSessionAction();
+        openItemsWindowAction = new census.presentation.actions.OpenItemsWindowAction();
         actionsToolBar = new javax.swing.JToolBar();
         openAttendanceButton = new javax.swing.JButton();
         closeAttendanceButton = new javax.swing.JButton();
@@ -199,6 +214,7 @@ public class CensusFrame extends JFrame {
         windowMenu = new javax.swing.JMenu();
         attendancesWindowMenuItem = new javax.swing.JMenuItem();
         financialActivitiesWindowMenuItem = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(bundle.getString("Title.Census")); // NOI18N
@@ -322,6 +338,9 @@ public class CensusFrame extends JFrame {
         financialActivitiesWindowMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.ALT_MASK));
         windowMenu.add(financialActivitiesWindowMenuItem);
 
+        jMenuItem2.setAction(openItemsWindowAction);
+        windowMenu.add(jMenuItem2);
+
         menuBar.add(windowMenu);
 
         setJMenuBar(menuBar);
@@ -339,7 +358,7 @@ public class CensusFrame extends JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(actionsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bannerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -386,6 +405,8 @@ public class CensusFrame extends JFrame {
     @Override
     public void dispose() {
         Logger.getLogger(this.getClass().getName()).info("Shutting down...");
+        
+        sessionsService.closeSession();
         
         super.dispose();
     }
@@ -440,6 +461,7 @@ public class CensusFrame extends JFrame {
     private javax.swing.JMenuItem financialActivitiesWindowMenuItem;
     private census.presentation.actions.FreezeClientAction freezeClientAction;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem manageCash;
     private census.presentation.actions.ManageCashAction manageCashAction;
     private javax.swing.JPopupMenu.Separator manageCashFreezesSeparator;
@@ -455,6 +477,7 @@ public class CensusFrame extends JFrame {
     private census.presentation.actions.CheckInAction openAttendanceAction;
     private javax.swing.JButton openAttendanceButton;
     private census.presentation.actions.OpenAttendancesWindowAction openAttendancesWindowAction;
+    private census.presentation.actions.OpenItemsWindowAction openItemsWindowAction;
     private census.presentation.actions.OpenOrdersWindowAction openOrdersWindowAction;
     private census.presentation.actions.RegisterClientAction registerClientAction;
     private javax.swing.JButton registerClientButton;

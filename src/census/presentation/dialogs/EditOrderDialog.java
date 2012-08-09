@@ -479,7 +479,7 @@ public class EditOrderDialog extends CensusDialog {
             /*
              * Date
              */
-            dateTextField.setText(order.getDate().toString("dd-MM-yyyy")); //NOI18N
+            dateTextField.setText(MessageFormat.format("{0, date, long}", order.getDate().toDate())); //NOI18N
         }
     }
 

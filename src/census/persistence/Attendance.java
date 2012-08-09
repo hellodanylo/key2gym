@@ -32,6 +32,7 @@ public class Attendance implements Serializable {
     
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id_atd")
     private Short id;
     

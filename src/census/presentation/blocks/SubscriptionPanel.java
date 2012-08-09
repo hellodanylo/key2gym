@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census.presentation.blocks;
 
@@ -20,25 +31,25 @@ import org.jdesktop.beansbinding.*;
 
 /**
  *
- * @author daniel
+ * @author Danylo Vashchilenko
  */
 public class SubscriptionPanel extends javax.swing.JPanel {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     private BindingGroup bindingGroup;
     private CensusBindingListener censusBindingListener;
-    private List<TimeSplitDTO> timeRanges;
+    private List<TimeSplitDTO> timeSplits;
     
     /**
      * Creates new form SubscriptionPanel
      */
     public SubscriptionPanel() {
         if(Beans.isDesignTime()) {
-            timeRanges = new LinkedList<>();
+            timeSplits = new LinkedList<>();
         } else {
-            timeRanges = TimeSplitsService.getInstance().getAllTimeRanges();
-            if(timeRanges.isEmpty()) {
-                throw new RuntimeException("There is not any time ranges found.");
+            timeSplits = TimeSplitsService.getInstance().getAll();
+            if(timeSplits.isEmpty()) {
+                throw new RuntimeException("There is not any time splits found.");
             }
         }
         
@@ -57,7 +68,7 @@ public class SubscriptionPanel extends javax.swing.JPanel {
             daysSpinner.setEnabled(false);
             monthsSpinner.setEnabled(false);
             yearsSpinner.setEnabled(false);
-            timeRangeComboBox.setEnabled(false);
+            timeSplitComboBox.setEnabled(false);
         } else {
             titleTextField.setEnabled(true);
             barcodeTextField.setEnabled(true);
@@ -66,7 +77,7 @@ public class SubscriptionPanel extends javax.swing.JPanel {
             daysSpinner.setEnabled(true);
             monthsSpinner.setEnabled(true);
             yearsSpinner.setEnabled(true);
-            timeRangeComboBox.setEnabled(true);         
+            timeSplitComboBox.setEnabled(true);         
         }
     
         if (bindingGroup == null) {
@@ -176,17 +187,17 @@ public class SubscriptionPanel extends javax.swing.JPanel {
             bindingGroup.addBinding(binding);
             
             /**
-             * Time range
+             * Time split
              */
             binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE,
-                    subscription, BeanProperty.create("timeRangeId"), timeRangeComboBox, BeanProperty.create("selectedItem"), "timeRange");
-            binding.setSourceNullValue(timeRanges.get(0));
-            binding.setSourceUnreadableValue(timeRanges.get(0));
+                    subscription, BeanProperty.create("timeSplitId"), timeSplitComboBox, BeanProperty.create("selectedItem"), "timeSplit");
+            binding.setSourceNullValue(timeSplits.get(0));
+            binding.setSourceUnreadableValue(timeSplits.get(0));
             binding.setConverter(new Converter<Short, TimeSplitDTO>() {
 
                 @Override
                 public TimeSplitDTO convertForward(Short value) {
-                    for(TimeSplitDTO timeRange : timeRanges) {
+                    for(TimeSplitDTO timeRange : timeSplits) {
                         if(timeRange.getId().equals(value)) {
                             return timeRange;
                         }
@@ -261,7 +272,7 @@ public class SubscriptionPanel extends javax.swing.JPanel {
         yearsLabel = new javax.swing.JLabel();
         yearsSpinner = new javax.swing.JSpinner();
         timeRangeLabel = new javax.swing.JLabel();
-        timeRangeComboBox = new javax.swing.JComboBox();
+        timeSplitComboBox = new javax.swing.JComboBox();
 
         titleLabel.setText(bundle.getString("Label.Title")); // NOI18N
 
@@ -287,8 +298,8 @@ public class SubscriptionPanel extends javax.swing.JPanel {
 
         timeRangeLabel.setText(bundle.getString("Label.TimeRange")); // NOI18N
 
-        timeRangeComboBox.setModel(new DefaultComboBoxModel(timeRanges.toArray()));
-        timeRangeComboBox.setRenderer(new TimeSplitListCellRenderer());
+        timeSplitComboBox.setModel(new DefaultComboBoxModel(timeSplits.toArray()));
+        timeSplitComboBox.setRenderer(new TimeSplitListCellRenderer());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -314,7 +325,7 @@ public class SubscriptionPanel extends javax.swing.JPanel {
                     .addComponent(titleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                     .addComponent(unitsSpinner)
                     .addComponent(priceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                    .addComponent(timeRangeComboBox, 0, 1, Short.MAX_VALUE))
+                    .addComponent(timeSplitComboBox, 0, 1, Short.MAX_VALUE))
                 .addGap(18, 18, 18))
         );
         layout.setVerticalGroup(
@@ -335,7 +346,7 @@ public class SubscriptionPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(timeRangeLabel)
-                    .addComponent(timeRangeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(timeSplitComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(daysLabel)
@@ -365,8 +376,8 @@ public class SubscriptionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel priceLabel;
     private javax.swing.JTextField priceTextField;
     private census.business.dto.SubscriptionDTO subscription;
-    private javax.swing.JComboBox timeRangeComboBox;
     private javax.swing.JLabel timeRangeLabel;
+    private javax.swing.JComboBox timeSplitComboBox;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JTextField titleTextField;
     private javax.swing.JLabel unitsLabel;
