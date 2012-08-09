@@ -99,8 +99,10 @@
             
             <!-- Generates build file -->
             <touch file="${dist.dir}/build"/>
-            <tstamp />
-            <echo output="${dist.dir}/build" message="Census v${version} (${TODAY}, ${TSTAMP})"/>
+            <tstamp>
+                <format property="TODAY" pattern="dd MMMM YYYY hh:mm:ss aa" />
+            </tstamp>
+            <echo output="${dist.dir}/build" message="Census v${version} (${TODAY})"/>
             
         </target>
 

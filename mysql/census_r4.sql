@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 23, 2012 at 05:07 AM
+-- Generation Time: Aug 09, 2012 at 05:36 AM
 -- Server version: 5.1.63
 -- PHP Version: 5.3.3-7+squeeze13
 
@@ -16,7 +16,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `census`
+-- Database: `census_v2`
 --
 
 -- --------------------------------------------------------
@@ -25,6 +25,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Table structure for table `administrator_adm`
 --
 
+DROP TABLE IF EXISTS `administrator_adm`;
 CREATE TABLE IF NOT EXISTS `administrator_adm` (
   `id_adm` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `username` text COLLATE utf8_unicode_ci NOT NULL,
@@ -35,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `administrator_adm` (
   `note` text COLLATE utf8_unicode_ci NOT NULL,
   `permissions_level` tinyint(1) NOT NULL DEFAULT '5',
   PRIMARY KEY (`id_adm`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -43,11 +44,12 @@ CREATE TABLE IF NOT EXISTS `administrator_adm` (
 -- Table structure for table `ad_source_ads`
 --
 
+DROP TABLE IF EXISTS `ad_source_ads`;
 CREATE TABLE IF NOT EXISTS `ad_source_ads` (
   `id_ads` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `title` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id_ads`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -55,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `ad_source_ads` (
 -- Table structure for table `attendance_atd`
 --
 
+DROP TABLE IF EXISTS `attendance_atd`;
 CREATE TABLE IF NOT EXISTS `attendance_atd` (
   `id_atd` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `idcln_atd` smallint(5) unsigned DEFAULT NULL,
@@ -64,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `attendance_atd` (
   PRIMARY KEY (`id_atd`),
   KEY `idcln_atd` (`idcln_atd`),
   KEY `idkey_atd` (`idkey_atd`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -72,6 +75,7 @@ CREATE TABLE IF NOT EXISTS `attendance_atd` (
 -- Table structure for table `cash_adjustment_cad`
 --
 
+DROP TABLE IF EXISTS `cash_adjustment_cad`;
 CREATE TABLE IF NOT EXISTS `cash_adjustment_cad` (
   `date_recorded` date NOT NULL,
   `amount` decimal(6,2) NOT NULL,
@@ -85,6 +89,7 @@ CREATE TABLE IF NOT EXISTS `cash_adjustment_cad` (
 -- Table structure for table `client_cln`
 --
 
+DROP TABLE IF EXISTS `client_cln`;
 CREATE TABLE IF NOT EXISTS `client_cln` (
   `id_cln` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `card` int(8) unsigned DEFAULT NULL,
@@ -96,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `client_cln` (
   `note` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_cln`),
   UNIQUE KEY `card` (`card`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -104,6 +109,7 @@ CREATE TABLE IF NOT EXISTS `client_cln` (
 -- Table structure for table `client_freeze_cfz`
 --
 
+DROP TABLE IF EXISTS `client_freeze_cfz`;
 CREATE TABLE IF NOT EXISTS `client_freeze_cfz` (
   `id_cfz` tinyint(3) unsigned NOT NULL AUTO_INCREMENT COMMENT 'The ID of the freeze',
   `idcln_cfz` smallint(5) unsigned NOT NULL COMMENT 'The ID of the client',
@@ -114,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `client_freeze_cfz` (
   PRIMARY KEY (`id_cfz`),
   KEY `idcln_cfz` (`idcln_cfz`),
   KEY `idadm_cfz` (`idadm_cfz`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Client freeze is a postponing of the expiration date.' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Client freeze is a postponing of the expiration date.';
 
 -- --------------------------------------------------------
 
@@ -122,6 +128,7 @@ CREATE TABLE IF NOT EXISTS `client_freeze_cfz` (
 -- Table structure for table `client_profile_cpf`
 --
 
+DROP TABLE IF EXISTS `client_profile_cpf`;
 CREATE TABLE IF NOT EXISTS `client_profile_cpf` (
   `idcln_cpf` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `sex` tinyint(1) NOT NULL DEFAULT '2',
@@ -139,7 +146,21 @@ CREATE TABLE IF NOT EXISTS `client_profile_cpf` (
   `idads_cpf` tinyint(3) unsigned NOT NULL,
   PRIMARY KEY (`idcln_cpf`),
   KEY `idads_cpf` (`idads_cpf`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `discount_dsc`
+--
+
+DROP TABLE IF EXISTS `discount_dsc`;
+CREATE TABLE IF NOT EXISTS `discount_dsc` (
+  `id_dsc` tinyint(4) unsigned NOT NULL,
+  `percent` tinyint(3) unsigned NOT NULL,
+  `title` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_dsc`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -147,6 +168,7 @@ CREATE TABLE IF NOT EXISTS `client_profile_cpf` (
 -- Table structure for table `item_itm`
 --
 
+DROP TABLE IF EXISTS `item_itm`;
 CREATE TABLE IF NOT EXISTS `item_itm` (
   `id_itm` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `barcode` bigint(20) unsigned DEFAULT NULL,
@@ -155,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `item_itm` (
   `price` decimal(5,2) unsigned NOT NULL,
   PRIMARY KEY (`id_itm`),
   UNIQUE KEY `barcode` (`barcode`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -163,15 +185,16 @@ CREATE TABLE IF NOT EXISTS `item_itm` (
 -- Table structure for table `item_subscription_its`
 --
 
+DROP TABLE IF EXISTS `item_subscription_its`;
 CREATE TABLE IF NOT EXISTS `item_subscription_its` (
   `iditm_its` tinyint(3) unsigned NOT NULL,
   `units` tinyint(3) unsigned NOT NULL,
   `term_days` tinyint(3) unsigned NOT NULL,
   `term_months` tinyint(3) unsigned NOT NULL,
   `term_years` tinyint(3) unsigned NOT NULL,
-  `idtmr_its` tinyint(3) unsigned NOT NULL,
+  `idtsp_its` tinyint(3) unsigned NOT NULL,
   PRIMARY KEY (`iditm_its`),
-  KEY `id_tmr` (`idtmr_its`)
+  KEY `id_tmr` (`idtsp_its`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -180,11 +203,12 @@ CREATE TABLE IF NOT EXISTS `item_subscription_its` (
 -- Table structure for table `key_key`
 --
 
+DROP TABLE IF EXISTS `key_key`;
 CREATE TABLE IF NOT EXISTS `key_key` (
   `id_key` tinyint(2) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -192,14 +216,18 @@ CREATE TABLE IF NOT EXISTS `key_key` (
 -- Table structure for table `order_line_orl`
 --
 
+DROP TABLE IF EXISTS `order_line_orl`;
 CREATE TABLE IF NOT EXISTS `order_line_orl` (
+  `id_orl` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `idord_orl` smallint(5) unsigned NOT NULL,
-  `quantity` tinyint(3) unsigned NOT NULL,
   `iditm_orl` tinyint(3) unsigned NOT NULL,
-  PRIMARY KEY (`idord_orl`,`iditm_orl`),
-  KEY `idord_orl` (`idord_orl`),
-  KEY `iditm_orl` (`iditm_orl`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `iddsc_orl` tinyint(4) unsigned DEFAULT NULL,
+  `quantity` tinyint(3) unsigned NOT NULL,
+  PRIMARY KEY (`id_orl`),
+  KEY `iditm_orl` (`iditm_orl`),
+  KEY `iddsc_orl` (`iddsc_orl`),
+  KEY `idord_orl` (`idord_orl`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -207,6 +235,7 @@ CREATE TABLE IF NOT EXISTS `order_line_orl` (
 -- Table structure for table `order_ord`
 --
 
+DROP TABLE IF EXISTS `order_ord`;
 CREATE TABLE IF NOT EXISTS `order_ord` (
   `id_ord` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `date_recorded` date NOT NULL,
@@ -216,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `order_ord` (
   PRIMARY KEY (`id_ord`),
   KEY `idatd_fna` (`idatd_ord`),
   KEY `idcln_fna` (`idcln_ord`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -224,12 +253,13 @@ CREATE TABLE IF NOT EXISTS `order_ord` (
 -- Table structure for table `property_pty`
 --
 
+DROP TABLE IF EXISTS `property_pty`;
 CREATE TABLE IF NOT EXISTS `property_pty` (
   `id_pty` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `name` text COLLATE utf8_unicode_ci NOT NULL,
   `current_value` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id_pty`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -237,6 +267,7 @@ CREATE TABLE IF NOT EXISTS `property_pty` (
 -- Table structure for table `session_ssn`
 --
 
+DROP TABLE IF EXISTS `session_ssn`;
 CREATE TABLE IF NOT EXISTS `session_ssn` (
   `id_ssn` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `idadm_ssn` tinyint(3) unsigned NOT NULL,
@@ -244,20 +275,21 @@ CREATE TABLE IF NOT EXISTS `session_ssn` (
   `datetime_end` datetime DEFAULT NULL,
   PRIMARY KEY (`id_ssn`),
   KEY `idadm_ssn` (`idadm_ssn`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `time_range_tmr`
+-- Table structure for table `time_split_tsp`
 --
 
-CREATE TABLE IF NOT EXISTS `time_range_tmr` (
-  `id_tmr` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
-  `time_begin` time NOT NULL,
-  `time_end` time NOT NULL,
-  PRIMARY KEY (`id_tmr`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+DROP TABLE IF EXISTS `time_split_tsp`;
+CREATE TABLE IF NOT EXISTS `time_split_tsp` (
+  `id_tsp` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `end_time` time NOT NULL,
+  `title` text CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`id_tsp`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Constraints for dumped tables
@@ -289,14 +321,7 @@ ALTER TABLE `client_profile_cpf`
 --
 ALTER TABLE `item_subscription_its`
   ADD CONSTRAINT `item_subscription_its_ibfk_1` FOREIGN KEY (`iditm_its`) REFERENCES `item_itm` (`id_itm`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `item_subscription_its_ibfk_2` FOREIGN KEY (`idtmr_its`) REFERENCES `time_range_tmr` (`id_tmr`) ON UPDATE CASCADE;
-
---
--- Constraints for table `order_line_orl`
---
-ALTER TABLE `order_line_orl`
-  ADD CONSTRAINT `order_line_orl_ibfk_1` FOREIGN KEY (`idord_orl`) REFERENCES `order_ord` (`id_ord`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `order_line_orl_ibfk_2` FOREIGN KEY (`iditm_orl`) REFERENCES `item_itm` (`id_itm`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `item_subscription_its_ibfk_2` FOREIGN KEY (`idtsp_its`) REFERENCES `time_split_tsp` (`id_tsp`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `order_ord`
