@@ -17,6 +17,7 @@
     <class>census.persistence.Property</class>
     <class>census.persistence.CashAdjustment</class>
     <class>census.persistence.TimeSplit</class>
+    <class>census.persistence.Discount</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="eclipselink.logging.logger" value="org.eclipse.persistence.logging.CommonsLoggingSessionLog"/>

@@ -137,7 +137,7 @@ public class AttendancesService extends BusinessService {
 
             try {       
                 for(int i = 0; i < penalty;i++) {
-                    OrdersService.getInstance().addPurchase(orderId, itemId);
+                    OrdersService.getInstance().addPurchase(orderId, itemId, null);
                 }
             } catch (SecurityException ex) {
                 throw new RuntimeException("Unexpected SecurityException.");

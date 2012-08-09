@@ -78,7 +78,4 @@ public class ItemDTO {
     private Short quantity;
     private BigDecimal price;
     private Boolean itemSubscription;
-    
-    public static final Short FAKE_ID_DEBT = -1;
-    public static final Short FAKE_ID_PENALTY = -2;
 }

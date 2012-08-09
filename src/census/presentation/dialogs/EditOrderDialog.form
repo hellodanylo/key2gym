@@ -31,7 +31,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="okButton" linkSize="2" min="-2" pref="87" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -39,23 +39,32 @@
                       <Component id="paymentPanel" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="purchasingSplitPane" alignment="0" min="-2" pref="355" max="-2" attributes="0"/>
-                          <Component id="cancelButton" linkSize="2" alignment="0" min="-2" pref="131" max="-2" attributes="0"/>
+                          <Component id="purchasingSplitPane" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="cancelButton" linkSize="2" min="-2" pref="131" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="196" max="-2" attributes="0"/>
                       <Component id="addItemButton" min="-2" pref="81" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="removeItemButton" min="-2" pref="79" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="discountsComboBox" max="32767" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -63,22 +72,28 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="basicInformationPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="paymentPanel" min="-2" max="-2" attributes="0"/>
-                  </Group>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="purchasingSplitPane" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="discountsComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="addItemButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="removeItemButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="basicInformationPanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="paymentPanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="okButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -113,7 +128,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Basic Information">
+            <TitledBorder title="&lt;Text.BasicInformation&gt;">
               <ResourceString PropertyName="titleX" bundle="src/census/presentation/resources/Strings.properties" key="Text.BasicInformation" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
@@ -187,7 +202,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Payment">
+            <TitledBorder title="&lt;Text.Payment&gt;">
               <ResourceString PropertyName="titleX" bundle="src/census/presentation/resources/Strings.properties" key="Text.Payment" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
@@ -357,15 +372,15 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="purchasesTable">
+            <Component class="javax.swing.JTable" name="orderLinesTable">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="purchasesTableModel" type="code"/>
+                  <Connection code="orderLinesTableModel" type="code"/>
                 </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="int[] widths = new int[]{300, 152};&#xa;TableColumn column = null;&#xa;for (int i = 0; i &lt; widths.length; i++) {&#xa;    column = purchasesTable.getColumnModel().getColumn(i);&#xa;    column.setPreferredWidth(widths[i]);&#xa;}"/>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="Column[] itemsTableColumns = new Column[] {&#xa;    Column.TITLE,&#xa;    Column.PRICE&#xa;};&#xa;&#xa;purchasesTableModel = new ItemsTableModel(itemsTableColumns);"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="int[] widths = new int[]{220, 55, 53, 68, 54};&#xa;    TableColumn column = null;&#xa;    for (int i = 0; i &lt; widths.length; i++) {&#xa;        column = orderLinesTable.getColumnModel().getColumn(i);&#xa;        column.setPreferredWidth(widths[i]);&#xa;    }"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="OrderLinesTableModel.Column[] orderLinesTableColumns = new OrderLinesTableModel.Column[] {&#xa;    OrderLinesTableModel.Column.ITEM_TITLE,&#xa;    OrderLinesTableModel.Column.ITEM_PRICE,&#xa;    OrderLinesTableModel.Column.QUANTITY,&#xa;    OrderLinesTableModel.Column.DISCOUNT_TITLE,&#xa;    OrderLinesTableModel.Column.TOTAL&#xa;};&#xa;&#xa;orderLinesTableModel = new OrderLinesTableModel(orderLinesTableColumns);"/>
               </AuxValues>
             </Component>
           </SubComponents>
@@ -400,5 +415,25 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JComboBox" name="discountsComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new DefaultComboBoxModel(discounts.toArray())" type="code"/>
+        </Property>
+        <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new DiscountListCellRenderer()" type="code"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="List&lt;DiscountDTO&gt; discounts = DiscountsService.getInstance().findAll();&#xa;discounts.add(0, null);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Discount" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

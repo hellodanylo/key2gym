@@ -18,12 +18,6 @@ public class OrderDTO {
         
     }
 
-    public OrderDTO(Short id, DateMidnight date, BigDecimal payment) {
-        this.id = id;
-        this.date = date;
-        this.payment = payment;
-    }
-
     public Short getId() {
         return id;
     }
@@ -80,12 +74,12 @@ public class OrderDTO {
         this.clientId = clientId;
     }
 
-    public List<ItemDTO> getItems() {
-        return items;
+    public List<OrderLineDTO> getOrderLines() {
+        return orderLines;
     }
 
-    public void setItems(List<ItemDTO> items) {
-        this.items = items;
+    public void setOrderLines(List<OrderLineDTO> orderLines) {
+        this.orderLines = orderLines;
     }
 
     public String getClientFullName() {
@@ -109,7 +103,7 @@ public class OrderDTO {
     private BigDecimal payment;
     private BigDecimal total;
     private BigDecimal due;
-    private List<ItemDTO> items;
+    private List<OrderLineDTO> orderLines;
     private DateMidnight date;
     private Short clientId;
     private String clientFullName;

@@ -8,7 +8,7 @@ import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.api.SecurityException;
 import census.business.dto.OrderDTO;
-import census.business.dto.ItemDTO;
+import census.business.dto.OrderLineDTO;
 import census.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
@@ -433,14 +433,19 @@ public class OrdersService extends BusinessService {
         OrderDTO result = wrapOrderEntity(order);
 
         /*
-         * Debt item
+         * Debt
          */
         if (order.getClient() != null && isToday(order.getDate())) {
             BigDecimal possibleMoneyBalance = order.getClient().getMoneyBalance().add(result.getTotal());
             if (possibleMoneyBalance.compareTo(BigDecimal.ZERO) < 0) {
-                ItemDTO item = new ItemDTO(ItemDTO.FAKE_ID_DEBT, null, bundle.getString("Debt"), null, possibleMoneyBalance.negate().setScale(2));
-                result.getItems().add(item);
-                result.setTotal(result.getTotal().add(item.getPrice()));
+                OrderLineDTO orderLine = new OrderLineDTO();
+                orderLine.setItemId(OrderLineDTO.FAKE_ID_DEBT);
+                orderLine.setItemTitle(bundle.getString("Debt"));
+                orderLine.setItemPrice(possibleMoneyBalance.negate().setScale(2));
+                orderLine.setQuantity((short)1);
+                
+                result.getOrderLines().add(orderLine);
+                result.setTotal(result.getTotal().add(orderLine.getItemPrice()));
             }
         }
 
@@ -469,7 +474,7 @@ public class OrdersService extends BusinessService {
      * @throws IllegalStateException if the transaction is not active; if no
      * session is open
      */
-    public void addPurchase(Short orderId, Short itemId)
+    public void addPurchase(Short orderId, Short itemId, Short discountId)
             throws BusinessException, IllegalArgumentException, IllegalStateException, ValidationException, SecurityException {
         assertSessionActive();
         assertTransactionActive();
@@ -487,6 +492,7 @@ public class OrdersService extends BusinessService {
 
         OrderEntity order;
         Item item;
+        Discount discount;
 
         order = entityManager.find(OrderEntity.class,
                 orderId);
@@ -511,6 +517,16 @@ public class OrdersService extends BusinessService {
 
         if (item.getItemSubscription() != null && order.getClient() == null) {
             throw new BusinessException(bundle.getString("OnlyClientsCanPurchaseSubscriptions"));
+        }
+        
+        if(discountId == null) {
+            discount = null;
+        } else {
+            discount = entityManager.find(Discount.class, discountId);
+
+            if(discount == null) {
+                throw new ValidationException(bundle.getString("IDInvalid"));
+            }
         }
 
         /*
@@ -542,7 +558,12 @@ public class OrdersService extends BusinessService {
              * Charge the Client's account. Checks whether the new value will
              * overreach the precision limit.
              */
-            BigDecimal newMoneyBalance = client.getMoneyBalance().subtract(item.getPrice());
+            BigDecimal amount = item.getPrice();
+            if(discount != null) {
+                amount = amount.divide(new BigDecimal(100));
+                amount = amount.multiply(new BigDecimal(100-discount.getPercent()));
+            }
+            BigDecimal newMoneyBalance = client.getMoneyBalance().subtract(amount);
             if (newMoneyBalance.precision() > 5) {
                 throw new ValidationException(bundle.getString("LimitReached"));
             }
@@ -579,30 +600,42 @@ public class OrdersService extends BusinessService {
         }
 
         /*
-         * Attemps to find an order line with the same item.
+         * Attemps to find an appropriate order line.
          */
-        OrderLine targetOrderLine = entityManager.find(OrderLine.class, new OrderLineId(orderId, itemId));
+        OrderLine orderLine;
+        
+        try {
+            orderLine = (OrderLine) entityManager
+                .createNamedQuery("OrderLine.findByOrderAndItemAndDiscount")
+                .setParameter("order", order)
+                .setParameter("item", item)
+                .setParameter("discount", discount)
+                .setMaxResults(1)
+                .getSingleResult();
+        } catch(NoResultException ex) {
+            orderLine = null;
+        }
 
         /*
-         * Creates a new order line, if none with the same item was found.
+         * Creates a new order line, if none was found.
          */
-        if (targetOrderLine == null) {
-            targetOrderLine = new OrderLine();
-            targetOrderLine.setItem(item);
-            targetOrderLine.setOrder(order);
-            targetOrderLine.setQuantity((short) 1);
-            entityManager.persist(targetOrderLine);
+        if (orderLine == null) {
+            orderLine = new OrderLine();
+            orderLine.setItem(item);
+            orderLine.setOrder(order);
+            orderLine.setQuantity((short) 1);
+            orderLine.setDiscount(discount);
+            entityManager.persist(orderLine);
 
             List<OrderLine> orderLines = order.getOrderLines();
             if (orderLines == null) {
                 orderLines = new LinkedList<>();
             }
-
-            orderLines.add(targetOrderLine);
+            orderLines.add(orderLine);
         } else {
-            targetOrderLine.setQuantity((short) (targetOrderLine.getQuantity() + 1));
+            orderLine.setQuantity((short) (orderLine.getQuantity() + 1));
         }
-
+       
         entityManager.flush();
     }
 
@@ -635,7 +668,7 @@ public class OrdersService extends BusinessService {
      * @throws IllegalStateException if the transaction is not active, or if no
      * session is open
      */
-    public void removePurchase(Short orderId, Short itemId)
+    public void removePurchase(Short orderLineId)
             throws BusinessException, IllegalArgumentException, ValidationException, SecurityException {
         assertSessionActive();
         assertTransactionActive();
@@ -643,31 +676,26 @@ public class OrdersService extends BusinessService {
         /*
          * Arguments validation.
          */
-        if (orderId == null) {
+        if (orderLineId == null) {
             throw new NullPointerException("The orderId is null."); //NOI18N
         }
-
-        if (itemId == null) {
-            throw new NullPointerException("The itemId is null."); //NOI18N
-        }
-
-        /*
-         * If the ID is less than 0, it's fake and can no be removed.
-         */
-        if (itemId < 0) {
+        
+        if(orderLineId < 0) {
             throw new BusinessException(bundle.getString("ItemEnforcedCanNotBeRemoved"));
         }
 
-
         OrderEntity order;
+        OrderLine orderLine;
         Item item;
 
-        order = entityManager.find(OrderEntity.class,
-                orderId);
-
-        if (order == null) {
-            throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
+        orderLine = entityManager.find(OrderLine.class, orderLineId);
+        
+        if (orderLine == null) {
+            throw new ValidationException(bundle.getString("OrderLineIDInvalid"));
         }
+        
+        order = orderLine.getOrder();
+        item = orderLine.getItem();
 
         Boolean requiresAllPermissions = (order.getAttendance() != null
                 && !order.getAttendance().getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN))
@@ -677,25 +705,12 @@ public class OrdersService extends BusinessService {
             throw new SecurityException(bundle.getString("OperationDenied"));
         }
 
-        item = entityManager.find(Item.class, itemId);
-
-        if (item == null) {
-            throw new ValidationException(bundle.getString("ItemIDInvalid"));
-        }
-
-
-        OrderLine targetOrderLine = entityManager.find(OrderLine.class, new OrderLineId(orderId, itemId));
-
-        if (targetOrderLine == null) {
-            throw new BusinessException(bundle.getString("OrderEntityDoesNotContainItem"));
-        }
-
         if (order.getAttendance() != null && item.getItemSubscription() != null) {
             throw new BusinessException(bundle.getString("SubscriptionCanNotBeRemovedFromOrderEntityWithAttendance"));
         }
 
         Property timeRangeMismatch = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
-        if (targetOrderLine.getItem().getId().toString().equals(timeRangeMismatch.getValue())) {
+        if (orderLine.getItem().getId().toString().equals(timeRangeMismatch.getValue())) {
             throw new BusinessException(bundle.getString("ItemEnforcedCanNotBeRemoved"));
         }
 
@@ -745,11 +760,11 @@ public class OrdersService extends BusinessService {
          * Decreases the quantity on the order line, and removes it, if the
          * quantity is now zero.
          */
-        targetOrderLine.setQuantity((short) (targetOrderLine.getQuantity() - 1));
-        if (targetOrderLine.getQuantity() == 0) {
+        orderLine.setQuantity((short) (orderLine.getQuantity() - 1));
+        if (orderLine.getQuantity() == 0) {
             // EntityManager won't remove this relationship upon EntityManager.remove call
-            order.getOrderLines().remove(targetOrderLine);
-            entityManager.remove(targetOrderLine);
+            order.getOrderLines().remove(orderLine);
+            entityManager.remove(orderLine);
         }
 
         entityManager.flush();
@@ -764,54 +779,54 @@ public class OrdersService extends BusinessService {
      * @throws ValidationException if the financial activity's ID is invalid
      * @throws IllegalStateException if the session is not active
      */
-    public List<ItemDTO> findPurchases(Short orderId)
-            throws ValidationException {
-        assertSessionActive();
-
-        if (orderId == null) {
-            throw new NullPointerException("The orderId is null."); //NOI18N
-        }
-
-        OrderEntity order;
-        LinkedList<ItemDTO> items = new LinkedList<>();
-
-        order = entityManager.find(OrderEntity.class,
-                orderId);
-
-        if (order == null) {
-            throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
-        }
-
-        /*
-         * We count the order's total to calculate the client's debt later.
-         */
-        BigDecimal total = BigDecimal.ZERO;
-
-        if (order.getOrderLines() != null) {
-            for (OrderLine orderLine : order.getOrderLines()) {
-                Item item = orderLine.getItem();
-                ItemDTO itemDTO = new ItemDTO(item.getId(), item.getBarcode(), item.getTitle(), item.getQuantity(), item.getPrice());
-
-                for (int i = 0; i < orderLine.getQuantity(); i++) {
-                    items.add(itemDTO);
-                    total = total.add(item.getPrice());
-                }
-            }
-        }
-
-        /*
-         * Debt item
-         */
-        if (order.getClient() != null) {
-            BigDecimal possibleMoneyBalance = order.getClient().getMoneyBalance().add(total.subtract(order.getPayment()));
-            if (possibleMoneyBalance.compareTo(BigDecimal.ZERO) < 0) {
-                ItemDTO item = new ItemDTO(ItemDTO.FAKE_ID_DEBT, null, bundle.getString("DebtTitle"), null, possibleMoneyBalance.negate().setScale(2));
-                items.addFirst(item);
-            }
-        }
-
-        return items;
-    }
+//    public List<ItemDTO> findPurchases(Short orderId)
+//            throws ValidationException {
+//        assertSessionActive();
+//
+//        if (orderId == null) {
+//            throw new NullPointerException("The orderId is null."); //NOI18N
+//        }
+//
+//        OrderEntity order;
+//        LinkedList<ItemDTO> items = new LinkedList<>();
+//
+//        order = entityManager.find(OrderEntity.class,
+//                orderId);
+//
+//        if (order == null) {
+//            throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
+//        }
+//
+//        /*
+//         * We count the order's total to calculate the client's debt later.
+//         */
+//        BigDecimal total = BigDecimal.ZERO;
+//
+//        if (order.getOrderLines() != null) {
+//            for (OrderLine orderLine : order.getOrderLines()) {
+//                Item item = orderLine.getItem();
+//                ItemDTO itemDTO = new ItemDTO(item.getId(), item.getBarcode(), item.getTitle(), item.getQuantity(), item.getPrice());
+//
+//                for (int i = 0; i < orderLine.getQuantity(); i++) {
+//                    items.add(itemDTO);
+//                    total = total.add(item.getPrice());
+//                }
+//            }
+//        }
+//
+//        /*
+//         * Debt item
+//         */
+//        if (order.getClient() != null) {
+//            BigDecimal possibleMoneyBalance = order.getClient().getMoneyBalance().add(total.subtract(order.getPayment()));
+//            if (possibleMoneyBalance.compareTo(BigDecimal.ZERO) < 0) {
+//                ItemDTO item = new ItemDTO(ItemDTO.FAKE_ID_DEBT, null, bundle.getString("DebtTitle"), null, possibleMoneyBalance.negate().setScale(2));
+//                items.addFirst(item);
+//            }
+//        }
+//
+//        return items;
+//    }
 
     /**
      * Records a payment.
@@ -961,16 +976,15 @@ public class OrdersService extends BusinessService {
 
     private OrderDTO wrapOrderEntity(OrderEntity order) {
 
-        OrderDTO orderDTO =
-                new OrderDTO(
-                order.getId(),
-                new DateMidnight(order.getDate()),
-                order.getPayment().setScale(2));
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setId(order.getId());
+        orderDTO.setDate(new DateMidnight(order.getDate()));
+        orderDTO.setPayment(order.getPayment().setScale(2));
 
         /*
-         * Purchased items
+         * Order lines
          */
-        List<ItemDTO> items = new LinkedList<>();
+        List<OrderLineDTO> orderLineDTOs = new LinkedList<>();
 
         /*
          * We count the order's total to calculate the client's debt later.
@@ -980,15 +994,26 @@ public class OrdersService extends BusinessService {
         if (order.getOrderLines() != null) {
             for (OrderLine orderLine : order.getOrderLines()) {
                 Item item = orderLine.getItem();
-                ItemDTO itemDTO = new ItemDTO(item.getId(), item.getBarcode(), item.getTitle(), item.getQuantity(), item.getPrice());
-
-                for (int i = 0; i < orderLine.getQuantity(); i++) {
-                    items.add(itemDTO);
-                    total = total.add(item.getPrice());
+                Discount discount = orderLine.getDiscount();
+                
+                OrderLineDTO orderLineDTO = new OrderLineDTO();
+                orderLineDTO.setId(orderLine.getId());
+                orderLineDTO.setItemId(item.getId());
+                orderLineDTO.setItemTitle(item.getTitle());
+                orderLineDTO.setItemPrice(item.getPrice());
+                if(discount != null) {
+                    orderLineDTO.setDiscountPercent(discount.getPercent());
+                    orderLineDTO.setDiscountTitle(discount.getTitle());
                 }
+                orderLineDTO.setQuantity(orderLine.getQuantity());
+                orderLineDTO.setTotal(orderLine.getTotal());
+                
+                total = total.add(orderLine.getTotal());
+                
+                orderLineDTOs.add(orderLineDTO);
             }
         }
-        orderDTO.setItems(items);
+        orderDTO.setOrderLines(orderLineDTOs);
 
         /*
          * Client
@@ -1005,6 +1030,7 @@ public class OrdersService extends BusinessService {
             orderDTO.setAttendanceId(order.getAttendance().getId());
             orderDTO.setKeyTitle(order.getAttendance().getKey().getTitle());
         }
+        
         /*
          * Total
          */

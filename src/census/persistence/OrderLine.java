@@ -6,6 +6,7 @@
 package census.persistence;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.persistence.*;
 
 /**
@@ -13,28 +14,40 @@ import javax.persistence.*;
  * @author Danylo Vashchilenko
  */
 @Entity
-@IdClass(OrderLineId.class)
 @Table(name = "order_line_orl")
+@NamedQueries({
+    @NamedQuery(name="OrderLine.findByOrderAndItemAndDiscount", query="SELECT ol FROM OrderLine ol WHERE ol.orderEntity = :order AND ol.item = :item AND ol.discount = :discount")
+})
+
 public class OrderLine implements Serializable {
     
     @Id
-    @Column(name = "idord_orl")
-    private short orderId;
-    
-    @Id
-    @Column(name = "iditm_orl")
-    private short itemId;
-    
-    @Column(name="quantity")
-    private short quantity;
-    
-    @PrimaryKeyJoinColumn(name="idord_orl", referencedColumnName="id_ord")//, insertable=false, updatable=false)
+    @Column(name = "id_orl")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private short id;
+            
+    @JoinColumn(name="idord_orl", referencedColumnName="id_ord")//, insertable=false, updatable=false)
     @ManyToOne
     private OrderEntity orderEntity;
     
-    @PrimaryKeyJoinColumn(name="iditm_orl", referencedColumnName="id_itm")//, insertable=false, updatable=false)
+    @JoinColumn(name="iditm_orl", referencedColumnName="id_itm")//, insertable=false, updatable=false)
     @ManyToOne
     private Item item;
+    
+    @JoinColumn(name = "iddsc_orl", referencedColumnName = "id_dsc")
+    @ManyToOne
+    private Discount discount;
+    
+    @Column(name="quantity")
+    private short quantity;
+
+    public short getId() {
+        return id;
+    }
+
+    public void setId(short id) {
+        this.id = id;
+    }
 
     public Item getItem() {
         return item;
@@ -42,7 +55,6 @@ public class OrderLine implements Serializable {
 
     public void setItem(Item item) {
         this.item = item;
-        itemId = item.getId();
     }
 
     public OrderEntity getOrder() {
@@ -51,7 +63,6 @@ public class OrderLine implements Serializable {
 
     public void setOrder(OrderEntity order) {
         this.orderEntity = order;
-        orderId = order.getId();
     }
 
     public short getQuantity() {
@@ -61,5 +72,21 @@ public class OrderLine implements Serializable {
     public void setQuantity(short quantity) {
         this.quantity = quantity;
     }
+
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
+    }
     
+    public BigDecimal getTotal() {
+        BigDecimal total = item.getPrice().multiply(new BigDecimal(quantity));
+        if(discount != null) {
+            total = total.divide(new BigDecimal(100));
+            total = total.multiply(new BigDecimal(100-discount.getPercent()));
+        }
+        return total;
+    }
 }

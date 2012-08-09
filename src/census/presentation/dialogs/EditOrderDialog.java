@@ -8,14 +8,12 @@ import census.business.*;
 import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
-import census.business.dto.AttendanceDTO;
-import census.business.dto.ClientDTO;
-import census.business.dto.ItemDTO;
+import census.business.dto.*;
 import census.presentation.CensusFrame;
+import census.presentation.util.DiscountListCellRenderer;
 import census.presentation.util.ItemListCellRenderer;
-import census.presentation.util.ItemsTableModel;
-import census.presentation.util.ItemsTableModel.Column;
 import census.presentation.util.MutableListModel;
+import census.presentation.util.OrderLinesTableModel;
 import java.awt.Color;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -23,12 +21,13 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.table.TableColumn;
 
 /**
- * This dialog allows user to view and edit a order. It implements
- * the following features:
+ * This dialog allows user to view and edit a order. It implements the following
+ * features:
  *
  * <ul>
  *
@@ -38,9 +37,9 @@ import javax.swing.table.TableColumn;
  *
  * Session variables: <ul>
  *
- * <li> orderId - the ID of order to be shown and
- * edited </li> <li> fullPaymentForced - if true, the dialog won't exit with
- * RESULT_OK, if the user did not record full payment.
+ * <li> orderId - the ID of order to be shown and edited </li> <li>
+ * fullPaymentForced - if true, the dialog won't exit with RESULT_OK, if the
+ * user did not record full payment.
  *
  * </ul>
  *
@@ -74,11 +73,11 @@ public class EditOrderDialog extends CensusDialog {
 
             @Override
             public void focusGained(FocusEvent e) {
-                purchasesTable.clearSelection();
+                orderLinesTable.clearSelection();
             }
         });
 
-        purchasesTable.addFocusListener(new FocusAdapter() {
+        orderLinesTable.addFocusListener(new FocusAdapter() {
 
             @Override
             public void focusGained(FocusEvent e) {
@@ -119,9 +118,11 @@ public class EditOrderDialog extends CensusDialog {
         cancelButton = new javax.swing.JButton();
         purchasingSplitPane = new javax.swing.JSplitPane();
         purchasesScrollPane = new javax.swing.JScrollPane();
-        purchasesTable = new javax.swing.JTable();
+        orderLinesTable = new javax.swing.JTable();
         itemsScrollPane = new javax.swing.JScrollPane();
         itemsList = new javax.swing.JList();
+        discountsComboBox = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(bundle.getString("Title.Order")); // NOI18N
@@ -272,20 +273,23 @@ public class EditOrderDialog extends CensusDialog {
         purchasingSplitPane.setDividerLocation(100);
         purchasingSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        Column[] itemsTableColumns = new Column[] {
-            Column.TITLE,
-            Column.PRICE
+        OrderLinesTableModel.Column[] orderLinesTableColumns = new OrderLinesTableModel.Column[] {
+            OrderLinesTableModel.Column.ITEM_TITLE,
+            OrderLinesTableModel.Column.ITEM_PRICE,
+            OrderLinesTableModel.Column.QUANTITY,
+            OrderLinesTableModel.Column.DISCOUNT_TITLE,
+            OrderLinesTableModel.Column.TOTAL
         };
 
-        purchasesTableModel = new ItemsTableModel(itemsTableColumns);
-        purchasesTable.setModel(purchasesTableModel);
-        int[] widths = new int[]{300, 152};
+        orderLinesTableModel = new OrderLinesTableModel(orderLinesTableColumns);
+        orderLinesTable.setModel(orderLinesTableModel);
+        int[] widths = new int[]{220, 55, 53, 68, 54};
         TableColumn column = null;
         for (int i = 0; i < widths.length; i++) {
-            column = purchasesTable.getColumnModel().getColumn(i);
+            column = orderLinesTable.getColumnModel().getColumn(i);
             column.setPreferredWidth(widths[i]);
         }
-        purchasesScrollPane.setViewportView(purchasesTable);
+        purchasesScrollPane.setViewportView(orderLinesTable);
 
         purchasingSplitPane.setLeftComponent(purchasesScrollPane);
 
@@ -296,6 +300,13 @@ public class EditOrderDialog extends CensusDialog {
         itemsScrollPane.setViewportView(itemsList);
 
         purchasingSplitPane.setBottomComponent(itemsScrollPane);
+
+        List<DiscountDTO> discounts = DiscountsService.getInstance().findAll();
+        discounts.add(0, null);
+        discountsComboBox.setModel(new DefaultComboBoxModel(discounts.toArray()));
+        discountsComboBox.setRenderer(new DiscountListCellRenderer());
+
+        jLabel1.setText(bundle.getString("Label.Discount")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -308,19 +319,26 @@ public class EditOrderDialog extends CensusDialog {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(basicInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(paymentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(purchasingSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                            .addComponent(purchasingSplitPane)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(196, 196, 196)
                         .addComponent(addItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(95, 95, 95))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(discountsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelButton, okButton});
@@ -329,18 +347,23 @@ public class EditOrderDialog extends CensusDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(basicInformationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(paymentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(purchasingSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(discountsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(addItemButton)
-                            .addComponent(removeItemButton))))
-                .addGap(18, 18, 18)
+                            .addComponent(removeItemButton))
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(basicInformationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(paymentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
                     .addComponent(cancelButton))
@@ -372,7 +395,7 @@ public class EditOrderDialog extends CensusDialog {
          */
         dueTextField.setForeground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ? new Color(168, 0, 0) : new Color(98, 179, 0));
         dueTextField.setBackground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ? new Color(255, 173, 206) : new Color(211, 255, 130));
-        
+
         dueTextField.setText(order.getDue().toPlainString());
 
         /*
@@ -405,19 +428,19 @@ public class EditOrderDialog extends CensusDialog {
          * bought or returned since last update. However, we want to preserve
          * the selected item for convinience.
          */
-        items = order.getItems();
-        index = purchasesTable.getSelectedRow();
-        purchasesTableModel.setItems(items);
+        List<OrderLineDTO> orderLines = order.getOrderLines();
+        index = orderLinesTable.getSelectedRow();
+        orderLinesTableModel.setOrderLines(orderLines);
         if (index >= items.size()) {
             index--;
         }
-        purchasesTable.getSelectionModel().setSelectionInterval(index, index);
+        orderLinesTable.getSelectionModel().setSelectionInterval(index, index);
 
         /*
          * We update basic information only upon hard resets for it could not
          * have changed since last update.
          */
-        if(!softReset) {
+        if (!softReset) {
             String subject;
             if (order.getClientId() == null) {
                 if (order.getAttendanceId() != null) {
@@ -452,8 +475,8 @@ public class EditOrderDialog extends CensusDialog {
             subjectTextField.getCaret().setDot(0);
 
             /*
-            * Date
-            */
+             * Date
+             */
             dateTextField.setText(order.getDate().toString("dd-MM-yyyy")); //NOI18N
         }
     }
@@ -465,23 +488,20 @@ public class EditOrderDialog extends CensusDialog {
      */
     private void addItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemButtonActionPerformed
 
-        ItemDTO item = null;
+        Short itemId = getSelectedItemId();
 
-        item = (ItemDTO) itemsList.getSelectedValue();
-        if (item == null) {
-            int index = purchasesTable.getSelectedRow();
-            if (index != -1) {
-                item = (ItemDTO) order.getItems().get(index);
-            } else {
-                ValidationException ex = new ValidationException(bundle.getString("Message.SelectItemFirst"));
-                CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
-                return;
-            }
+        if (itemId == null) {
+            /*
+             * Asks the user to select an item.
+             */
+            ValidationException ex = new ValidationException(bundle.getString("Message.SelectItemFirst"));
+            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            return;
         }
 
         try {
-            Short itemId = item.getId();
-            ordersService.addPurchase(order.getId(), itemId);
+            DiscountDTO discount = (DiscountDTO)discountsComboBox.getSelectedItem();
+            ordersService.addPurchase(order.getId(), itemId, discount == null ? null : discount.getId());
         } catch (BusinessException | ValidationException | SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
         } catch (RuntimeException ex) {
@@ -506,22 +526,18 @@ public class EditOrderDialog extends CensusDialog {
      */
     private void removeItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeItemButtonActionPerformed
 
-        ItemDTO item = null;
-
-        item = (ItemDTO) itemsList.getSelectedValue();
-        if (item == null) {
-            int index = purchasesTable.getSelectedRow();
-            if (index != -1) {
-                item = (ItemDTO) order.getItems().get(index);
-            } else {
-                ValidationException ex = new ValidationException(bundle.getString("Message.SelectItemFirst"));
-                CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
-                return;
-            }
+        int orderLineIndex = orderLinesTable.getSelectedRow();
+        
+        if (orderLineIndex == -1) {
+            ValidationException ex = new ValidationException(bundle.getString("Message.SelectOrderLineFirst"));
+            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            return;
         }
+        
+        OrderLineDTO orderLine = order.getOrderLines().get(orderLineIndex);
 
         try {
-            ordersService.removePurchase(order.getId(), item.getId());
+            ordersService.removePurchase(orderLine.getId());
         } catch (BusinessException | SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
         } catch (ValidationException | RuntimeException ex) {
@@ -538,6 +554,30 @@ public class EditOrderDialog extends CensusDialog {
         // Reloads the order and updates GUI
         setOrderId(orderId);
     }//GEN-LAST:event_removeItemButtonActionPerformed
+
+    private Short getSelectedItemId() {
+
+        Short itemId = null;
+
+        /*
+         * Checks the items list, first.
+         */
+        ItemDTO itemDTO = (ItemDTO) itemsList.getSelectedValue();
+
+        if (itemDTO != null) {
+            itemId = itemDTO.getId();
+        } else {
+            /*
+             * Checks the order lines, second.
+             */
+            int index = orderLinesTable.getSelectedRow();
+            if (index != -1) {
+                itemId = order.getOrderLines().get(index).getItemId();
+            }
+        }
+
+        return itemId;
+    }
 
     /**
      * Processes an OK button click
@@ -593,8 +633,8 @@ public class EditOrderDialog extends CensusDialog {
     }//GEN-LAST:event_paymentTextFieldFocusLost
 
     /**
-     * Sets the order's ID. This method causes all components to be
-     * reloaded in order to correspond with the new order.
+     * Sets the order's ID. This method causes all components to be reloaded in
+     * order to correspond with the new order.
      *
      * @param orderId the
      * @see EditOrderDialog for details about hot swapping
@@ -611,7 +651,7 @@ public class EditOrderDialog extends CensusDialog {
 
     public void setFullPaymentForced(Boolean fullPaymentForced) {
         this.fullPaymentForced = fullPaymentForced;
-    } 
+    }
 
     public Short getOrderId() {
         return orderId;
@@ -619,7 +659,7 @@ public class EditOrderDialog extends CensusDialog {
     /*
      * Presentation
      */
-    private ItemsTableModel purchasesTableModel;
+    private OrderLinesTableModel orderLinesTableModel;
     private MutableListModel<ItemDTO> itemsListModel;
     private Short orderId;
     private Boolean fullPaymentForced;
@@ -637,19 +677,21 @@ public class EditOrderDialog extends CensusDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JTextField dateTextField;
+    private javax.swing.JComboBox discountsComboBox;
     private javax.swing.JLabel dueLabel;
     private javax.swing.JTextField dueTextField;
     private javax.swing.JList itemsList;
     private javax.swing.JScrollPane itemsScrollPane;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton okButton;
     private census.business.dto.OrderDTO order;
+    private javax.swing.JTable orderLinesTable;
     private javax.swing.JLabel paidLabel;
     private javax.swing.JTextField paidTextField;
     private javax.swing.JLabel paymentLabel;
     private javax.swing.JPanel paymentPanel;
     private javax.swing.JTextField paymentTextField;
     private javax.swing.JScrollPane purchasesScrollPane;
-    private javax.swing.JTable purchasesTable;
     private javax.swing.JSplitPane purchasingSplitPane;
     private javax.swing.JButton removeItemButton;
     private javax.swing.JLabel subjectLabel;

@@ -13,10 +13,7 @@ import census.business.SessionsService;
 import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
-import census.business.dto.AttendanceDTO;
-import census.business.dto.ClientProfileDTO;
-import census.business.dto.OrderDTO;
-import census.business.dto.ItemDTO;
+import census.business.dto.*;
 import census.presentation.CensusFrame;
 import census.presentation.util.AttendancesTableModel;
 import census.presentation.util.FreezesTableModel;
@@ -529,8 +526,16 @@ public class EditClientDialog extends CensusDialog {
                     });
             dateNode = new DefaultMutableTreeNode(text);
 
-            for (ItemDTO item : orderDTO.getItems()) {
-                itemNode = new DefaultMutableTreeNode(item.getTitle());
+            for (OrderLineDTO orderLine : orderDTO.getOrderLines()) {
+                String nodeText = MessageFormat.format(
+                        bundle.getString("Text.OrderLine(ItemTitle,Quantity,DiscountTitle)"),
+                        new Object[]{
+                            orderLine.getItemTitle(), 
+                            orderLine.getQuantity(),
+                            orderLine.getDiscountTitle() == null ? bundle.getString("Text.Discount.None") : orderLine.getDiscountTitle()
+                        }
+                );
+                itemNode = new DefaultMutableTreeNode(nodeText);
                 dateNode.add(itemNode);
             }
 
