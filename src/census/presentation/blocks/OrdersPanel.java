@@ -12,9 +12,9 @@ import census.business.api.SecurityException;
 import census.business.dto.OrderDTO;
 import census.presentation.actions.CensusAction;
 import census.presentation.actions.EditOrderAction;
-import census.presentation.util.FinancialActivitiesTableCellRenderer;
-import census.presentation.util.FinancialActivitiesTableModel;
-import census.presentation.util.FinancialActivitiesTableModel.Column;
+import census.presentation.util.OrdersTableCellRenderer;
+import census.presentation.util.OrdersTableModel;
+import census.presentation.util.OrdersTableModel.Column;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -83,7 +83,7 @@ public class OrdersPanel extends javax.swing.JPanel {
         /*
         * This renderer highlights FAs wo/ full payments
         */
-        financialActivitiesTable.setDefaultRenderer(String.class, new FinancialActivitiesTableCellRenderer());
+        financialActivitiesTable.setDefaultRenderer(String.class, new OrdersTableCellRenderer());
 
         /*
         * Columns for FAs table
@@ -96,7 +96,7 @@ public class OrdersPanel extends javax.swing.JPanel {
             Column.PAID
         };
 
-        financialActivitiesTableModel = new FinancialActivitiesTableModel(сolumns);
+        financialActivitiesTableModel = new OrdersTableModel(сolumns);
         financialActivitiesTable.setModel(financialActivitiesTableModel);
         int[] widths = new int[]{50,200,50,50};
         TableColumn column = null;
@@ -180,7 +180,7 @@ public class OrdersPanel extends javax.swing.JPanel {
      * Presentation
      */
     private DateMidnight date;
-    private FinancialActivitiesTableModel financialActivitiesTableModel;
+    private OrdersTableModel financialActivitiesTableModel;
     private CustomObserver observer;
     /*
      * Business

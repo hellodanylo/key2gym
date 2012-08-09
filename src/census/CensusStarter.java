@@ -61,7 +61,7 @@ public class CensusStarter {
         StorageService.getInstance();
 
         //<editor-fold defaultstate="collapsed" desc="Debugging code">
-        Locale.setDefault(new Locale("ru", "RU"));
+        //Locale.setDefault(new Locale("ru", "RU"));
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Changes the L&F to Nimbus">

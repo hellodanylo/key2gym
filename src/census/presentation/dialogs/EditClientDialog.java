@@ -520,7 +520,7 @@ public class EditClientDialog extends CensusDialog {
         DefaultMutableTreeNode itemNode;
         for (OrderDTO orderDTO : ordersDTO) {
             String text = MessageFormat.format(bundle.getString("Text.Order.withDateAndTotalAndPaid"),
-                    new Object[]{orderDTO.getDate().toString("dd-MM-yyyy"), //NOI18N
+                    new Object[]{orderDTO.getDate().toDate(), //NOI18N
                         orderDTO.getTotal().toPlainString(),
                         orderDTO.getPayment().toPlainString()
                     });

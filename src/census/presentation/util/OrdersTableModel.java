@@ -6,6 +6,7 @@ package census.presentation.util;
 
 import census.business.dto.AttendanceDTO;
 import census.business.dto.OrderDTO;
+import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -15,18 +16,18 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Danylo Vashchilenko
  */
-public class FinancialActivitiesTableModel extends AbstractTableModel {
+public class OrdersTableModel extends AbstractTableModel {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public enum Column {ID, SUBJECT, TOTAL, PAID};
     private List<OrderDTO> financialActivities;
     private Column[] columns;
 
-    public FinancialActivitiesTableModel(Column[] columns) {
+    public OrdersTableModel(Column[] columns) {
         this(columns, new LinkedList<OrderDTO>());
     }
 
-    public FinancialActivitiesTableModel(Column[] columns, List<OrderDTO> attendances) {
+    public OrdersTableModel(Column[] columns, List<OrderDTO> attendances) {
         this.columns = columns;
         this.financialActivities = attendances;
     }
@@ -54,7 +55,7 @@ public class FinancialActivitiesTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         OrderDTO financialActivity = financialActivities.get(rowIndex);
         if (columns[columnIndex].equals(Column.ID)) {
-            return financialActivity.getId().toString();
+            return MessageFormat.format("{0}", financialActivity.getId());
         } else if (columns[columnIndex].equals(Column.SUBJECT)) {
             String subject;
             if (financialActivity.getAttendanceId() != null) {
@@ -76,7 +77,7 @@ public class FinancialActivitiesTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         if (columns[columnIndex].equals(Column.ID)) {
-            return bundle.getString("Text.ID");
+            return bundle.getString("Text.OrderID");
         } else if (columns[columnIndex].equals(Column.SUBJECT)) {
             return bundle.getString("Text.Subject");
         } else if (columns[columnIndex].equals(Column.TOTAL)) {

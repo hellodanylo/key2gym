@@ -5,6 +5,7 @@
 package census.presentation.util;
 
 import census.business.dto.AttendanceDTO;
+import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -54,7 +55,7 @@ public class AttendancesTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         AttendanceDTO attendance = attendances.get(rowIndex);
         if (columns[columnIndex].equals(Column.BEGIN)) {
-            return attendance.getDateTimeBegin().toString("HH:mm:ss");
+            return MessageFormat.format("{0, time, short}", attendance.getDateTimeBegin().toDate());
         } else if (columns[columnIndex].equals(Column.CLIENT_ID)) {
             return attendance.getClientId() == null ? "" : attendance.getClientId().toString();
         } else if (columns[columnIndex].equals(Column.CLIENT_FULL_NAME)) {
@@ -62,11 +63,11 @@ public class AttendancesTableModel extends AbstractTableModel {
         } else if (columns[columnIndex].equals(Column.KEY)) {
             return attendance.getKeyTitle();
         } else if (columns[columnIndex].equals(Column.END)) {
-            return attendance.getDateTimeEnd() == null ? "" : attendance.getDateTimeEnd().toString("HH:mm:ss");
+            return attendance.getDateTimeEnd() == null ? "" : MessageFormat.format("{0, time, short}", attendance.getDateTimeEnd().toDate());
         } else if(columns[columnIndex].equals(Column.BEGIN_DATE)) {
-            return attendance.getDateTimeBegin().toString("dd-MM-yyyy");
+            return MessageFormat.format("{0, date, short}", attendance.getDateTimeBegin().toDate());
         } else if(columns[columnIndex].equals(Column.ID)) {
-            return attendance.getId().toString();
+            return MessageFormat.format("{0}", attendance.getId());
         }
         throw new IndexOutOfBoundsException();
     }
@@ -86,7 +87,7 @@ public class AttendancesTableModel extends AbstractTableModel {
         } else if (columns[columnIndex].equals(Column.BEGIN_DATE)) {
             return bundle.getString("Text.Date");
         } else if(columns[columnIndex].equals(Column.ID)) {
-            return bundle.getString("Text.ID");
+            return bundle.getString("Text.AttendanceID");
         }
         throw new IndexOutOfBoundsException();
     }

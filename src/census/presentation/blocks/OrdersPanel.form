@@ -91,7 +91,7 @@
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="financialActivitiesTableFocusLost"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="/*&#xa; * This renderer highlights FAs wo/ full payments&#xa; */&#xa;financialActivitiesTable.setDefaultRenderer(String.class, new FinancialActivitiesTableCellRenderer());&#xa;&#xa;/*&#xa; * Columns for FAs table&#xa; */&#xa;Column[] &#x441;olumns = &#xa;    new Column[] {&#xa;    Column.ID, &#xa;    Column.SUBJECT, &#xa;    Column.TOTAL, &#xa;    Column.PAID&#xa;};&#xa;&#xa;financialActivitiesTableModel = new FinancialActivitiesTableModel(&#x441;olumns);"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="/*&#xa; * This renderer highlights FAs wo/ full payments&#xa; */&#xa;financialActivitiesTable.setDefaultRenderer(String.class, new census.presentation.util.OrdersTableCellRenderer());&#xa;&#xa;/*&#xa; * Columns for FAs table&#xa; */&#xa;Column[] &#x441;olumns = &#xa;    new Column[] {&#xa;    Column.ID, &#xa;    Column.SUBJECT, &#xa;    Column.TOTAL, &#xa;    Column.PAID&#xa;};&#xa;&#xa;financialActivitiesTableModel = new census.presentation.util.OrdersTableModel(&#x441;olumns);"/>
           </AuxValues>
         </Component>
       </SubComponents>

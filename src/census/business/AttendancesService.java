@@ -514,7 +514,7 @@ public class AttendancesService extends BusinessService {
      * @return the current time range or null, if none is found
      */
     private TimeSplit findCurrentTimeSplit() {
-        List<TimeSplit> timeSplits = entityManager.createNamedQuery("TimeSplit.findAllOrderByTime") //NOI18N
+        List<TimeSplit> timeSplits = entityManager.createNamedQuery("TimeSplit.findAll") //NOI18N
                 .getResultList();
         LocalTime now = new LocalTime();
         LocalTime begin = now;

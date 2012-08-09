@@ -17,23 +17,23 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author Danylo Vashchilenko
  */
-public class FinancialActivitiesTableCellRenderer implements TableCellRenderer {
+public class OrdersTableCellRenderer implements TableCellRenderer {
     private DefaultTableCellRenderer renderer;
     private Color unpaidFinancialActivityColor;
 
-    public FinancialActivitiesTableCellRenderer() {
+    public OrdersTableCellRenderer() {
         renderer = new DefaultTableCellRenderer();
         unpaidFinancialActivityColor = new Color(255, 173, 206);
     }
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        if(!(table.getModel() instanceof FinancialActivitiesTableModel)) { 
+        if(!(table.getModel() instanceof OrdersTableModel)) { 
             throw new IllegalArgumentException("The table's model is not of expected type.");
         }
         
         if (row != -1) {
-            OrderDTO financialActivity = ((FinancialActivitiesTableModel)table.getModel()).getFinancialActivityAt(row);
+            OrderDTO financialActivity = ((OrdersTableModel)table.getModel()).getFinancialActivityAt(row);
             renderer.setBackground(financialActivity.getTotal().compareTo(financialActivity.getPayment()) > 0
                     ? unpaidFinancialActivityColor : Color.white);
         }
