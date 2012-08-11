@@ -39,7 +39,7 @@ public abstract class BusinessService {
     protected BusinessService() {
         storageService = StorageService.getInstance();
         sessionService = SessionsService.getInstance();
-        bundle = ResourceBundle.getBundle("census.business.resources.Strings");
+        bundle = ResourceBundle.getBundle("census/business/resources/Strings");
         entityManager = storageService.getEntityManager();
     }
     

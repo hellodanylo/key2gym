@@ -152,11 +152,11 @@ public class SessionsService extends Observable {
      */
     public void closeSession() {
         if (!StorageService.getInstance().isTransactionActive()) {
-            throw new IllegalStateException(bundle.getString("TransactionNotActive"));
+            throw new IllegalStateException("The transcation has to be active.");
         }
 
         if (session == null) {
-            throw new IllegalStateException(bundle.getString("NoOpenSessions"));
+            throw new IllegalStateException(bundle.getString("There isn't any open session."));
         }
 
         raisedAdministrator = null;

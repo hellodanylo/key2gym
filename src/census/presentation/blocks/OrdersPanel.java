@@ -49,7 +49,7 @@ public class OrdersPanel extends javax.swing.JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() > 1) {
+                if (e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1) {
                     new EditOrderAction().actionPerformed(new ActionEvent(this, 0, CensusAction.ACTION_CONTEXT));
                 }
             }

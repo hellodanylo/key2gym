@@ -12,10 +12,12 @@ import census.presentation.CensusFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.dialogs.PickDateDialog;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.beans.Beans;
 import java.util.Observable;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import org.apache.log4j.Logger;
 
 /**
@@ -30,6 +32,7 @@ public class OpenOrdersWindowAction extends CensusAction {
             update(null, null);
         }
         
+        setAccelerationKey(KeyStroke.getKeyStroke(KeyEvent.VK_2, KeyEvent.ALT_MASK));
         setText(bundle.getString("Text.Orders"));
     }
 

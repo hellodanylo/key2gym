@@ -6,6 +6,7 @@ package census.presentation;
 
 import census.business.AdministratorsService;
 import census.business.SessionsService;
+import census.business.StorageService;
 import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.SessionListener;
@@ -15,8 +16,8 @@ import census.business.dto.AttendanceDTO;
 import census.business.dto.OrderDTO;
 import census.presentation.blocks.AttendancesPanel;
 import census.presentation.blocks.CloseableTabComponent;
-import census.presentation.blocks.OrdersPanel;
 import census.presentation.blocks.ItemsPanel;
+import census.presentation.blocks.OrdersPanel;
 import census.presentation.util.CensusExceptionListener;
 import census.presentation.util.NotificationException;
 import java.awt.Component;
@@ -201,9 +202,9 @@ public class CensusFrame extends JFrame {
         eventLeavingPurchaseSeparator = new javax.swing.JPopupMenu.Separator();
         eventPurchaseMenuItem = new javax.swing.JMenuItem();
         clientsMenu = new javax.swing.JMenu();
-        clientsRegisterMenuItem = new javax.swing.JMenuItem();
-        clientsEditMenuItem = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        registerClientMenuItem = new javax.swing.JMenuItem();
+        findClientMenuItem = new javax.swing.JMenuItem();
+        freezeClientMenuItem = new javax.swing.JMenuItem();
         manageMenu = new javax.swing.JMenu();
         manageItemsMenuItem = new javax.swing.JMenuItem();
         manageSubscriptionsMenuItem = new javax.swing.JMenuItem();
@@ -213,8 +214,8 @@ public class CensusFrame extends JFrame {
         manageFreezesMenuItem = new javax.swing.JMenuItem();
         windowMenu = new javax.swing.JMenu();
         attendancesWindowMenuItem = new javax.swing.JMenuItem();
-        financialActivitiesWindowMenuItem = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        ordersWindowMenuItem = new javax.swing.JMenuItem();
+        itemsWindowMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(bundle.getString("Title.Census")); // NOI18N
@@ -296,17 +297,17 @@ public class CensusFrame extends JFrame {
 
         clientsMenu.setText(bundle.getString("Menu.Clients")); // NOI18N
 
-        clientsRegisterMenuItem.setAction(registerClientAction);
-        clientsRegisterMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
-        clientsMenu.add(clientsRegisterMenuItem);
+        registerClientMenuItem.setAction(registerClientAction);
+        registerClientMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
+        clientsMenu.add(registerClientMenuItem);
 
-        clientsEditMenuItem.setAction(editClientAction);
-        clientsEditMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.ALT_MASK));
-        clientsMenu.add(clientsEditMenuItem);
+        findClientMenuItem.setAction(editClientAction);
+        findClientMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.ALT_MASK));
+        clientsMenu.add(findClientMenuItem);
 
-        jMenuItem1.setAction(freezeClientAction);
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK));
-        clientsMenu.add(jMenuItem1);
+        freezeClientMenuItem.setAction(freezeClientAction);
+        freezeClientMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK));
+        clientsMenu.add(freezeClientMenuItem);
 
         menuBar.add(clientsMenu);
 
@@ -331,15 +332,13 @@ public class CensusFrame extends JFrame {
         windowMenu.setText(bundle.getString("Menu.Window")); // NOI18N
 
         attendancesWindowMenuItem.setAction(openAttendancesWindowAction);
-        attendancesWindowMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.ALT_MASK));
         windowMenu.add(attendancesWindowMenuItem);
 
-        financialActivitiesWindowMenuItem.setAction(openOrdersWindowAction);
-        financialActivitiesWindowMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.ALT_MASK));
-        windowMenu.add(financialActivitiesWindowMenuItem);
+        ordersWindowMenuItem.setAction(openOrdersWindowAction);
+        windowMenu.add(ordersWindowMenuItem);
 
-        jMenuItem2.setAction(openItemsWindowAction);
-        windowMenu.add(jMenuItem2);
+        itemsWindowMenuItem.setAction(openItemsWindowAction);
+        windowMenu.add(itemsWindowMenuItem);
 
         menuBar.add(windowMenu);
 
@@ -358,7 +357,7 @@ public class CensusFrame extends JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(actionsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bannerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -406,7 +405,9 @@ public class CensusFrame extends JFrame {
     public void dispose() {
         Logger.getLogger(this.getClass().getName()).info("Shutting down...");
         
+        StorageService.getInstance().beginTransaction();
         sessionsService.closeSession();
+        StorageService.getInstance().commitTransaction();
         
         super.dispose();
     }
@@ -443,10 +444,8 @@ public class CensusFrame extends JFrame {
     private javax.swing.JToolBar.Separator attendancesClientsSeparator;
     private javax.swing.JMenuItem attendancesWindowMenuItem;
     private javax.swing.JLabel bannerLabel;
-    private javax.swing.JMenuItem clientsEditMenuItem;
     private javax.swing.JToolBar.Separator clientsFinancesSeparator;
     private javax.swing.JMenu clientsMenu;
-    private javax.swing.JMenuItem clientsRegisterMenuItem;
     private census.presentation.actions.CheckOutAction closeAttendanceAction;
     private javax.swing.JButton closeAttendanceButton;
     private census.presentation.actions.EditClientAction editClientAction;
@@ -458,10 +457,10 @@ public class CensusFrame extends JFrame {
     private javax.swing.JPopupMenu.Separator eventLeavingPurchaseSeparator;
     private javax.swing.JMenu eventMenu;
     private javax.swing.JMenuItem eventPurchaseMenuItem;
-    private javax.swing.JMenuItem financialActivitiesWindowMenuItem;
+    private javax.swing.JMenuItem findClientMenuItem;
     private census.presentation.actions.FreezeClientAction freezeClientAction;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem freezeClientMenuItem;
+    private javax.swing.JMenuItem itemsWindowMenuItem;
     private javax.swing.JMenuItem manageCash;
     private census.presentation.actions.ManageCashAction manageCashAction;
     private javax.swing.JPopupMenu.Separator manageCashFreezesSeparator;
@@ -479,8 +478,10 @@ public class CensusFrame extends JFrame {
     private census.presentation.actions.OpenAttendancesWindowAction openAttendancesWindowAction;
     private census.presentation.actions.OpenItemsWindowAction openItemsWindowAction;
     private census.presentation.actions.OpenOrdersWindowAction openOrdersWindowAction;
+    private javax.swing.JMenuItem ordersWindowMenuItem;
     private census.presentation.actions.RegisterClientAction registerClientAction;
     private javax.swing.JButton registerClientButton;
+    private javax.swing.JMenuItem registerClientMenuItem;
     private javax.swing.JMenu sessionMenu;
     private census.presentation.actions.ToggleRaisedAdministratorAction toggleRaisedAdministratorAction;
     private census.presentation.actions.ToggleSessionAction toggleSessionAction;

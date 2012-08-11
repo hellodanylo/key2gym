@@ -116,56 +116,61 @@ public class AttendancesService extends BusinessService {
         /*
          * Finds the client's current subscription.
          */
-        ItemSubscription itemSubscription = (ItemSubscription)entityManager
+        ItemSubscription itemSubscription;
+        
+        List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>)entityManager
                 .createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
                 .setParameter("client", client) //NOI18N
-                .setMaxResults(1)
-                .getSingleResult();
-
-        List<TimeSplit> timeSplits = entityManager
-                .createNamedQuery("TimeSplit.findAll") //NOI18N
                 .getResultList();
         
-        /*
-         * Calculates the qunatity of penalties to apply.
-         */
-        int penalties = -1;
-        LocalTime now = new LocalTime();
-        LocalTime begin = now;
-        
-        for (TimeSplit timeSplit : timeSplits) {
-            LocalTime end = new LocalTime(timeSplit.getTime());
-
-            if(timeSplit.equals(itemSubscription.getTimeSplit())) {
-                penalties = 0;
-            } else if(penalties != -1) {
-                penalties++;
-            } 
+        if(!itemSubscriptions.isEmpty()) {
+            itemSubscription = itemSubscriptions.get(0);
             
-            if(now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
-                break;
-            }
-            
-            begin = end;
-        }
-        
-        /*
-         * If there are penalties to apply, does it.
-         */
-        if(penalties > 0) {
-            Short orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), true);
-            Short itemId = ((Property)entityManager
-                    .createNamedQuery("Property.findByName") //NOI18N
-                    .setParameter("name", "time_range_mismatch_penalty_item_id") //NOI18N
-                    .getSingleResult())
-                    .getShort();
+            List<TimeSplit> timeSplits = entityManager
+                    .createNamedQuery("TimeSplit.findAll") //NOI18N
+                    .getResultList();
 
-            try {       
-                for(int i = 0; i < penalties;i++) {
-                    OrdersService.getInstance().addPurchase(orderId, itemId, null);
+            /*
+            * Calculates the qunatity of penalties to apply.
+            */
+            int penalties = -1;
+            LocalTime now = new LocalTime();
+            LocalTime begin = now;
+
+            for (TimeSplit timeSplit : timeSplits) {
+                LocalTime end = new LocalTime(timeSplit.getTime());
+
+                if(timeSplit.equals(itemSubscription.getTimeSplit())) {
+                    penalties = 0;
+                } else if(penalties != -1) {
+                    penalties++;
+                } 
+
+                if(now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
+                    break;
                 }
-            } catch (SecurityException ex) {
-                throw new RuntimeException("Unexpected SecurityException.");
+
+                begin = end;
+            }
+
+            /*
+            * If there are penalties to apply, does it.
+            */
+            if(penalties > 0) {
+                Short orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), true);
+                Short itemId = ((Property)entityManager
+                        .createNamedQuery("Property.findByName") //NOI18N
+                        .setParameter("name", "time_range_mismatch_penalty_item_id") //NOI18N
+                        .getSingleResult())
+                        .getShort();
+
+                try {       
+                    for(int i = 0; i < penalties;i++) {
+                        OrdersService.getInstance().addPurchase(orderId, itemId, null);
+                    }
+                } catch (SecurityException ex) {
+                    throw new RuntimeException("Unexpected SecurityException.");
+                }
             }
         }
 

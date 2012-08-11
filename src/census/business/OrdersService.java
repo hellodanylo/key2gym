@@ -12,7 +12,9 @@ import census.business.dto.OrderLineDTO;
 import census.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
+import javax.persistence.NamedQuery;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import org.joda.time.DateMidnight;
 
 /**
@@ -541,7 +543,6 @@ public class OrdersService extends BusinessService {
             if (quantity == 0) {
                 throw new BusinessException(bundle.getString("ItemNotInStock"));
             } else {
-                // TODO: note change
                 item.setQuantity(new Integer(quantity - 1).shortValue());
             }
         }
@@ -551,7 +552,6 @@ public class OrdersService extends BusinessService {
          * clients.
          */
         if (order.getClient() != null) {
-            // TODO: note change
             Client client = order.getClient();
 
             /*
@@ -601,15 +601,24 @@ public class OrdersService extends BusinessService {
 
         /*
          * Attemps to find an appropriate order line.
+         * Due to JPQL limitations we need a separate query,
+         * when the order line's discount is null. Criteria API, JDO?
          */
         OrderLine orderLine;
         
+        Query query;
+        if(discount == null) {
+            query = entityManager.createNamedQuery("OrderLine.findByOrderAndItemAndNoDiscount");
+        } else {
+            query = entityManager.createNamedQuery("OrderLine.findByOrderAndItemAndDiscount")
+                .setParameter("discount", discount);
+        }
+        
+        query.setParameter("order", order)
+             .setParameter("item", item);
+        
         try {
-            orderLine = (OrderLine) entityManager
-                .createNamedQuery("OrderLine.findByOrderAndItemAndDiscount")
-                .setParameter("order", order)
-                .setParameter("item", item)
-                .setParameter("discount", discount)
+            orderLine = (OrderLine) query
                 .setMaxResults(1)
                 .getSingleResult();
         } catch(NoResultException ex) {

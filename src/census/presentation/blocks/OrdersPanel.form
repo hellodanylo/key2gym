@@ -50,7 +50,7 @@
     <Component class="javax.swing.JLabel" name="cashLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Label.Cash" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Cash" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
@@ -62,7 +62,7 @@
     <Component class="javax.swing.JLabel" name="totalLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="census/presentation/resources/Strings.properties" key="Label.Total" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Total" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

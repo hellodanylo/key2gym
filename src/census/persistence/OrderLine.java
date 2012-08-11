@@ -16,7 +16,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "order_line_orl")
 @NamedQueries({
-    @NamedQuery(name="OrderLine.findByOrderAndItemAndDiscount", query="SELECT ol FROM OrderLine ol WHERE ol.orderEntity = :order AND ol.item = :item AND ol.discount = :discount")
+    @NamedQuery(name="OrderLine.findByOrderAndItemAndDiscount", query="SELECT ol FROM OrderLine ol WHERE ol.orderEntity = :order AND ol.item = :item AND ol.discount = :discount"),
+    @NamedQuery(name="OrderLine.findByOrderAndItemAndNoDiscount", query="SELECT ol FROM OrderLine ol WHERE ol.orderEntity = :order AND ol.item = :item AND ol.discount IS NULL")
 })
 
 public class OrderLine implements Serializable {

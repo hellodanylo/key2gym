@@ -111,7 +111,7 @@
             </Property>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="clientsRegisterMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="registerClientMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection component="registerClientAction" type="bean"/>
@@ -121,7 +121,7 @@
                 </Property>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="clientsEditMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="findClientMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="editClientAction"/>
@@ -131,7 +131,7 @@
                 </Property>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+            <MenuItem class="javax.swing.JMenuItem" name="freezeClientMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="freezeClientAction"/>
@@ -196,22 +196,16 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="openAttendancesWindowAction"/>
                 </Property>
-                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="Alt+1"/>
-                </Property>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="financialActivitiesWindowMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="ordersWindowMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="openOrdersWindowAction"/>
                 </Property>
-                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="Alt+2"/>
-                </Property>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+            <MenuItem class="javax.swing.JMenuItem" name="itemsWindowMenuItem">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="openItemsWindowAction"/>
@@ -258,7 +252,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="actionsToolBar" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="workspacesTabbedPane" pref="252" max="32767" attributes="0"/>
+              <Component id="workspacesTabbedPane" pref="251" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="bannerLabel" min="-2" pref="96" max="-2" attributes="0"/>
           </Group>
