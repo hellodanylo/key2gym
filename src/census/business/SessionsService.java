@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census.business;
 
@@ -118,7 +129,7 @@ public class SessionsService extends Observable {
             listener.sessionUpdated();
         }
 
-        logger.info("Current session is now associated with "
+        logger.info("Current administrator is now "
                 + administrator.getFullName() + " (" + administrator.getId() + ")");
     }
 
@@ -140,7 +151,7 @@ public class SessionsService extends Observable {
             listener.sessionUpdated();
         }
 
-        logger.info("Current session is now associated with "
+        logger.info("Current administrator is now "
                 + session.getAdministrator().getFullName() + " (" + session.getAdministrator().getId() + ")");
     }
 
@@ -173,7 +184,7 @@ public class SessionsService extends Observable {
             listener.sessionClosed();
         }
 
-        logger.info("Current session is now not associtead with any administrator.");
+        logger.info("The session has been closed.");
     }
 
     /**
@@ -289,17 +300,6 @@ public class SessionsService extends Observable {
         listeners.remove(sessionListener);
     }
 
-    /**
-     * Gets an instance of this class.
-     *
-     * @return an instance of this class
-     */
-    public static SessionsService getInstance() {
-        if (instance == null) {
-            instance = new SessionsService();
-        }
-        return instance;
-    }
     /*
      * Storage
      */
@@ -312,14 +312,28 @@ public class SessionsService extends Observable {
     private Administrator raisedAdministrator;
     private Set<SessionListener> listeners;
     private static final Logger logger = Logger.getLogger(SessionsService.class.getName());
+    
     /*
      * Permissions levels
      */
     public static final Short PL_ALL = 1;
     public static final Short PL_EXTENDED = 3;
     public static final Short PL_BASIC = 5;
-    /*
-     * Singleton instance
+    
+    /**
+     * Singleton instance.
      */
     private static SessionsService instance;
+    
+    /**
+     * Gets an instance of this class.
+     *
+     * @return an instance of this class
+     */
+    public static SessionsService getInstance() {
+        if (instance == null) {
+            instance = new SessionsService();
+        }
+        return instance;
+    }
 }

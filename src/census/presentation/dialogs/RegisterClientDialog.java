@@ -30,7 +30,7 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author daniel
+ * @author Danylo Vashchilenko
  */
 public class RegisterClientDialog extends CensusDialog {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");

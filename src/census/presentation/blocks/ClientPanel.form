@@ -37,7 +37,7 @@
                   <Component id="registrationDateField" alignment="0" max="32767" attributes="0"/>
                   <Component id="expirationDateField" alignment="0" max="32767" attributes="0"/>
                   <Component id="attendancesBalanceField" alignment="0" max="32767" attributes="0"/>
-                  <Component id="noteScrollPane" alignment="1" pref="278" max="32767" attributes="0"/>
+                  <Component id="noteScrollPane" alignment="1" pref="327" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>

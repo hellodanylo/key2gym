@@ -24,7 +24,7 @@ import org.joda.time.DateMidnight;
 
 /**
  *
- * @author daniel
+ * @author Danylo Vashchilenko
  */
 public class EditOrderAction extends CensusAction {
     

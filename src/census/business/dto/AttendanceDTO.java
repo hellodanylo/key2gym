@@ -19,7 +19,7 @@ import org.joda.time.DateTime;
 
 /**
  *
- * @author daniel
+ * @author Danylo Vashchilenko
  */
 public class AttendanceDTO {
 

@@ -1,12 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census.business;
 
 import census.business.api.BusinessException;
-import census.business.api.ValidationException;
 import census.business.api.SecurityException;
+import census.business.api.ValidationException;
 import census.business.dto.ItemDTO;
 import census.persistence.Item;
 import census.persistence.Property;
@@ -18,16 +29,11 @@ import javax.persistence.NoResultException;
 
 /**
  *
- * @author daniel
+ * @author Danylo Vashchilenko
  */
 public class ItemsService extends BusinessService {
-    /*
-     * Singleton instance
-     */
-    private static ItemsService instance;
     
     protected ItemsService() {
-        
     }
 
     /**
@@ -309,18 +315,6 @@ public class ItemsService extends BusinessService {
         return result;
     }
 
-    /**
-     * Gets an instance of this class.
-     *
-     * @return an instance
-     */
-    public static ItemsService getInstance() {
-        if (instance == null) {
-            instance = new ItemsService();
-        }
-        return instance;
-    }
-
     private void validateBarcode(Long value, Short id) throws ValidationException {
         if (value == null) {
             return;
@@ -384,4 +378,22 @@ public class ItemsService extends BusinessService {
             throw new ValidationException(bundle.getString("TitleCanNotBeNegative"));
         }
     }
+    
+    /**
+     * Singleton instance.
+     */
+    private static ItemsService instance;
+    
+   /**
+     * Gets an instance of this class.
+     *
+     * @return an instance
+     */
+    public static ItemsService getInstance() {
+        if (instance == null) {
+            instance = new ItemsService();
+        }
+        return instance;
+    }
+
 }

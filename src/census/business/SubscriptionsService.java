@@ -1,12 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census.business;
 
 import census.business.api.BusinessException;
-import census.business.api.ValidationException;
 import census.business.api.SecurityException;
+import census.business.api.ValidationException;
 import census.business.dto.SubscriptionDTO;
 import census.persistence.Item;
 import census.persistence.ItemSubscription;
@@ -22,15 +33,9 @@ import javax.persistence.NoResultException;
  */
 public class SubscriptionsService extends BusinessService {
     
-    protected SubscriptionsService() {
-        
+    protected SubscriptionsService() { 
     }
     
-    /*
-     * Singleton instance
-     */
-    private static SubscriptionsService instance;
-
     /**
      * Adds a subscription.
      * 
@@ -218,13 +223,11 @@ public class SubscriptionsService extends BusinessService {
     
     /**
      * Removes a subscription.
+     * <p>
      * 
      * <ul>
-     * 
-     * <li> The permissions level has to be PL_ALL.
-     * 
-     * <li> The subscription can not have any unarchived purchases.
-     * 
+     * <li>The permissions level has to be PL_ALL</li>
+     * <li>The subscription can not have any unarchived purchases</li>
      * </ul>
      * 
      * @param id the subscription's ID
@@ -259,7 +262,6 @@ public class SubscriptionsService extends BusinessService {
                     + "' subscription has unarchived purchases. It can not be removed now.");
         }
         
-        // TODO: note change
         entityManager.remove(itemSubscription);
         entityManager.flush();
     }
@@ -343,6 +345,11 @@ public class SubscriptionsService extends BusinessService {
             throw new ValidationException("The term can not be negative.");
         }
     }
+    
+    /**
+     * Singleton instance.
+     */
+    private static SubscriptionsService instance;
    
     /**
      * Gets an instance of this class.

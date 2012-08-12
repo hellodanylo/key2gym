@@ -10,15 +10,16 @@
  * Contributors:
  *     Oracle - initial API and implementation from Oracle TopLink
  ******************************************************************************/
+
 package org.eclipse.persistence.logging;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.MessageFormat;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.LogRecord;
-import java.util.logging.Level;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.SimpleFormatter;
 import org.eclipse.persistence.internal.security.PrivilegedAccessHelper;
 
 /**

@@ -46,7 +46,7 @@
                   <Component id="goalTextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="telephoneTextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="addressTextField" alignment="0" max="32767" attributes="0"/>
-                  <Component id="heightSpinner" alignment="0" pref="209" max="32767" attributes="0"/>
+                  <Component id="heightSpinner" alignment="0" pref="257" max="32767" attributes="0"/>
                   <Component id="birthdayTextField" alignment="0" max="32767" attributes="0"/>
                   <Component id="favouriteSportTextField" alignment="1" max="32767" attributes="0"/>
                   <Component id="weightSpinner" alignment="0" max="32767" attributes="0"/>

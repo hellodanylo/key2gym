@@ -26,7 +26,7 @@ import org.joda.time.DateMidnight;
 
 /**
  *
- * @author daniel
+ * @author Danylo Vashchilenko
  */
 public class PickDateDialog extends CensusDialog {
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");

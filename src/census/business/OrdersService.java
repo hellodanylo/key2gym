@@ -1,57 +1,62 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census.business;
 
 import census.business.api.BusinessException;
-import census.business.api.ValidationException;
 import census.business.api.SecurityException;
+import census.business.api.ValidationException;
 import census.business.dto.OrderDTO;
 import census.business.dto.OrderLineDTO;
 import census.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
-import javax.persistence.NamedQuery;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import org.joda.time.DateMidnight;
 
 /**
- *
- * @author daniel
- *
- * A financial activity is open if either one of the following statements is
- * true: <ul>
- *
- * <li> it's associated with an attendance and the attendance is open. <li> it's
- * associated with a client and was issued today. <li> it's not associated with
- * anything and was issued today.
- *
+ * This class provides orders-related service.
+ * <p>
+ * An order is open if either one of the following statements is
+ * true:
+ * <ul>
+ * <li> it's associated with an attendance and the attendance is open </li>
+ * <li> it's associated with a client and was issued today </li>
+ * <li> it's not associated with anything and was issued today </li>
  * </ul>
+ * 
+ * @author Danylo Vashchilenko
  */
 public class OrdersService extends BusinessService {
 
-    /*
-     * Singleton instance
-     */
-    private static OrdersService instance;
-
     /**
-     * Finds a financial activity by the client and the date. If it does not
-     * exist, and createIfDoesNotExist is true, a financial activity will be
-     * created. Note that a transaction is needed to create a financial activity
-     * in this case.
+     * Finds an order by the client and the date. If it does not
+     * exist, and createIfDoesNotExist is true, an order will be
+     * created. Note that an active transaction is required to 
+     * create an order.
      *
      * @param clientId the ID of the client
      * @param date the date to look up
-     * @param createIfDoesNotExist if true, the financial activity will be
+     * @param createIfDoesNotExist if true, the order will be
      * created, if none is found
      * @throws NullPointerException if any of the arguments is null
-     * @throws IllegalStateException if a new financial activity is requested,
+     * @throws IllegalStateException if a new order is requested,
      * but the transaction is not active; if no session is open.
      * @throws ValidationException if the client's ID provided is invalid
-     * @return the ID of the financial activity, or null, if none was found and
+     * @return the ID of the order, or null, if none was found and
      * a new one was not requested.
      */
     public Short findByClientIdAndDate(Short clientId, DateMidnight date, Boolean createIfDoesNotExist)
@@ -84,7 +89,7 @@ public class OrdersService extends BusinessService {
         }
 
         /*
-         * Finds a financial activity associtead with the client and issued
+         * Finds an order associtead with the client and issued
          * today.
          */
         try {
@@ -106,7 +111,6 @@ public class OrdersService extends BusinessService {
                 order.setPayment(BigDecimal.ZERO);
                 order.setId(getNextId());
 
-                // TODO: note change
                 entityManager.persist(order);
                 entityManager.flush();
 
@@ -118,17 +122,17 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Finds the today's financial activity for the client. If it does not
+     * Finds the today's order for the client. If it does not
      * exist, but a valid card was provided, and createIfDoesNotExist is true, a
-     * financial activity will be created. Note that the transaction has to be
-     * active to create a financial activity.
+     * order will be created. Note that an active transaction is required to 
+     * create an order.
      *
      * @param cardId the card of the client
      * @throws NullPointerException if the card or createIfDoesNotExist is null
-     * @throws IllegalStateException if a new financial activity is required,
+     * @throws IllegalStateException if a new order is required,
      * but the transaction is not active; if the session is not active
      * @throws ValidationException if the card is invalid
-     * @return the ID of the financial activity, or null, if none was found and
+     * @return the ID of the order, or null, if none was found and
      * a new one was not requested.
      */
     public Short findCurrentForClientByCard(Integer card, Boolean createIfDoesNotExist)
@@ -172,8 +176,7 @@ public class OrdersService extends BusinessService {
                 order.setDate(getToday());
                 order.setPayment(BigDecimal.ZERO);
                 order.setId(getNextId());
-
-                // TODO: note change
+                
                 entityManager.persist(order);
                 entityManager.flush();
 
@@ -184,12 +187,11 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Finds the financial activity associated with the attendance.
-     *
+     * Finds the order associated with the attendance.
+     * <p>
+     * 
      * <ul>
-     *
-     * <li> The attendance must be anonymous.
-     *
+     * <li> The attendance must be anonymous </li>
      * </ul>
      *
      * @param attendanceId the attendance's ID
@@ -198,7 +200,7 @@ public class OrdersService extends BusinessService {
      * @throws ValidationException if the attendance's ID is invalid
      * @throws BusinessException if current business rules resrict this
      * operation
-     * @return the ID of the financial activity or null, if none was found and a
+     * @return the ID of the order or null, if none was found and a
      * new one was not requested.
      */
     public Short findForAttendanceById(Short attendanceId)
@@ -239,16 +241,16 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Finds the today's default financial activity. It's used to record all
+     * Finds the today's default order. It's used to record all
      * operations that are not associated with anybody or anything. If the
      * record does not exist, and createIfDoesNotExist is true, it will be
-     * created. Note that the transaction has to be active to create a new
-     * financial activity.
+     * created. Note that an active transaction is required to create a new
+     * order.
      *
-     * @return the ID of the financial activity, or null, if was not found and a
+     * @return the ID of the order, or null, if was not found and a
      * new one was not requested.
      * @throws NullPointerException if the createIfDoesNotExist is null
-     * @throws IllegalStateException if a new financial activity is required,
+     * @throws IllegalStateException if a new order is required,
      * but the transaction is not active.
      */
     public Short findCurrentDefault(Boolean createIfDoesNotExist)
@@ -280,7 +282,7 @@ public class OrdersService extends BusinessService {
                 order.setDate(new Date());
                 order.setPayment(BigDecimal.ZERO);
 
-                // TODO: note change
+                
                 entityManager.persist(order);
                 entityManager.flush();
 
@@ -291,13 +293,11 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Finds financial activities by the date.
-     *
+     * Finds orders by the date.
+     * <p>
+     * 
      * <ul>
-     *
-     * <li> If the date is not today, the permissions level has to be PL_ALL.
-     * </li>
-     *
+     * <li> If the date is not today, the permissions level has to be PL_ALL </li>
      * </ul>
      *
      * @param date the date
@@ -318,13 +318,13 @@ public class OrdersService extends BusinessService {
             throw new SecurityException(bundle.getString("AccessDenied"));
         }
 
-        List<OrderEntity> financialActivities = entityManager.createNamedQuery("OrderEntity.findByDateRecordedOrderByIdDesc") //NOI18N
+        List<OrderEntity> orders = entityManager.createNamedQuery("OrderEntity.findByDateRecordedOrderByIdDesc") //NOI18N
                 .setParameter("dateRecorded", date.toDate()) //NOI18N
                 .getResultList();
 
         List<OrderDTO> result = new LinkedList<>();
 
-        for (OrderEntity order : financialActivities) {
+        for (OrderEntity order : orders) {
             result.add(wrapOrderEntity(order));
         }
 
@@ -332,7 +332,7 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Finds financial activities for client within specified time period.
+     * Finds orders for client within specified time period.
      *
      * @param id the client's ID
      * @param begin the beginning date
@@ -383,6 +383,12 @@ public class OrdersService extends BusinessService {
         return result;
     }
 
+    /**
+     * Gets the sum of all payments received on the date.
+     * 
+     * @param date the date
+     * @return the sum of all payments
+     */
     public BigDecimal getTotalForDate(DateMidnight date) {
         assertOpenSessionExists();
 
@@ -402,13 +408,13 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Finds the financial activity by its ID.
+     * Finds the order by its ID.
      *
-     * @param id the financial activity's ID.
-     * @return the financial activity's information.
-     * @throws NullPointerException if the financial activity's ID is null
-     * @throws ValidationException if the financial activity's ID is invalid
-     * @throws IllegalStateException if the session is not active
+     * @param id the order's ID.
+     * @return the order's information.
+     * @throws NullPointerException if the order's ID is null
+     * @throws ValidationException if the order's ID is invalid
+     * @throws IllegalStateException if no session is open
      */
     public OrderDTO getById(Short id) throws ValidationException {
         assertOpenSessionExists();
@@ -455,19 +461,17 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Adds a purchase to the financial activity.
-     *
+     * Adds a purchase to the order.
+     * <p>
+     * 
      * <ul>
-     *
-     * <li> If the financial activity is not open, the permissions level has to
+     * <li> If the order is not open, the permissions level has to
      * be PL_ALL</li>
-     *
-     * <li> If an item subscription is being bought, the financial activity has
-     * to be associated with a client.</li>
-     *
+     * <li> If an item subscription is being bought, the order has
+     * to be associated with a client</li>
      * </ul>
      *
-     * @param financialActivitId the financial activity's ID
+     * @param financialActivitId the order's ID
      * @param itemId the item's ID
      * @throws BusinessException if current security rules restrict this
      * operation
@@ -548,7 +552,7 @@ public class OrdersService extends BusinessService {
         }
 
         /*
-         * Business logic specific to financial activities associated with
+         * Business logic specific to orders associated with
          * clients.
          */
         if (order.getClient() != null) {
@@ -571,8 +575,8 @@ public class OrdersService extends BusinessService {
 
             if (item.getItemSubscription() != null) {
                 /*
-                 * After the Client has expired, it's attendances balance is
-                 * kept until the Client buys another subscription. The
+                 * After the client has expired, it's attendances balance is
+                 * kept until the client buys another subscription. The
                  * attendance's balance is not zeroed, if he buys another
                  * subscription before the expiration date.
                  */
@@ -649,24 +653,20 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Removes one purchase of the item from the financial activity.
-     *
+     * Removes one purchase of the item from the order.
+     * <p>
+     * 
      * <ul>
-     *
-     * <li>If the financial activity is not open, the permissions level has to
+     * <li> If the order is not open, the permissions level has to
      * be PL_ALL</li>
-     *
-     * <li> The financial activity has to contain at least one purchase of the
-     * item.
-     *
-     * <li> If the item's ID is negative, it's forced and can not be removed.
-     *
-     * <li> The subscriptions can not be removed from the financial activities
-     * associated with attendances.
-     *
+     * <li> The order has to contain at least one purchase of the
+     * item</li>
+     * <li> If the item's ID is negative, it's forced and can not be removed </li>
+     * <li> The subscriptions can not be removed from the orders
+     * associated with attendances </li>
      * </ul>
      *
-     * @param orderId the financial activity's ID
+     * @param orderId the order's ID
      * @param itemId the item's ID
      * @throws BusinessException if current business rules restrict this
      * operation
@@ -724,15 +724,14 @@ public class OrdersService extends BusinessService {
         }
 
         /*
-         * Business logic specific to Financial Activities associated with
-         * Clients.
+         * Business logic specific to orders associated with clients.
          */
         if (order.getClient() != null) {
-            // TODO: note change
+            
             Client client = order.getClient();
 
             /*
-             * Give money back to the Client.
+             * Give money back to the client.
              */
             client.setMoneyBalance(client.getMoneyBalance().add(item.getPrice()));
 
@@ -780,82 +779,22 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Finds all items purchased within the the financial activity.
-     *
-     * @param orderId the financial activity's ID
-     * @return a list of items purchased
-     * @throws NullPointerException if the financial activity's ID is null
-     * @throws ValidationException if the financial activity's ID is invalid
-     * @throws IllegalStateException if the session is not active
-     */
-//    public List<ItemDTO> findPurchases(Short orderId)
-//            throws ValidationException {
-//        assertOpenSessionExists();
-//
-//        if (orderId == null) {
-//            throw new NullPointerException("The orderId is null."); //NOI18N
-//        }
-//
-//        OrderEntity order;
-//        LinkedList<ItemDTO> items = new LinkedList<>();
-//
-//        order = entityManager.find(OrderEntity.class,
-//                orderId);
-//
-//        if (order == null) {
-//            throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
-//        }
-//
-//        /*
-//         * We count the order's total to calculate the client's debt later.
-//         */
-//        BigDecimal total = BigDecimal.ZERO;
-//
-//        if (order.getOrderLines() != null) {
-//            for (OrderLine orderLine : order.getOrderLines()) {
-//                Item item = orderLine.getItem();
-//                ItemDTO itemDTO = new ItemDTO(item.getId(), item.getBarcode(), item.getTitle(), item.getQuantity(), item.getPrice());
-//
-//                for (int i = 0; i < orderLine.getQuantity(); i++) {
-//                    items.add(itemDTO);
-//                    total = total.add(item.getPrice());
-//                }
-//            }
-//        }
-//
-//        /*
-//         * Debt item
-//         */
-//        if (order.getClient() != null) {
-//            BigDecimal possibleMoneyBalance = order.getClient().getMoneyBalance().add(total.subtract(order.getPayment()));
-//            if (possibleMoneyBalance.compareTo(BigDecimal.ZERO) < 0) {
-//                ItemDTO item = new ItemDTO(ItemDTO.FAKE_ID_DEBT, null, bundle.getString("DebtTitle"), null, possibleMoneyBalance.negate().setScale(2));
-//                items.addFirst(item);
-//            }
-//        }
-//
-//        return items;
-//    }
-
-    /**
      * Records a payment.
-     *
+     * <p>
+     * 
      * <ul>
-     *
-     * <li> If the financial activity is closed, the permissions level has to be
-     * PL_ALL. </li>
-     *
-     * <li>If the financial activity is associated with a client, a withdrawal
-     * is allowed, if it won't make the client's money balance negative. </li>
-     *
+     * <li>If the order is closed, the permissions level has to be
+     * PL_ALL</li>
+     * <li>If the order is associated with a client, a withdrawal
+     * is allowed, if it won't make the client's money balance negative</li>
      * </ul>
      *
-     * @param orderId the financial activity's ID
+     * @param orderId the order's ID
      * @param amount the amount paid
      * @throws BusinessException if current business rules restrict this
      * operation
      * @throws NullPointerException if either one of the arguments is null
-     * @throws ValidationException if financial activity's ID is invalid
+     * @throws ValidationException if order's ID is invalid
      * @throws SecurityException if current security rules restrict this
      * operation
      * @throws IllegalStateException if the transaction or the session is not
@@ -878,7 +817,7 @@ public class OrdersService extends BusinessService {
         }
 
         /*
-         * Finds the target Financial Activity.
+         * Finds the target order.
          */
         OrderEntity order = entityManager.find(OrderEntity.class, orderId);
 
@@ -911,7 +850,7 @@ public class OrdersService extends BusinessService {
         }
 
         /*
-         * If the financial activity is associted with a Client, does some
+         * If the order is associted with a Client, does some
          * checks and alters the Client's money balance.
          */
         if (order.getClient() != null) {
@@ -934,18 +873,18 @@ public class OrdersService extends BusinessService {
             client.setMoneyBalance(newMoneyBalance);
         }
 
-        // TODO: note change
+        
         order.setPayment(newTotalPaymentMaid);
 
     }
 
     /**
-     * Returns the amount of payment associated with the financial activity.
+     * Returns the amount of payment associated with the order.
      *
-     * @param orderId the financial activity's ID
+     * @param orderId the order's ID
      * @return the amount of payment
-     * @throws NullPointerException if the financial activity's ID is null
-     * @throws ValidationException if the financial activity's ID is invalid
+     * @throws NullPointerException if the order's ID is null
+     * @throws ValidationException if the order's ID is invalid
      * @throws IllegalStateException if the session is not active
      */
     public BigDecimal getPayment(Integer orderId)
@@ -970,7 +909,7 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Gets the next free ID that can be assigned to a financial activity.
+     * Gets the next free ID that can be assigned to an order.
      *
      * @return the ID
      */
@@ -1066,23 +1005,32 @@ public class OrdersService extends BusinessService {
     }
 
     /**
-     * Returns a
-     * <code>Date</code> instance that represents the today's midnight.
+     * Returns a Date instance that represents the today's midnight.
      *
-     * @return the
-     * <code>Date</code> instance
+     * @return a Date instance
      */
     private Date getToday() {
         return new DateMidnight().toDate();
     }
 
-//    private DateMidnight getTomorrow() {
-//        return new DateMidnight().plusDays(1);
-//    }
+    /**
+     * Gets whether the expiration date has passed.
+     * 
+     * @param expirationDate the date to check
+     * @return true, if the expiration date has passed
+     */
     private boolean hasExpired(Date expirationDate) {
         return !new Date().before(expirationDate);
     }
 
+    /**
+     * Shifts the date according to the subscription's term.
+     * 
+     * @param itemSubscription the subscription to use
+     * @param date the date to start with
+     * @param forward if true, the date will be shifted into the future
+     * @return the shifted date
+     */
     private Date rollExpirationDate(ItemSubscription itemSubscription, Date date, Boolean forward) {
         Calendar expirationDate = new GregorianCalendar();
         expirationDate.setTime(date);
@@ -1093,6 +1041,11 @@ public class OrdersService extends BusinessService {
 
         return expirationDate.getTime();
     }
+    
+    /**
+     * Singleton instance.
+     */
+    private static OrdersService instance;
 
     /**
      * Returns the instance of this class.

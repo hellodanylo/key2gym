@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Danylo Vashchilenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package census.presentation.actions;
 
@@ -8,8 +19,8 @@ import census.business.AttendancesService;
 import census.business.OrdersService;
 import census.business.SessionsService;
 import census.business.StorageService;
-import census.business.api.SecurityException;
 import census.business.api.BusinessException;
+import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.AttendanceDTO;
 import census.presentation.CensusFrame;
@@ -28,7 +39,7 @@ import org.joda.time.DateMidnight;
 
 /**
  *
- * @author daniel
+ * @author Danylo Vashchilenko
  */
 public class CheckOutAction extends CensusAction implements Observer {
     

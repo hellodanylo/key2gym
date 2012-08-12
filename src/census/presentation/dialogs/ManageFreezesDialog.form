@@ -41,7 +41,7 @@
                   <Group type="102" attributes="0">
                       <Component id="okButton" linkSize="3" min="-2" pref="87" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cancelButton" linkSize="3" pref="99" max="32767" attributes="0"/>
+                      <Component id="cancelButton" linkSize="3" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="periodsComboBox" max="32767" attributes="0"/>
@@ -117,7 +117,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Note">
+            <TitledBorder title="&lt;Text.Note&gt;">
               <ResourceString PropertyName="titleX" bundle="src/census/presentation/resources/Strings.properties" key="Text.Note" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>

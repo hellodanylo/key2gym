@@ -26,10 +26,10 @@
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="titleTextField" pref="224" max="32767" attributes="0"/>
+                  <Component id="titleTextField" pref="277" max="32767" attributes="0"/>
                   <Component id="barcodeTextField" alignment="1" max="32767" attributes="0"/>
                   <Component id="priceTextField" alignment="0" max="32767" attributes="0"/>
-                  <Component id="quantityTextField" alignment="0" pref="224" max="32767" attributes="0"/>
+                  <Component id="quantityTextField" alignment="0" pref="277" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
