@@ -72,49 +72,64 @@
 
     -->
     
-        <target depends="compile" name="jar" description="Builds the distribution">
-            <!-- Generates the manifest file from the project's properties -->
-            <jar basedir="${build.classes.dir}" file="${dist.jar}">
-                <manifest>
-                    <attribute name="Class-path" value="${jar.classpath}" />
-                    <attribute name="Main-class" value="${main.class}" />
-                    <attribute name="SplashScreen-Image" value="${jar.splash}" />
-                </manifest>
-            </jar>
+    <target depends="compile" name="jar" description="Builds the distribution">
+        <!-- Generates the manifest file from the project's properties -->
+        <jar basedir="${build.classes.dir}" file="${dist.jar}">
+            <manifest>
+                <attribute name="Class-path" value="${jar.classpath}" />
+                <attribute name="Main-class" value="${main.class}" />
+                <attribute name="SplashScreen-Image" value="${jar.splash}" />
+            </manifest>
+        </jar>
             
-            <!-- Copies libraries to the distribution -->
-            <copy todir="${dist.dir}/lib">
-                <fileset dir="${lib.dir}" />
-            </copy>
+        <!-- Copies libraries to the distribution -->
+        <copy todir="${dist.dir}/${lib.dir}">
+            <fileset dir="${lib.dir}" />
+        </copy>
             
-            <!-- Copies configuration files to the distribution -->
-            <copy todir="${dist.dir}/etc">
-                <fileset dir="${etc.dir}" />
-            </copy>
+        <!-- Copies configuration files to the distribution -->
+        <copy todir="${dist.dir}/${etc.dir}">
+            <fileset dir="${etc.dir}" />
+        </copy>
             
-            <!-- Copies mysql files to the distribution -->
-            <copy todir="${dist.dir}/mysql">
-                <fileset dir="${mysql.dir}" excludes="**/*.mwb*" />
-            </copy>
+        <!-- Copies mysql files to the distribution -->
+        <copy todir="${dist.dir}/${mysql.dir}">
+            <fileset dir="${mysql.dir}" excludes="**/*.mwb*" />
+        </copy>
             
-            <!-- Copies documentation files to the distribution -->
-            <copy todir="${dist.dir}/doc">
-                <fileset dir="${doc.dir}" />
-            </copy>
+        <!-- Generates build file -->
+        <touch file="${dist.dir}/build"/>
+        <tstamp>
+            <format property="TODAY" pattern="dd MMMM YYYY hh:mm:ss aa" />
+        </tstamp>
+        <echo output="${dist.dir}/build" message="Census v${version} (${TODAY})"/>
             
-            <!-- Generates build file -->
-            <touch file="${dist.dir}/build"/>
-            <tstamp>
-                <format property="TODAY" pattern="dd MMMM YYYY hh:mm:ss aa" />
-            </tstamp>
-            <echo output="${dist.dir}/build" message="Census v${version} (${TODAY})"/>
-            
-        </target>
+    </target>
 
-        <target name="release" depends="jar" description="Converts the distribution into a portable zip file.">
-            <echo message="Preparing release of Census ${version}" />
-            <zip destfile="${dist.dir}/Census_v${version}.zip">
-                <fileset dir="${dist.dir}" />
-            </zip>
-        </target>
+    <target name="release" depends="jar,doc" description="Converts the distribution into a portable zip file.">
+        <echo message="Preparing release of Census ${version}" />
+        <zip destfile="${dist.dir}/Census_v${version}.zip">
+            <fileset dir="${dist.dir}" />
+        </zip>
+    </target>
+        
+    <macrodef name="markdown2html" description="Internal target used by doc target to convert markdown files to html.">
+        <attribute name="name" />
+        <sequential>
+            <!-- Creates the documentation folder in case the project was not built. -->
+            <mkdir dir="${dist.dir}/${doc.dir}" />
+            
+            <!-- Converts a markdown documentation file to HTML format -->
+            <exec executable="perl" output="${dist.dir}/${doc.dir}/@{name}.html"> 
+                <arg value="${doc.dir}/markdown.pl" />
+                <arg value="${doc.dir}/@{name}.md" />
+            </exec>          
+        </sequential>
+    </macrodef>
+        
+    <target name="doc" depends="init" description="Generates end-user documentation.">
+        <markdown2html name="index" />
+        <markdown2html name="deployment" />
+    </target>
+    
 </project>
