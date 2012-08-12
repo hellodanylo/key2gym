@@ -405,10 +405,11 @@ public class CensusFrame extends JFrame {
     public void dispose() {
         Logger.getLogger(this.getClass().getName()).info("Shutting down...");
         
-        StorageService.getInstance().beginTransaction();
-        sessionsService.closeSession();
-        StorageService.getInstance().commitTransaction();
-        
+        if(sessionsService.hasOpenSession()) {
+            StorageService.getInstance().beginTransaction();
+            sessionsService.closeSession();
+            StorageService.getInstance().commitTransaction();
+        }
         super.dispose();
     }
 
