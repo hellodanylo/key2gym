@@ -12,9 +12,9 @@ It helps you to:
 ## Building
 
 You need:
-* JDK (with `java` and `javac` on the class path)
-* Ant (with `ant` on the class path)
-* Perl (with `perl` on the class path)
+* JDK 1.7+ (with `java` and `javac` on the `PATH`)
+* Ant 1.7.0+ (with `ant` on the `PATH`)
+* Perl 5.6.0+ (with `perl` on the `PATH`)
 
 1. Fork or download the repository.
 2. `cd` to the repository's root folder and run `ant -buildfile nb-build.xml release`.
