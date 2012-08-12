@@ -127,7 +127,7 @@
         </sequential>
     </macrodef>
         
-    <target name="doc" depends="init" description="Generates end-user documentation.">
+    <target name="doc" depends="init" description="Generates the end-user documentation.">
         <markdown2html name="index" />
         <markdown2html name="deployment" />
     </target>
