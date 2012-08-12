@@ -2,4 +2,5 @@
 
 This is the end-user documentation of Census.
 
-TODO: Add links to other documentation pages here.
+## Index of documentation entries:
+1. [Deployment](./deployment.html)
