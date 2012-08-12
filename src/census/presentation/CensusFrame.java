@@ -194,6 +194,7 @@ public class CensusFrame extends JFrame {
         manageSubscriptionsAction = new census.presentation.actions.ManageSubscriptionsAction();
         toggleSessionAction = new census.presentation.actions.ToggleSessionAction();
         openItemsWindowAction = new census.presentation.actions.OpenItemsWindowAction();
+        aboutAction = new census.presentation.actions.AboutAction();
         actionsToolBar = new javax.swing.JToolBar();
         openAttendanceButton = new javax.swing.JButton();
         closeAttendanceButton = new javax.swing.JButton();
@@ -228,6 +229,8 @@ public class CensusFrame extends JFrame {
         attendancesWindowMenuItem = new javax.swing.JMenuItem();
         ordersWindowMenuItem = new javax.swing.JMenuItem();
         itemsWindowMenuItem = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(bundle.getString("Title.Census")); // NOI18N
@@ -354,6 +357,13 @@ public class CensusFrame extends JFrame {
 
         menuBar.add(windowMenu);
 
+        jMenu1.setText(bundle.getString("Menu.Help")); // NOI18N
+
+        jMenuItem1.setAction(aboutAction);
+        jMenu1.add(jMenuItem1);
+
+        menuBar.add(jMenu1);
+
         setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -369,7 +379,7 @@ public class CensusFrame extends JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(actionsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bannerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -453,6 +463,7 @@ public class CensusFrame extends JFrame {
         return instance;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private census.presentation.actions.AboutAction aboutAction;
     private javax.swing.JToolBar actionsToolBar;
     private javax.swing.JToolBar.Separator attendancesClientsSeparator;
     private javax.swing.JMenuItem attendancesWindowMenuItem;
@@ -474,6 +485,8 @@ public class CensusFrame extends JFrame {
     private census.presentation.actions.FreezeClientAction freezeClientAction;
     private javax.swing.JMenuItem freezeClientMenuItem;
     private javax.swing.JMenuItem itemsWindowMenuItem;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem manageCash;
     private census.presentation.actions.ManageCashAction manageCashAction;
     private javax.swing.JPopupMenu.Separator manageCashFreezesSeparator;

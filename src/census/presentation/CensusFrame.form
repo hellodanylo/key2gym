@@ -32,6 +32,8 @@
     </Component>
     <Component class="census.presentation.actions.OpenItemsWindowAction" name="openItemsWindowAction">
     </Component>
+    <Component class="census.presentation.actions.AboutAction" name="aboutAction">
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="menuBar">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="sessionMenu">
@@ -214,6 +216,22 @@
             </MenuItem>
           </SubComponents>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenu1">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Menu.Help" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection component="aboutAction" type="bean"/>
+                </Property>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
       </SubComponents>
     </Menu>
   </NonVisualComponents>
@@ -252,7 +270,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="actionsToolBar" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="workspacesTabbedPane" pref="249" max="32767" attributes="0"/>
+              <Component id="workspacesTabbedPane" pref="248" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="bannerLabel" min="-2" pref="96" max="-2" attributes="0"/>
           </Group>
