@@ -332,7 +332,8 @@ public class ClientsService extends BusinessService {
          * will throw ValidationException for the card is already assigned to
          * this client.
          */
-        if (!originalClient.getCard().equals(client.getCard())) {
+        if ((originalClient.getCard() != null && !originalClient.getCard().equals(client.getCard()))
+                || (client.getCard() != null && !client.getCard().equals(originalClient.getCard()))) {
             getCardValidator().validate(client.getCard());
             originalClient.setCard(client.getCard());
         }
