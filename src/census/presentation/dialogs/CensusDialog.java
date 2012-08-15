@@ -16,31 +16,34 @@
 package census.presentation.dialogs;
 
 import java.awt.Component;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 
 /**
  * Basic class for Census dialogs. Implements basic session variables like:
- * 
+ *
  * <ul>
- * 
+ *
  * <li> Result - a general result code
- * 
- * <li> Exception - a runtime exception that this dialog encountered,
- * this variable is set, when Result is RESULT_EXCEPTION.
- * 
+ *
+ * <li> Exception - a runtime exception that this dialog encountered, this
+ * variable is set, when Result is RESULT_EXCEPTION.
+ *
  * </ul>
- * 
+ *
  * Sets the result to RESULT_CANCEL, when the close button is pressed.
- * 
+ *
  * @author Danylo Vashchilenko
  */
 public class CensusDialog extends JDialog {
 
     /**
      * Constructs with the specified parent and modality.
+     * 
      * @param parent the parent frame of this dialog
      * @param modal if true, the dialog will be modal
      */
@@ -53,14 +56,23 @@ public class CensusDialog extends JDialog {
                 formWindowClosing(evt);
             }
         });
+        
+        cancelAction = new CancelAction();
+        
+        /*
+         * Binds the escape key to the cancel action.
+         */
+        getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel");
+        getRootPane().getActionMap().put("cancel", cancelAction);
+        
         result = null;
         exception = null;
     }
-
+    
     /**
-     * Sets the result to RESULT_CANCEL.
-     * 
-     * @param evt an optional WindowEvent 
+     * Performs pre-closing routine.
+     *
+     * @param evt an optional WindowEvent
      * @see CensusDialog
      */
     protected void formWindowClosing(java.awt.event.WindowEvent evt) {
@@ -76,11 +88,11 @@ public class CensusDialog extends JDialog {
     public Component getComponent() {
         return this;
     }
-    
+
     /**
      * Gets the exception that terminated this dialog.
-     * 
-     * @return the runtime exception 
+     *
+     * @return the runtime exception
      */
     public RuntimeException getException() {
         return exception;
@@ -88,8 +100,8 @@ public class CensusDialog extends JDialog {
 
     /**
      * Sets the exception that terminated this dialog.
-     * 
-     * @param exception the runtime exception 
+     *
+     * @param exception the runtime exception
      */
     public void setException(RuntimeException exception) {
         this.exception = exception;
@@ -97,20 +109,42 @@ public class CensusDialog extends JDialog {
 
     /**
      * Gets the dialog's result code.
-     * 
+     *
      * @return the result code
      */
     public Integer getResult() {
         return result;
     }
 
+    /**
+     * Sets the dialog's result code.
+     * 
+     * @param result the result code 
+     */
     public void setResult(Integer result) {
         this.result = result;
     }
+
+    /**
+     * Returns the dialog's cancel action.
+     * 
+     * @return the action used to perform cancellation 
+     */
+    public CancelAction getCancelAction() {
+        return cancelAction;
+    }   
     
+    protected class CancelAction extends AbstractAction {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setResult(RESULT_CANCEL);
+            dispose();
+        }
+    }
+    
+    private CancelAction cancelAction;
     private Integer result;
     private RuntimeException exception;
-    
     public static final Integer RESULT_OK = 0;
     public static final Integer RESULT_CANCEL = 1;
     public static final Integer RESULT_EXCEPTION = 2;
