@@ -351,7 +351,7 @@ public class EditClientDialog extends CensusDialog {
         if (!clientPanel.isFormValid() || (attachedCheckBox.isSelected() && !clientProfilePanel.isFormValid())) {
             return;
         }
-
+        
         try {
             /*
              * Updates the client
@@ -359,10 +359,16 @@ public class EditClientDialog extends CensusDialog {
             clientsService.updateClient(client, sessionsService.getPermissionsLevel().equals(SessionsService.PL_ALL));
 
             /*
-             * Attaches (and also updates) or removes the profile
+             * Updates the profile, it the check box was selected.
              */
             if (attachedCheckBox.isSelected()) {
+                // New profiles do not have propper ID, so overwrite the value just in case.
+                clientProfile.setClientId(client.getId());
+                
                 ClientProfilesService.getInstance().updateClientProfile(clientProfile);
+            /*
+             * Removes the profile, if it exists
+             */
             } else if (clientProfileAttached) {
                 ClientProfilesService.getInstance().detachClientProfile(clientProfile.getClientId());
             }
