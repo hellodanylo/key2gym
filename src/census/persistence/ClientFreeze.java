@@ -30,7 +30,8 @@ import javax.persistence.*;
     @NamedQuery(name = "ClientFreeze.findById", query = "SELECT c FROM ClientFreeze c WHERE c.id = :id"),
     @NamedQuery(name = "ClientFreeze.findByClient", query = "SELECT c FROM ClientFreeze c WHERE c.client = :client"),
     @NamedQuery(name = "ClientFreeze.findByDateIssued", query = "SELECT c FROM ClientFreeze c WHERE c.dateIssued = :dateIssued"),
-    @NamedQuery(name = "ClientFreeze.findByDateIssuedRange" , query = "SELECT c FROM ClientFreeze c WHERE c.dateIssued BETWEEN :rangeBegin AND :rangeEnd")})
+    @NamedQuery(name = "ClientFreeze.findByDateIssuedRange" , query = "SELECT c FROM ClientFreeze c WHERE c.dateIssued BETWEEN :rangeBegin AND :rangeEnd"),
+    @NamedQuery(name = "ClientFreeze.findByClientAndDateIssuedRange" , query = "SELECT c FROM ClientFreeze c WHERE c.client = :client AND c.dateIssued BETWEEN :rangeBegin AND :rangeEnd")})
 public class ClientFreeze implements Serializable {
 
     private static final long serialVersionUID = 1L;

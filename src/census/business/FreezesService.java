@@ -98,7 +98,8 @@ public class FreezesService extends BusinessService {
 
         DateMidnight today = new DateMidnight();
         List<ClientFreeze> freezes = entityManager
-                .createNamedQuery("ClientFreeze.findByDateIssuedRange") //NOI18N
+                .createNamedQuery("ClientFreeze.findByClientAndDateIssuedRange") //NOI18N
+                .setParameter("client", client)
                 .setParameter("rangeBegin", today.minusMonths(1).toDate()) //NOI18N
                 .setParameter("rangeEnd", today.toDate()) //NOI18N
                 .getResultList();
