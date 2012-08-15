@@ -438,27 +438,9 @@ public class OrdersService extends BusinessService {
             throw new ValidationException(bundle.getString("OrderEntityIDInvalid"));
         }
 
-        OrderDTO result = wrapOrderEntity(order);
+        OrderDTO orderDTO = wrapOrderEntity(order);
 
-        /*
-         * Debt
-         */
-        if (order.getClient() != null && isToday(order.getDate())) {
-            BigDecimal possibleMoneyBalance = order.getClient().getMoneyBalance().add(result.getTotal());
-            if (possibleMoneyBalance.compareTo(BigDecimal.ZERO) < 0) {
-                OrderLineDTO orderLine = new OrderLineDTO();
-                orderLine.setItemId(OrderLineDTO.FAKE_ID_DEBT);
-                orderLine.setItemTitle(bundle.getString("Debt"));
-                orderLine.setItemPrice(possibleMoneyBalance.negate().setScale(2));
-                orderLine.setQuantity((short)1);
-                orderLine.setTotal(possibleMoneyBalance.negate().setScale(2));
-                
-                result.getOrderLines().add(orderLine);
-                result.setTotal(result.getTotal().add(orderLine.getItemPrice()));
-            }
-        }
-
-        return result;
+        return orderDTO;
     }
 
     /**
@@ -929,6 +911,11 @@ public class OrdersService extends BusinessService {
         orderDTO.setId(order.getId());
         orderDTO.setDate(new DateMidnight(order.getDate()));
         orderDTO.setPayment(order.getPayment().setScale(2));
+        if(order.getClient() != null) {
+            orderDTO.setMoneyBalance(order.getClient().getMoneyBalance().setScale(2));
+        } else {
+            orderDTO.setMoneyBalance(BigDecimal.ZERO.setScale(2));
+        }
 
         /*
          * Order lines
