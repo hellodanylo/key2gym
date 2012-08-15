@@ -451,6 +451,7 @@ public class OrdersService extends BusinessService {
                 orderLine.setItemTitle(bundle.getString("Debt"));
                 orderLine.setItemPrice(possibleMoneyBalance.negate().setScale(2));
                 orderLine.setQuantity((short)1);
+                orderLine.setTotal(possibleMoneyBalance.negate().setScale(2));
                 
                 result.getOrderLines().add(orderLine);
                 result.setTotal(result.getTotal().add(orderLine.getItemPrice()));
