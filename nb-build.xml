@@ -72,7 +72,7 @@
 
     -->
     
-    <target depends="compile" name="jar" description="Builds the distribution">
+    <target name="jar" depends="compile" description="Builds a jar file and basic environment.">
         <!-- Generates the manifest file from the project's properties -->
         <jar basedir="${build.classes.dir}" file="${dist.jar}">
             <manifest>
@@ -90,8 +90,12 @@
         <!-- Copies configuration files to the distribution -->
         <copy todir="${dist.dir}/${etc.dir}">
             <fileset dir="${etc.dir}" />
-        </copy>
-            
+        </copy>    
+    </target>
+
+    <target name="release" depends="clean,jar,doc" description="Builds a distribution that can be deployed.">
+        <echo message="Preparing a distribution of Census ${version}" />
+        
         <!-- Copies mysql files to the distribution -->
         <copy todir="${dist.dir}/${mysql.dir}">
             <fileset dir="${mysql.dir}" excludes="**/*.mwb*" />
@@ -103,17 +107,19 @@
             <format property="TODAY" pattern="dd MMMM YYYY hh:mm:ss aa" />
         </tstamp>
         <echo output="${dist.dir}/build" message="Census v${version} (${TODAY})"/>
-            
-    </target>
-
-    <target name="release" depends="jar,doc" description="Converts the distribution into a portable zip file.">
-        <echo message="Preparing release of Census ${version}" />
+        
+        <!-- Copies legal notices and licenses -->
+        <copy todir="${dist.dir}">
+            <fileset dir="${legal.dir}"/>
+        </copy>
+        
+        <!-- Zips the distribution -->
         <zip destfile="${dist.dir}/Census_v${version}.zip">
             <fileset dir="${dist.dir}" />
         </zip>
     </target>
         
-    <macrodef name="markdown2html" description="Internal target used by doc target to convert markdown files to html.">
+    <macrodef name="markdown2html" description="Used by doc target to convert markdown files to html.">
         <attribute name="name" />
         <sequential>
             <!-- Creates the documentation folder in case the project was not built. -->
