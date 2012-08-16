@@ -845,7 +845,7 @@ public class OrdersService extends BusinessService {
             }
 
             if (newTotalPaymentMaid.compareTo(BigDecimal.ZERO) < 0) {
-                if (newMoneyBalance.add(amount).compareTo(BigDecimal.ZERO) < 0) {
+                if (newMoneyBalance.compareTo(BigDecimal.ZERO) < 0) {
                     throw new BusinessException(bundle.getString("ClientNotEnoughMoneyToWithdraw"));
                 }
             }
