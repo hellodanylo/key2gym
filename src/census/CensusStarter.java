@@ -17,7 +17,9 @@ package census;
 
 import census.business.StorageService;
 import census.presentation.CensusFrame;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.log4j.Logger;
@@ -27,15 +29,12 @@ import org.apache.log4j.PropertyConfigurator;
  * This is the main class of the application.
  *
  * It's responsible for the following tasks:
- *
- * <ul>
- *
- * <li> Initializing Logging system </li>
+ * <p/>
  * 
+ * <ul>
+ * <li> Initializing Logging system </li>
  * <li> Reading and applying application properties.
- *
  * <li> Launching CensusFrame </li>
- *
  * </ul>
  *
  * @author Danylo Vashchilenko
@@ -43,7 +42,8 @@ import org.apache.log4j.PropertyConfigurator;
 public class CensusStarter {
 
     private static final Logger logger = Logger.getLogger(CensusStarter.class.getName());
-
+    private static final Map<String, String> properties = new HashMap<>();
+    
     /**
      * The main method which performs all task as described in class description.
      *
@@ -57,6 +57,29 @@ public class CensusStarter {
         PropertyConfigurator.configure(CensusStarter.class.getClassLoader().getResourceAsStream("etc/log.properties"));
 
         logger.info("Starting...");
+        
+        /*
+         * Puts the default values of various properties.
+         */
+        properties.put("storage", "default");
+        
+        /*
+         * The array contains the names of all expected arguments.
+         */
+        String[] expectedArgumentsNames = new String[] {"storage"};
+        
+        /*
+         * Parses the arguments looking for expected arguments.
+         * The arguments are in the '--ARGUMENTNAME=ARGUMENTVALUE' format.
+         */
+        for(String arg : args) {
+            for(String expectedArgumentName : expectedArgumentsNames) {
+                String preffix = "--"+expectedArgumentName+"=";
+                if(arg.startsWith(preffix)) {
+                    properties.put(expectedArgumentName, arg.substring(preffix.length()));
+                }
+            }
+        }
         
         /*
          * Storage service starts up on the first call of StorageService.getInstance().
@@ -92,5 +115,9 @@ public class CensusStarter {
         //</editor-fold>
 
         logger.info("Started!");
+    }
+    
+    public static Map<String, String> getProperties() {
+        return properties;
     }
 }

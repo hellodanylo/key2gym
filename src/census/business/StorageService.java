@@ -15,11 +15,14 @@
  */
 package census.business;
 
+import census.CensusStarter;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
-import java.util.ResourceBundle;
+import java.util.Properties;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
@@ -33,17 +36,25 @@ public class StorageService extends Observable {
 
     protected StorageService() {
 
-        ResourceBundle config = ResourceBundle.getBundle("etc/mysql");
+        /*
+         * Loads the storage configuration file.
+         */
+        Properties config = new Properties();
+        try {
+            config.load(new FileInputStream("etc/storages/"+CensusStarter.getProperties().get("storage")+".properties"));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
-        Map<String, String> properties = new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("javax.persistence.jdbc.url",
                 MessageFormat.format("jdbc:mysql://{0}:{1}/{2}?useUnicode=true&amp;connectionCollation=utf8_general_ci&amp;characterSetResults=utf8",
-                config.getString("host"),
-                config.getString("port"),
-                config.getString("database")));
+                config.get("host"),
+                config.get("port"),
+                config.get("database")));
 
-        properties.put("javax.persistence.jdbc.password", config.getString("password"));
-        properties.put("javax.persistence.jdbc.user", config.getString("user"));
+        properties.put("javax.persistence.jdbc.password", config.get("password"));
+        properties.put("javax.persistence.jdbc.user", config.get("user"));
 
         entityManager = Persistence.createEntityManagerFactory("Census PU", properties).createEntityManager();
     }
