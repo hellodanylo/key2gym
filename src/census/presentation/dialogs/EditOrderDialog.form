@@ -58,7 +58,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="133" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="154" max="32767" attributes="0"/>
                       <Component id="addItemButton" min="-2" pref="81" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="removeItemButton" min="-2" pref="79" max="-2" attributes="0"/>
@@ -148,8 +148,8 @@
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="dateTextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="subjectTextField" alignment="0" pref="193" max="32767" attributes="0"/>
-                      <Component id="moneyBalanceTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="subjectTextField" alignment="0" pref="215" max="32767" attributes="0"/>
+                      <Component id="debtTextField" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
@@ -171,7 +171,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="moneyBalanceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="moneyBalanceTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="debtTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -206,11 +206,11 @@
         <Component class="javax.swing.JLabel" name="moneyBalanceLabel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.MoneyBalance" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="src/census/presentation/resources/Strings.properties" key="Label.Debt" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="moneyBalanceTextField">
+        <Component class="javax.swing.JTextField" name="debtTextField">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">

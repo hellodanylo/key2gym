@@ -911,20 +911,12 @@ public class OrdersService extends BusinessService {
         orderDTO.setId(order.getId());
         orderDTO.setDate(new DateMidnight(order.getDate()));
         orderDTO.setPayment(order.getPayment().setScale(2));
-        if(order.getClient() != null) {
-            orderDTO.setMoneyBalance(order.getClient().getMoneyBalance().setScale(2));
-        } else {
-            orderDTO.setMoneyBalance(BigDecimal.ZERO.setScale(2));
-        }
 
         /*
          * Order lines
          */
         List<OrderLineDTO> orderLineDTOs = new LinkedList<>();
 
-        /*
-         * We count the order's total to calculate the client's debt later.
-         */
         BigDecimal total = BigDecimal.ZERO.setScale(2);
 
         if (order.getOrderLines() != null) {
@@ -950,7 +942,7 @@ public class OrdersService extends BusinessService {
             }
         }
         orderDTO.setOrderLines(orderLineDTOs);
-
+        
         /*
          * Client
          */
@@ -976,6 +968,12 @@ public class OrdersService extends BusinessService {
          * Due
          */
         orderDTO.setDue(total.subtract(order.getPayment()));
+        
+        if(order.getClient() != null) {
+            orderDTO.setDebt(order.getClient().getMoneyBalance().add(orderDTO.getDue()).negate().setScale(2));
+        } else {
+            orderDTO.setDebt(BigDecimal.ZERO.setScale(2));
+        }
 
         return orderDTO;
     }

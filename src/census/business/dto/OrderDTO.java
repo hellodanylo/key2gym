@@ -109,12 +109,12 @@ public class OrderDTO {
         this.keyTitle = keyTitle;
     }
 
-    public BigDecimal getMoneyBalance() {
-        return moneyBalance;
+    public BigDecimal getDebt() {
+        return debt;
     }
 
-    public void setMoneyBalance(BigDecimal moneyBalance) {
-        this.moneyBalance = moneyBalance;
+    public void setDebt(BigDecimal debt) {
+        this.debt = debt;
     }
     
     private Short id;
@@ -127,5 +127,5 @@ public class OrderDTO {
     private String clientFullName;
     private Short attendanceId;
     private String keyTitle;
-    private BigDecimal moneyBalance;
+    private BigDecimal debt;
 }

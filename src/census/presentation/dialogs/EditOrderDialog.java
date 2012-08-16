@@ -117,7 +117,7 @@ public class EditOrderDialog extends CensusDialog {
         subjectTextField = new javax.swing.JTextField();
         dateTextField = new javax.swing.JTextField();
         moneyBalanceLabel = new javax.swing.JLabel();
-        moneyBalanceTextField = new javax.swing.JTextField();
+        debtTextField = new javax.swing.JTextField();
         paymentPanel = new javax.swing.JPanel();
         totalLabel = new javax.swing.JLabel();
         totalTextField = new javax.swing.JTextField();
@@ -165,10 +165,10 @@ public class EditOrderDialog extends CensusDialog {
 
         dateTextField.setEditable(false);
 
-        moneyBalanceLabel.setText(bundle.getString("Label.MoneyBalance")); // NOI18N
+        moneyBalanceLabel.setText(bundle.getString("Label.Debt")); // NOI18N
 
-        moneyBalanceTextField.setEditable(false);
-        moneyBalanceTextField.setFont(new java.awt.Font("DejaVu Sans", 0, 18)); // NOI18N
+        debtTextField.setEditable(false);
+        debtTextField.setFont(new java.awt.Font("DejaVu Sans", 0, 18)); // NOI18N
 
         javax.swing.GroupLayout basicInformationPanelLayout = new javax.swing.GroupLayout(basicInformationPanel);
         basicInformationPanel.setLayout(basicInformationPanelLayout);
@@ -183,8 +183,8 @@ public class EditOrderDialog extends CensusDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(basicInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(dateTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(subjectTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-                    .addComponent(moneyBalanceTextField, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(subjectTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                    .addComponent(debtTextField, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap())
         );
         basicInformationPanelLayout.setVerticalGroup(
@@ -201,7 +201,7 @@ public class EditOrderDialog extends CensusDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(basicInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(moneyBalanceLabel)
-                    .addComponent(moneyBalanceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(debtTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -358,7 +358,7 @@ public class EditOrderDialog extends CensusDialog {
                                 .addComponent(discountsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 133, Short.MAX_VALUE)
+                        .addGap(0, 154, Short.MAX_VALUE)
                         .addComponent(addItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -443,7 +443,7 @@ public class EditOrderDialog extends CensusDialog {
         }
         itemsListModel.set(items);
         if (index >= items.size()) {
-            index--;
+            index = items.size() - 1;
         }
         itemsList.setSelectedIndex(index);
 
@@ -455,8 +455,8 @@ public class EditOrderDialog extends CensusDialog {
         List<OrderLineDTO> orderLines = order.getOrderLines();
         index = orderLinesTable.getSelectedRow();
         orderLinesTableModel.setOrderLines(orderLines);
-        if (index >= items.size()) {
-            index--;
+        if (index >= orderLines.size()) {
+            index = orderLines.size() - 1;
         }
         orderLinesTable.getSelectionModel().setSelectionInterval(index, index);
 
@@ -502,13 +502,14 @@ public class EditOrderDialog extends CensusDialog {
              * Date
              */
             dateTextField.setText(MessageFormat.format("{0, date, long}", order.getDate().toDate())); //NOI18N
-            
+
             /*
-             * Money balance
+             * Debt
              */
-            moneyBalanceTextField.setText(order.getMoneyBalance().toPlainString());
-            moneyBalanceTextField.setForeground(order.getMoneyBalance().compareTo(BigDecimal.ZERO) < 0 ? new Color(168, 0, 0) : new Color(98, 179, 0));
-            moneyBalanceTextField.setBackground(order.getMoneyBalance().compareTo(BigDecimal.ZERO) < 0 ? new Color(255, 173, 206) : new Color(211, 255, 130));
+            debtTextField.setText(order.getDebt().toPlainString());
+            debtTextField.setForeground(order.getDebt().compareTo(BigDecimal.ZERO) > 0 ? new Color(168, 0, 0) : new Color(98, 179, 0));
+            debtTextField.setBackground(order.getDebt().compareTo(BigDecimal.ZERO) > 0 ? new Color(255, 173, 206) : new Color(211, 255, 130));
+
 
         }
     }
@@ -520,9 +521,7 @@ public class EditOrderDialog extends CensusDialog {
      */
     private void addItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemButtonActionPerformed
 
-        Short itemId = getSelectedItemId();
-
-        if (itemId == null) {
+        if (itemsList.getSelectedValue() == null) {
             /*
              * Asks the user to select an item.
              */
@@ -531,8 +530,10 @@ public class EditOrderDialog extends CensusDialog {
             return;
         }
 
+        Short itemId = ((ItemDTO) itemsList.getSelectedValue()).getId();
+
         try {
-            DiscountDTO discount = (DiscountDTO)discountsComboBox.getSelectedItem();
+            DiscountDTO discount = (DiscountDTO) discountsComboBox.getSelectedItem();
             ordersService.addPurchase(order.getId(), itemId, discount == null ? null : discount.getId());
         } catch (BusinessException | ValidationException | SecurityException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
@@ -558,14 +559,14 @@ public class EditOrderDialog extends CensusDialog {
      */
     private void removeItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeItemButtonActionPerformed
 
-        int orderLineIndex = orderLinesTable.getSelectedRow();
-        
+        int orderLineIndex = orderLinesTable.getSelectionModel().getMinSelectionIndex();
+
         if (orderLineIndex == -1) {
             ValidationException ex = new ValidationException(bundle.getString("Message.SelectOrderLineFirst"));
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         }
-        
+
         OrderLineDTO orderLine = order.getOrderLines().get(orderLineIndex);
 
         try {
@@ -709,6 +710,7 @@ public class EditOrderDialog extends CensusDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JTextField dateTextField;
+    private javax.swing.JTextField debtTextField;
     private javax.swing.JComboBox discountsComboBox;
     private javax.swing.JLabel dueLabel;
     private javax.swing.JTextField dueTextField;
@@ -716,7 +718,6 @@ public class EditOrderDialog extends CensusDialog {
     private javax.swing.JScrollPane itemsScrollPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel moneyBalanceLabel;
-    private javax.swing.JTextField moneyBalanceTextField;
     private javax.swing.JButton okButton;
     private census.business.dto.OrderDTO order;
     private javax.swing.JTable orderLinesTable;
