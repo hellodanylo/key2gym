@@ -299,7 +299,25 @@ public class SessionsService extends Observable {
     public void removeListener(SessionListener sessionListener) {
         listeners.remove(sessionListener);
     }
-
+    
+    /**
+     * Gets the current session.
+     * 
+     * @return the session 
+     */
+    Session getSession() {
+        return session;
+    }
+    
+    /**
+     * Sets the current session.
+     * 
+     * @param session the new session
+     */
+    void setSession(Session session) {
+         this.session = session;
+     }
+    
     /*
      * Storage
      */
