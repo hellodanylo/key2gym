@@ -5,9 +5,11 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>Census</name>
             <source-roots>
-                <root id="src.dir" name="src"/>
+                <root id="src.dir" name="Source"/>
             </source-roots>
-            <test-roots/>
+            <test-roots>
+                <root id="test.test.dir" name="Testing"/>
+            </test-roots>
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>Barcode</word>
