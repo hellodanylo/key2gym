@@ -103,7 +103,7 @@ public class ClientForm extends JPanel {
         FormLayout layout = new FormLayout("right:default, 3dlu, default:grow", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, ResourceBundle.getBundle("census/presentation/resources/Strings"), this);
 
-        builder.setDefaultRowSpec(new RowSpec(RowSpec.TOP, Sizes.PREFERRED, RowSpec.NO_GROW));
+        builder.defaultRowSpec(new RowSpec(RowSpec.TOP, Sizes.PREFERRED, RowSpec.NO_GROW));
         builder.appendI15d("Label.ID", idTextField);
         builder.nextLine();
         builder.appendI15d("Label.FullName", fullNameTextField);
