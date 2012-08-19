@@ -16,10 +16,10 @@
 package census.presentation.dialogs;
 
 import census.business.ClientProfilesService;
-import census.business.api.BusinessException;
-import census.business.api.SecurityException;
 import census.business.ClientsService;
 import census.business.SessionsService;
+import census.business.api.BusinessException;
+import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.ClientDTO;
 import census.business.dto.ClientProfileDTO;
@@ -78,10 +78,10 @@ public class RegisterClientDialog extends CensusDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        clientPanel = new census.presentation.blocks.ClientPanel();
+        clientPanel = new census.presentation.forms.ClientForm();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        clientProfilePanel = new census.presentation.blocks.ClientProfilePanel();
+        clientProfilePanel = new census.presentation.forms.ClientProfileForm();
         optionsPanel = new javax.swing.JPanel();
         attachProfileCheckBox = new javax.swing.JCheckBox();
         openFinancialActivityCheckBox = new javax.swing.JCheckBox();
@@ -190,7 +190,7 @@ public class RegisterClientDialog extends CensusDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
-        if (!clientPanel.isFormValid() || (attachProfileCheckBox.isSelected() && !clientProfilePanel.isFormValid())) {
+        if (!clientPanel.trySave() || (attachProfileCheckBox.isSelected() && !clientProfilePanel.trySave())) {
             return;
         }
 
@@ -249,8 +249,8 @@ public class RegisterClientDialog extends CensusDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox attachProfileCheckBox;
     private javax.swing.JButton cancelButton;
-    private census.presentation.blocks.ClientPanel clientPanel;
-    private census.presentation.blocks.ClientProfilePanel clientProfilePanel;
+    private census.presentation.forms.ClientForm clientPanel;
+    private census.presentation.forms.ClientProfileForm clientProfilePanel;
     private javax.swing.JButton okButton;
     private javax.swing.JCheckBox openAttendanceCheckBox;
     private javax.swing.JCheckBox openFinancialActivityCheckBox;

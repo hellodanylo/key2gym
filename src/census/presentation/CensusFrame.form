@@ -260,7 +260,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="actionsToolBar" pref="656" max="32767" attributes="0"/>
+          <Component id="actionsToolBar" pref="672" max="32767" attributes="0"/>
           <Component id="workspacesTabbedPane" alignment="0" max="32767" attributes="0"/>
           <Component id="bannerLabel" alignment="1" max="32767" attributes="0"/>
       </Group>
@@ -270,7 +270,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="actionsToolBar" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="workspacesTabbedPane" pref="248" max="32767" attributes="0"/>
+              <Component id="workspacesTabbedPane" pref="247" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="bannerLabel" min="-2" pref="96" max="-2" attributes="0"/>
           </Group>

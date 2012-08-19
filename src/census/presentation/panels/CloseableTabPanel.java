@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package census.presentation.blocks;
+package census.presentation.panels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,14 +24,14 @@ import java.util.Set;
  *
  * @author Danylo Vashchilenko
  */
-public class CloseableTabComponent extends javax.swing.JPanel {
+public class CloseableTabPanel extends javax.swing.JPanel {
  
     private Set<ActionListener> actionListeners;
 
     /**
-     * Creates new form CloseableTabComponent
+     * Creates new form CloseableTabPanel
      */
-    public CloseableTabComponent() {
+    public CloseableTabPanel() {
         actionListeners = new HashSet<>();
         initComponents();
     }

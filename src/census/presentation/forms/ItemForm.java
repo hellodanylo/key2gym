@@ -13,11 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package census.presentation.blocks;
+package census.presentation.forms;
 
 import census.business.api.ValidationException;
 import census.business.dto.ItemDTO;
 import census.presentation.util.CensusBindingListener;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -27,20 +29,48 @@ import org.jdesktop.beansbinding.*;
  *
  * @author Danylo Vashchilenko
  */
-public class ItemPanel extends javax.swing.JPanel {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
-
-    private BindingGroup bindingGroup;
-    private CensusBindingListener censusBindingListener;
-    private ItemDTO item;
+public class ItemForm extends javax.swing.JPanel {
 
     /**
-     * Creates new form ItemPanel
+     * Creates new form ItemForm
      */
-    public ItemPanel() {
+    public ItemForm() {
+        strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
         initComponents();
+        buildForm();
     }
 
+    /**
+     * Initializes the components on this form.
+     */
+    private void initComponents() {
+        barcodeTextField = new javax.swing.JTextField();
+        priceTextField = new javax.swing.JTextField();
+        titleTextField = new javax.swing.JTextField();
+        quantityTextField = new javax.swing.JTextField();
+    }
+
+    /**
+     * Builds this from by placing the components on it.
+     */
+    private void buildForm() {
+        FormLayout layout = new FormLayout("right:default, 3dlu, default:grow", "");
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout, strings, this);
+
+        builder.appendI15d("Label.Title", titleTextField);
+        builder.nextLine();
+        builder.appendI15d("Label.Quantity", quantityTextField);
+        builder.nextLine();
+        builder.appendI15d("Label.Price", priceTextField);
+        builder.nextLine();
+        builder.appendI15d("Label.Barcode", barcodeTextField);
+    }
+
+    /**
+     * Sets the form's item.
+     *
+     * @param item the new item
+     */
     public void setItem(ItemDTO item) {
         this.item = item;
 
@@ -96,7 +126,7 @@ public class ItemPanel extends javax.swing.JPanel {
                     try {
                         return Long.parseLong(value);
                     } catch (NumberFormatException ex) {
-                        throw new RuntimeException(new ValidationException(bundle.getString("Message.BarcodeHasToBeNumber")));
+                        throw new RuntimeException(new ValidationException(strings.getString("Message.BarcodeHasToBeNumber")));
                     }
                 }
             });
@@ -113,7 +143,7 @@ public class ItemPanel extends javax.swing.JPanel {
 
                 @Override
                 public String convertForward(Short value) {
-                    return value == null ? bundle.getString("Messages.Infinite") : value.toString();
+                    return value == null ? strings.getString("Messages.Infinite") : value.toString();
                 }
 
                 @Override
@@ -128,7 +158,7 @@ public class ItemPanel extends javax.swing.JPanel {
                     try {
                         return Short.parseShort(value);
                     } catch (NumberFormatException ex) {
-                        throw new RuntimeException(new ValidationException(bundle.getString("Message.QuantityHasToBeNumber")));
+                        throw new RuntimeException(new ValidationException(strings.getString("Message.QuantityHasToBeNumber")));
                     }
                 }
             });
@@ -153,9 +183,9 @@ public class ItemPanel extends javax.swing.JPanel {
                     value = value.trim();
                     try {
                         return new BigDecimal(value);
-                    } catch(NumberFormatException ex) {
-                        String string = bundle.getString("Message.FieldIsNotFilledInCorrectly.withFieldName");
-                        string = MessageFormat.format(string, bundle.getString("Text.Price"));
+                    } catch (NumberFormatException ex) {
+                        String string = strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName");
+                        string = MessageFormat.format(string, strings.getString("Text.Price"));
                         throw new RuntimeException(new ValidationException(string));
                     }
                 }
@@ -176,107 +206,33 @@ public class ItemPanel extends javax.swing.JPanel {
         }
     }
 
-    /**
-     * Saves all fields to the item.
-     */
-    public void save() {
-        for (Binding binding : bindingGroup.getBindings()) {
-            binding.saveAndNotify();
-        }
-    }
-
     public ItemDTO getItem() {
         return item;
     }
 
-    public Boolean isFormValid() {
-        save();
+    /**
+     * Tries to save the form to the current item.
+     *
+     * @return true, if the form is valid and has been saved
+     */
+    public Boolean trySave() {
+        for (Binding binding : bindingGroup.getBindings()) {
+            binding.saveAndNotify();
+        }
         return censusBindingListener.getInvalidTargets().isEmpty();
     }
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+    /*
+     * Business
      */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        barcodeTextField = new javax.swing.JTextField();
-        barcodeLabel = new javax.swing.JLabel();
-        priceTextField = new javax.swing.JTextField();
-        priceLabel = new javax.swing.JLabel();
-        titleTextField = new javax.swing.JTextField();
-        titleLabel = new javax.swing.JLabel();
-        quantityTextField = new javax.swing.JTextField();
-        quantityLabel = new javax.swing.JLabel();
-
-        barcodeTextField.setName("barcode");
-
-        barcodeLabel.setText(bundle.getString("Label.Barcode")); // NOI18N
-
-        priceTextField.setName("price");
-
-        priceLabel.setText(bundle.getString("Label.Price")); // NOI18N
-
-        titleTextField.setName("title");
-
-        titleLabel.setText(bundle.getString("Label.Title")); // NOI18N
-
-        quantityTextField.setName("quantity");
-
-        quantityLabel.setText(bundle.getString("Label.Quantity")); // NOI18N
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(barcodeLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(priceLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(quantityLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(titleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                    .addComponent(barcodeTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(priceTextField)
-                    .addComponent(quantityTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(titleLabel)
-                    .addComponent(titleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(quantityLabel)
-                    .addComponent(quantityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(priceLabel)
-                    .addComponent(priceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(barcodeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(barcodeLabel))
-                .addContainerGap(22, Short.MAX_VALUE))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel barcodeLabel;
+    private ItemDTO item;
+    /*
+     * Presentation
+     */
+    private ResourceBundle strings;
+    private BindingGroup bindingGroup;
+    private CensusBindingListener censusBindingListener;
     private javax.swing.JTextField barcodeTextField;
-    private javax.swing.JLabel priceLabel;
     private javax.swing.JTextField priceTextField;
-    private javax.swing.JLabel quantityLabel;
     private javax.swing.JTextField quantityTextField;
-    private javax.swing.JLabel titleLabel;
     private javax.swing.JTextField titleTextField;
-    // End of variables declaration//GEN-END:variables
 }

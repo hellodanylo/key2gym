@@ -106,7 +106,7 @@ public class ManageItemsDialog extends CensusDialog {
         itemDetailsPanel = new javax.swing.JPanel();
         editingApplyButton = new javax.swing.JButton();
         editingCancelButton = new javax.swing.JButton();
-        itemPanel = new census.presentation.blocks.ItemPanel();
+        itemPanel = new census.presentation.forms.ItemForm();
         removeButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
 
@@ -275,7 +275,7 @@ public class ManageItemsDialog extends CensusDialog {
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void editingApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editingApplyButtonActionPerformed
-        if (!itemPanel.isFormValid()) {
+        if (!itemPanel.trySave()) {
             return;
         }
 
@@ -390,7 +390,7 @@ public class ManageItemsDialog extends CensusDialog {
     private javax.swing.JButton editingApplyButton;
     private javax.swing.JButton editingCancelButton;
     private javax.swing.JPanel itemDetailsPanel;
-    private census.presentation.blocks.ItemPanel itemPanel;
+    private census.presentation.forms.ItemForm itemPanel;
     private javax.swing.JScrollPane itemsScrollPane;
     private javax.swing.JTable itemsTable;
     private javax.swing.JButton okButton;

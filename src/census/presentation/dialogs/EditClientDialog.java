@@ -115,9 +115,9 @@ public class EditClientDialog extends CensusDialog {
         cancelButton = new javax.swing.JButton();
         tabbedPane = new javax.swing.JTabbedPane();
         clientTabPanel = new javax.swing.JPanel();
-        clientPanel = new census.presentation.blocks.ClientPanel();
+        clientPanel = new census.presentation.forms.ClientForm();
         profileTabPanel = new javax.swing.JPanel();
-        clientProfilePanel = new census.presentation.blocks.ClientProfilePanel();
+        clientProfilePanel = new census.presentation.forms.ClientProfileForm();
         attachedCheckBox = new javax.swing.JCheckBox();
         attendancesTableScrollPane = new javax.swing.JScrollPane();
         attendancesTable = new javax.swing.JTable();
@@ -155,14 +155,16 @@ public class EditClientDialog extends CensusDialog {
         clientTabPanel.setLayout(clientTabPanelLayout);
         clientTabPanelLayout.setHorizontalGroup(
             clientTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(clientPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+            .addGroup(clientTabPanelLayout.createSequentialGroup()
+                .addComponent(clientPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+                .addContainerGap())
         );
         clientTabPanelLayout.setVerticalGroup(
             clientTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(clientTabPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(clientPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(142, Short.MAX_VALUE))
+                .addComponent(clientPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(87, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(bundle.getString("Tab.Client"), clientTabPanel); // NOI18N
@@ -186,7 +188,7 @@ public class EditClientDialog extends CensusDialog {
                 .addComponent(attachedCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clientProfilePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab(bundle.getString("Text.Profile"), profileTabPanel); // NOI18N
@@ -259,7 +261,7 @@ public class EditClientDialog extends CensusDialog {
             freezesTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(freezesTabPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(freezesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addComponent(freezesTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(freezeNoteScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -302,7 +304,7 @@ public class EditClientDialog extends CensusDialog {
         ordersTabPanelLayout.setVerticalGroup(
             ordersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ordersTabPanelLayout.createSequentialGroup()
-                .addGap(0, 12, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(ordersTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(purchasesFilterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(purchasesFilterLabel))
@@ -348,7 +350,7 @@ public class EditClientDialog extends CensusDialog {
          * clientPanel is required to be valid, while clientProfilePanel has to
          * be valid only if it is (or is going to be) attached.
          */
-        if (!clientPanel.isFormValid() || (attachedCheckBox.isSelected() && !clientProfilePanel.isFormValid())) {
+        if (!clientPanel.trySave() || (attachedCheckBox.isSelected() && !clientProfilePanel.trySave())) {
             return;
         }
         
@@ -585,9 +587,9 @@ public class EditClientDialog extends CensusDialog {
     private javax.swing.JScrollPane attendancesTableScrollPane;
     private javax.swing.JButton cancelButton;
     private census.business.dto.ClientDTO client;
-    private census.presentation.blocks.ClientPanel clientPanel;
+    private census.presentation.forms.ClientForm clientPanel;
     private census.business.dto.ClientProfileDTO clientProfile;
-    private census.presentation.blocks.ClientProfilePanel clientProfilePanel;
+    private census.presentation.forms.ClientProfileForm clientProfilePanel;
     private javax.swing.JPanel clientTabPanel;
     private javax.swing.JScrollPane freezeNoteScrollPane;
     private javax.swing.JTextArea freezeNoteTextArea;

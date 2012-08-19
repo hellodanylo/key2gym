@@ -26,10 +26,10 @@ import census.business.api.ValidationException;
 import census.business.dto.AdministratorDTO;
 import census.business.dto.AttendanceDTO;
 import census.business.dto.OrderDTO;
-import census.presentation.blocks.AttendancesPanel;
-import census.presentation.blocks.CloseableTabComponent;
-import census.presentation.blocks.ItemsPanel;
-import census.presentation.blocks.OrdersPanel;
+import census.presentation.panels.AttendancesPanel;
+import census.presentation.panels.CloseableTabPanel;
+import census.presentation.panels.ItemsPanel;
+import census.presentation.panels.OrdersPanel;
 import census.presentation.util.CensusExceptionListener;
 import census.presentation.util.NotificationException;
 import java.awt.Component;
@@ -85,7 +85,7 @@ public class CensusFrame extends JFrame {
         workspacesTabbedPane.addTab(null, attendancesPanel);
         attendancesPanels.put(date, attendancesPanel);
 
-        CloseableTabComponent tabComponent = new CloseableTabComponent();
+        CloseableTabPanel tabComponent = new CloseableTabPanel();
         tabComponent.setText(MessageFormat.format(bundle.getString("Text.AttendancesFor.withDate"), new Object[] {date.toString("dd-MM-yyyy")}));
         tabComponent.addActionListener(new ActionListener() {
 
@@ -110,7 +110,7 @@ public class CensusFrame extends JFrame {
         workspacesTabbedPane.addTab(null, ordersPanel);
         ordersPanels.put(date, ordersPanel);
 
-        CloseableTabComponent tabComponent = new CloseableTabComponent();
+        CloseableTabPanel tabComponent = new CloseableTabPanel();
         tabComponent.setText(MessageFormat.format(bundle.getString("Text.OrdersFor.withDate"), new Object[] {date.toString("dd-MM-yyyy")}));
         tabComponent.addActionListener(new ActionListener() {
 
@@ -131,11 +131,11 @@ public class CensusFrame extends JFrame {
         }
 
         itemsPanel = new ItemsPanel();
-        itemsPanel.setItems(ItemsPanel.Items.PURE);
+        itemsPanel.setItems(ItemsPanel.ItemsGroup.PURE);
 
         workspacesTabbedPane.addTab(bundle.getString("Text.Items"), itemsPanel);
 
-        CloseableTabComponent tabComponent = new CloseableTabComponent();
+        CloseableTabPanel tabComponent = new CloseableTabPanel();
         tabComponent.setText(bundle.getString("Text.Items"));
         tabComponent.addActionListener(new ActionListener() {
 

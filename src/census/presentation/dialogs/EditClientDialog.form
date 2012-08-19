@@ -98,21 +98,24 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="clientPanel" pref="428" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="clientPanel" pref="416" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="clientPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="115" max="32767" attributes="0"/>
+                      <Component id="clientPanel" min="-2" pref="336" max="-2" attributes="0"/>
+                      <EmptySpace pref="87" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="census.presentation.blocks.ClientPanel" name="clientPanel">
+            <Component class="census.presentation.forms.ClientForm" name="clientPanel">
             </Component>
           </SubComponents>
         </Container>
@@ -151,7 +154,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="census.presentation.blocks.ClientProfilePanel" name="clientProfilePanel">
+            <Component class="census.presentation.forms.ClientProfileForm" name="clientProfilePanel">
             </Component>
             <Component class="javax.swing.JCheckBox" name="attachedCheckBox">
               <Properties>

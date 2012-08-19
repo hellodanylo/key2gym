@@ -98,7 +98,7 @@ public class ManageSubscriptionsDialog extends CensusDialog {
         removeButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
         editingPanel = new javax.swing.JPanel();
-        subscriptionPanel = new census.presentation.blocks.SubscriptionPanel();
+        subscriptionPanel = new census.presentation.forms.SubscriptionForm();
         subscriptionApplyButton = new javax.swing.JButton();
         subscriptionCancelButton = new javax.swing.JButton();
 
@@ -180,15 +180,15 @@ public class ManageSubscriptionsDialog extends CensusDialog {
         editingPanel.setLayout(editingPanelLayout);
         editingPanelLayout.setHorizontalGroup(
             editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(editingPanelLayout.createSequentialGroup()
-                .addComponent(subscriptionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editingPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(subscriptionApplyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(subscriptionCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
+            .addGroup(editingPanelLayout.createSequentialGroup()
+                .addComponent(subscriptionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         editingPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {subscriptionApplyButton, subscriptionCancelButton});
@@ -331,7 +331,7 @@ public class ManageSubscriptionsDialog extends CensusDialog {
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void subscriptionApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subscriptionApplyButtonActionPerformed
-        if(!subscriptionPanel.isFormValid()) {
+        if(!subscriptionPanel.trySave()) {
             return;
         }
         
@@ -391,7 +391,7 @@ public class ManageSubscriptionsDialog extends CensusDialog {
     private javax.swing.JButton removeButton;
     private javax.swing.JButton subscriptionApplyButton;
     private javax.swing.JButton subscriptionCancelButton;
-    private census.presentation.blocks.SubscriptionPanel subscriptionPanel;
+    private census.presentation.forms.SubscriptionForm subscriptionPanel;
     private javax.swing.JTable subscriptionsTable;
     private javax.swing.JScrollPane subscriptionsTableScollPane;
     // End of variables declaration//GEN-END:variables
