@@ -18,7 +18,7 @@ package census.presentation.dialogs;
 import census.business.SessionsService;
 import census.business.api.BusinessException;
 import census.business.api.ValidationException;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -91,7 +91,7 @@ public class OpenSessionDialog extends CensusDialog {
         try {
             SessionsService.getInstance().openSession(username, password);
         } catch (BusinessException | ValidationException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         }
 

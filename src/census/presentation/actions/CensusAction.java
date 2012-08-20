@@ -15,7 +15,7 @@
  */
 package census.presentation.actions;
 
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -49,8 +49,8 @@ public abstract class CensusAction extends AbstractAction implements Observer {
         putValue(AbstractAction.SELECTED_KEY, selected);
     }
 
-    protected CensusFrame getFrame() {
-        return CensusFrame.getInstance();
+    protected MainFrame getFrame() {
+        return MainFrame.getInstance();
     }
 
     public static final String ACTION_GLOBAL = "ACTION_GLOBAL";

@@ -18,7 +18,7 @@ package census.presentation.dialogs;
 import census.business.ClientsService;
 import census.business.api.ValidationException;
 import census.business.dto.ClientDTO;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.util.ClientsTableModel;
 import census.presentation.util.ClientsTableModel.Column;
 import com.jgoodies.forms.factories.CC;
@@ -308,7 +308,7 @@ public class PickClientDialog extends CensusDialog {
     protected void onOkActionPerformed(ActionEvent evt) {
         int index = clientsTable.getSelectedRow();
         if (index == -1) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(getString("Message.SelectClientFirst")));
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(getString("Message.SelectClientFirst")));
             return;
         }
         ClientDTO client = clientsTableModel.getClients().get(index);

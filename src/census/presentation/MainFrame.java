@@ -16,6 +16,7 @@
 
 package census.presentation;
 
+import census.CensusStarter;
 import census.business.AdministratorsService;
 import census.business.SessionsService;
 import census.business.StorageService;
@@ -33,16 +34,13 @@ import census.presentation.panels.OrdersPanel;
 import census.presentation.util.CensusExceptionListener;
 import census.presentation.util.NotificationException;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Stack;
-import javax.swing.FocusManager;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 
@@ -51,11 +49,12 @@ import org.joda.time.DateMidnight;
  *
  * @author Danylo Vashchilenko
  */
-public class CensusFrame extends JFrame {
+public class MainFrame extends JFrame {
+    
     /**
-     * Creates new form CensusFrame
+     * Creates new form MainFrame
      */
-    protected CensusFrame() {
+    protected MainFrame() {
         sessionsService = SessionsService.getInstance();
         sessionsService.addListener(new CustomListener());
         attendancesPanels = new HashMap<>();
@@ -66,6 +65,19 @@ public class CensusFrame extends JFrame {
 
         getGlobalCensusExceptionListenersStack().push(new MessageDialogExceptionListener());
 
+        /*
+         * The Starter is waiting on the MainFrame to perform shutting down.
+         */
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                synchronized (MainFrame.getInstance()) {
+                    setVisible(false);
+                    MainFrame.getInstance().notify();
+                }
+            }
+        });
+        
         setLocationRelativeTo(null);
     }
 
@@ -370,7 +382,7 @@ public class CensusFrame extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(actionsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
+            .addComponent(actionsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
             .addComponent(workspacesTabbedPane)
             .addComponent(bannerLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -379,7 +391,7 @@ public class CensusFrame extends JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(actionsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                .addComponent(workspacesTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bannerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -424,9 +436,7 @@ public class CensusFrame extends JFrame {
     }
     
     @Override
-    public void dispose() {
-        Logger.getLogger(this.getClass().getName()).info("Shutting down...");
-        
+    public void dispose() {      
         if(sessionsService.hasOpenSession()) {
             StorageService.getInstance().beginTransaction();
             sessionsService.closeSession();
@@ -449,16 +459,16 @@ public class CensusFrame extends JFrame {
     /*
      * Singleton instance
      */
-    private static CensusFrame instance;
+    private static MainFrame instance;
 
     /**
      * Gets an instance of this class.
      *
      * @return an instance of this class
      */
-    public static CensusFrame getInstance() {
+    public static MainFrame getInstance() {
         if (instance == null) {
-            instance = new CensusFrame();
+            instance = new MainFrame();
         }
         return instance;
     }

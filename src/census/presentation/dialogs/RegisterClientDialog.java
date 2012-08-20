@@ -23,7 +23,7 @@ import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.ClientDTO;
 import census.business.dto.ClientProfileDTO;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import java.beans.Beans;
 import java.util.ResourceBundle;
 import javax.swing.JFrame;
@@ -212,10 +212,10 @@ public class RegisterClientDialog extends CensusDialog {
             dispose();
             return;
         } catch (ValidationException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (BusinessException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (RuntimeException ex) {
             /*

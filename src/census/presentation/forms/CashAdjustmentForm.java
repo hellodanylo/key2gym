@@ -6,7 +6,7 @@ package census.presentation.forms;
 
 import census.business.api.ValidationException;
 import census.business.dto.CashAdjustmentDTO;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.util.CensusBindingListener;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
@@ -116,7 +116,7 @@ public class CashAdjustmentForm extends JPanel {
             augend = new BigDecimal(newAdjustmentTextField.getText().trim());
         } catch (NumberFormatException ex) {
             String message = MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), strings.getString("Text.Adjustmnet"));
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(message));
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(message));
             return;
         }
 
@@ -132,7 +132,7 @@ public class CashAdjustmentForm extends JPanel {
             subtrahend = new BigDecimal(newAdjustmentTextField.getText().trim());
         } catch (NumberFormatException ex) {
             String message = MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), strings.getString("Text.Adjustmnet"));
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(message));
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(message));
             return;
         }
 

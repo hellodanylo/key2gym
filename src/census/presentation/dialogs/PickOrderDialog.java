@@ -23,7 +23,7 @@ import census.business.api.ValidationException;
 import census.business.api.SecurityException;
 import census.business.dto.AttendanceDTO;
 import census.business.dto.KeyDTO;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.util.KeyListCellRenderer;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -256,7 +256,7 @@ public class PickOrderDialog extends CensusDialog {
                 orderId = OrdersService.getInstance().findCurrentDefault(true);
             }
         } catch(ValidationException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch(RuntimeException ex) {
             /*

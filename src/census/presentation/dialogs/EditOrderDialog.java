@@ -20,7 +20,7 @@ import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.*;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.util.DiscountListCellRenderer;
 import census.presentation.util.ItemListCellRenderer;
 import census.presentation.util.MutableListModel;
@@ -526,7 +526,7 @@ public class EditOrderDialog extends CensusDialog {
              * Asks the user to select an item.
              */
             ValidationException ex = new ValidationException(bundle.getString("Message.SelectItemFirst"));
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         }
 
@@ -536,7 +536,7 @@ public class EditOrderDialog extends CensusDialog {
             DiscountDTO discount = (DiscountDTO) discountsComboBox.getSelectedItem();
             ordersService.addPurchase(order.getId(), itemId, discount == null ? null : discount.getId());
         } catch (BusinessException | ValidationException | SecurityException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
         } catch (RuntimeException ex) {
             /*
              * The exception is unexpected. We got to shutdown the dialog for
@@ -563,7 +563,7 @@ public class EditOrderDialog extends CensusDialog {
 
         if (orderLineIndex == -1) {
             ValidationException ex = new ValidationException(bundle.getString("Message.SelectOrderLineFirst"));
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         }
 
@@ -572,7 +572,7 @@ public class EditOrderDialog extends CensusDialog {
         try {
             ordersService.removePurchase(orderLine.getId());
         } catch (BusinessException | SecurityException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
         } catch (ValidationException | RuntimeException ex) {
             /*
              * The exception is unexpected. We got to shutdown the dialog for
@@ -630,10 +630,10 @@ public class EditOrderDialog extends CensusDialog {
         } catch (NumberFormatException ex) {
             String message = MessageFormat.format(bundle.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"),
                     bundle.getString("Text.NewPayment"));
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(message));
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(message));
             return;
         } catch (BusinessException | ValidationException | SecurityException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (RuntimeException ex) {
             /*

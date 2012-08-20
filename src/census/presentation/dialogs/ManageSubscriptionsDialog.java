@@ -21,7 +21,7 @@ import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.SubscriptionDTO;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.util.SubscriptionsTableModel;
 import census.presentation.util.SubscriptionsTableModel.Column;
 import com.jgoodies.forms.factories.CC;
@@ -212,7 +212,7 @@ public class ManageSubscriptionsDialog extends CensusDialog {
                 } catch (ValidationException | SecurityException ex) {
                     throw new RuntimeException(ex);
                 } catch (BusinessException ex) {
-                    CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
                 }
             } catch (RuntimeException ex) {
                 /*

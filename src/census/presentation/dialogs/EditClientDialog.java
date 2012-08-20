@@ -25,7 +25,7 @@ import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.*;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.util.AttendancesTableModel;
 import census.presentation.util.FreezesTableModel;
 import java.text.MessageFormat;
@@ -384,7 +384,7 @@ public class EditClientDialog extends CensusDialog {
             dispose();
             return;
         } catch (BusinessException | ValidationException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (RuntimeException ex) {
             /*

@@ -10,7 +10,7 @@ import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.CashAdjustmentDTO;
 import census.business.dto.SubscriptionDTO;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.forms.CashAdjustmentForm;
 import census.presentation.forms.SubscriptionForm;
@@ -79,7 +79,7 @@ public class CashAdjustmentEditorDialog extends CensusDialog {
         try {
             CashService.getInstance().recordCashAdjustment(cashAdjustment);
         } catch (SecurityException | ValidationException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (RuntimeException ex) {
             setResult(RESULT_EXCEPTION);

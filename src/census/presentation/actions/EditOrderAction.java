@@ -8,7 +8,7 @@ import census.business.OrdersService;
 import census.business.SessionsService;
 import census.business.StorageService;
 import census.business.api.ValidationException;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.dialogs.PickClientDialog;
@@ -52,7 +52,7 @@ public class EditOrderAction extends CensusAction {
             Short financialActivityId;
             
             if(e.getActionCommand().equals(ACTION_CONTEXT)) {
-                financialActivityId = CensusFrame.getInstance()
+                financialActivityId = MainFrame.getInstance()
                         .getSelectedOrder().getId();
             } else {
                 PickOrderDialog pickFinancialActivityDialog = new PickOrderDialog(getFrame());

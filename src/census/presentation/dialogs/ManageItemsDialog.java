@@ -21,7 +21,7 @@ import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.ItemDTO;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.util.ItemsTableModel;
 import census.presentation.util.ItemsTableModel.Column;
 import com.jgoodies.forms.debug.FormDebugPanel;
@@ -202,7 +202,7 @@ public class ManageItemsDialog extends CensusDialog {
                 } catch (ValidationException | SecurityException ex) {
                     throw new RuntimeException(ex);
                 } catch (BusinessException ex) {
-                    CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
                 }
             } catch (RuntimeException ex) {
                 /*

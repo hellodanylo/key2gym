@@ -80,6 +80,10 @@ public class StorageService extends Observable {
     public void rollbackTransaction() {
         entityManager.getTransaction().rollback();
     }
+    
+    public void closeEntityManager() {
+        entityManager.close();
+    }
 
     /**
      * Singleton instance.

@@ -8,7 +8,7 @@ import census.business.ItemsService;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.ItemDTO;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.forms.ItemForm;
 import com.jgoodies.forms.factories.CC;
@@ -83,7 +83,7 @@ public class ItemEditorDialog extends CensusDialog {
                 ItemsService.getInstance().updateItem(form.getItem());
             }
         } catch (SecurityException | ValidationException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (RuntimeException ex) {
             setResult(RESULT_EXCEPTION);

@@ -21,7 +21,7 @@ import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.dto.KeyDTO;
 import census.persistence.Key;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.util.KeyListCellRenderer;
 import java.beans.Beans;
 import java.util.List;
@@ -240,7 +240,7 @@ public class PickAttendanceDialog extends CensusDialog {
                 throw new RuntimeException(ex);
             }
         } catch (BusinessException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (RuntimeException ex) {
             /*

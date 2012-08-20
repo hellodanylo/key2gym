@@ -16,7 +16,7 @@
 package census.presentation.util;
 
 import census.business.api.ValidationException;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import java.math.BigDecimal;
 import java.util.ResourceBundle;
 import org.jdesktop.beansbinding.Converter;

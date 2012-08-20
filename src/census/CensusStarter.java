@@ -16,7 +16,9 @@
 package census;
 
 import census.business.StorageService;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -30,12 +32,9 @@ import org.apache.log4j.PropertyConfigurator;
  *
  * It's responsible for the following tasks:
  * <p/>
- * 
- * <ul>
- * <li> Initializing Logging system </li>
- * <li> Reading and applying application properties.
- * <li> Launching CensusFrame </li>
- * </ul>
+ *
+ * <ul> <li> Initializing Logging system </li> <li> Reading and applying
+ * application properties. <li> Launching MainFrame </li> </ul>
  *
  * @author Danylo Vashchilenko
  */
@@ -43,54 +42,56 @@ public class CensusStarter {
 
     private static final Logger logger = Logger.getLogger(CensusStarter.class.getName());
     private static final Map<String, String> properties = new HashMap<>();
-    
+
     /**
-     * The main method which performs all task as described in class description.
+     * The main method which performs all task as described in class
+     * description.
      *
      * @param args an array of arguments
      */
     public static void main(String[] args) {
         /*
-         * Configures the logger using 'etc/log.properties' which should be on the
-         * class path.
+         * Configures the logger using 'etc/log.properties' which should be on
+         * the class path.
          */
         PropertyConfigurator.configure(CensusStarter.class.getClassLoader().getResourceAsStream("etc/log.properties"));
 
         logger.info("Starting...");
-        
+
         /*
          * Puts the default values of various properties.
          */
         properties.put("storage", "default");
-        
+
         /*
          * The array contains the names of all expected arguments.
          */
-        String[] expectedArgumentsNames = new String[] {"storage"};
-        
+        String[] expectedArgumentsNames = new String[]{"storage"};
+
         /*
-         * Parses the arguments looking for expected arguments.
-         * The arguments are in the '--ARGUMENTNAME=ARGUMENTVALUE' format.
+         * Parses the arguments looking for expected arguments. The arguments
+         * are in the '--ARGUMENTNAME=ARGUMENTVALUE' format.
          */
-        for(String arg : args) {
-            for(String expectedArgumentName : expectedArgumentsNames) {
-                String preffix = "--"+expectedArgumentName+"=";
-                if(arg.startsWith(preffix)) {
+        for (String arg : args) {
+            for (String expectedArgumentName : expectedArgumentsNames) {
+                String preffix = "--" + expectedArgumentName + "=";
+                if (arg.startsWith(preffix)) {
                     properties.put(expectedArgumentName, arg.substring(preffix.length()));
                 }
             }
         }
-        
+
         /*
-         * Storage service starts up on the first call of StorageService.getInstance().
+         * Storage service starts up on the first call of
+         * StorageService.getInstance().
          */
         StorageService.getInstance();
 
         //<editor-fold defaultstate="collapsed" desc="Reading and applying applicaiton properties">
         ResourceBundle applicationProperties = ResourceBundle.getBundle("etc/census");
-        
+
         Locale.setDefault(new Locale(applicationProperties.getString("locale.language"), applicationProperties.getString("locale.language")));
-        
+
         String ui = applicationProperties.getString("ui");
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -102,21 +103,38 @@ public class CensusStarter {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             logger.fatal("Failed to change the L&F!");
         }
-        
-        //</editor-fold>
-
-        //<editor-fold defaultstate="collapsed" desc="Creates and launches a CensusFrame">
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                CensusFrame.getInstance().setVisible(true);
-            }
-        });
         //</editor-fold>
 
         logger.info("Started!");
+        
+        //<editor-fold defaultstate="collapsed" desc="Creating and launching a MainFrame">
+
+        try {
+            EventQueue.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    MainFrame.getInstance().setVisible(true);
+                }
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(CensusStarter.class.getName()).error("Unexpected Exception!", ex);
+        }
+
+        synchronized (MainFrame.getInstance()) {
+            while (MainFrame.getInstance().isVisible()) {
+                try {
+                    MainFrame.getInstance().wait();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(CensusStarter.class.getName()).error("Unexpected Exception!", ex);
+                }
+            }
+        }
+        //</editor-fold>
+
+        Logger.getLogger(CensusStarter.class.getName()).info("Shutting down!");
+        StorageService.getInstance().closeEntityManager();
     }
-    
+
     public static Map<String, String> getProperties() {
         return properties;
     }

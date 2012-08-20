@@ -16,7 +16,7 @@
 package census.presentation.util;
 
 import census.business.api.ValidationException;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import java.util.HashSet;
 import java.util.Set;
 import org.jdesktop.beansbinding.Binding;
@@ -55,7 +55,7 @@ public class CensusBindingListener implements BindingListener {
                 return;
             }
             invalidTargets.add(binding.getTargetObject());
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException((ValidationException) failure.getConversionException().getCause());
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException((ValidationException) failure.getConversionException().getCause());
         }
     }
 

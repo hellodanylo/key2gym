@@ -19,7 +19,7 @@ import census.business.FreezesService;
 import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import java.util.ResourceBundle;
 import javax.swing.JFrame;
 
@@ -143,7 +143,7 @@ public class FreezeClientDialog extends CensusDialog {
         try {
             freezesService.addFreeze(clientId, days, note);
         } catch (ValidationException | BusinessException | SecurityException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         }
 

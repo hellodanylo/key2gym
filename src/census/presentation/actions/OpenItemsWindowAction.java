@@ -17,7 +17,7 @@ package census.presentation.actions;
 
 import census.business.SessionsService;
 import census.business.api.SecurityException;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.dialogs.PickDateDialog;
 import java.awt.event.ActionEvent;
@@ -50,7 +50,7 @@ public class OpenItemsWindowAction extends CensusAction {
     public void actionPerformed(ActionEvent e) {
 
         try {
-            CensusFrame.getInstance().openItemsTab();
+            MainFrame.getInstance().openItemsTab();
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);

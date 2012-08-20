@@ -21,7 +21,7 @@ import census.business.KeysService;
 import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.dto.KeyDTO;
-import census.presentation.CensusFrame;
+import census.presentation.MainFrame;
 import census.presentation.util.KeyListCellRenderer;
 import java.beans.Beans;
 import java.text.MessageFormat;
@@ -284,7 +284,7 @@ public class CheckInDialog extends CensusDialog {
                 try {
                     updateGUI();
                 } catch (BusinessException ex) {
-                    CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
                     setResult(RESULT_CANCEL);
                     return;
                 }
@@ -358,7 +358,7 @@ public class CheckInDialog extends CensusDialog {
             }
 
         } catch (BusinessException | ValidationException ex) {
-            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
         } catch (RuntimeException ex) {
             /*
