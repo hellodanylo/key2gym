@@ -12,12 +12,12 @@ It helps you to:
 ## Building
 
 You need:
-* JDK 1.7+ (with `java` and `javac` on the `PATH`)
-* Ant 1.7.0+ (with `ant` on the `PATH`)
-* Perl 5.6.0+ (with `perl` on the `PATH`)
+* JDK 1.7+
+* Ant 1.7.0+
+* Perl 5.6.0+
 
 1. Fork or download the repository.
-2. `cd` to the repository's root folder and run `ant -buildfile nb-build.xml release`.
+2. `cd` to the repository's root folder and run `ant release`.
 3. You can now run Census as `cd dist && java -jar census.jar`.
 
 Note that you have to deploy the whole environment to check out all the features.
