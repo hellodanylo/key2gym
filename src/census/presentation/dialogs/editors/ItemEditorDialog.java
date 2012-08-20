@@ -2,13 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package census.presentation.dialogs;
+package census.presentation.dialogs.editors;
 
 import census.business.ItemsService;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.ItemDTO;
 import census.presentation.CensusFrame;
+import census.presentation.dialogs.CensusDialog;
 import census.presentation.forms.ItemForm;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -21,9 +22,9 @@ import javax.swing.JButton;
  *
  * @author Danylo Vashchilenko
  */
-public class EditItemDialog extends CensusDialog {
+public class ItemEditorDialog extends CensusDialog {
 
-    public EditItemDialog(ItemDTO item) {
+    public ItemEditorDialog(ItemDTO item) {
         super(null, true);
         this.item = item;
 
@@ -55,15 +56,19 @@ public class EditItemDialog extends CensusDialog {
         add(okButton, CC.xy(2, 4));
         add(cancelButton, CC.xy(3, 4));
 
-        setTitle(MessageFormat.format(getString("Title.ItemDialog.withTitle"), item.getTitle()));
+        if (item.getId() == null) {
+            setTitle(getString("Title.ItemDialog.new"));
+        } else {
+            setTitle(MessageFormat.format(getString("Title.ItemDialog.withTitle"), item.getTitle()));
+        }
         setLocationRelativeTo(null);
         pack();
     }
 
     /**
      * Called when the OK action has been performed.
-     * 
-     * @param evt the action event 
+     *
+     * @param evt the action event
      */
     @Override
     protected void onOkActionPerformed(ActionEvent evt) {
@@ -72,7 +77,11 @@ public class EditItemDialog extends CensusDialog {
         }
 
         try {
-            ItemsService.getInstance().updateItem(form.getItem());
+            if (item.getId() == null) {
+                ItemsService.getInstance().addItem(item);
+            } else {
+                ItemsService.getInstance().updateItem(form.getItem());
+            }
         } catch (SecurityException | ValidationException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;
@@ -85,7 +94,6 @@ public class EditItemDialog extends CensusDialog {
 
         super.onOkActionPerformed(evt);
     }
-    
     /*
      * Business
      */

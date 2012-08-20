@@ -15,6 +15,7 @@
  */
 package census.presentation.dialogs;
 
+import census.presentation.dialogs.editors.ItemEditorDialog;
 import census.business.ItemsService;
 import census.business.api.BusinessException;
 import census.business.api.SecurityException;
@@ -167,9 +168,9 @@ public class ManageItemsDialog extends CensusDialog {
         CensusDialog dialog;
 
         if (evt.getSource().equals(addButton)) {
-            dialog = new NewItemDialog();
+            dialog = new ItemEditorDialog(new ItemDTO());
         } else {
-            dialog = new EditItemDialog(items.get(itemsTable.getSelectedRow()));
+            dialog = new ItemEditorDialog(items.get(itemsTable.getSelectedRow()));
         }
 
         dialog.setLocationRelativeTo(this);
