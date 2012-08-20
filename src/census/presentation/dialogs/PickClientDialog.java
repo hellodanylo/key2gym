@@ -23,9 +23,11 @@ import census.presentation.util.ClientsTableModel;
 import census.presentation.util.ClientsTableModel.Column;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
@@ -155,17 +157,25 @@ public class PickClientDialog extends CensusDialog {
 
         okButton = new JButton(getOkAction());
         cancelButton = new JButton(getCancelAction());
-        
+
         /*
          * Resize all buttons to have the same size.
          */
         Dimension commonSize = cancelButton.getPreferredSize();
-        
+
         okButton.setPreferredSize(commonSize);
         cancelButton.setPreferredSize(commonSize);
         searchButton.setPreferredSize(commonSize);
 
         getRootPane().setDefaultButton(okButton);
+
+        /*
+         * Smart Input (see issue #22).
+         */
+        addHotKey(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, 0), new IdFocusAction());
+        addHotKey(KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, 0), new CardFocusAction());
+        addHotKey(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SLASH, 0), new FullNameFocusAction());
+        
     }
 
     private void buildDialog() {
@@ -180,28 +190,28 @@ public class PickClientDialog extends CensusDialog {
         JPanel searchControlPanel = new JPanel();
         {
             searchControlPanel.setLayout(new FormLayout("c:p:g", "p, t:p:g, p, p"));
-            
+
             /*
              * Criterias panel
              */
             {
                 searchCriteriasPanel.setLayout(new FormLayout("f:p:g", "p, 3dlu, p, 5dlu, p, 3dlu, p, 5dlu, p, 3dlu, p, 5dlu"));
 
-                searchCriteriasPanel.add(idRadioButton,         CC.xy(1, 1));
-                searchCriteriasPanel.add(idTextField,           CC.xy(1, 3));
-                searchCriteriasPanel.add(cardRadioButton,       CC.xy(1, 5));
-                searchCriteriasPanel.add(cardTextField,         CC.xy(1, 7));
-                searchCriteriasPanel.add(fullNameRadioButton,   CC.xy(1, 9));
-                searchCriteriasPanel.add(fullNameTextField,     CC.xy(1, 11));
+                searchCriteriasPanel.add(idRadioButton, CC.xy(1, 1));
+                searchCriteriasPanel.add(idTextField, CC.xy(1, 3));
+                searchCriteriasPanel.add(cardRadioButton, CC.xy(1, 5));
+                searchCriteriasPanel.add(cardTextField, CC.xy(1, 7));
+                searchCriteriasPanel.add(fullNameRadioButton, CC.xy(1, 9));
+                searchCriteriasPanel.add(fullNameTextField, CC.xy(1, 11));
             }
 
-            searchControlPanel.add(searchCriteriasPanel,        CC.xy(1, 1));
-            searchControlPanel.add(searchButton,                CC.xy(1, 2));
-            searchControlPanel.add(okButton,                    CC.xy(1, 3));
-            searchControlPanel.add(cancelButton,                CC.xy(1, 4));
+            searchControlPanel.add(searchCriteriasPanel, CC.xy(1, 1));
+            searchControlPanel.add(searchButton, CC.xy(1, 2));
+            searchControlPanel.add(okButton, CC.xy(1, 3));
+            searchControlPanel.add(cancelButton, CC.xy(1, 4));
         }
-        add(searchControlPanel,     CC.xy(4, 2));
-        
+        add(searchControlPanel, CC.xy(4, 2));
+
         /*
          * Clients table
          */
@@ -315,6 +325,30 @@ public class PickClientDialog extends CensusDialog {
         setClientId(client.getId());
 
         super.onOkActionPerformed(evt);
+    }
+
+    protected class CardFocusAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            cardRadioButton.doClick(0);
+        }
+    }
+
+    protected class IdFocusAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            idRadioButton.doClick(0);
+        }
+    }
+
+    protected class FullNameFocusAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            fullNameRadioButton.doClick(0);
+        }
     }
 
     /*

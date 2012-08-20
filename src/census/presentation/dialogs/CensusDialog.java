@@ -153,6 +153,20 @@ public abstract class CensusDialog extends JDialog {
         return okAction;
     }
 
+    /**
+     * Adds a dialog-wide hot key. 
+     * <p>
+     * As long as the dialog or its subcomponents has the focus, the triggering
+     * of the key stroke will cause the action to be performed.
+     * 
+     * @param keyStroke the key stroke to listen for
+     * @param action the action to perform when the key stroke is triggered
+     */
+    protected void addHotKey(KeyStroke keyStroke, Action action) {
+        getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(keyStroke, action.getClass().getName());
+        getRootPane().getActionMap().put(action.getClass().getName(), action);
+    }
+
     protected void onOkActionPerformed(ActionEvent evt) {
         setResult(RESULT_OK);
         dispose();
@@ -188,7 +202,6 @@ public abstract class CensusDialog extends JDialog {
             onOkActionPerformed(e);
         }
     }
-    
     private Action cancelAction;
     private Action okAction;
     private Integer result;
