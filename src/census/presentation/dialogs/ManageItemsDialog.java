@@ -25,6 +25,7 @@ import census.presentation.util.ItemsTableModel;
 import census.presentation.util.ItemsTableModel.Column;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
@@ -157,7 +158,7 @@ public class ManageItemsDialog extends CensusDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(getString("Title.ManageItems")); // NOI18N
         setResizable(true);
-        pack();
+        setSize(new Dimension(850, 480));
         setLocationRelativeTo(getParent());
     }
 
