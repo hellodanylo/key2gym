@@ -23,13 +23,14 @@ import com.jgoodies.forms.layout.FormLayout;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import javax.swing.JPanel;
 import org.jdesktop.beansbinding.*;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public class ItemForm extends javax.swing.JPanel {
+public class ItemForm extends JPanel {
 
     /**
      * Creates new form ItemForm
@@ -215,7 +216,7 @@ public class ItemForm extends javax.swing.JPanel {
      *
      * @return true, if the form is valid and has been saved
      */
-    public Boolean trySave() {
+    public boolean trySave() {
         for (Binding binding : bindingGroup.getBindings()) {
             binding.saveAndNotify();
         }

@@ -161,7 +161,8 @@ public class ClientProfileForm extends JPanel {
      *
      * @return true, if the form is valid and has been saved
      */
-    public Boolean trySave() {
+ 
+    public boolean trySave() {
         for (Binding binding : bindingGroup.getBindings()) {
             binding.saveAndNotify();
         }
