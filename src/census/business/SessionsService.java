@@ -40,7 +40,7 @@ public class SessionsService extends Observable {
     protected SessionsService() {
         entityManager = StorageService.getInstance().getEntityManager();
         attemptsLeft = 5;
-        bundle = ResourceBundle.getBundle("census.business.resources.Strings");
+        bundle = ResourceBundle.getBundle("census/business/resources/Strings");
         listeners = new HashSet<>();
     }
 
@@ -91,8 +91,7 @@ public class SessionsService extends Observable {
             listener.sessionOpened();
         }
 
-        logger.info("Current session is now associated with "
-                + administrator.getFullName() + " (" + administrator.getId() + ")");
+        logger.info(administrator.getFullName() + " (" + administrator.getId() + ") logged in.");
     }
 
     /**
@@ -129,8 +128,7 @@ public class SessionsService extends Observable {
             listener.sessionUpdated();
         }
 
-        logger.info("Current administrator is now "
-                + administrator.getFullName() + " (" + administrator.getId() + ")");
+        logger.info(administrator.getFullName() + " (" + administrator.getId() + ") swaped previous administrator.");
     }
 
     public Boolean hasRaisedAdministrator() {
@@ -151,8 +149,7 @@ public class SessionsService extends Observable {
             listener.sessionUpdated();
         }
 
-        logger.info("Current administrator is now "
-                + session.getAdministrator().getFullName() + " (" + session.getAdministrator().getId() + ")");
+        logger.info(session.getAdministrator().getFullName() + " (" + session.getAdministrator().getId() + ") swaped back.");
     }
 
     /**
@@ -167,7 +164,7 @@ public class SessionsService extends Observable {
         }
 
         if (session == null) {
-            throw new IllegalStateException(bundle.getString("There isn't any open session."));
+            throw new IllegalStateException("There isn't any open session.");
         }
 
         raisedAdministrator = null;
@@ -184,7 +181,7 @@ public class SessionsService extends Observable {
             listener.sessionClosed();
         }
 
-        logger.info("The session has been closed.");
+        logger.info("The administrator logged out.");
     }
 
     /**
