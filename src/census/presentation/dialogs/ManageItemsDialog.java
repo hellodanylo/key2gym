@@ -24,6 +24,7 @@ import census.business.dto.ItemDTO;
 import census.presentation.CensusFrame;
 import census.presentation.util.ItemsTableModel;
 import census.presentation.util.ItemsTableModel.Column;
+import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Dimension;
@@ -143,7 +144,7 @@ public class ManageItemsDialog extends CensusDialog {
     }
 
     private void buildDialog() {
-
+        setContentPane(new FormDebugPanel());
         FormLayout layout = new FormLayout("4dlu, default:grow, 4dlu, default, 4dlu",
                 "4dlu, bottom:default:grow, center:default, top:default:grow, default, 4dlu, default, 4dlu");
         setLayout(layout);

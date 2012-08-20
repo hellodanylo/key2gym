@@ -167,6 +167,7 @@ public abstract class CensusDialog extends JDialog {
 
         public CancelAction() {
             putValue(NAME, getString("Button.Cancel"));
+            putValue(LARGE_ICON_KEY, new ImageIcon(getClass().getResource("/census/presentation/resources/cancel32.png")));
         }
 
         @Override
@@ -179,6 +180,7 @@ public abstract class CensusDialog extends JDialog {
 
         public OkAction() {
             putValue(NAME, getString("Button.Ok"));
+            putValue(LARGE_ICON_KEY, new ImageIcon(getClass().getResource("/census/presentation/resources/ok32.png")));
         }
 
         @Override
