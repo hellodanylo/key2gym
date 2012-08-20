@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package census.presentation.dialogs;
+package census.presentation.dialogs.editors;
 
 import census.business.ItemsService;
 import census.business.SubscriptionsService;
@@ -10,6 +10,7 @@ import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.SubscriptionDTO;
 import census.presentation.CensusFrame;
+import census.presentation.dialogs.CensusDialog;
 import census.presentation.forms.ItemForm;
 import census.presentation.forms.SubscriptionForm;
 import com.jgoodies.forms.factories.CC;
@@ -62,8 +63,9 @@ public class SubscriptionEditorDialog extends CensusDialog {
         } else {
             setTitle(MessageFormat.format(getString("Title.SubscriptionEditorDialog.withTitle"), subscription.getTitle()));
         }
-        setLocationRelativeTo(null);
         pack();
+        setLocationRelativeTo(null);
+        setMinimumSize(getSize());
     }
 
     /**

@@ -51,6 +51,9 @@ public class CensusBindingListener implements BindingListener {
     @Override
     public void syncFailed(Binding binding, SyncFailure failure) {
         if (failure.getType().equals(Binding.SyncFailureType.CONVERSION_FAILED)) {
+            if(failure.getConversionException() instanceof UnsupportedOperationException) {
+                return;
+            }
             invalidTargets.add(binding.getTargetObject());
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException((ValidationException) failure.getConversionException().getCause());
         }

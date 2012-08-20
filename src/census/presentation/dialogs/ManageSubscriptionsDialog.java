@@ -15,6 +15,7 @@
  */
 package census.presentation.dialogs;
 
+import census.presentation.dialogs.editors.SubscriptionEditorDialog;
 import census.business.SubscriptionsService;
 import census.business.api.BusinessException;
 import census.business.api.SecurityException;

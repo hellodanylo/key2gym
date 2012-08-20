@@ -15,11 +15,13 @@
  */
 package census.presentation.actions;
 
+import census.business.CashService;
 import census.business.SessionsService;
 import census.business.StorageService;
+import census.presentation.CensusFrame;
 import census.presentation.dialogs.CensusDialog;
-import census.presentation.dialogs.ManageCashDialog;
 import census.presentation.dialogs.PickDateDialog;
+import census.presentation.dialogs.editors.CashAdjustmentEditorDialog;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
 import java.util.Observable;
@@ -64,21 +66,25 @@ public class ManageCashAction extends CensusAction implements Observer {
                 return;
             }
 
-            ManageCashDialog manageCashDialog = new ManageCashDialog(getFrame());
-            manageCashDialog.setDate(pickDateDialog.getDate());
-            manageCashDialog.setVisible(true);
+            CashAdjustmentEditorDialog cashAdjustmentEditorDIalog = new CashAdjustmentEditorDialog(CashService.getInstance().getAdjustmentByDate(pickDateDialog.getDate()));
+            cashAdjustmentEditorDIalog.setVisible(true);
 
-            if (manageCashDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
-                throw manageCashDialog.getException();
+            if (cashAdjustmentEditorDIalog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                throw cashAdjustmentEditorDIalog.getException();
             }
 
-            if (manageCashDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (cashAdjustmentEditorDIalog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
 
             storageService.commitTransaction();
-
+        } catch (census.business.api.SecurityException ex) {
+            CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            if (StorageService.getInstance().isTransactionActive()) {
+                StorageService.getInstance().rollbackTransaction();
+            }
+            return;
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
