@@ -31,12 +31,12 @@ import javax.swing.*;
  *
  * @author Danylo Vashchilenko
  */
-public class OpenSessionDialog extends CensusDialog {
+public class TemporalySwapAdministratorDialog extends CensusDialog {
 
     /**
      * Creates new form OpenSessionDialog
      */
-    public OpenSessionDialog(JFrame parent) {
+    public TemporalySwapAdministratorDialog(JFrame parent) {
         super(parent, true);
         initComponents();
         buildDialog();
@@ -77,7 +77,7 @@ public class OpenSessionDialog extends CensusDialog {
         
         add(buttonsPanel,           CC.xywh(2, 6, 3, 1));
         
-        setTitle(getString("Title.OpenSession")); // NOI18N
+        setTitle(getString("Title.RaiseAdministrator")); // NOI18N
         setResizable(false);
         pack();
         setLocationRelativeTo(getParent());
@@ -89,7 +89,7 @@ public class OpenSessionDialog extends CensusDialog {
         char[] password = passwordPasswordField.getPassword();
 
         try {
-            SessionsService.getInstance().openSession(username, password);
+            SessionsService.getInstance().raiseAdministrator(username, password);
         } catch (BusinessException | ValidationException ex) {
             CensusFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
             return;

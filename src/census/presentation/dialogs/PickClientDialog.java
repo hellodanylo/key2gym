@@ -122,7 +122,7 @@ public class PickClientDialog extends CensusDialog {
          */
         searchButton = new JButton();
         searchButton.setText(getString("Button.Search")); // NOI18N
-        searchButton.setIcon(new ImageIcon(getClass().getResource("/census/presentation/resources/search32.png")));
+        searchButton.setIcon(new ImageIcon(getClass().getResource("/census/presentation/resources/search16.png")));
         searchButton.addActionListener(new ActionListener() {
 
             @Override

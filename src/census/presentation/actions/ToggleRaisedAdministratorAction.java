@@ -18,7 +18,7 @@ package census.presentation.actions;
 import census.business.SessionsService;
 import census.business.StorageService;
 import census.presentation.dialogs.CensusDialog;
-import census.presentation.dialogs.RaiseAdministratorDialog;
+import census.presentation.dialogs.TemporalySwapAdministratorDialog;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
 import java.util.Observable;
@@ -50,16 +50,16 @@ public class ToggleRaisedAdministratorAction extends CensusAction implements Obs
             if(SessionsService.getInstance().hasRaisedAdministrator()) {
                 SessionsService.getInstance().dropRaisedAdministrator();
             } else {
-                RaiseAdministratorDialog raisePermissionsLevelDialog = new RaiseAdministratorDialog(getFrame());
-                raisePermissionsLevelDialog.setVisible(true);
+                TemporalySwapAdministratorDialog swapAdminsitratorDialog = new TemporalySwapAdministratorDialog(getFrame());
+                swapAdminsitratorDialog.setVisible(true);
 
-                if(raisePermissionsLevelDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+                if(swapAdminsitratorDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
                     StorageService.getInstance().rollbackTransaction();
                     return;
                 }
 
-                if(raisePermissionsLevelDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
-                    throw raisePermissionsLevelDialog.getException();
+                if(swapAdminsitratorDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                    throw swapAdminsitratorDialog.getException();
                 }
             }
             
