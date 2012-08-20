@@ -21,11 +21,9 @@ import census.business.dto.ClientDTO;
 import census.presentation.CensusFrame;
 import census.presentation.util.ClientsTableModel;
 import census.presentation.util.ClientsTableModel.Column;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
@@ -62,7 +60,7 @@ public class PickClientDialog extends CensusDialog {
 
         modeButtonGroup = new ButtonGroup();
 
-        searchCriteriasPanel = new JPanel();//FormDebugPanel();
+        searchCriteriasPanel = new JPanel();
         searchCriteriasPanel.setBorder(BorderFactory.createTitledBorder(getString("Text.SearchCriterias"))); // NOI18N
 
         /*
@@ -89,10 +87,10 @@ public class PickClientDialog extends CensusDialog {
         cardRadioButton = new JRadioButton();
         cardRadioButton.setText(getString("Label.Card")); // NOI18N
         cardRadioButton.setActionCommand("card"); // NOI18N
-        cardRadioButton.addActionListener(new java.awt.event.ActionListener() {
+        cardRadioButton.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 radioButtonsActionPerformed(evt);
             }
         });
@@ -107,10 +105,10 @@ public class PickClientDialog extends CensusDialog {
         fullNameRadioButton = new JRadioButton();
         fullNameRadioButton.setText(getString("Label.FullName")); // NOI18N
         fullNameRadioButton.setActionCommand("fullName"); // NOI18N
-        fullNameRadioButton.addActionListener(new java.awt.event.ActionListener() {
+        fullNameRadioButton.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 radioButtonsActionPerformed(evt);
             }
         });
@@ -128,7 +126,7 @@ public class PickClientDialog extends CensusDialog {
         searchButton.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 searchButtonActionPerformed(evt);
             }
         });
@@ -171,7 +169,6 @@ public class PickClientDialog extends CensusDialog {
     }
 
     private void buildDialog() {
-        //setContentPane(new FormDebugPanel());
 
         setLayout(new FormLayout("4dlu, c:p, 4dlu, p:g, 4dlu", "4dlu, f:p:g, 4dlu"));
 
@@ -180,7 +177,7 @@ public class PickClientDialog extends CensusDialog {
         /*
          * Search control panel
          */
-        JPanel searchControlPanel = new JPanel();//FormDebugPanel();
+        JPanel searchControlPanel = new JPanel();
         {
             searchControlPanel.setLayout(new FormLayout("c:p:g", "p, t:p:g, p, p"));
             
@@ -227,7 +224,7 @@ public class PickClientDialog extends CensusDialog {
         super.setVisible(visible);
     }
 
-    private void radioButtonsActionPerformed(java.awt.event.ActionEvent evt) {
+    private void radioButtonsActionPerformed(ActionEvent evt) {
         if (idRadioButton.isSelected()) {
             idTextField.setEnabled(true);
             idTextField.requestFocusInWindow();
@@ -253,7 +250,7 @@ public class PickClientDialog extends CensusDialog {
         }
     }
 
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void searchButtonActionPerformed(ActionEvent evt) {
         List<ClientDTO> clients;
 
         try {
