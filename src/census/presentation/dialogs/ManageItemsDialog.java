@@ -15,22 +15,19 @@
  */
 package census.presentation.dialogs;
 
-import census.presentation.dialogs.editors.ItemEditorDialog;
 import census.business.ItemsService;
 import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.ItemDTO;
 import census.presentation.MainFrame;
+import census.presentation.dialogs.editors.ItemEditorDialog;
 import census.presentation.util.ItemsTableModel;
 import census.presentation.util.ItemsTableModel.Column;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -144,23 +141,27 @@ public class ManageItemsDialog extends CensusDialog {
     }
 
     private void buildDialog() {
-        setContentPane(new FormDebugPanel());
-        FormLayout layout = new FormLayout("4dlu, default:grow, 4dlu, default, 4dlu",
-                "4dlu, bottom:default:grow, center:default, top:default:grow, default, 4dlu, default, 4dlu");
+        FormLayout layout = new FormLayout("4dlu, [400dlu, d]:g, 4dlu, d, 4dlu",
+                "4dlu, f:[200dlu, d]:g, 4dlu");
         setLayout(layout);
 
-        add(itemsScrollPane, CC.xywh(2, 2, 1, 6));
+        add(itemsScrollPane, CC.xy(2, 2));
 
-        add(addButton, CC.xy(4, 2));
-        add(editButton, CC.xy(4, 3));
-        add(removeButton, CC.xy(4, 4));
-        add(okButton, CC.xy(4, 5));
-        add(cancelButton, CC.xy(4, 7));
+        JPanel buttonsPanel = new JPanel();
+        {
+            buttonsPanel.setLayout(new FormLayout("d", "b:d:g, c:d, t:d:g, d, d"));
+            buttonsPanel.add(addButton, CC.xy(1, 1));
+            buttonsPanel.add(editButton, CC.xy(1, 2));
+            buttonsPanel.add(removeButton, CC.xy(1, 3));
+            buttonsPanel.add(okButton, CC.xy(1, 4));
+            buttonsPanel.add(cancelButton, CC.xy(1, 5));
+        }
+        add(buttonsPanel,   CC.xy(4, 2));
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(getString("Title.ManageItems")); // NOI18N
         setResizable(true);
-        setSize(new Dimension(850, 480));
+        pack();
         setLocationRelativeTo(getParent());
     }
 
