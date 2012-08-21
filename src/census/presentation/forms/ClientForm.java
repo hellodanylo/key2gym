@@ -26,7 +26,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.Sizes;
 import java.util.ResourceBundle;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import org.jdesktop.beansbinding.*;
 
 /**
@@ -101,9 +103,10 @@ public class ClientForm extends JPanel {
      */
     private void buildForm() {
         FormLayout layout = new FormLayout("right:default, 3dlu, default:grow", "");
-        DefaultFormBuilder builder = new DefaultFormBuilder(layout, ResourceBundle.getBundle("census/presentation/resources/Strings"), this);
+        ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout, bundle, this);
+        builder.defaultRowSpec(new RowSpec(RowSpec.FILL, Sizes.DEFAULT, RowSpec.DEFAULT_GROW));
 
-        builder.defaultRowSpec(new RowSpec(RowSpec.TOP, Sizes.PREFERRED, RowSpec.NO_GROW));
         builder.appendI15d("Label.ID", idTextField);
         builder.nextLine();
         builder.appendI15d("Label.FullName", fullNameTextField);
@@ -116,7 +119,10 @@ public class ClientForm extends JPanel {
         builder.nextLine();
         builder.appendI15d("Label.RegistrationDate", registrationDateTextField);
         builder.nextLine();
-        builder.appendI15d("Label.Note", noteScrollPane);
+        
+        JLabel label = new JLabel(bundle.getString("Label.Note"));
+        label.setVerticalAlignment(SwingConstants.TOP);
+        builder.append(label, noteScrollPane);
     }
 
     /**
