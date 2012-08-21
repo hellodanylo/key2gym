@@ -141,8 +141,8 @@ public class ManageItemsDialog extends CensusDialog {
     }
 
     private void buildDialog() {
-        FormLayout layout = new FormLayout("4dlu, [400dlu, d]:g, 4dlu, d, 4dlu",
-                "4dlu, f:[200dlu, d]:g, 4dlu");
+        FormLayout layout = new FormLayout("4dlu, [400dlu, p]:g, 4dlu, p, 4dlu",
+                "4dlu, f:[200dlu, p]:g, 4dlu");
         setLayout(layout);
 
         add(itemsScrollPane, CC.xy(2, 2));
@@ -160,8 +160,9 @@ public class ManageItemsDialog extends CensusDialog {
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(getString("Title.ManageItems")); // NOI18N
-        setResizable(true);
         pack();
+        setMinimumSize(getPreferredSize());
+        setResizable(true);
         setLocationRelativeTo(getParent());
     }
 

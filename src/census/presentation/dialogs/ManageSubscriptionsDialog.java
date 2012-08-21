@@ -24,6 +24,7 @@ import census.business.dto.SubscriptionDTO;
 import census.presentation.MainFrame;
 import census.presentation.util.SubscriptionsTableModel;
 import census.presentation.util.SubscriptionsTableModel.Column;
+import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Dimension;
@@ -154,23 +155,29 @@ public class ManageSubscriptionsDialog extends CensusDialog {
     }
 
     private void buildDialog() {
-
-        FormLayout layout = new FormLayout("4dlu, default:grow, 4dlu, default, 4dlu",
-                "4dlu, bottom:default:grow, center:default, top:default:grow, default, 4dlu, default, 4dlu");
+        setContentPane(new FormDebugPanel());
+        FormLayout layout = new FormLayout("4dlu, [400dlu, p]:g, 4dlu, p, 4dlu",
+                "4dlu, f:[200dlu, p]:g, 4dlu");
         setLayout(layout);
 
-        add(subscriptionsScrollPane, CC.xywh(2, 2, 1, 6));
+        add(subscriptionsScrollPane, CC.xy(2, 2));
 
-        add(addButton, CC.xy(4, 2));
-        add(editButton, CC.xy(4, 3));
-        add(removeButton, CC.xy(4, 4));
-        add(okButton, CC.xy(4, 5));
-        add(cancelButton, CC.xy(4, 7));
+        JPanel buttonsPanel = new JPanel();
+        {
+            buttonsPanel.setLayout(new FormLayout("d", "b:d:g, c:d, t:d:g, d, d"));
+            buttonsPanel.add(addButton, CC.xy(1, 1));
+            buttonsPanel.add(editButton, CC.xy(1, 2));
+            buttonsPanel.add(removeButton, CC.xy(1, 3));
+            buttonsPanel.add(okButton, CC.xy(1, 4));
+            buttonsPanel.add(cancelButton, CC.xy(1, 5));
+        }
+        add(buttonsPanel,   CC.xy(4, 2));
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(getString("Title.ManageSubscriptions")); // NOI18N
+        pack();
+        setMinimumSize(getPreferredSize());
         setResizable(true);
-        setSize(new Dimension(850, 480));
         setLocationRelativeTo(getParent());
     }
 
