@@ -69,8 +69,8 @@ public class CheckInAction extends CensusAction implements Observer {
 
             /*
              * OpenAttendance
-             */
-            CheckInDialog openAttendanceDialog = new CheckInDialog(getFrame());
+             */         
+            CheckInDialog openAttendanceDialog = new CheckInDialog(getFrame());  
             openAttendanceDialog.setVisible(true);
 
             if (openAttendanceDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
@@ -85,7 +85,7 @@ public class CheckInAction extends CensusAction implements Observer {
             /*
              * If requested, EditFinancialActivty
              */
-            if (openAttendanceDialog.isFinancialActivityDialogRequested()) {
+            if (openAttendanceDialog.isOrderDialogRequested()) {
 
                 Short activityId = null;
                 EditOrderDialog editFinancialActivityDialog = new EditOrderDialog(getFrame());
@@ -130,7 +130,7 @@ public class CheckInAction extends CensusAction implements Observer {
                 if (days.getDays() < 7) {
                     MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new NotificationException(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Message.ClientHasThisManyDaysBeforeExpiration.withDays"), new Object[] {days.getDays()})));
                 }
-
+                
             }
 
             storageService.commitTransaction();
