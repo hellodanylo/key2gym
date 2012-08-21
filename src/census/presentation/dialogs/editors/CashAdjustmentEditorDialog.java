@@ -61,7 +61,7 @@ public class CashAdjustmentEditorDialog extends CensusDialog {
 
         setTitle(MessageFormat.format(getString("Title.CashAdjustment"), cashAdjustment.getDate().toDate()));
         pack();
-        //setResizable(false);
+        setMinimumSize(getPreferredSize());
         setLocationRelativeTo(null);
     }
 
