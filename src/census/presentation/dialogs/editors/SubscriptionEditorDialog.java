@@ -4,20 +4,20 @@
  */
 package census.presentation.dialogs.editors;
 
-import census.business.ItemsService;
 import census.business.SubscriptionsService;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.SubscriptionDTO;
 import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
-import census.presentation.forms.ItemForm;
 import census.presentation.forms.SubscriptionForm;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /**
  *
@@ -50,28 +50,34 @@ public class SubscriptionEditorDialog extends CensusDialog {
      * Builds the dialog by placing the components it.
      */
     private void buildDialog() {
-        FormLayout layout = new FormLayout("4dlu, right:100dlu, left:100dlu, 4dlu",
-                "4dlu, default, 4dlu, default, 4dlu");
+        FormLayout layout = new FormLayout("4dlu, [200dlu, p]:g, 4dlu",
+                "4dlu, p, 4dlu, p, 4dlu");
         setLayout(layout);
 
-        add(form, CC.xywh(2, 2, 2, 1));
-        add(okButton, CC.xy(2, 4));
-        add(cancelButton, CC.xy(3, 4));
+        add(form, CC.xy(2, 2));
 
-        if(subscription.getId() == null) {
+        JPanel buttonsPanel = new JPanel();
+        {
+            buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+            buttonsPanel.add(okButton);
+            buttonsPanel.add(cancelButton);
+        }
+        add(buttonsPanel, CC.xy(2, 4));
+
+        if (subscription.getId() == null) {
             setTitle(getString("Title.SubscriptionEditorDialog.new"));
         } else {
             setTitle(MessageFormat.format(getString("Title.SubscriptionEditorDialog.withTitle"), subscription.getTitle()));
         }
         pack();
-        setLocationRelativeTo(null);
-        setMinimumSize(getSize());
+        setLocationRelativeTo(getParent());
+        setResizable(false);
     }
 
     /**
      * Called when the OK action has been performed.
-     * 
-     * @param evt the action event 
+     *
+     * @param evt the action event
      */
     @Override
     protected void onOkActionPerformed(ActionEvent evt) {
@@ -80,7 +86,7 @@ public class SubscriptionEditorDialog extends CensusDialog {
         }
 
         try {
-            if(subscription.getId() == null) {
+            if (subscription.getId() == null) {
                 SubscriptionsService.getInstance().addSubscription(subscription);
             } else {
                 SubscriptionsService.getInstance().updateSubscription(subscription);
@@ -97,7 +103,6 @@ public class SubscriptionEditorDialog extends CensusDialog {
 
         super.onOkActionPerformed(evt);
     }
-    
     /*
      * Business
      */

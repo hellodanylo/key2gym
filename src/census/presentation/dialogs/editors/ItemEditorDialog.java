@@ -11,12 +11,14 @@ import census.business.dto.ItemDTO;
 import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.forms.ItemForm;
+import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
-import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /**
  *
@@ -48,21 +50,28 @@ public class ItemEditorDialog extends CensusDialog {
      * Builds the dialog by placing the components it.
      */
     private void buildDialog() {
-        FormLayout layout = new FormLayout("4dlu, right:100dlu, left:100dlu, 4dlu",
-                "4dlu, default, 4dlu, default, 4dlu");
+        FormLayout layout = new FormLayout("4dlu, [200dlu, p]:g, 4dlu",
+                "4dlu, p, 4dlu, p, 4dlu");
         setLayout(layout);
 
-        add(form, CC.xywh(2, 2, 2, 1));
-        add(okButton, CC.xy(2, 4));
-        add(cancelButton, CC.xy(3, 4));
+        add(form, CC.xy(2, 2));
+
+        JPanel buttonsPanel = new JPanel();
+        {
+            buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+            buttonsPanel.add(okButton);
+            buttonsPanel.add(cancelButton);
+        }
+        add(buttonsPanel, CC.xy(2, 4));
 
         if (item.getId() == null) {
             setTitle(getString("Title.ItemDialog.new"));
         } else {
             setTitle(MessageFormat.format(getString("Title.ItemDialog.withTitle"), item.getTitle()));
         }
-        setLocationRelativeTo(null);
         pack();
+        setLocationRelativeTo(getParent());
+        setResizable(false);
     }
 
     /**

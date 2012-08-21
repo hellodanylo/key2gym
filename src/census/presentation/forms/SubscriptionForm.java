@@ -24,6 +24,7 @@ import census.presentation.util.TimeSplitListCellRenderer;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.*;
@@ -90,41 +91,42 @@ public class SubscriptionForm extends JPanel {
         timeSplitComboBox.setModel(new DefaultComboBoxModel(timeSplits.toArray()));
         timeSplitComboBox.setRenderer(new TimeSplitListCellRenderer());
     }
-    
+
     /**
      * Builds the form by placing the components on it.
      */
     private void buildForm() {
         FormLayout layout = new FormLayout("right:default, 3dlu, default:grow", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, strings, this);
-        
+
         builder.appendI15d("Label.Title", titleTextField);
         builder.nextLine();
-        
+
         builder.appendI15d("Label.Price", priceTextField);
         builder.nextLine();
-        
+
         builder.appendI15d("Label.Units", unitsSpinner);
         builder.nextLine();
 
         builder.appendI15d("Label.TimeSplit", timeSplitComboBox);
         builder.nextLine();
-       
+
         builder.appendI15d("Label.Days", daysSpinner);
         builder.nextLine();
-        
+
         builder.appendI15d("Label.Months", monthsSpinner);
         builder.nextLine();
-        
+
         builder.appendI15d("Label.Years", yearsSpinner);
         builder.nextLine();
-        
+
         builder.appendI15d("Label.Barcode", barcodeTextField);
         builder.nextLine();
     }
 
     /**
      * Sets the current subscription.
+     *
      * @param subscription the new subscription
      */
     public void setSubscription(SubscriptionDTO subscription) {
@@ -188,7 +190,8 @@ public class SubscriptionForm extends JPanel {
                     try {
                         return Long.parseLong(value);
                     } catch (NumberFormatException ex) {
-                        throw new RuntimeException(new ValidationException("The barcode has to be a number."));
+                        throw new RuntimeException(new ValidationException(
+                                strings.getString("Message.BarcodeHasToBeNumbe")));
                     }
                 }
             });
@@ -214,7 +217,10 @@ public class SubscriptionForm extends JPanel {
                     try {
                         return new BigDecimal(value);
                     } catch (NumberFormatException ex) {
-                        throw new RuntimeException(new ValidationException("The price field is not filled in correctly."));
+                        throw new RuntimeException(new ValidationException(
+                                MessageFormat.format(
+                                strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"),
+                                strings.getString("Text.Price"))));
                     }
                 }
             });
@@ -298,6 +304,7 @@ public class SubscriptionForm extends JPanel {
 
     /**
      * Gets the current subscription.
+     *
      * @return the current subscription
      */
     public SubscriptionDTO getSubscription() {
@@ -306,6 +313,7 @@ public class SubscriptionForm extends JPanel {
 
     /**
      * Tries to save the form to the current subscription.
+     *
      * @return true, if the form is valid and has been saved
      */
     public boolean trySave() {
@@ -314,20 +322,17 @@ public class SubscriptionForm extends JPanel {
         }
         return censusBindingListener.getInvalidTargets().isEmpty();
     }
-    
     /*
      * Business
      */
     private SubscriptionDTO subscription;
     private List<TimeSplitDTO> timeSplits;
-    
     /*
      * Presentation
      */
     private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
     private BindingGroup bindingGroup;
     private CensusBindingListener censusBindingListener;
-    
     private JTextField barcodeTextField;
     private JSpinner daysSpinner;
     private JSpinner monthsSpinner;
