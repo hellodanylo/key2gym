@@ -8,7 +8,7 @@ import census.business.CashService;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.CashAdjustmentDTO;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.forms.CashAdjustmentForm;
 import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
@@ -21,7 +21,7 @@ import javax.swing.JButton;
  *
  * @author Danylo Vashchilenko
  */
-public class CashAdjustmentEditorDialog extends CensusDialog {
+public class CashAdjustmentEditorDialog extends AbstractDialog {
 
     public CashAdjustmentEditorDialog(CashAdjustmentDTO cashAdjustment) {
         super(null, true);

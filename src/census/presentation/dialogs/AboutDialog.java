@@ -30,7 +30,7 @@ import javax.swing.event.HyperlinkEvent;
  *
  * @author Danylo Vashchilenko
  */
-public class AboutDialog extends CensusDialog {
+public class AboutDialog extends AbstractDialog {
 
     /**
      * Creates new form AboutDialog

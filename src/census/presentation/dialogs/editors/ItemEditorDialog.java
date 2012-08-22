@@ -8,7 +8,7 @@ import census.business.ItemsService;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.ItemDTO;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.forms.ItemForm;
 import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
@@ -23,7 +23,7 @@ import javax.swing.JPanel;
  *
  * @author Danylo Vashchilenko
  */
-public class ItemEditorDialog extends CensusDialog {
+public class ItemEditorDialog extends AbstractDialog {
 
     public ItemEditorDialog(ItemDTO item) {
         super(null, true);

@@ -17,7 +17,7 @@ package census.presentation.actions;
 
 import census.business.SessionsService;
 import census.business.StorageService;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.TemporalySwapAdministratorDialog;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
@@ -53,12 +53,12 @@ public class ToggleRaisedAdministratorAction extends CensusAction implements Obs
                 TemporalySwapAdministratorDialog swapAdminsitratorDialog = new TemporalySwapAdministratorDialog(getFrame());
                 swapAdminsitratorDialog.setVisible(true);
 
-                if(swapAdminsitratorDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+                if(swapAdminsitratorDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                     StorageService.getInstance().rollbackTransaction();
                     return;
                 }
 
-                if(swapAdminsitratorDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                if(swapAdminsitratorDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                     throw swapAdminsitratorDialog.getException();
                 }
             }

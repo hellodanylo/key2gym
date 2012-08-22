@@ -23,7 +23,7 @@ import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.AttendanceDTO;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.dialogs.PickAttendanceDialog;
 import census.presentation.util.UserExceptionHandler;
@@ -81,11 +81,11 @@ public class CheckOutAction extends CensusAction implements Observer {
 
             pickAttendanceDialog.setVisible(true);
 
-            if (pickAttendanceDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (pickAttendanceDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw pickAttendanceDialog.getException();
             }
 
-            if (pickAttendanceDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (pickAttendanceDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -114,11 +114,11 @@ public class CheckOutAction extends CensusAction implements Observer {
                     editOrderDialog.setFullPaymentForced(isAnonymous);
                     editOrderDialog.setVisible(true);
 
-                    if (editOrderDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                    if (editOrderDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                         throw editOrderDialog.getException();
                     }
 
-                    if (editOrderDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+                    if (editOrderDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                         storageService.rollbackTransaction();
                         return;
                     }

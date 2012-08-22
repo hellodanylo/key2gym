@@ -30,7 +30,7 @@ import javax.swing.*;
  *
  * @author Danylo Vashchilenko
  */
-public class TemporalySwapAdministratorDialog extends CensusDialog {
+public class TemporalySwapAdministratorDialog extends AbstractDialog {
 
     /**
      * Creates new form OpenSessionDialog

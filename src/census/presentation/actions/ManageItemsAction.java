@@ -17,7 +17,7 @@ package census.presentation.actions;
 
 import census.business.SessionsService;
 import census.business.StorageService;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.ManageItemsDialog;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
@@ -54,11 +54,11 @@ public class ManageItemsAction extends CensusAction implements Observer {
             ManageItemsDialog manageItemsDialog = new ManageItemsDialog(getFrame());
             manageItemsDialog.setVisible(true);
 
-            if (manageItemsDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (manageItemsDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw manageItemsDialog.getException();
             }
 
-            if (manageItemsDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (manageItemsDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }

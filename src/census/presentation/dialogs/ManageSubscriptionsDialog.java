@@ -39,7 +39,7 @@ import javax.swing.table.TableColumn;
  *
  * @author Danylo Vashchilenko
  */
-public class ManageSubscriptionsDialog extends CensusDialog {
+public class ManageSubscriptionsDialog extends AbstractDialog {
 
     /**
      * Creates new form ItemsDialog
@@ -182,7 +182,7 @@ public class ManageSubscriptionsDialog extends CensusDialog {
 
     private void addOrEditButtonActionPerformed(ActionEvent evt) {
 
-        CensusDialog dialog;
+        AbstractDialog dialog;
 
         if (evt.getSource().equals(addButton)) {
             dialog = new SubscriptionEditorDialog(new SubscriptionDTO());
@@ -193,10 +193,10 @@ public class ManageSubscriptionsDialog extends CensusDialog {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
 
-        if (dialog.getResult().equals(CensusDialog.RESULT_OK)) {
+        if (dialog.getResult().equals(AbstractDialog.RESULT_OK)) {
             subscriptions = SubscriptionsService.getInstance().getAllSubscriptions();
             subscriptionsTableModel.setSubscriptions(subscriptions);
-        } else if(dialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+        } else if(dialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
             setResult(RESULT_EXCEPTION);
             setException(dialog.getException());
             dispose();

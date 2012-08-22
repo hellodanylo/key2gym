@@ -37,7 +37,7 @@ import javax.swing.*;
  *
  * @author Danylo Vashchilenko
  */
-public class CheckInDialog extends CensusDialog {
+public class CheckInDialog extends AbstractDialog {
 
     /**
      * Creates new CheckInDialog

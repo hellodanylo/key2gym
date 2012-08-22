@@ -30,7 +30,7 @@ import org.joda.time.DateMidnight;
  *
  * @author Danylo Vashchilenko
  */
-public class PickDateDialog extends CensusDialog {
+public class PickDateDialog extends AbstractDialog {
 
     /**
      * Creates new PickDateDialog

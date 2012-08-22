@@ -30,7 +30,7 @@ import javax.swing.*;
  *
  * @author Danylo Vashchilenko
  */
-public class OpenSessionDialog extends CensusDialog {
+public class OpenSessionDialog extends AbstractDialog {
 
     /**
      * Creates new form OpenSessionDialog

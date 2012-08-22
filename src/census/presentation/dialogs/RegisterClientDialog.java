@@ -39,7 +39,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author Danylo Vashchilenko
  */
-public class RegisterClientDialog extends CensusDialog {
+public class RegisterClientDialog extends AbstractDialog {
 
     /**
      * Creates new form RegisterClientDialog
@@ -170,7 +170,7 @@ public class RegisterClientDialog extends CensusDialog {
         setClientId(client.getId());
         setEditFinancialActivityDialogRequested(openOrderCheckBox.isSelected());
         setOpenAttendanceDialogRequested(openAttendanceCheckBox.isSelected());
-        setResult(CensusDialog.RESULT_OK);
+        setResult(AbstractDialog.RESULT_OK);
         dispose();
     }
 

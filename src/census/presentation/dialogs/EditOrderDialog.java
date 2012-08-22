@@ -47,7 +47,7 @@ import javax.swing.*;
  *
  * @author Danylo Vashchilenko
  */
-public class EditOrderDialog extends CensusDialog {
+public class EditOrderDialog extends AbstractDialog {
 
     /**
      * Constructs from a parent frame.

@@ -42,7 +42,7 @@ import org.joda.time.DateMidnight;
  *
  * @author Danylo Vashchilenko
  */
-public class ManageFreezesDialog extends CensusDialog {
+public class ManageFreezesDialog extends AbstractDialog {
 
     /**
      * Creates new ManageFreezesDialog

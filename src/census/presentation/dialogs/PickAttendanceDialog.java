@@ -36,7 +36,7 @@ import javax.swing.JFrame;
  *
  * @author Danylo Vashchilenko
  */
-public class PickAttendanceDialog extends CensusDialog {
+public class PickAttendanceDialog extends AbstractDialog {
 
     /**
      * Creates new PickAttendanceDialog
@@ -185,7 +185,7 @@ public class PickAttendanceDialog extends CensusDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(CensusDialog.RESULT_EXCEPTION);
+            setResult(AbstractDialog.RESULT_EXCEPTION);
             setException(ex);
             dispose();
             return;

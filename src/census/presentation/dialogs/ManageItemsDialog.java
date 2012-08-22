@@ -37,7 +37,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author Danylo Vashchilenko
  */
-public class ManageItemsDialog extends CensusDialog {
+public class ManageItemsDialog extends AbstractDialog {
 
     /**
      * Creates new form ItemsDialog
@@ -168,7 +168,7 @@ public class ManageItemsDialog extends CensusDialog {
 
     private void addOrEditButtonActionPerformed(ActionEvent evt) {
 
-        CensusDialog dialog;
+        AbstractDialog dialog;
 
         if (evt.getSource().equals(addButton)) {
             dialog = new ItemEditorDialog(new ItemDTO());
@@ -179,10 +179,10 @@ public class ManageItemsDialog extends CensusDialog {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
 
-        if (dialog.getResult().equals(CensusDialog.RESULT_OK)) {
+        if (dialog.getResult().equals(AbstractDialog.RESULT_OK)) {
             items = ItemsService.getInstance().getPureItems();
             itemsTableModel.setItems(items);
-        } else if(dialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+        } else if(dialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
             setResult(RESULT_EXCEPTION);
             setException(dialog.getException());
             dispose();

@@ -70,7 +70,7 @@ import org.joda.time.DateMidnight;
  *
  * @author Danylo Vashchilenko
  */
-public class EditClientDialog extends CensusDialog {
+public class EditClientDialog extends AbstractDialog {
 
     /**
      * Creates a new instance of this class.

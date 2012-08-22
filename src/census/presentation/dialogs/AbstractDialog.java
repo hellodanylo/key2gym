@@ -15,10 +15,11 @@
  */
 package census.presentation.dialogs;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Component;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ResourceBundle;
 import javax.swing.*;
 
@@ -38,7 +39,7 @@ import javax.swing.*;
  *
  * @author Danylo Vashchilenko
  */
-public abstract class CensusDialog extends JDialog {
+public abstract class AbstractDialog extends JDialog {
 
     /**
      * Constructs with the specified parent and modality.
@@ -46,7 +47,7 @@ public abstract class CensusDialog extends JDialog {
      * @param parent the parent frame of this dialog
      * @param modal if true, the dialog will be modal
      */
-    public CensusDialog(JFrame parent, boolean modal, Button[] buttons) {
+    public AbstractDialog(JFrame parent, boolean modal, Button[] buttons) {
         super(parent, modal);
         strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
@@ -64,14 +65,13 @@ public abstract class CensusDialog extends JDialog {
         /*
          * Binds the escape key to the cancel action.
          */
-        getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel");
-        getRootPane().getActionMap().put("cancel", cancelAction);
+        addHotKey(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelAction);
 
         result = null;
         exception = null;
     }
     
-    public CensusDialog(JFrame parent, boolean modal) {
+    public AbstractDialog(JFrame parent, boolean modal) {
         this(parent, modal, new Button[]{Button.OK, Button.CANCEL});
     }
 
@@ -79,7 +79,7 @@ public abstract class CensusDialog extends JDialog {
      * Performs pre-closing routine.
      *
      * @param evt an optional WindowEvent
-     * @see CensusDialog
+     * @see AbstractDialog
      */
     protected void formWindowClosing(java.awt.event.WindowEvent evt) {
         setResult(RESULT_CANCEL);
@@ -177,7 +177,7 @@ public abstract class CensusDialog extends JDialog {
      * @param keyStroke the key stroke to listen for
      * @param action the action to perform when the key stroke is triggered
      */
-    protected void addHotKey(KeyStroke keyStroke, Action action) {
+    protected final void addHotKey(KeyStroke keyStroke, Action action) {
         getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(keyStroke, action.getClass().getName());
         getRootPane().getActionMap().put(action.getClass().getName(), action);
     }

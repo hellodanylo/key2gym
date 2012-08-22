@@ -18,7 +18,7 @@ package census.presentation.actions;
 import census.presentation.dialogs.RegisterClientDialog;
 import census.presentation.dialogs.CheckInDialog;
 import census.presentation.dialogs.EditOrderDialog;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.business.OrdersService;
 import census.business.SessionsService;
 import census.business.StorageService;
@@ -67,11 +67,11 @@ public class RegisterClientAction extends CensusAction implements Observer {
             registerClientDialog = new RegisterClientDialog(getFrame());
             registerClientDialog.setVisible(true);
 
-            if (registerClientDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (registerClientDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw registerClientDialog.getException();
             }
 
-            if (registerClientDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (registerClientDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -91,11 +91,11 @@ public class RegisterClientAction extends CensusAction implements Observer {
 
                 editFinancialActivityDialog.setVisible(true);
 
-                if (editFinancialActivityDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                if (editFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                     throw editFinancialActivityDialog.getException();
                 }
 
-                if (editFinancialActivityDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+                if (editFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                     storageService.rollbackTransaction();
                     return;
                 }
@@ -110,11 +110,11 @@ public class RegisterClientAction extends CensusAction implements Observer {
                 openAttendanceDialog.setClientId(registerClientDialog.getClientId());
                 openAttendanceDialog.setVisible(true);
 
-                if (openAttendanceDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                if (openAttendanceDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                     throw openAttendanceDialog.getException();
                 }
 
-                if (openAttendanceDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+                if (openAttendanceDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                     storageService.rollbackTransaction();
                     return;
                 }

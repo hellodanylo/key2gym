@@ -9,7 +9,7 @@ import census.business.SessionsService;
 import census.business.StorageService;
 import census.business.api.ValidationException;
 import census.presentation.MainFrame;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.dialogs.PickClientDialog;
 import census.presentation.dialogs.PickOrderDialog;
@@ -58,11 +58,11 @@ public class EditOrderAction extends CensusAction {
                 PickOrderDialog pickFinancialActivityDialog = new PickOrderDialog(getFrame());
                 pickFinancialActivityDialog.setVisible(true);
 
-                if (pickFinancialActivityDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                if (pickFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                     throw pickFinancialActivityDialog.getException();
                 }
 
-                if (pickFinancialActivityDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+                if (pickFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                     storageService.rollbackTransaction();
                     return;
                 }
@@ -71,11 +71,11 @@ public class EditOrderAction extends CensusAction {
                     PickClientDialog pickClientDialog = new PickClientDialog(getFrame());
                     pickClientDialog.setVisible(true);
 
-                    if (pickClientDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                    if (pickClientDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                         throw pickClientDialog.getException();
                     }
 
-                    if (pickClientDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+                    if (pickClientDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                         storageService.rollbackTransaction();
                         return;
                     }
@@ -96,11 +96,11 @@ public class EditOrderAction extends CensusAction {
             editFinancialActivityDialog.setFullPaymentForced(false);
             editFinancialActivityDialog.setVisible(true);
 
-            if (editFinancialActivityDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (editFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw editFinancialActivityDialog.getException();
             }
 
-            if (editFinancialActivityDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (editFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }

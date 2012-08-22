@@ -38,7 +38,7 @@ import javax.swing.table.TableColumn;
  *
  * @author Danylo Vashchilenko
  */
-public class PickClientDialog extends CensusDialog {
+public class PickClientDialog extends AbstractDialog {
 
     /**
      * Creates new form PickClientDialog

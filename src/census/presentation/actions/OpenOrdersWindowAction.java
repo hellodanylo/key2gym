@@ -18,7 +18,7 @@ package census.presentation.actions;
 import census.business.SessionsService;
 import census.business.api.SecurityException;
 import census.presentation.MainFrame;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.PickDateDialog;
 import census.presentation.util.UserExceptionHandler;
 import java.awt.event.ActionEvent;
@@ -54,11 +54,11 @@ public class OpenOrdersWindowAction extends CensusAction {
             PickDateDialog pickDateDialog = new PickDateDialog(getFrame());
             pickDateDialog.setVisible(true);
 
-            if (pickDateDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (pickDateDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw pickDateDialog.getException();
             }
 
-            if (pickDateDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (pickDateDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 return;
             }
             

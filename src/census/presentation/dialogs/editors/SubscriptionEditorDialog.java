@@ -8,7 +8,7 @@ import census.business.SubscriptionsService;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.SubscriptionDTO;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.forms.SubscriptionForm;
 import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
@@ -23,7 +23,7 @@ import javax.swing.JPanel;
  *
  * @author Danylo Vashchilenko
  */
-public class SubscriptionEditorDialog extends CensusDialog {
+public class SubscriptionEditorDialog extends AbstractDialog {
 
     public SubscriptionEditorDialog(SubscriptionDTO subscription) {
         super(null, true);

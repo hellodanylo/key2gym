@@ -18,7 +18,7 @@ package census.presentation.actions;
 import census.business.CashService;
 import census.business.SessionsService;
 import census.business.StorageService;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.PickDateDialog;
 import census.presentation.dialogs.editors.CashAdjustmentEditorDialog;
 import census.presentation.util.UserExceptionHandler;
@@ -57,11 +57,11 @@ public class ManageCashAction extends CensusAction implements Observer {
             PickDateDialog pickDateDialog = new PickDateDialog(getFrame());
             pickDateDialog.setVisible(true);
 
-            if (pickDateDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (pickDateDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw pickDateDialog.getException();
             }
 
-            if (pickDateDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (pickDateDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -69,11 +69,11 @@ public class ManageCashAction extends CensusAction implements Observer {
             CashAdjustmentEditorDialog cashAdjustmentEditorDIalog = new CashAdjustmentEditorDialog(CashService.getInstance().getAdjustmentByDate(pickDateDialog.getDate()));
             cashAdjustmentEditorDIalog.setVisible(true);
 
-            if (cashAdjustmentEditorDIalog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (cashAdjustmentEditorDIalog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw cashAdjustmentEditorDIalog.getException();
             }
 
-            if (cashAdjustmentEditorDIalog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (cashAdjustmentEditorDIalog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }

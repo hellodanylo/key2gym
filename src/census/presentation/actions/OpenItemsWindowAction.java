@@ -18,7 +18,7 @@ package census.presentation.actions;
 import census.business.SessionsService;
 import census.business.api.SecurityException;
 import census.presentation.MainFrame;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.PickDateDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;

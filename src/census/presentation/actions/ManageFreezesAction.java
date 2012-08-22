@@ -17,7 +17,7 @@ package census.presentation.actions;
 
 import census.business.SessionsService;
 import census.business.StorageService;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.ManageFreezesDialog;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
@@ -53,11 +53,11 @@ public class ManageFreezesAction extends CensusAction implements Observer {
             ManageFreezesDialog manageFreezesDialog = new ManageFreezesDialog(getFrame());
             manageFreezesDialog.setVisible(true);
 
-            if (manageFreezesDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (manageFreezesDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw manageFreezesDialog.getException();
             }
 
-            if (manageFreezesDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (manageFreezesDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }

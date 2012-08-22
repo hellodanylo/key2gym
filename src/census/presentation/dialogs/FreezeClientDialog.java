@@ -31,7 +31,7 @@ import javax.swing.*;
  *
  * @author Danylo Vashchilenko
  */
-public class FreezeClientDialog extends CensusDialog {
+public class FreezeClientDialog extends AbstractDialog {
     
     /**
      * Creates new form FreezeClientDialog

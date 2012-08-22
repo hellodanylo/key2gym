@@ -22,7 +22,7 @@ import census.business.StorageService;
 import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.dto.ClientDTO;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.CheckInDialog;
 import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.util.NotificationException;
@@ -73,11 +73,11 @@ public class CheckInAction extends CensusAction implements Observer {
             CheckInDialog openAttendanceDialog = new CheckInDialog(getFrame());  
             openAttendanceDialog.setVisible(true);
 
-            if (openAttendanceDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (openAttendanceDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw openAttendanceDialog.getException();
             }
 
-            if (openAttendanceDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (openAttendanceDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -105,11 +105,11 @@ public class CheckInAction extends CensusAction implements Observer {
                 
                 editFinancialActivityDialog.setVisible(true);
 
-                if (editFinancialActivityDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+                if (editFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                     throw editFinancialActivityDialog.getException();
                 }
 
-                if (editFinancialActivityDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+                if (editFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                     storageService.rollbackTransaction();
                     return;
                 }

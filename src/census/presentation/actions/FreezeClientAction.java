@@ -18,7 +18,7 @@ package census.presentation.actions;
 
 import census.business.SessionsService;
 import census.business.StorageService;
-import census.presentation.dialogs.CensusDialog;
+import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.FreezeClientDialog;
 import census.presentation.dialogs.PickClientDialog;
 import java.awt.event.ActionEvent;
@@ -54,11 +54,11 @@ public class FreezeClientAction extends CensusAction implements Observer {
             PickClientDialog pickClientDialog = new PickClientDialog(getFrame());
             pickClientDialog.setVisible(true);
 
-            if (pickClientDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (pickClientDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw pickClientDialog.getException();
             }
 
-            if (pickClientDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (pickClientDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -67,11 +67,11 @@ public class FreezeClientAction extends CensusAction implements Observer {
             freezeClientDialog.setClientId(pickClientDialog.getClientId());
             freezeClientDialog.setVisible(true);
 
-            if (freezeClientDialog.getResult().equals(CensusDialog.RESULT_EXCEPTION)) {
+            if (freezeClientDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                 throw freezeClientDialog.getException();
             }
 
-            if (freezeClientDialog.getResult().equals(CensusDialog.RESULT_CANCEL)) {
+            if (freezeClientDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
