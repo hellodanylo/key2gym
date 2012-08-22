@@ -25,7 +25,6 @@ import census.presentation.forms.ClientForm;
 import census.presentation.forms.ClientProfileForm;
 import census.presentation.util.AttendancesTableModel;
 import census.presentation.util.FreezesTableModel;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Dimension;
@@ -159,7 +158,6 @@ public class EditClientDialog extends CensusDialog {
 
         attendancesTable = new JTable();
         scrollPane.setViewportView(attendancesTable);
-
         return scrollPane;
     }
 

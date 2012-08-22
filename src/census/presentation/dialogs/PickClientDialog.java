@@ -24,7 +24,6 @@ import census.presentation.util.ClientsTableModel.Column;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -174,7 +173,6 @@ public class PickClientDialog extends CensusDialog {
     }
 
     private void buildDialog() {
-        setContentPane(new FormDebugPanel());
         setLayout(new FormLayout("4dlu, f:p:g, 4dlu, p, 4dlu", "4dlu, f:p:g, f:p, 4dlu"));
 
         buildSearchCriteriasPanel();
