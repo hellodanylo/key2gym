@@ -26,6 +26,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -173,7 +174,8 @@ public class PickClientDialog extends CensusDialog {
     }
 
     private void buildDialog() {
-        setLayout(new FormLayout("4dlu, f:p:g, 4dlu, p, 4dlu", "4dlu, f:p:g, 4dlu"));
+        setContentPane(new FormDebugPanel());
+        setLayout(new FormLayout("4dlu, f:p:g, 4dlu, p, 4dlu", "4dlu, f:p:g, f:p, 4dlu"));
 
         buildSearchCriteriasPanel();
 
@@ -200,8 +202,6 @@ public class PickClientDialog extends CensusDialog {
 
             searchControlPanel.add(searchCriteriasPanel, CC.xy(1, 1));
             searchControlPanel.add(searchButton, CC.xy(1, 2));
-            searchControlPanel.add(okButton, CC.xy(1, 3));
-            searchControlPanel.add(cancelButton, CC.xy(1, 4));
         }
         add(searchControlPanel, CC.xy(4, 2));
 
@@ -209,6 +209,14 @@ public class PickClientDialog extends CensusDialog {
          * Clients table
          */
         add(clientsTableScrollPane, CC.xy(2, 2));
+        
+        JPanel buttonsPanel = new JPanel();
+        {
+            buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+            buttonsPanel.add(okButton);
+            buttonsPanel.add(cancelButton);
+        }
+        add(buttonsPanel, CC.xywh(2, 3, 3, 1));
 
         setTitle(getString("Title.PickClient"));
         pack();

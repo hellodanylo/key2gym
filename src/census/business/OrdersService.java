@@ -932,6 +932,7 @@ public class OrdersService extends BusinessService {
                 if(discount != null) {
                     orderLineDTO.setDiscountPercent(discount.getPercent());
                     orderLineDTO.setDiscountTitle(discount.getTitle());
+                    orderLineDTO.setDiscountId(discount.getId());
                 }
                 orderLineDTO.setQuantity(orderLine.getQuantity());
                 orderLineDTO.setTotal(orderLine.getTotal());
@@ -969,12 +970,12 @@ public class OrdersService extends BusinessService {
          */
         orderDTO.setDue(total.subtract(order.getPayment()));
         
+        /*
+         * Money balance
+         */
         if(order.getClient() != null) {
-            orderDTO.setDebt(order.getClient().getMoneyBalance().add(orderDTO.getDue()).negate().setScale(2));
-        } else {
-            orderDTO.setDebt(BigDecimal.ZERO.setScale(2));
+            orderDTO.setMoneyBalance(order.getClient().getMoneyBalance().setScale(2));
         }
-
         return orderDTO;
     }
 

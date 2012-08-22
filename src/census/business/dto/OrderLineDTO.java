@@ -87,15 +87,22 @@ public class OrderLineDTO {
     public void setTotal(BigDecimal total) {
         this.total = total;
     }
-   
+
+    public Short getDiscountId() {
+        return discountId;
+    }
+
+    public void setDiscountId(Short discountId) {
+        this.discountId = discountId;
+    }
+       
     Short id;
     Short itemId;
     String itemTitle;
     BigDecimal itemPrice;
     Short quantity;
+    Short discountId;
     String discountTitle;
     Short discountPercent;
     BigDecimal total;
-    
-    public static final Short FAKE_ID_DEBT = -1;
 }

@@ -15,6 +15,8 @@
  */
 package census.presentation.dialogs;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Component;
 import java.awt.event.*;
 import java.util.ResourceBundle;
@@ -44,9 +46,9 @@ public abstract class CensusDialog extends JDialog {
      * @param parent the parent frame of this dialog
      * @param modal if true, the dialog will be modal
      */
-    public CensusDialog(JFrame parent, boolean modal) {
+    public CensusDialog(JFrame parent, boolean modal, Button[] buttons) {
         super(parent, modal);
-        bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+        strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
         this.addWindowListener(new WindowAdapter() {
 
@@ -68,6 +70,10 @@ public abstract class CensusDialog extends JDialog {
         result = null;
         exception = null;
     }
+    
+    public CensusDialog(JFrame parent, boolean modal) {
+        this(parent, modal, new Button[]{Button.OK, Button.CANCEL});
+    }
 
     /**
      * Performs pre-closing routine.
@@ -86,7 +92,16 @@ public abstract class CensusDialog extends JDialog {
      * @return the l15d value
      */
     protected String getString(String key) {
-        return bundle.getString(key);
+        return strings.getString(key);
+    }
+    
+    /**
+     * Gets the dialog's strings bundle.
+     * 
+     * @return the strings bundle 
+     */
+    protected ResourceBundle getStrings() {
+        return strings;
     }
 
     /**
@@ -206,7 +221,10 @@ public abstract class CensusDialog extends JDialog {
     private Action okAction;
     private Integer result;
     private RuntimeException exception;
-    private ResourceBundle bundle;
+    private ResourceBundle strings;
+    
+    public enum Button {OK, CANCEL};
+        
     // TODO: use enumeration instead
     public static final Integer RESULT_OK = 0;
     public static final Integer RESULT_CANCEL = 1;
