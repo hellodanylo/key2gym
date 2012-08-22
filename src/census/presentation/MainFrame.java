@@ -307,8 +307,7 @@ public class MainFrame extends JFrame {
         workspacesTabbedPane.addTab(null, attendancesPanel);
         attendancesPanels.put(date, attendancesPanel);
 
-        CloseableTabPanel tabComponent = new CloseableTabPanel();
-        tabComponent.setText(MessageFormat.format(bundle.getString("Text.AttendancesFor.withDate"), new Object[] {date.toString("dd-MM-yyyy")}));
+        CloseableTabPanel tabComponent = new CloseableTabPanel(MessageFormat.format(bundle.getString("Text.AttendancesFor.withDate"), new Object[] {date.toString("dd-MM-yyyy")}));
         tabComponent.addActionListener(new ActionListener() {
 
             @Override
@@ -333,8 +332,7 @@ public class MainFrame extends JFrame {
         workspacesTabbedPane.addTab(null, ordersPanel);
         ordersPanels.put(date, ordersPanel);
 
-        CloseableTabPanel tabComponent = new CloseableTabPanel();
-        tabComponent.setText(MessageFormat.format(bundle.getString("Text.OrdersFor.withDate"), new Object[] {date.toString("dd-MM-yyyy")}));
+        CloseableTabPanel tabComponent = new CloseableTabPanel(MessageFormat.format(bundle.getString("Text.OrdersFor.withDate"), new Object[] {date.toString("dd-MM-yyyy")}));
         tabComponent.addActionListener(new ActionListener() {
 
             @Override
@@ -358,8 +356,7 @@ public class MainFrame extends JFrame {
 
         workspacesTabbedPane.addTab(bundle.getString("Text.Items"), itemsPanel);
 
-        CloseableTabPanel tabComponent = new CloseableTabPanel();
-        tabComponent.setText(bundle.getString("Text.Items"));
+        CloseableTabPanel tabComponent = new CloseableTabPanel(bundle.getString("Text.Items"));
         tabComponent.addActionListener(new ActionListener() {
 
             @Override
