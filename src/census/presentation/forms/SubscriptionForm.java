@@ -23,6 +23,8 @@ import census.presentation.util.CensusBindingListener;
 import census.presentation.util.TimeSplitListCellRenderer;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
@@ -122,6 +124,18 @@ public class SubscriptionForm extends JPanel {
 
         builder.appendI15d("Label.Barcode", barcodeTextField);
         builder.nextLine();
+
+        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, KeyEvent.CTRL_DOWN_MASK), BarcodeFocusAction.class.getName());
+        getActionMap().put(BarcodeFocusAction.class.getName(), new BarcodeFocusAction());
+
+    }
+
+    private class BarcodeFocusAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            barcodeTextField.requestFocusInWindow();
+        }
     }
 
     /**

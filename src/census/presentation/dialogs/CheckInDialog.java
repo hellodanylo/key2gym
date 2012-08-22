@@ -29,6 +29,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.*;
@@ -143,6 +145,10 @@ public class CheckInDialog extends AbstractDialog {
 
         getRootPane().setDefaultButton(okButton);
 
+        /*
+         * Smart Input (see issue #22).
+         */
+        addHotKey(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, KeyEvent.CTRL_DOWN_MASK), new CardFocusAction());
     }
 
     /**
@@ -213,9 +219,9 @@ public class CheckInDialog extends AbstractDialog {
     public void setVisible(boolean visible) {
         if (visible) {
             /*
-             * Updates the dialog according to the session variables.
-             * We can not do it constructor for the caller then would not 
-             * have a chance to set the session variables.
+             * Updates the dialog according to the session variables. We can not
+             * do it constructor for the caller then would not have a chance to
+             * set the session variables.
              */
             openOrderCheckBox.setSelected(isOrderDialogRequested());
             if (getClientId() != null) {
@@ -243,6 +249,14 @@ public class CheckInDialog extends AbstractDialog {
             }
         }
         super.setVisible(visible);
+    }
+
+    protected class CardFocusAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            cardRadioButton.doClick(0);
+        }
     }
 
     @Override

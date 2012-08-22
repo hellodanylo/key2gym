@@ -165,10 +165,7 @@ public class PickClientDialog extends AbstractDialog {
         /*
          * Smart Input (see issue #22).
          */
-        addHotKey(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, 0), new IdFocusAction());
-        addHotKey(KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, 0), new CardFocusAction());
-        addHotKey(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SLASH, 0), new FullNameFocusAction());
-        
+        addHotKey(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, KeyEvent.CTRL_DOWN_MASK), new CardFocusAction()); 
     }
 
     private void buildDialog() {
@@ -331,22 +328,6 @@ public class PickClientDialog extends AbstractDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             cardRadioButton.doClick(0);
-        }
-    }
-
-    protected class IdFocusAction extends AbstractAction {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            idRadioButton.doClick(0);
-        }
-    }
-
-    protected class FullNameFocusAction extends AbstractAction {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            fullNameRadioButton.doClick(0);
         }
     }
 

@@ -25,10 +25,10 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.Sizes;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ResourceBundle;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import org.jdesktop.beansbinding.*;
 
 /**
@@ -42,6 +42,9 @@ public class ClientForm extends JPanel {
 
         initComponents();
         buildForm();
+        
+        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, KeyEvent.CTRL_DOWN_MASK), CardFocusAction.class.getName());
+        getActionMap().put(CardFocusAction.class.getName(), new CardFocusAction());
     }
 
     /**
@@ -52,47 +55,51 @@ public class ClientForm extends JPanel {
         /*
          * ID
          */
-        idTextField = new javax.swing.JTextField();
+        idTextField = new JTextField();
         idTextField.setEditable(false);
         idTextField.setEnabled(false);
 
         /*
          * Full name
          */
-        fullNameTextField = new javax.swing.JTextField();
-        cardTextField = new javax.swing.JTextField();
+        fullNameTextField = new JTextField();
+        
+        /*
+         * Card
+         */
+        cardTextField = new JTextField();
 
         /*
          * Money balance
          */
-        moneyBalanceTextField = new javax.swing.JTextField();
+        moneyBalanceTextField = new JTextField();
         moneyBalanceTextField.setEnabled(isPriviliged);
 
 
         /*
          * Attendances balance
          */
-        attendancesBalanceTextField = new javax.swing.JSpinner();
-        attendancesBalanceTextField.setModel(new javax.swing.SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
+        attendancesBalanceTextField = new JSpinner();
+        attendancesBalanceTextField.setModel(new SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
         attendancesBalanceTextField.setEnabled(isPriviliged);
 
         /*
          * Expiration date
          */
-        expirationDateTextField = new javax.swing.JTextField();
+        expirationDateTextField = new JTextField();
         expirationDateTextField.setEnabled(isPriviliged);
 
         /*
          * Registration date
          */
-        registrationDateTextField = new javax.swing.JTextField();
+        registrationDateTextField = new JTextField();
         registrationDateTextField.setEnabled(isPriviliged);
 
         /*
          * Note
          */
-        noteScrollPane = new javax.swing.JScrollPane();
-        noteTextArea = new javax.swing.JTextArea();
+        noteScrollPane = new JScrollPane();
+        noteTextArea = new JTextArea();
         noteTextArea.setColumns(20);
         noteTextArea.setRows(5);
         noteScrollPane.setViewportView(noteTextArea);
@@ -110,6 +117,8 @@ public class ClientForm extends JPanel {
         builder.appendI15d("Label.ID", idTextField);
         builder.nextLine();
         builder.appendI15d("Label.FullName", fullNameTextField);
+        builder.nextLine();
+        builder.appendI15d("Label.Card", cardTextField);
         builder.nextLine();
         builder.appendI15d("Label.MoneyBalance", moneyBalanceTextField);
         builder.nextLine();
@@ -203,6 +212,15 @@ public class ClientForm extends JPanel {
         }
         return censusBindingListener.getInvalidTargets().isEmpty();
     }
+    
+    private class CardFocusAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            cardTextField.requestFocusInWindow();
+        }
+        
+    }
     /*
      * Business
      */
@@ -213,13 +231,13 @@ public class ClientForm extends JPanel {
      */
     private BindingGroup bindingGroup;
     private CensusBindingListener censusBindingListener;
-    private javax.swing.JSpinner attendancesBalanceTextField;
-    private javax.swing.JTextField cardTextField;
-    private javax.swing.JTextField expirationDateTextField;
-    private javax.swing.JTextField fullNameTextField;
-    private javax.swing.JTextField idTextField;
-    private javax.swing.JTextField moneyBalanceTextField;
-    private javax.swing.JScrollPane noteScrollPane;
-    private javax.swing.JTextArea noteTextArea;
-    private javax.swing.JTextField registrationDateTextField;
+    private JSpinner attendancesBalanceTextField;
+    private JTextField cardTextField;
+    private JTextField expirationDateTextField;
+    private JTextField fullNameTextField;
+    private JTextField idTextField;
+    private JTextField moneyBalanceTextField;
+    private JScrollPane noteScrollPane;
+    private JTextArea noteTextArea;
+    private JTextField registrationDateTextField;
 }

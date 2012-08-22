@@ -20,10 +20,15 @@ import census.business.dto.ItemDTO;
 import census.presentation.util.CensusBindingListener;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import javax.swing.AbstractAction;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import org.jdesktop.beansbinding.*;
 
 /**
@@ -45,10 +50,10 @@ public class ItemForm extends JPanel {
      * Initializes the components on this form.
      */
     private void initComponents() {
-        barcodeTextField = new javax.swing.JTextField();
-        priceTextField = new javax.swing.JTextField();
-        titleTextField = new javax.swing.JTextField();
-        quantityTextField = new javax.swing.JTextField();
+        barcodeTextField = new JTextField();
+        priceTextField = new JTextField();
+        titleTextField = new JTextField();
+        quantityTextField = new JTextField();
     }
 
     /**
@@ -65,6 +70,18 @@ public class ItemForm extends JPanel {
         builder.appendI15d("Label.Price", priceTextField);
         builder.nextLine();
         builder.appendI15d("Label.Barcode", barcodeTextField);
+
+        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, KeyEvent.CTRL_DOWN_MASK), BarcodeFocusAction.class.getName());
+        getActionMap().put(BarcodeFocusAction.class.getName(), new BarcodeFocusAction());
+
+    }
+
+    private class BarcodeFocusAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            barcodeTextField.requestFocusInWindow();
+        }
     }
 
     /**
