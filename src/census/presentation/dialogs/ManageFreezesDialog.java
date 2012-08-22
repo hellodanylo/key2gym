@@ -20,9 +20,9 @@ import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.api.SecurityException;
 import census.business.dto.FreezeDTO;
-import census.presentation.MainFrame;
 import census.presentation.util.FreezesTableModel;
 import census.presentation.util.FreezesTableModel.Column;
+import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
@@ -199,7 +199,7 @@ public class ManageFreezesDialog extends CensusDialog {
             dispose();
             return;
         } catch (BusinessException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         }
 

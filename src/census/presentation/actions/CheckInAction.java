@@ -22,11 +22,11 @@ import census.business.StorageService;
 import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.dto.ClientDTO;
-import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.dialogs.CheckInDialog;
 import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.util.NotificationException;
+import census.presentation.util.UserExceptionHandler;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
 import java.math.BigDecimal;
@@ -121,14 +121,14 @@ public class CheckInAction extends CensusAction implements Observer {
                     throw new RuntimeException(ex);
                 }
                 if (client.getMoneyBalance().compareTo(BigDecimal.ZERO) < 0) {
-                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new NotificationException(MessageFormat.format(bundle.getString("Message.ClientHasDebt.withDebtAmount"), new Object[] {client.getMoneyBalance().negate().setScale(2)})));
+                    UserExceptionHandler.getInstance().processException(new NotificationException(MessageFormat.format(bundle.getString("Message.ClientHasDebt.withDebtAmount"), new Object[] {client.getMoneyBalance().negate().setScale(2)})));
                 }
                 if (client.getAttendancesBalance() == 0) {
-                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new NotificationException(bundle.getString("Message.ThisIsClientsLastAttendance")));
+                    UserExceptionHandler.getInstance().processException(new NotificationException(bundle.getString("Message.ThisIsClientsLastAttendance")));
                 }
                 Days days = Days.daysBetween(new DateMidnight(), client.getExpirationDate());
                 if (days.getDays() < 7) {
-                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new NotificationException(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Message.ClientHasThisManyDaysBeforeExpiration.withDays"), new Object[] {days.getDays()})));
+                    UserExceptionHandler.getInstance().processException(new NotificationException(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Message.ClientHasThisManyDaysBeforeExpiration.withDays"), new Object[] {days.getDays()})));
                 }
                 
             }

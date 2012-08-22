@@ -23,9 +23,9 @@ import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.ClientDTO;
 import census.business.dto.ClientProfileDTO;
-import census.presentation.MainFrame;
 import census.presentation.forms.ClientForm;
 import census.presentation.forms.ClientProfileForm;
+import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Dimension;
@@ -151,10 +151,10 @@ public class RegisterClientDialog extends CensusDialog {
             dispose();
             return;
         } catch (ValidationException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (BusinessException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (RuntimeException ex) {
             /*

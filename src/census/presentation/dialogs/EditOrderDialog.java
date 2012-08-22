@@ -20,10 +20,8 @@ import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.api.SecurityException;
 import census.business.dto.*;
-import census.presentation.MainFrame;
 import census.presentation.util.*;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Color;
@@ -31,18 +29,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
-import javax.swing.table.TableColumnModel;
 
 /**
  * This dialog displays and edits an order. <p> Session variables: <ul> <li>
@@ -396,7 +388,7 @@ public class EditOrderDialog extends CensusDialog {
                 try {
                     ordersService.addPurchase(order.getId(), orderLine.getItemId(), orderLine.getDiscountId());
                 } catch (BusinessException | SecurityException ex) {
-                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+                    UserExceptionHandler.getInstance().processException(ex);
                 } catch (ValidationException | RuntimeException ex) {
                     /*
                      * The exception is unexpected. We got to shutdown the
@@ -435,7 +427,7 @@ public class EditOrderDialog extends CensusDialog {
 
                 if (orderLineIndex == -1) {
                     ValidationException ex = new ValidationException(getString("Message.SelectOrderLineFirst"));
-                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+                    UserExceptionHandler.getInstance().processException(ex);
                     return;
                 }
 
@@ -444,7 +436,7 @@ public class EditOrderDialog extends CensusDialog {
                 try {
                     ordersService.removePurchase(orderLine.getId());
                 } catch (BusinessException | SecurityException ex) {
-                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+                    UserExceptionHandler.getInstance().processException(ex);
                 } catch (ValidationException | RuntimeException ex) {
                     /*
                      * The exception is unexpected. We got to shutdown the
@@ -483,7 +475,7 @@ public class EditOrderDialog extends CensusDialog {
                      * Asks the user to select an item.
                      */
                     ValidationException ex = new ValidationException(getString("Message.SelectItemFirst"));
-                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+                    UserExceptionHandler.getInstance().processException(ex);
                     return;
                 }
 
@@ -495,7 +487,7 @@ public class EditOrderDialog extends CensusDialog {
                         ordersService.addPurchase(order.getId(), itemId, discount == null ? null : discount.getId());
                     }
                 } catch (BusinessException | ValidationException | SecurityException ex) {
-                    MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+                    UserExceptionHandler.getInstance().processException(ex);
                 } catch (RuntimeException ex) {
                     /*
                      * The exception is unexpected. We got to shutdown the
@@ -532,10 +524,10 @@ public class EditOrderDialog extends CensusDialog {
         } catch (NumberFormatException ex) {
             String message = MessageFormat.format(getString("Message.FieldIsNotFilledInCorrectly.withFieldName"),
                     getString("Text.NewPayment"));
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(message));
+            UserExceptionHandler.getInstance().processException(new ValidationException(message));
             return;
         } catch (BusinessException | ValidationException | SecurityException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (RuntimeException ex) {
             /*

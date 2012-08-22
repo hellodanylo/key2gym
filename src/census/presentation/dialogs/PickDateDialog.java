@@ -16,8 +16,7 @@
 package census.presentation.dialogs;
 
 import census.business.api.ValidationException;
-import census.presentation.MainFrame;
-import com.jgoodies.forms.debug.FormDebugPanel;
+import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
@@ -100,7 +99,7 @@ public class PickDateDialog extends CensusDialog {
         try {
             date = new DateMidnight(new SimpleDateFormat("dd-MM-yyyy").parse(value));
         } catch (ParseException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(getString("Message.DateInvalid")));
+            UserExceptionHandler.getInstance().processException(new ValidationException(getString("Message.DateInvalid")));
             return;
         }
 

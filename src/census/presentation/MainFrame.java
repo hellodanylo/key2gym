@@ -16,14 +16,11 @@
 
 package census.presentation;
 
-import census.CensusStarter;
 import census.business.AdministratorsService;
 import census.business.SessionsService;
 import census.business.StorageService;
-import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.SessionListener;
-import census.business.api.ValidationException;
 import census.business.dto.AdministratorDTO;
 import census.business.dto.AttendanceDTO;
 import census.business.dto.OrderDTO;
@@ -31,15 +28,12 @@ import census.presentation.panels.AttendancesPanel;
 import census.presentation.panels.CloseableTabPanel;
 import census.presentation.panels.ItemsPanel;
 import census.presentation.panels.OrdersPanel;
-import census.presentation.util.CensusExceptionListener;
-import census.presentation.util.NotificationException;
 import java.awt.Component;
 import java.awt.event.*;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Stack;
 import javax.swing.*;
 import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
@@ -62,8 +56,6 @@ public class MainFrame extends JFrame {
         bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
         initComponents();
-
-        getGlobalCensusExceptionListenersStack().push(new MessageDialogExceptionListener());
 
         /*
          * The Starter is waiting on the MainFrame to perform shutting down.
@@ -527,37 +519,4 @@ public class MainFrame extends JFrame {
     private javax.swing.JTabbedPane workspacesTabbedPane;
     // End of variables declaration//GEN-END:variables
 
-    /*
-     * Global BusinessExceptionsListeners stack. The top listener is the
-     * listener that is supposed to process all incoming BusinessExceptions.
-     */
-    private static Stack<CensusExceptionListener> globalListenersStack = new Stack<>();
-
-    public static Stack<CensusExceptionListener> getGlobalCensusExceptionListenersStack() {
-        return globalListenersStack;
-
-
-    }
-
-    private class MessageDialogExceptionListener implements CensusExceptionListener {
-
-        public Component getComponent() {
-            return FocusManager.getCurrentManager().getFocusedWindow();
-        }
-
-        @Override
-        public void processException(Exception ex) {
-            Integer messageType;
-            if (ex instanceof NotificationException) {
-                messageType = JOptionPane.INFORMATION_MESSAGE;
-            } else if (ex instanceof ValidationException || ex instanceof SecurityException) {
-                messageType = JOptionPane.WARNING_MESSAGE;
-            } else if (ex instanceof BusinessException) {
-                messageType = JOptionPane.ERROR_MESSAGE;
-            } else {
-                throw new RuntimeException("Unexpexted exception type.");
-            }
-            JOptionPane.showMessageDialog(getComponent(), ex.getMessage(), bundle.getString("Title.Message"), messageType);
-        }
-    }
 }

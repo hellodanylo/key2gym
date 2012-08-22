@@ -20,14 +20,13 @@ import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.*;
-import census.presentation.MainFrame;
 import census.presentation.forms.ClientForm;
 import census.presentation.forms.ClientProfileForm;
 import census.presentation.util.AttendancesTableModel;
 import census.presentation.util.FreezesTableModel;
+import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -308,7 +307,7 @@ public class EditClientDialog extends CensusDialog {
             dispose();
             return;
         } catch (BusinessException | ValidationException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (RuntimeException ex) {
             /*

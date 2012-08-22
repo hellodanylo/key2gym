@@ -6,23 +6,15 @@ package census.presentation.forms;
 
 import census.business.api.ValidationException;
 import census.business.dto.CashAdjustmentDTO;
-import census.presentation.MainFrame;
 import census.presentation.util.CensusBindingListener;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.debug.FormDebugPanel;
+import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.Sizes;
-import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 import javax.swing.*;
 import org.jdesktop.beansbinding.*;
 import org.joda.time.DateMidnight;
@@ -116,7 +108,7 @@ public class CashAdjustmentForm extends JPanel {
             augend = new BigDecimal(newAdjustmentTextField.getText().trim());
         } catch (NumberFormatException ex) {
             String message = MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), strings.getString("Text.Adjustmnet"));
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(message));
+            UserExceptionHandler.getInstance().processException(new ValidationException(message));
             return;
         }
 
@@ -132,7 +124,7 @@ public class CashAdjustmentForm extends JPanel {
             subtrahend = new BigDecimal(newAdjustmentTextField.getText().trim());
         } catch (NumberFormatException ex) {
             String message = MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), strings.getString("Text.Adjustmnet"));
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new ValidationException(message));
+            UserExceptionHandler.getInstance().processException(new ValidationException(message));
             return;
         }
 

@@ -23,10 +23,10 @@ import census.business.api.BusinessException;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.AttendanceDTO;
-import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.dialogs.EditOrderDialog;
 import census.presentation.dialogs.PickAttendanceDialog;
+import census.presentation.util.UserExceptionHandler;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
 import java.util.Observable;
@@ -138,7 +138,7 @@ public class CheckOutAction extends CensusAction implements Observer {
 
         } catch (BusinessException ex) {
             storageService.rollbackTransaction();
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);

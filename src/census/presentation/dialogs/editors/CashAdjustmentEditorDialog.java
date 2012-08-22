@@ -5,15 +5,12 @@
 package census.presentation.dialogs.editors;
 
 import census.business.CashService;
-import census.business.SubscriptionsService;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.CashAdjustmentDTO;
-import census.business.dto.SubscriptionDTO;
-import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.forms.CashAdjustmentForm;
-import census.presentation.forms.SubscriptionForm;
+import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
@@ -79,7 +76,7 @@ public class CashAdjustmentEditorDialog extends CensusDialog {
         try {
             CashService.getInstance().recordCashAdjustment(cashAdjustment);
         } catch (SecurityException | ValidationException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (RuntimeException ex) {
             setResult(RESULT_EXCEPTION);

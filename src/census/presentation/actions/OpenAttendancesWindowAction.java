@@ -20,6 +20,7 @@ import census.business.api.SecurityException;
 import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.dialogs.PickDateDialog;
+import census.presentation.util.UserExceptionHandler;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.Beans;
@@ -66,7 +67,7 @@ public class OpenAttendancesWindowAction extends CensusAction {
 
 
         } catch (SecurityException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
             JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);

@@ -55,7 +55,7 @@ public class CensusBindingListener implements BindingListener {
                 return;
             }
             invalidTargets.add(binding.getTargetObject());
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException((ValidationException) failure.getConversionException().getCause());
+            UserExceptionHandler.getInstance().processException((ValidationException) failure.getConversionException().getCause());
         }
     }
 

@@ -21,15 +21,14 @@ import census.business.KeysService;
 import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.dto.KeyDTO;
-import census.presentation.MainFrame;
 import census.presentation.util.KeyListCellRenderer;
+import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.Beans;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.*;
@@ -309,7 +308,7 @@ public class CheckInDialog extends CensusDialog {
             }
 
         } catch (BusinessException | ValidationException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (RuntimeException ex) {
             /*

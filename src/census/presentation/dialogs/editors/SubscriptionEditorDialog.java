@@ -8,9 +8,9 @@ import census.business.SubscriptionsService;
 import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.SubscriptionDTO;
-import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.forms.SubscriptionForm;
+import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
@@ -92,7 +92,7 @@ public class SubscriptionEditorDialog extends CensusDialog {
                 SubscriptionsService.getInstance().updateSubscription(subscription);
             }
         } catch (SecurityException | ValidationException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (RuntimeException ex) {
             setResult(RESULT_EXCEPTION);

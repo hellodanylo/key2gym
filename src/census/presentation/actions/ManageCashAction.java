@@ -18,10 +18,10 @@ package census.presentation.actions;
 import census.business.CashService;
 import census.business.SessionsService;
 import census.business.StorageService;
-import census.presentation.MainFrame;
 import census.presentation.dialogs.CensusDialog;
 import census.presentation.dialogs.PickDateDialog;
 import census.presentation.dialogs.editors.CashAdjustmentEditorDialog;
+import census.presentation.util.UserExceptionHandler;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
 import java.util.Observable;
@@ -80,7 +80,7 @@ public class ManageCashAction extends CensusAction implements Observer {
 
             storageService.commitTransaction();
         } catch (census.business.api.SecurityException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             if (StorageService.getInstance().isTransactionActive()) {
                 StorageService.getInstance().rollbackTransaction();
             }

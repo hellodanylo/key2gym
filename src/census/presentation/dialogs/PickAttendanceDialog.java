@@ -20,8 +20,8 @@ import census.business.KeysService;
 import census.business.api.BusinessException;
 import census.business.api.ValidationException;
 import census.business.dto.KeyDTO;
-import census.presentation.MainFrame;
 import census.presentation.util.KeyListCellRenderer;
+import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
@@ -79,7 +79,7 @@ public class PickAttendanceDialog extends CensusDialog {
          */
         List<KeyDTO> keys = KeysService.getInstance().getKeysTaken();
         if (keys.isEmpty()) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(new BusinessException(getString("Message.NoAttendanceIsOpen")));
+            UserExceptionHandler.getInstance().processException(new BusinessException(getString("Message.NoAttendanceIsOpen")));
             getCancelAction().actionPerformed(null);
         }
         
@@ -178,7 +178,7 @@ public class PickAttendanceDialog extends CensusDialog {
                 throw new RuntimeException(ex);
             }
         } catch (BusinessException ex) {
-            MainFrame.getGlobalCensusExceptionListenersStack().peek().processException(ex);
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (RuntimeException ex) {
             /*
