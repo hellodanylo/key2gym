@@ -18,9 +18,10 @@ package census.presentation.forms;
 import census.business.SessionsService;
 import census.business.dto.ClientDTO;
 import census.presentation.util.CardIntegerToStringConverter;
-import census.presentation.util.CensusBindingListener;
+import census.presentation.util.FormBindingListener;
 import census.presentation.util.DateMidnightToStringConverter;
 import census.presentation.util.MoneyBigDecimalToStringConverter;
+import com.google.common.collect.ImmutableList;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -37,101 +38,97 @@ import org.jdesktop.beansbinding.*;
  */
 public class ClientForm extends JPanel {
 
-    public ClientForm() {
+    public ClientForm(ImmutableList<Column> columnsList) {
         isPriviliged = SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL);
+        this.columnsList = columnsList;
 
-        initComponents();
         buildForm();
-        
+
         getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, KeyEvent.CTRL_DOWN_MASK), CardFocusAction.class.getName());
         getActionMap().put(CardFocusAction.class.getName(), new CardFocusAction());
     }
 
     /**
-     * Initializes the components on this form.
-     */
-    private void initComponents() {
-
-        /*
-         * ID
-         */
-        idTextField = new JTextField();
-        idTextField.setEditable(false);
-        idTextField.setEnabled(false);
-
-        /*
-         * Full name
-         */
-        fullNameTextField = new JTextField();
-        
-        /*
-         * Card
-         */
-        cardTextField = new JTextField();
-
-        /*
-         * Money balance
-         */
-        moneyBalanceTextField = new JTextField();
-        moneyBalanceTextField.setEnabled(isPriviliged);
-
-
-        /*
-         * Attendances balance
-         */
-        attendancesBalanceTextField = new JSpinner();
-        attendancesBalanceTextField.setModel(new SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
-        attendancesBalanceTextField.setEnabled(isPriviliged);
-
-        /*
-         * Expiration date
-         */
-        expirationDateTextField = new JTextField();
-        expirationDateTextField.setEnabled(isPriviliged);
-
-        /*
-         * Registration date
-         */
-        registrationDateTextField = new JTextField();
-        registrationDateTextField.setEnabled(isPriviliged);
-
-        /*
-         * Note
-         */
-        noteScrollPane = new JScrollPane();
-        noteTextArea = new JTextArea();
-        noteTextArea.setColumns(20);
-        noteTextArea.setRows(5);
-        noteScrollPane.setViewportView(noteTextArea);
-    }
-
-    /**
-     * Builds this from by placing the components on it.
+     * Builds this from by placing the fields specified in columnsList.
      */
     private void buildForm() {
         FormLayout layout = new FormLayout("right:default, 3dlu, default:grow", "");
-        ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
-        DefaultFormBuilder builder = new DefaultFormBuilder(layout, bundle, this);
+        ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout, strings, this);
         builder.defaultRowSpec(new RowSpec(RowSpec.FILL, Sizes.DEFAULT, RowSpec.NO_GROW));
 
-        builder.appendI15d("Label.ID", idTextField);
-        builder.nextLine();
-        builder.appendI15d("Label.FullName", fullNameTextField);
-        builder.nextLine();
-        builder.appendI15d("Label.Card", cardTextField);
-        builder.nextLine();
-        builder.appendI15d("Label.MoneyBalance", moneyBalanceTextField);
-        builder.nextLine();
-        builder.appendI15d("Label.AttendancesBalance", attendancesBalanceTextField);
-        builder.nextLine();
-        builder.appendI15d("Label.ExpirationDate", expirationDateTextField);
-        builder.nextLine();
-        builder.appendI15d("Label.RegistrationDate", registrationDateTextField);
-        builder.nextLine();
-        
-        JLabel label = new JLabel(bundle.getString("Label.Note"));
-        label.setVerticalAlignment(SwingConstants.TOP);
-        builder.append(label, noteScrollPane);
+        for (Column column : columnsList) {
+            if (column.equals(Column.ID)) {
+                /*
+                 * ID
+                 */
+                idTextField = new JTextField();
+                idTextField.setEditable(false);
+                idTextField.setEnabled(false);
+                builder.appendI15d("Label.ID", idTextField);
+                builder.nextLine();
+            } else if (column.equals(Column.FULL_NAME)) {
+                /*
+                 * Full name
+                 */
+                fullNameTextField = new JTextField();
+                builder.appendI15d("Label.FullName", fullNameTextField);
+                builder.nextLine();
+            } else if (column.equals(Column.CARD)) {
+                /*
+                 * Card
+                 */
+                cardTextField = new JTextField();
+                builder.appendI15d("Label.Card", cardTextField);
+                builder.nextLine();
+            } else if (column.equals(Column.EXPIRATION_DATE)) {
+                /*
+                 * Expiration date
+                 */
+                expirationDateTextField = new JTextField();
+                expirationDateTextField.setEnabled(isPriviliged);
+                builder.appendI15d("Label.ExpirationDate", expirationDateTextField);
+                builder.nextLine();
+            } else if (column.equals(Column.ATTENDANCES_BALANCE)) {
+                /*
+                 * Attendances balance
+                 */
+                attendancesBalanceTextField = new JSpinner();
+                attendancesBalanceTextField.setModel(new SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
+                attendancesBalanceTextField.setEnabled(isPriviliged);
+                builder.appendI15d("Label.AttendancesBalance", attendancesBalanceTextField);
+                builder.nextLine();
+            } else if (column.equals(Column.MONEY_BALANCE)) {
+                /*
+                 * Money balance
+                 */
+                moneyBalanceTextField = new JTextField();
+                moneyBalanceTextField.setEnabled(isPriviliged);
+                builder.appendI15d("Label.MoneyBalance", moneyBalanceTextField);
+                builder.nextLine();
+            } else if (column.equals(Column.REGISTRATION_DATE)) {
+                /*
+                 * Registration date
+                 */
+                registrationDateTextField = new JTextField();
+                registrationDateTextField.setEnabled(isPriviliged);
+                builder.appendI15d("Label.RegistrationDate", registrationDateTextField);
+                builder.nextLine();
+            } else if (column.equals(Column.NOTE)) {
+                /*
+                 * Note
+                 */
+                noteScrollPane = new JScrollPane();
+                noteTextArea = new JTextArea();
+                noteTextArea.setColumns(20);
+                noteTextArea.setRows(5);
+                noteScrollPane.setViewportView(noteTextArea);
+                JLabel label = new JLabel(strings.getString("Label.Note"));
+                label.setVerticalAlignment(SwingConstants.TOP);
+                builder.append(label, noteScrollPane);
+
+            }
+        }
     }
 
     /**
@@ -143,7 +140,7 @@ public class ClientForm extends JPanel {
         this.client = newClient;
 
         if (bindingGroup == null) {
-            censusBindingListener = new CensusBindingListener();
+            formBindingListener = new FormBindingListener();
 
             bindingGroup = new BindingGroup();
 
@@ -183,12 +180,12 @@ public class ClientForm extends JPanel {
             binding.setConverter(new MoneyBigDecimalToStringConverter("Money Balance"));
             bindingGroup.addBinding(binding);
 
-            bindingGroup.addBindingListener(censusBindingListener);
+            bindingGroup.addBindingListener(formBindingListener);
 
             bindingGroup.bind();
         } else {
 
-            censusBindingListener.getInvalidTargets().clear();
+            formBindingListener.getInvalidTargets().clear();
 
             /*
              * We take each binding and set the source object.
@@ -210,27 +207,43 @@ public class ClientForm extends JPanel {
         for (Binding binding : bindingGroup.getBindings()) {
             binding.saveAndNotify();
         }
-        return censusBindingListener.getInvalidTargets().isEmpty();
+        return formBindingListener.getInvalidTargets().isEmpty();
     }
-    
+
     private class CardFocusAction extends AbstractAction {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             cardTextField.requestFocusInWindow();
         }
-        
     }
+
+    public enum Column {
+
+        ID,
+        FULL_NAME,
+        CARD,
+        REGISTRATION_DATE,
+        EXPIRATION_DATE,
+        ATTENDANCES_BALANCE,
+        MONEY_BALANCE,
+        NOTE
+    };
+
     /*
      * Business
      */
     private Boolean isPriviliged;
     private ClientDTO client;
     /*
+     * Form
+     */
+    private ImmutableList<Column> columnsList;
+    /*
      * Presentation
      */
     private BindingGroup bindingGroup;
-    private CensusBindingListener censusBindingListener;
+    private FormBindingListener formBindingListener;
     private JSpinner attendancesBalanceTextField;
     private JTextField cardTextField;
     private JTextField expirationDateTextField;

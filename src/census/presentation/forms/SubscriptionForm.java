@@ -19,7 +19,7 @@ import census.business.TimeSplitsService;
 import census.business.api.ValidationException;
 import census.business.dto.SubscriptionDTO;
 import census.business.dto.TimeSplitDTO;
-import census.presentation.util.CensusBindingListener;
+import census.presentation.util.FormBindingListener;
 import census.presentation.util.TimeSplitListCellRenderer;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -167,7 +167,7 @@ public class SubscriptionForm extends JPanel {
         }
 
         if (bindingGroup == null) {
-            censusBindingListener = new CensusBindingListener();
+            censusBindingListener = new FormBindingListener();
             bindingGroup = new BindingGroup();
             bindingGroup.addBindingListener(censusBindingListener);
 
@@ -346,7 +346,7 @@ public class SubscriptionForm extends JPanel {
      */
     private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
     private BindingGroup bindingGroup;
-    private CensusBindingListener censusBindingListener;
+    private FormBindingListener censusBindingListener;
     private JTextField barcodeTextField;
     private JSpinner daysSpinner;
     private JSpinner monthsSpinner;

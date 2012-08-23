@@ -17,7 +17,7 @@ package census.presentation.forms;
 
 import census.business.api.ValidationException;
 import census.business.dto.ItemDTO;
-import census.presentation.util.CensusBindingListener;
+import census.presentation.util.FormBindingListener;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
@@ -105,7 +105,7 @@ public class ItemForm extends JPanel {
         }
 
         if (bindingGroup == null) {
-            censusBindingListener = new CensusBindingListener();
+            censusBindingListener = new FormBindingListener();
             bindingGroup = new BindingGroup();
             bindingGroup.addBindingListener(censusBindingListener);
 
@@ -248,7 +248,7 @@ public class ItemForm extends JPanel {
      */
     private ResourceBundle strings;
     private BindingGroup bindingGroup;
-    private CensusBindingListener censusBindingListener;
+    private FormBindingListener censusBindingListener;
     private javax.swing.JTextField barcodeTextField;
     private javax.swing.JTextField priceTextField;
     private javax.swing.JTextField quantityTextField;

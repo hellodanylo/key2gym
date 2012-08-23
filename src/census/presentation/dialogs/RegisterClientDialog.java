@@ -31,6 +31,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -62,8 +64,18 @@ public class RegisterClientDialog extends AbstractDialog {
     private void buildDialog() {
 
         setLayout(new FormLayout("4dlu, p, 4dlu, d, 4dlu", "4dlu, d, 4dlu, d, 4dlu, d, 4dlu"));
-
-        clientPanel = new ClientForm();
+        
+        List<ClientForm.Column> columnsList = Arrays.asList(
+                ClientForm.Column.ID, 
+                ClientForm.Column.FULL_NAME,
+                ClientForm.Column.CARD,
+                ClientForm.Column.REGISTRATION_DATE,
+                ClientForm.Column.MONEY_BALANCE,
+                ClientForm.Column.ATTENDANCES_BALANCE,
+                ClientForm.Column.EXPIRATION_DATE,
+                ClientForm.Column.NOTE
+        );
+        clientPanel = new ClientForm(columnsList);
         clientPanel.setClient(client);
         clientPanel.setBorder(BorderFactory.createTitledBorder(getString("Text.BasicInformation"))); // NOI18N
         add(clientPanel, CC.xy(2, 2));

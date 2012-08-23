@@ -6,7 +6,7 @@ package census.presentation.forms;
 
 import census.business.api.ValidationException;
 import census.business.dto.CashAdjustmentDTO;
-import census.presentation.util.CensusBindingListener;
+import census.presentation.util.FormBindingListener;
 import census.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -146,7 +146,7 @@ public class CashAdjustmentForm extends JPanel {
         }
 
         if (bindingGroup == null) {
-            censusBindingListener = new CensusBindingListener();
+            censusBindingListener = new FormBindingListener();
             bindingGroup = new BindingGroup();
             bindingGroup.addBindingListener(censusBindingListener);
 
@@ -227,7 +227,7 @@ public class CashAdjustmentForm extends JPanel {
      */
     private ResourceBundle strings;
     private BindingGroup bindingGroup;
-    private CensusBindingListener censusBindingListener;
+    private FormBindingListener censusBindingListener;
     private JTextField dateTextField;
     private JTextField newAdjustmentTextField;
     private JTextArea noteTextArea;

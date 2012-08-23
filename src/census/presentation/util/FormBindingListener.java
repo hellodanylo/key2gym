@@ -28,11 +28,11 @@ import org.jdesktop.beansbinding.PropertyStateEvent;
  *
  * @author Danylo Vashchilenko
  */
-public class CensusBindingListener implements BindingListener {
+public class FormBindingListener implements BindingListener {
 
     private Set<Object> invalidTargets;
 
-    public CensusBindingListener() {
+    public FormBindingListener() {
         this.invalidTargets = new HashSet<>();
     }
 

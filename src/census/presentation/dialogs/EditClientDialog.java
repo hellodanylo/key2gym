@@ -21,6 +21,7 @@ import census.business.api.SecurityException;
 import census.business.api.ValidationException;
 import census.business.dto.*;
 import census.presentation.forms.ClientForm;
+import census.presentation.forms.ClientForm.Column;
 import census.presentation.forms.ClientProfileForm;
 import census.presentation.util.AttendancesTableModel;
 import census.presentation.util.FreezesTableModel;
@@ -32,6 +33,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -130,7 +132,17 @@ public class EditClientDialog extends AbstractDialog {
         JPanel panel = new JPanel();
         panel.setLayout(new FormLayout("f:p:g", "4dlu, f:p:g"));
 
-        clientPanel = new ClientForm();
+        List<Column> columnsList = Arrays.asList(
+                Column.ID, 
+                Column.FULL_NAME,
+                Column.CARD,
+                Column.REGISTRATION_DATE,
+                Column.MONEY_BALANCE,
+                Column.ATTENDANCES_BALANCE,
+                Column.EXPIRATION_DATE,
+                Column.NOTE
+        );
+        clientPanel = new ClientForm(columnsList);
         panel.add(clientPanel, CC.xy(1, 2));
 
         return panel;

@@ -20,7 +20,7 @@ import census.business.dto.ClientProfileDTO;
 import census.business.dto.ClientProfileDTO.FitnessExperience;
 import census.business.dto.ClientProfileDTO.Sex;
 import census.persistence.AdSource;
-import census.presentation.util.CensusBindingListener;
+import census.presentation.util.FormBindingListener;
 import census.presentation.util.DateMidnightToStringConverter;
 import census.presentation.util.FitnessExperienceListCellRenderer;
 import census.presentation.util.SexListCellRenderer;
@@ -179,7 +179,7 @@ public class ClientProfileForm extends JPanel {
 
         if (bindingGroup == null) {
             bindingGroup = new BindingGroup();
-            censusBindingListener = new CensusBindingListener();
+            censusBindingListener = new FormBindingListener();
 
             Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("address"), addressTextField, BeanProperty.create("text"), "address"); //NOI18N
@@ -285,7 +285,7 @@ public class ClientProfileForm extends JPanel {
      */
     private List<AdSource> adSources;
     private BindingGroup bindingGroup;
-    private CensusBindingListener censusBindingListener;
+    private FormBindingListener censusBindingListener;
     private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
     private JComboBox adSourceComboBox;
     private JTextField addressTextField;
