@@ -47,7 +47,7 @@ public class IntegerToStringConverter extends Converter<Integer, String> {
             }
             return Integer.parseInt(value);
         } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(new ValidationException(MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Message.FilledIsNotFilledInCorrectly.withFieldName"), new Object[] {fieldName})));
+            throw new IllegalArgumentException(new ValidationException(MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), new Object[] {fieldName})));
         }
     }
 
