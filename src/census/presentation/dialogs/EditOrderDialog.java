@@ -257,8 +257,8 @@ public class EditOrderDialog extends AbstractDialog {
         /*
          * Due
          */
-        dueTextField.setForeground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ? new Color(168, 0, 0) : new Color(98, 179, 0));
-        dueTextField.setBackground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ? new Color(255, 173, 206) : new Color(211, 255, 130));
+        dueTextField.setForeground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ?  ColorConstants.WARNING_FOREGROUND: ColorConstants.OK_FOREGROUND);
+        dueTextField.setBackground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ?  ColorConstants.WARNING_BACKGROUND : ColorConstants.OK_BACKGROUND);
         dueTextField.setText(order.getDue().toPlainString());
 
         /*

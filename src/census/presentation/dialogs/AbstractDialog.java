@@ -16,6 +16,7 @@
 package census.presentation.dialogs;
 
 import java.awt.Component;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -47,8 +48,8 @@ public abstract class AbstractDialog extends JDialog {
      * @param parent the parent frame of this dialog
      * @param modal if true, the dialog will be modal
      */
-    public AbstractDialog(JFrame parent, boolean modal, Button[] buttons) {
-        super(parent, modal);
+    public AbstractDialog(Window parent, boolean modal) {
+        super(parent, modal ? DEFAULT_MODALITY_TYPE : ModalityType.MODELESS);
         strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
         this.addWindowListener(new WindowAdapter() {
@@ -61,6 +62,7 @@ public abstract class AbstractDialog extends JDialog {
 
         cancelAction = new CancelAction();
         okAction = new OkAction();
+        closeAction = new CloseAction();
 
         /*
          * Binds the escape key to the cancel action.
@@ -70,10 +72,10 @@ public abstract class AbstractDialog extends JDialog {
         result = null;
         exception = null;
     }
-    
-    public AbstractDialog(JFrame parent, boolean modal) {
-        this(parent, modal, new Button[]{Button.OK, Button.CANCEL});
-    }
+
+//    public AbstractDialog(JFrame parent, boolean modal) {
+//        this(parent, modal, new Button[]{Button.OK, Button.CANCEL});
+//    }
 
     /**
      * Performs pre-closing routine.
@@ -94,11 +96,11 @@ public abstract class AbstractDialog extends JDialog {
     protected String getString(String key) {
         return strings.getString(key);
     }
-    
+
     /**
      * Gets the dialog's strings bundle.
-     * 
-     * @return the strings bundle 
+     *
+     * @return the strings bundle
      */
     protected ResourceBundle getStrings() {
         return strings;
@@ -169,12 +171,23 @@ public abstract class AbstractDialog extends JDialog {
     }
 
     /**
-     * Adds a dialog-wide hot key. 
+     * Returns the dialog's close action.
+     *
+     * @return the action used to close the dialog.
+     */
+    protected Action getCloseAction() {
+        return closeAction;
+    }
+
+    /**
+     * Adds a dialog hot key.
+     *
      * <p>
+     *
      * As long as the dialog or its subcomponents has the focus, the triggering
      * of the key stroke will cause the action to be performed.
-     * 
-     * @param keyStroke the key stroke to listen for
+     *
+     * @param keyStroke the key stroke to hook
      * @param action the action to perform when the key stroke is triggered
      */
     protected final void addHotKey(KeyStroke keyStroke, Action action) {
@@ -189,6 +202,11 @@ public abstract class AbstractDialog extends JDialog {
 
     protected void onCancelActionPerformed(ActionEvent evt) {
         setResult(RESULT_CANCEL);
+        dispose();
+    }
+
+    protected void onCloseActionPerformed(ActionEvent evt) {
+        setResult(RESULT_CLOSE);
         dispose();
     }
 
@@ -217,16 +235,32 @@ public abstract class AbstractDialog extends JDialog {
             onOkActionPerformed(e);
         }
     }
+
+    protected class CloseAction extends AbstractAction {
+
+        public CloseAction() {
+            putValue(NAME, getString("Button.Close"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            onCloseActionPerformed(e);
+        }
+    }
     private Action cancelAction;
     private Action okAction;
+    private Action closeAction;
     private Integer result;
     private RuntimeException exception;
     private ResourceBundle strings;
-    
-    public enum Button {OK, CANCEL};
-        
+
+    public enum Button {
+
+        OK, CANCEL
+    };
     // TODO: use enumeration instead
     public static final Integer RESULT_OK = 0;
     public static final Integer RESULT_CANCEL = 1;
     public static final Integer RESULT_EXCEPTION = 2;
+    public static final Integer RESULT_CLOSE = 3;
 }

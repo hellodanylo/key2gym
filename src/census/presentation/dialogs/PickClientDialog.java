@@ -25,6 +25,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -43,7 +44,7 @@ public class PickClientDialog extends AbstractDialog {
     /**
      * Creates new form PickClientDialog
      */
-    public PickClientDialog(JFrame parent) {
+    public PickClientDialog(Window parent) {
         super(parent, true);
         initComponents();
         buildDialog();

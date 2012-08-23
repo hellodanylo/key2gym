@@ -15,22 +15,16 @@
  */
 package census.presentation.actions;
 
-import census.business.ClientsService;
 import census.business.OrdersService;
 import census.business.SessionsService;
 import census.business.StorageService;
 import census.business.api.BusinessException;
 import census.business.api.ValidationException;
-import census.business.dto.ClientDTO;
 import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.CheckInDialog;
 import census.presentation.dialogs.EditOrderDialog;
-import census.presentation.util.NotificationException;
-import census.presentation.util.UserExceptionHandler;
 import java.awt.event.ActionEvent;
 import java.beans.Beans;
-import java.math.BigDecimal;
-import java.text.MessageFormat;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
@@ -38,7 +32,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
-import org.joda.time.Days;
 
 
 /**
@@ -70,14 +63,14 @@ public class CheckInAction extends CensusAction implements Observer {
             /*
              * OpenAttendance
              */         
-            CheckInDialog openAttendanceDialog = new CheckInDialog(getFrame());  
-            openAttendanceDialog.setVisible(true);
+            CheckInDialog checkInDialog = new CheckInDialog(getFrame());  
+            checkInDialog.setVisible(true);
 
-            if (openAttendanceDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
-                throw openAttendanceDialog.getException();
+            if (checkInDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                throw checkInDialog.getException();
             }
 
-            if (openAttendanceDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (checkInDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -85,52 +78,34 @@ public class CheckInAction extends CensusAction implements Observer {
             /*
              * If requested, EditFinancialActivty
              */
-            if (openAttendanceDialog.isOrderDialogRequested()) {
+            if (checkInDialog.isOrderRequested()) {
 
-                Short activityId = null;
-                EditOrderDialog editFinancialActivityDialog = new EditOrderDialog(getFrame());
+                Short orderId = null;
+                EditOrderDialog editOrderDialog = new EditOrderDialog(getFrame());
 
                 try {
-                    if (openAttendanceDialog.isAnonymous()) {
-                        activityId = OrdersService.getInstance().findForAttendanceById(openAttendanceDialog.getAttendanceId());
+                    if (checkInDialog.isAnonymous()) {
+                        orderId = OrdersService.getInstance().findForAttendanceById(checkInDialog.getAttendanceId());
                     } else {
-                        activityId = OrdersService.getInstance().findByClientIdAndDate(openAttendanceDialog.getClientId(), new DateMidnight(), true);
+                        orderId = OrdersService.getInstance().findByClientIdAndDate(checkInDialog.getClientId(), new DateMidnight(), true);
                     }
                 } catch (ValidationException ex) {
                     throw new RuntimeException(ex);
                 }
 
-                editFinancialActivityDialog.setOrderId(activityId);
-                editFinancialActivityDialog.setFullPaymentForced(false);
+                editOrderDialog.setOrderId(orderId);
+                editOrderDialog.setFullPaymentForced(false);
                 
-                editFinancialActivityDialog.setVisible(true);
+                editOrderDialog.setVisible(true);
 
-                if (editFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
-                    throw editFinancialActivityDialog.getException();
+                if (editOrderDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                    throw editOrderDialog.getException();
                 }
 
-                if (editFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+                if (editOrderDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                     storageService.rollbackTransaction();
                     return;
                 }
-            } else if (!openAttendanceDialog.isAnonymous()) {
-                ClientDTO client;
-                try {
-                    client = ClientsService.getInstance().getById(openAttendanceDialog.getClientId());
-                } catch (ValidationException ex) {
-                    throw new RuntimeException(ex);
-                }
-                if (client.getMoneyBalance().compareTo(BigDecimal.ZERO) < 0) {
-                    UserExceptionHandler.getInstance().processException(new NotificationException(MessageFormat.format(bundle.getString("Message.ClientHasDebt.withDebtAmount"), new Object[] {client.getMoneyBalance().negate().setScale(2)})));
-                }
-                if (client.getAttendancesBalance() == 0) {
-                    UserExceptionHandler.getInstance().processException(new NotificationException(bundle.getString("Message.ThisIsClientsLastAttendance")));
-                }
-                Days days = Days.daysBetween(new DateMidnight(), client.getExpirationDate());
-                if (days.getDays() < 7) {
-                    UserExceptionHandler.getInstance().processException(new NotificationException(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Message.ClientHasThisManyDaysBeforeExpiration.withDays"), new Object[] {days.getDays()})));
-                }
-                
             }
 
             storageService.commitTransaction();

@@ -17,19 +17,17 @@ package census.presentation.forms;
 
 import census.business.SessionsService;
 import census.business.dto.ClientDTO;
-import census.presentation.util.CardIntegerToStringConverter;
-import census.presentation.util.FormBindingListener;
-import census.presentation.util.DateMidnightToStringConverter;
-import census.presentation.util.MoneyBigDecimalToStringConverter;
-import com.google.common.collect.ImmutableList;
+import census.presentation.util.*;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.Sizes;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import org.jdesktop.beansbinding.*;
 
 /**
@@ -38,7 +36,7 @@ import org.jdesktop.beansbinding.*;
  */
 public class ClientForm extends JPanel {
 
-    public ClientForm(ImmutableList<Column> columnsList) {
+    public ClientForm(List<Column> columnsList) {
         isPriviliged = SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL);
         this.columnsList = columnsList;
 
@@ -57,7 +55,14 @@ public class ClientForm extends JPanel {
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, strings, this);
         builder.defaultRowSpec(new RowSpec(RowSpec.FILL, Sizes.DEFAULT, RowSpec.NO_GROW));
 
+        bindingGroup = new BindingGroup();
+
+        formBindingListener = new FormBindingListener();
+        bindingGroup.addBindingListener(formBindingListener);
+
         for (Column column : columnsList) {
+            Binding binding;
+
             if (column.equals(Column.ID)) {
                 /*
                  * ID
@@ -67,6 +72,11 @@ public class ClientForm extends JPanel {
                 idTextField.setEnabled(false);
                 builder.appendI15d("Label.ID", idTextField);
                 builder.nextLine();
+
+                binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
+                        BeanProperty.create("id"), idTextField, BeanProperty.create("text"), "id");
+                bindingGroup.addBinding(binding);
+
             } else if (column.equals(Column.FULL_NAME)) {
                 /*
                  * Full name
@@ -74,6 +84,10 @@ public class ClientForm extends JPanel {
                 fullNameTextField = new JTextField();
                 builder.appendI15d("Label.FullName", fullNameTextField);
                 builder.nextLine();
+
+                binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
+                        BeanProperty.create("fullName"), fullNameTextField, BeanProperty.create("text"), "fullName");
+                bindingGroup.addBinding(binding);
             } else if (column.equals(Column.CARD)) {
                 /*
                  * Card
@@ -81,6 +95,12 @@ public class ClientForm extends JPanel {
                 cardTextField = new JTextField();
                 builder.appendI15d("Label.Card", cardTextField);
                 builder.nextLine();
+
+                binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
+                        BeanProperty.create("card"), cardTextField, BeanProperty.create("text"), "card");
+                binding.setConverter(new IntegerToStringConverter("Card", true));
+                bindingGroup.addBinding(binding);
+
             } else if (column.equals(Column.EXPIRATION_DATE)) {
                 /*
                  * Expiration date
@@ -89,15 +109,26 @@ public class ClientForm extends JPanel {
                 expirationDateTextField.setEnabled(isPriviliged);
                 builder.appendI15d("Label.ExpirationDate", expirationDateTextField);
                 builder.nextLine();
+
+                binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
+                        BeanProperty.create("expirationDate"), expirationDateTextField, BeanProperty.create("text"), "expirationDate");
+                binding.setConverter(new DateMidnightToStringConverter("Expiration Date", "dd-MM-yyyy"));
+                bindingGroup.addBinding(binding);
             } else if (column.equals(Column.ATTENDANCES_BALANCE)) {
                 /*
                  * Attendances balance
                  */
-                attendancesBalanceTextField = new JSpinner();
-                attendancesBalanceTextField.setModel(new SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
-                attendancesBalanceTextField.setEnabled(isPriviliged);
-                builder.appendI15d("Label.AttendancesBalance", attendancesBalanceTextField);
+                attendancesBalanceSpinner = new JTextField();
+                //attendancesBalanceSpinner.setModel(new SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
+                attendancesBalanceSpinner.setEnabled(isPriviliged);
+                builder.appendI15d("Label.AttendancesBalance", attendancesBalanceSpinner);
                 builder.nextLine();
+
+                binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
+                        BeanProperty.create("attendancesBalance"), attendancesBalanceSpinner, BeanProperty.create("text"), "attendancesBalance");
+                binding.setConverter(new ShortToStringConverter("Attendances Balance", false));
+                bindingGroup.addBinding(binding);
+
             } else if (column.equals(Column.MONEY_BALANCE)) {
                 /*
                  * Money balance
@@ -106,6 +137,11 @@ public class ClientForm extends JPanel {
                 moneyBalanceTextField.setEnabled(isPriviliged);
                 builder.appendI15d("Label.MoneyBalance", moneyBalanceTextField);
                 builder.nextLine();
+
+                binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
+                        BeanProperty.create("moneyBalance"), moneyBalanceTextField, BeanProperty.create("text"), "moneyBalance");
+                binding.setConverter(new MoneyBigDecimalToStringConverter("Money Balance"));
+                bindingGroup.addBinding(binding);
             } else if (column.equals(Column.REGISTRATION_DATE)) {
                 /*
                  * Registration date
@@ -114,6 +150,11 @@ public class ClientForm extends JPanel {
                 registrationDateTextField.setEnabled(isPriviliged);
                 builder.appendI15d("Label.RegistrationDate", registrationDateTextField);
                 builder.nextLine();
+
+                binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
+                        BeanProperty.create("registrationDate"), registrationDateTextField, BeanProperty.create("text"), "registrationDate");
+                binding.setConverter(new DateMidnightToStringConverter("Registration Date", "dd-MM-yyyy"));
+                bindingGroup.addBinding(binding);
             } else if (column.equals(Column.NOTE)) {
                 /*
                  * Note
@@ -127,8 +168,14 @@ public class ClientForm extends JPanel {
                 label.setVerticalAlignment(SwingConstants.TOP);
                 builder.append(label, noteScrollPane);
 
+                binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
+                        BeanProperty.create("note"), noteTextArea, BeanProperty.create("text"), "note");
+                bindingGroup.addBinding(binding);
+
             }
         }
+
+        bindingGroup.bind();
     }
 
     /**
@@ -137,65 +184,63 @@ public class ClientForm extends JPanel {
      * @param newClient the new client
      */
     public void setClient(ClientDTO newClient) {
+        if (newClient == null) {
+            newClient = new ClientDTO();
+        }
+
         this.client = newClient;
 
-        if (bindingGroup == null) {
-            formBindingListener = new FormBindingListener();
+        formBindingListener.getInvalidTargets().clear();
 
-            bindingGroup = new BindingGroup();
+        /*
+         * We take each binding and set the source object.
+         */
+        for (Binding binding : bindingGroup.getBindings()) {
+            binding.unbind();
+            binding.setSourceObject(client);
+            binding.bind();
+        }
+    }
 
-            Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                    BeanProperty.create("id"), idTextField, BeanProperty.create("text"), "id");
-            bindingGroup.addBinding(binding);
-
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                    BeanProperty.create("fullName"), fullNameTextField, BeanProperty.create("text"), "fullName");
-            bindingGroup.addBinding(binding);
-
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                    BeanProperty.create("card"), cardTextField, BeanProperty.create("text"), "card");
-            binding.setConverter(new CardIntegerToStringConverter("Card"));
-            bindingGroup.addBinding(binding);
-
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                    BeanProperty.create("note"), noteTextArea, BeanProperty.create("text"), "note");
-            bindingGroup.addBinding(binding);
-
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                    BeanProperty.create("registrationDate"), registrationDateTextField, BeanProperty.create("text"), "registrationDate");
-            binding.setConverter(new DateMidnightToStringConverter("Registration Date", "dd-MM-yyyy"));
-            bindingGroup.addBinding(binding);
-
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                    BeanProperty.create("expirationDate"), expirationDateTextField, BeanProperty.create("text"), "expirationDate");
-            binding.setConverter(new DateMidnightToStringConverter("Expiration Date", "dd-MM-yyyy"));
-            bindingGroup.addBinding(binding);
-
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                    BeanProperty.create("attendancesBalance"), attendancesBalanceTextField, BeanProperty.create("value"), "attendancesBalance");
-            bindingGroup.addBinding(binding);
-
-            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                    BeanProperty.create("moneyBalance"), moneyBalanceTextField, BeanProperty.create("text"), "moneyBalance");
-            binding.setConverter(new MoneyBigDecimalToStringConverter("Money Balance"));
-            bindingGroup.addBinding(binding);
-
-            bindingGroup.addBindingListener(formBindingListener);
-
-            bindingGroup.bind();
-        } else {
-
-            formBindingListener.getInvalidTargets().clear();
-
-            /*
-             * We take each binding and set the source object.
-             */
-            for (Binding binding : bindingGroup.getBindings()) {
-                binding.unbind();
-                binding.setSourceObject(client);
-                binding.bind();
+    /**
+     * Sets whether the form can be edited by the user.
+     *
+     * @param canEdit if true, this form will do its best to show user that the
+     * form is not editable.
+     */
+    public void setEditable(boolean canEdit) {
+        /*
+         * Takes each binding and applies the editable property, if it's a
+         * component.
+         */
+        for (Binding binding : bindingGroup.getBindings()) {
+            Object target = binding.getTargetObject();
+            if (JTextComponent.class.isInstance(target)) {
+                ((JTextComponent) binding.getTargetObject()).setEditable(canEdit);
             }
         }
+    }
+
+    /**
+     * Sets whether the form can be edited by the user.
+     *
+     * @param enabled if true, this form will do its best to show user that the
+     * form is not editable.
+     */
+    @Override
+    public void setEnabled(boolean enabled) {
+        /*
+         * Takes each binding and applies the editable property, if it's a
+         * component.
+         */
+        for (Binding binding : bindingGroup.getBindings()) {
+            Object target = binding.getTargetObject();
+            if (JTextComponent.class.isInstance(target)) {
+                ((JTextComponent) binding.getTargetObject()).setEnabled(enabled);
+            }
+        }
+
+        super.setEnabled(enabled);
     }
 
     /**
@@ -238,13 +283,13 @@ public class ClientForm extends JPanel {
     /*
      * Form
      */
-    private ImmutableList<Column> columnsList;
+    private List<Column> columnsList;
     /*
      * Presentation
      */
     private BindingGroup bindingGroup;
     private FormBindingListener formBindingListener;
-    private JSpinner attendancesBalanceTextField;
+    private JTextField attendancesBalanceSpinner;
     private JTextField cardTextField;
     private JTextField expirationDateTextField;
     private JTextField fullNameTextField;
