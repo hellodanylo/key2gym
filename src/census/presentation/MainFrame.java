@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package census.presentation;
 
 import census.business.AdministratorsService;
@@ -42,46 +41,40 @@ import javax.swing.*;
 import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 
-
 /**
  *
  * @author Danylo Vashchilenko
  */
 public class MainFrame extends JFrame {
-    
+
     /**
      * Creates new MainFrame
      */
     protected MainFrame() {
         sessionsService = SessionsService.getInstance();
         sessionsService.addListener(new CustomListener());
-        
+
         attendancesPanels = new HashMap<>();
         ordersPanels = new HashMap<>();
-        
-        bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+
+        strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
         initComponents();
 
-        /*
-         * The Starter is waiting on the MainFrame to close.
-         */
         addWindowListener(new WindowAdapter() {
+
             @Override
             public void windowClosing(WindowEvent e) {
-                synchronized (MainFrame.getInstance()) {
-                    setVisible(false);
-                    MainFrame.getInstance().notify();
-                }
+                onWindowClosing(e);
             }
         });
     }
 
     private void initComponents() {
-        
+
         initActions();
         buildMenu();
-        
+
         add(createActionsToolBar(), BorderLayout.NORTH);
         add(createFooterPanel(), BorderLayout.SOUTH);
 
@@ -90,11 +83,11 @@ public class MainFrame extends JFrame {
         add(workspacesTabbedPane, BorderLayout.CENTER);
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(bundle.getString("Title.Census")); // NOI18N
+        setTitle(strings.getString("Title.Census")); // NOI18N
         pack();
         setLocationRelativeTo(null);
-    }                
-    
+    }
+
     private void initActions() {
         toggleRaisedAdministratorAction = new ToggleRaisedAdministratorAction();
         freezeClientAction = new FreezeClientAction();
@@ -113,9 +106,9 @@ public class MainFrame extends JFrame {
         openItemsWindowAction = new OpenItemsWindowAction();
         aboutAction = new AboutAction();
     }
-    
+
     private JToolBar createActionsToolBar() {
-        
+
         JToolBar actionsToolBar = new JToolBar();
         JButton openAttendanceButton = new JButton();
         JButton closeAttendanceButton = new JButton();
@@ -124,7 +117,7 @@ public class MainFrame extends JFrame {
         JButton editClientButton = new JButton();
         JToolBar.Separator clientsFinancesSeparator = new JToolBar.Separator();
         JButton editOrderButton = new JButton();
-        
+
         actionsToolBar.setFloatable(false);
         actionsToolBar.setRollover(true);
 
@@ -165,12 +158,12 @@ public class MainFrame extends JFrame {
         editOrderButton.setMargin(new java.awt.Insets(0, 10, 0, 10));
         editOrderButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         actionsToolBar.add(editOrderButton);
-        
+
         return actionsToolBar;
     }
 
     private void buildMenu() {
-        
+
         JMenuBar menuBar = new JMenuBar();
         JMenu sessionMenu = new JMenu();
         JMenuItem toggleSessionMenuItem = new JMenuItem();
@@ -197,8 +190,8 @@ public class MainFrame extends JFrame {
         JMenuItem itemsWindowMenuItem = new JMenuItem();
         JMenu helpMenu = new JMenu();
         JMenuItem helpAboutMenuItem = new JMenuItem();
-        
-        sessionMenu.setText(bundle.getString("Menu.Session")); // NOI18N
+
+        sessionMenu.setText(strings.getString("Menu.Session")); // NOI18N
 
         toggleSessionMenuItem.setAction(toggleSessionAction);
         toggleSessionMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.ALT_MASK));
@@ -210,7 +203,7 @@ public class MainFrame extends JFrame {
 
         menuBar.add(sessionMenu);
 
-        eventMenu.setText(bundle.getString("Menu.Events")); // NOI18N
+        eventMenu.setText(strings.getString("Menu.Events")); // NOI18N
 
         eventEntryMenuItem.setAction(openAttendanceAction);
         eventEntryMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.ALT_MASK));
@@ -227,7 +220,7 @@ public class MainFrame extends JFrame {
 
         menuBar.add(eventMenu);
 
-        clientsMenu.setText(bundle.getString("Menu.Clients")); // NOI18N
+        clientsMenu.setText(strings.getString("Menu.Clients")); // NOI18N
 
         registerClientMenuItem.setAction(registerClientAction);
         registerClientMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_MASK));
@@ -243,7 +236,7 @@ public class MainFrame extends JFrame {
 
         menuBar.add(clientsMenu);
 
-        manageMenu.setText(bundle.getString("Menu.Manage")); // NOI18N
+        manageMenu.setText(strings.getString("Menu.Manage")); // NOI18N
 
         manageItemsMenuItem.setAction(manageItemsAction);
         manageMenu.add(manageItemsMenuItem);
@@ -261,7 +254,7 @@ public class MainFrame extends JFrame {
 
         menuBar.add(manageMenu);
 
-        windowMenu.setText(bundle.getString("Menu.Window")); // NOI18N
+        windowMenu.setText(strings.getString("Menu.Window")); // NOI18N
 
         attendancesWindowMenuItem.setAction(openAttendancesWindowAction);
         windowMenu.add(attendancesWindowMenuItem);
@@ -274,7 +267,7 @@ public class MainFrame extends JFrame {
 
         menuBar.add(windowMenu);
 
-        helpMenu.setText(bundle.getString("Menu.Help")); // NOI18N
+        helpMenu.setText(strings.getString("Menu.Help")); // NOI18N
 
         helpAboutMenuItem.setAction(aboutAction);
         helpMenu.add(helpAboutMenuItem);
@@ -283,15 +276,15 @@ public class MainFrame extends JFrame {
 
         setJMenuBar(menuBar);
     }
-    
+
     private JPanel createFooterPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel.setBackground(new java.awt.Color(55, 85, 111));   
-        
+        panel.setBackground(new java.awt.Color(55, 85, 111));
+
         bannerLabel = new JLabel();
         bannerLabel.setIcon(new ImageIcon(getClass().getResource("/census/presentation/resources/banner.png"))); // NOI18N
         panel.add(bannerLabel);
-        
+
         return panel;
     }
 
@@ -307,7 +300,7 @@ public class MainFrame extends JFrame {
         workspacesTabbedPane.addTab(null, attendancesPanel);
         attendancesPanels.put(date, attendancesPanel);
 
-        CloseableTabPanel tabComponent = new CloseableTabPanel(MessageFormat.format(bundle.getString("Text.AttendancesFor.withDate"), new Object[] {date.toString("dd-MM-yyyy")}));
+        CloseableTabPanel tabComponent = new CloseableTabPanel(MessageFormat.format(strings.getString("Text.AttendancesFor.withDate"), new Object[]{date.toString("dd-MM-yyyy")}));
         tabComponent.addActionListener(new ActionListener() {
 
             @Override
@@ -319,7 +312,7 @@ public class MainFrame extends JFrame {
         workspacesTabbedPane.setTabComponentAt(workspacesTabbedPane.indexOfComponent(attendancesPanel), tabComponent);
         workspacesTabbedPane.setSelectedComponent(attendancesPanel);
     }
-    
+
     public void openOrdersTabForDate(DateMidnight date) throws SecurityException {
         if (ordersPanels.containsKey(date)) {
             workspacesTabbedPane.setSelectedComponent(ordersPanels.get(date));
@@ -332,7 +325,7 @@ public class MainFrame extends JFrame {
         workspacesTabbedPane.addTab(null, ordersPanel);
         ordersPanels.put(date, ordersPanel);
 
-        CloseableTabPanel tabComponent = new CloseableTabPanel(MessageFormat.format(bundle.getString("Text.OrdersFor.withDate"), new Object[] {date.toString("dd-MM-yyyy")}));
+        CloseableTabPanel tabComponent = new CloseableTabPanel(MessageFormat.format(strings.getString("Text.OrdersFor.withDate"), new Object[]{date.toString("dd-MM-yyyy")}));
         tabComponent.addActionListener(new ActionListener() {
 
             @Override
@@ -345,7 +338,7 @@ public class MainFrame extends JFrame {
         workspacesTabbedPane.setSelectedComponent(ordersPanel);
     }
 
-    public void openItemsTab() {        
+    public void openItemsTab() {
         if (itemsPanel != null) {
             workspacesTabbedPane.setSelectedComponent(itemsPanel);
             return;
@@ -354,9 +347,9 @@ public class MainFrame extends JFrame {
         itemsPanel = new ItemsPanel();
         itemsPanel.setItems(ItemsPanel.ItemsGroup.PURE);
 
-        workspacesTabbedPane.addTab(bundle.getString("Text.Items"), itemsPanel);
+        workspacesTabbedPane.addTab(strings.getString("Text.Items"), itemsPanel);
 
-        CloseableTabPanel tabComponent = new CloseableTabPanel(bundle.getString("Text.Items"));
+        CloseableTabPanel tabComponent = new CloseableTabPanel(strings.getString("Text.Items"));
         tabComponent.addActionListener(new ActionListener() {
 
             @Override
@@ -379,17 +372,17 @@ public class MainFrame extends JFrame {
 
         return null;
     }
-    
+
     public OrderDTO getSelectedOrder() {
         Component component = workspacesTabbedPane.getSelectedComponent();
-        
-        if(component instanceof OrdersPanel) {
-            return ((OrdersPanel)component).getSelectedOrder();
+
+        if (component instanceof OrdersPanel) {
+            return ((OrdersPanel) component).getSelectedOrder();
         }
-        
+
         return null;
     }
-               
+
     private class CustomListener implements SessionListener {
 
         @Override
@@ -406,7 +399,7 @@ public class MainFrame extends JFrame {
             workspacesTabbedPane.setSelectedComponent(attendancesPanels.get(new DateMidnight()));
 
             AdministratorDTO administrator = AdministratorsService.getInstance().getById(sessionsService.getTopmostAdministratorId());
-            setTitle(MessageFormat.format(bundle.getString("Title.Census.withAdministrator"), new Object[] {administrator.getFullName()}));
+            setTitle(MessageFormat.format(strings.getString("Title.Census.withAdministrator"), new Object[]{administrator.getFullName()}));
         }
 
         @Override
@@ -416,42 +409,56 @@ public class MainFrame extends JFrame {
             ordersPanels.clear();
             itemsPanel = null;
 
-            setTitle(bundle.getString("Title.Census"));
+            setTitle(strings.getString("Title.Census"));
         }
 
         @Override
         public void sessionUpdated() {
             AdministratorDTO administrator = AdministratorsService.getInstance().getById(sessionsService.getTopmostAdministratorId());
-            setTitle(MessageFormat.format(bundle.getString("Title.Census.withAdministrator"), new Object[] {administrator.getFullName()}));
+            setTitle(MessageFormat.format(strings.getString("Title.Census.withAdministrator"), new Object[]{administrator.getFullName()}));
         }
     }
     
-    @Override
-    public void dispose() {      
-        if(sessionsService.hasOpenSession()) {
+    /**
+     * Process the window closing event. <p> The method must be called once on
+     * the MainFrame's shutdown. The application will not shutdown properly, if
+     * this method is not called.
+     *
+     * @param e the window event
+     */
+    private void onWindowClosing(WindowEvent e) {
+        /*
+         * Closes the session, if one is open.
+         */
+        if (sessionsService.hasOpenSession()) {
             StorageService.getInstance().beginTransaction();
             sessionsService.closeSession();
             StorageService.getInstance().commitTransaction();
         }
-        super.dispose();
+
+        /*
+         * The main thread is waiting on us to shutdown in order to perform
+         * shutdown routine.
+         */
+        synchronized (MainFrame.getInstance()) {
+            setVisible(false);
+            MainFrame.getInstance().notify();
+        }
     }
-  
     /*
      * Business
      */
     private SessionsService sessionsService;
-    
-        /*
+    /*
      * Presentation
      */
     private Map<DateMidnight, AttendancesPanel> attendancesPanels;
     private Map<DateMidnight, OrdersPanel> ordersPanels;
     private ItemsPanel itemsPanel;
-    private ResourceBundle bundle;
-    
+    private ResourceBundle strings;
     /*
      * Components
-     */              
+     */
     private AboutAction aboutAction;
     private JLabel bannerLabel;
     private CheckOutAction closeAttendanceAction;
@@ -470,7 +477,6 @@ public class MainFrame extends JFrame {
     private ToggleRaisedAdministratorAction toggleRaisedAdministratorAction;
     private ToggleSessionAction toggleSessionAction;
     private JTabbedPane workspacesTabbedPane;
-    
     /*
      * Singleton instance
      */
@@ -487,6 +493,4 @@ public class MainFrame extends JFrame {
         }
         return instance;
     }
-               
-
 }
