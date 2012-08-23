@@ -20,10 +20,6 @@ import census.business.StorageService;
 import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.TemporalySwapAdministratorDialog;
 import java.awt.event.ActionEvent;
-import java.beans.Beans;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
@@ -31,44 +27,40 @@ import org.apache.log4j.Logger;
  *
  * @author Danylo Vashchilenko
  */
-public class ToggleRaisedAdministratorAction extends CensusAction implements Observer {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+public class ToggleRaisedAdministratorAction extends BasicAction {
 
     public ToggleRaisedAdministratorAction() {
-        if(!Beans.isDesignTime()) {
-            update(null, null);
-        } else {
-            setText("Raise");
-        }
+        setText(getString("Text.Raise"));
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
             StorageService.getInstance().beginTransaction();
-            
-            if(SessionsService.getInstance().hasRaisedAdministrator()) {
+
+            if (SessionsService.getInstance().hasRaisedAdministrator()) {
                 SessionsService.getInstance().dropRaisedAdministrator();
             } else {
                 TemporalySwapAdministratorDialog swapAdminsitratorDialog = new TemporalySwapAdministratorDialog(getFrame());
                 swapAdminsitratorDialog.setVisible(true);
 
-                if(swapAdminsitratorDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+                if (swapAdminsitratorDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                     StorageService.getInstance().rollbackTransaction();
                     return;
                 }
 
-                if(swapAdminsitratorDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                if (swapAdminsitratorDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
                     throw swapAdminsitratorDialog.getException();
                 }
             }
-            
+
             StorageService.getInstance().commitTransaction();
-            
+
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
-            JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-            if(StorageService.getInstance().isTransactionActive()) {
+            JOptionPane.showMessageDialog(getFrame(), getString("Message.ProgramEncounteredError"), getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            if (StorageService.getInstance().isTransactionActive()) {
                 StorageService.getInstance().rollbackTransaction();
             }
             return;
@@ -76,19 +68,20 @@ public class ToggleRaisedAdministratorAction extends CensusAction implements Obs
     }
 
     @Override
-    public final void update(Observable o, Object arg) {
-        if(o == null) {
-            SessionsService.getInstance().addObserver(this);
-        }
-        
-        if(SessionsService.getInstance().hasOpenSession()) {
-            Boolean raised = SessionsService.getInstance().hasRaisedAdministrator();
-            setText(raised ? bundle.getString("Text.Drop") : bundle.getString("Text.Raise"));    
-            setEnabled(true);
-        } else {
-            setEnabled(false);
-            setText(bundle.getString("Text.Raise"));
-        }
+    protected void onSessionOpened() {
+        setText(getString("Text.Raise"));
+        setEnabled(true);
     }
 
+    @Override
+    protected void onSessionClosed() {
+        super.onSessionClosed();
+        setText(getString("Text.Raise"));
+    }
+
+    @Override
+    protected void onSessionChanged() {
+        Boolean raised = SessionsService.getInstance().hasRaisedAdministrator();
+        setText(raised ? getString("Text.Drop") : getString("Text.Raise"));
+    }
 }

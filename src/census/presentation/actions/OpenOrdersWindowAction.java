@@ -15,7 +15,6 @@
  */
 package census.presentation.actions;
 
-import census.business.SessionsService;
 import census.business.api.SecurityException;
 import census.presentation.MainFrame;
 import census.presentation.dialogs.AbstractDialog;
@@ -23,9 +22,6 @@ import census.presentation.dialogs.PickDateDialog;
 import census.presentation.util.UserExceptionHandler;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.beans.Beans;
-import java.util.Observable;
-import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import org.apache.log4j.Logger;
@@ -34,16 +30,12 @@ import org.apache.log4j.Logger;
  *
  * @author Danylo Vashchilenko
  */
-public class OpenOrdersWindowAction extends CensusAction {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
-    
-   public OpenOrdersWindowAction() {
-        if (!Beans.isDesignTime()) {
-            update(null, null);
-        }
-        
+public class OpenOrdersWindowAction extends BasicAction {
+
+    public OpenOrdersWindowAction() {
         setAccelerationKey(KeyStroke.getKeyStroke(KeyEvent.VK_2, KeyEvent.ALT_MASK));
-        setText(bundle.getString("Text.Orders"));
+        setText(getString("Text.Orders"));
+        
     }
 
     @Override
@@ -61,25 +53,16 @@ public class OpenOrdersWindowAction extends CensusAction {
             if (pickDateDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
                 return;
             }
-            
+
             MainFrame.getInstance().openOrdersTabForDate(pickDateDialog.getDate());
 
 
-        } catch(SecurityException ex) {
+        } catch (SecurityException ex) {
             UserExceptionHandler.getInstance().processException(ex);
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
-            JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-            return;}
-    }
-
-    @Override
-    public final void update(Observable o, Object arg) {
-        if (o == null) {
-            SessionsService.getInstance().addObserver(this);
+            JOptionPane.showMessageDialog(getFrame(), getString("Message.ProgramEncounteredError"), getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        Boolean open = SessionsService.getInstance().hasOpenSession();
-        setEnabled(open);
     }
-    
 }

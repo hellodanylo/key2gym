@@ -413,7 +413,7 @@ public class MainFrame extends JFrame {
         }
 
         @Override
-        public void sessionUpdated() {
+        public void sessionChanged() {
             AdministratorDTO administrator = AdministratorsService.getInstance().getById(sessionsService.getTopmostAdministratorId());
             setTitle(MessageFormat.format(strings.getString("Title.Census.withAdministrator"), new Object[]{administrator.getFullName()}));
         }

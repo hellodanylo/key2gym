@@ -22,5 +22,5 @@ package census.business.api;
 public interface SessionListener {
     public void sessionOpened();
     public void sessionClosed();
-    public void sessionUpdated();
+    public void sessionChanged();
 }

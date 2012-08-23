@@ -15,8 +15,10 @@
  */
 package census.presentation.actions;
 
+import census.business.SessionsService;
+import census.business.api.SessionListener;
 import census.presentation.MainFrame;
-import java.util.Observer;
+import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.KeyStroke;
@@ -27,10 +29,30 @@ import javax.swing.KeyStroke;
  * @author Danylo Vashchilenko
  *
  */
-public abstract class CensusAction extends AbstractAction implements Observer {
+public abstract class BasicAction extends AbstractAction {
 
-    public CensusAction() {
+    public BasicAction() {
+        strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
         
+        setEnabled(false);
+        
+        SessionsService.getInstance().addListener(new SessionListener() {
+
+            @Override
+            public void sessionOpened() {
+                onSessionOpened();
+            }
+
+            @Override
+            public void sessionClosed() {
+                onSessionClosed();
+            }
+
+            @Override
+            public void sessionChanged() {
+                onSessionChanged();
+            }
+        });
     }
 
     public void setText(String text) {
@@ -48,10 +70,41 @@ public abstract class CensusAction extends AbstractAction implements Observer {
     public void setSelected(Boolean selected) {
         putValue(AbstractAction.SELECTED_KEY, selected);
     }
+    
+    /**
+     * Called after a session has been opened.
+     */
+    protected void onSessionOpened() {
+        setEnabled(true);
+    }
+    
+    /**
+     * Called after the session has been closed.
+     */
+    protected void onSessionClosed() {
+        setEnabled(false);
+    }
+    
+    /**
+     * Called after the session has changed.
+     */
+    protected void onSessionChanged() {
+        
+    }
+    
+    protected ResourceBundle getStrings() {
+        return strings;
+    }
+    
+    protected String getString(String key) {
+        return getStrings().getString(key);
+    }
 
     protected MainFrame getFrame() {
         return MainFrame.getInstance();
     }
+    
+    private ResourceBundle strings;
 
     public static final String ACTION_GLOBAL = "ACTION_GLOBAL";
     public static final String ACTION_CONTEXT = "ACTION_CONTEXT";

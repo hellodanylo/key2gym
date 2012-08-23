@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package census.presentation.actions;
 
 import census.business.SessionsService;
@@ -22,10 +21,6 @@ import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.FreezeClientDialog;
 import census.presentation.dialogs.PickClientDialog;
 import java.awt.event.ActionEvent;
-import java.beans.Beans;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
@@ -33,14 +28,10 @@ import org.apache.log4j.Logger;
  *
  * @author Danylo Vashchilenko
  */
-public class FreezeClientAction extends CensusAction implements Observer {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
-    
-   public FreezeClientAction() {
-        setText(bundle.getString("Text.Freeze"));
-        if(!Beans.isDesignTime()) {
-            update(null, null);
-        }
+public class FreezeClientAction extends BasicAction {
+
+    public FreezeClientAction() {
+        setText(getString("Text.Freeze"));
     }
 
     @Override
@@ -80,8 +71,8 @@ public class FreezeClientAction extends CensusAction implements Observer {
 
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
-            JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-            if(StorageService.getInstance().isTransactionActive()) {
+            JOptionPane.showMessageDialog(getFrame(), getString("Message.ProgramEncounteredError"), getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            if (StorageService.getInstance().isTransactionActive()) {
                 StorageService.getInstance().rollbackTransaction();
             }
             return;
@@ -89,11 +80,12 @@ public class FreezeClientAction extends CensusAction implements Observer {
     }
 
     @Override
-    public final void update(Observable o, Object arg) {
-        if (o == null) {
-            SessionsService.getInstance().addObserver(this);
-        }
-        Boolean open = SessionsService.getInstance().hasOpenSession();
-        setEnabled(open);
+    protected void onSessionOpened() {
+        setEnabled(SessionsService.getInstance().getPermissionsLevel() <= SessionsService.PL_EXTENDED);
+    }
+
+    @Override
+    protected void onSessionChanged() {
+        setEnabled(SessionsService.getInstance().getPermissionsLevel() <= SessionsService.PL_EXTENDED);
     }
 }

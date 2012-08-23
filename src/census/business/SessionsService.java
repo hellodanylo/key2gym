@@ -35,7 +35,7 @@ import org.joda.time.DateTime;
  *
  * @author Danylo Vashchilenko
  */
-public class SessionsService extends Observable {
+public class SessionsService {
 
     protected SessionsService() {
         entityManager = StorageService.getInstance().getEntityManager();
@@ -84,9 +84,6 @@ public class SessionsService extends Observable {
 
         entityManager.flush();
 
-        setChanged();
-        notifyObservers();
-
         for (SessionListener listener : listeners) {
             listener.sessionOpened();
         }
@@ -121,11 +118,8 @@ public class SessionsService extends Observable {
 
         raisedAdministrator = administrator;
 
-        setChanged();
-        notifyObservers();
-
         for (SessionListener listener : listeners) {
-            listener.sessionUpdated();
+            listener.sessionChanged();
         }
 
         logger.info(administrator.getFullName() + " (" + administrator.getId() + ") swaped previous administrator.");
@@ -142,11 +136,8 @@ public class SessionsService extends Observable {
 
         raisedAdministrator = null;
 
-        setChanged();
-        notifyObservers();
-
         for (SessionListener listener : listeners) {
-            listener.sessionUpdated();
+            listener.sessionChanged();
         }
 
         logger.info(session.getAdministrator().getFullName() + " (" + session.getAdministrator().getId() + ") swaped back.");
@@ -173,9 +164,6 @@ public class SessionsService extends Observable {
         session = null;
 
         StorageService.getInstance().getEntityManager().flush();
-
-        setChanged();
-        notifyObservers();
 
         for (SessionListener listener : listeners) {
             listener.sessionClosed();

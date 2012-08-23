@@ -17,28 +17,21 @@ package census.presentation.actions;
 
 import census.presentation.dialogs.AboutDialog;
 import java.awt.event.ActionEvent;
-import java.util.Observable;
-import java.util.ResourceBundle;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public class AboutAction extends CensusAction {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+public class AboutAction extends BasicAction {
 
     public AboutAction() {
-        setText(bundle.getString("Text.About"));
+        setText(getString("Text.About"));
+        setEnabled(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         AboutDialog aboutDialog = new AboutDialog(getFrame());
         aboutDialog.setVisible(true);
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -10,7 +10,7 @@ import census.business.SessionsService;
 import census.business.StorageService;
 import census.business.api.SecurityException;
 import census.business.dto.OrderDTO;
-import census.presentation.actions.CensusAction;
+import census.presentation.actions.BasicAction;
 import census.presentation.actions.EditOrderAction;
 import census.presentation.util.OrdersTableCellRenderer;
 import census.presentation.util.OrdersTableModel;
@@ -113,7 +113,7 @@ public class OrdersPanel extends javax.swing.JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1) {
-                    new EditOrderAction().actionPerformed(new ActionEvent(this, 0, CensusAction.ACTION_CONTEXT));
+                    new EditOrderAction().actionPerformed(new ActionEvent(this, 0, BasicAction.ACTION_CONTEXT));
                 }
             }
         });

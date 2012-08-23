@@ -15,16 +15,11 @@
  */
 package census.presentation.actions;
 
-import census.business.SessionsService;
 import census.business.StorageService;
 import census.presentation.dialogs.AbstractDialog;
 import census.presentation.dialogs.EditClientDialog;
 import census.presentation.dialogs.PickClientDialog;
 import java.awt.event.ActionEvent;
-import java.beans.Beans;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
@@ -33,18 +28,12 @@ import org.apache.log4j.Logger;
  *
  * @author Danylo Vashchilenko
  */
-public class EditClientAction extends CensusAction implements Observer {
-
-    private ResourceBundle bundle;
+public class EditClientAction extends BasicAction {
 
     public EditClientAction() {
-        if (!Beans.isDesignTime()) {
-            update(null, null);
-        }
-        bundle  = ResourceBundle.getBundle("census/presentation/resources/Strings");
-        setText(bundle.getString("Text.Find"));
+        
+        setText(getString("Text.Find"));
         setIcon(new ImageIcon(getClass().getResource("/census/presentation/resources/search64.png")));
-
     }
 
     @Override
@@ -90,20 +79,11 @@ public class EditClientAction extends CensusAction implements Observer {
 
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
-            JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(getFrame(), getString("Message.ProgramEncounteredError"), getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
             if(StorageService.getInstance().isTransactionActive()) {
                 StorageService.getInstance().rollbackTransaction();
             }
             return;
         }
-    }
-
-    @Override
-    public final void update(Observable o, Object arg) {
-        if (o == null) {
-            SessionsService.getInstance().addObserver(this);
-        }
-        Boolean open = SessionsService.getInstance().hasOpenSession();
-        setEnabled(open);
     }
 }

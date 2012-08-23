@@ -23,9 +23,6 @@ import census.presentation.dialogs.PickDateDialog;
 import census.presentation.util.UserExceptionHandler;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.beans.Beans;
-import java.util.Observable;
-import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import org.apache.log4j.Logger;
@@ -34,17 +31,13 @@ import org.apache.log4j.Logger;
  *
  * @author Danylo Vashchilenko
  */
-public class OpenAttendancesWindowAction extends CensusAction {
-
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+public class OpenAttendancesWindowAction extends BasicAction {
 
     public OpenAttendancesWindowAction() {
-        if (!Beans.isDesignTime()) {
-            update(null, null);
-        }
 
         setAccelerationKey(KeyStroke.getKeyStroke(KeyEvent.VK_1, KeyEvent.ALT_MASK));
-        setText(bundle.getString("Text.Attendances"));
+        setText(getString("Text.Attendances"));
+
     }
 
     @Override
@@ -70,17 +63,8 @@ public class OpenAttendancesWindowAction extends CensusAction {
             UserExceptionHandler.getInstance().processException(ex);
         } catch (RuntimeException ex) {
             Logger.getLogger(this.getClass().getName()).error("RuntimeException", ex);
-            JOptionPane.showMessageDialog(getFrame(), bundle.getString("Message.ProgramEncounteredError"), bundle.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(getFrame(), getString("Message.ProgramEncounteredError"), getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
             return;
         }
-    }
-
-    @Override
-    public final void update(Observable o, Object arg) {
-        if (o == null) {
-            SessionsService.getInstance().addObserver(this);
-        }
-        Boolean open = SessionsService.getInstance().hasOpenSession();
-        setEnabled(open);
     }
 }

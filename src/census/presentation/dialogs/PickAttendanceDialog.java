@@ -54,7 +54,7 @@ public class PickAttendanceDialog extends AbstractDialog {
 
     }
 
-    private void initComponents() {
+    private void initComponents() throws BusinessException {
         
         setLayout(new FormLayout("4dlu, l:d, 3dlu, d:g, 4dlu", "4dlu, d:g, 3dlu, d, 4dlu, d, 4dlu"));
         
@@ -70,7 +70,7 @@ public class PickAttendanceDialog extends AbstractDialog {
         pack();
     }
 
-    private JComboBox createKeysComboBox() {
+    private JComboBox createKeysComboBox() throws BusinessException {
         
         keysComboBox = new JComboBox();
 
@@ -79,8 +79,7 @@ public class PickAttendanceDialog extends AbstractDialog {
          */
         List<KeyDTO> keys = KeysService.getInstance().getKeysTaken();
         if (keys.isEmpty()) {
-            UserExceptionHandler.getInstance().processException(new BusinessException(getString("Message.NoAttendanceIsOpen")));
-            getCancelAction().actionPerformed(null);
+            throw new BusinessException(getString("Message.NoAttendanceIsOpen"));
         }
         
         keysComboBox.setRenderer(new KeyListCellRenderer());
