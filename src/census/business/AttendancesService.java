@@ -219,6 +219,10 @@ public class AttendancesService extends BusinessService {
         if (key == null) {
             throw new ValidationException(bundle.getString("KeyIDInvalid"));
         }
+        
+        if (!entityManager.createNamedQuery("Key.findAvailable").getResultList().contains(key)) { //NOI18N
+            throw new BusinessException(bundle.getString("KeyNotAvailable"));
+        }
 
         /*
          * Build an attendance record.
