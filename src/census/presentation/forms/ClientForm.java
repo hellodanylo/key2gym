@@ -17,6 +17,9 @@ package census.presentation.forms;
 
 import census.business.SessionsService;
 import census.business.dto.ClientDTO;
+import census.presentation.editors.AttendancesBalanceEditor;
+import census.presentation.editors.ExpirationDateEditor;
+import census.presentation.editors.MoneyBalanceEditor;
 import census.presentation.util.*;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -105,42 +108,41 @@ public class ClientForm extends JPanel {
                 /*
                  * Expiration date
                  */
-                expirationDateTextField = new JTextField();
+                expirationDateTextField = new ExpirationDateEditor();
                 expirationDateTextField.setEnabled(isPriviliged);
                 builder.appendI15d("Label.ExpirationDate", expirationDateTextField);
                 builder.nextLine();
 
                 binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                        BeanProperty.create("expirationDate"), expirationDateTextField, BeanProperty.create("text"), "expirationDate");
-                binding.setConverter(new DateMidnightToStringConverter("Expiration Date", "dd-MM-yyyy"));
+                        BeanProperty.create("expirationDate"), expirationDateTextField, BeanProperty.create("value"), "expirationDate");
+                binding.setValidator(new NotNullValidator());
                 bindingGroup.addBinding(binding);
             } else if (column.equals(Column.ATTENDANCES_BALANCE)) {
                 /*
                  * Attendances balance
                  */
-                attendancesBalanceSpinner = new JTextField();
-                //attendancesBalanceSpinner.setModel(new SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
-                attendancesBalanceSpinner.setEnabled(isPriviliged);
-                builder.appendI15d("Label.AttendancesBalance", attendancesBalanceSpinner);
+                attendancesBalanceEditor = new AttendancesBalanceEditor();
+                attendancesBalanceEditor.setEnabled(isPriviliged);
+                builder.appendI15d("Label.AttendancesBalance", attendancesBalanceEditor);
                 builder.nextLine();
 
                 binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                        BeanProperty.create("attendancesBalance"), attendancesBalanceSpinner, BeanProperty.create("text"), "attendancesBalance");
-                binding.setConverter(new ShortToStringConverter("Attendances Balance", false));
+                        BeanProperty.create("attendancesBalance"), attendancesBalanceEditor, BeanProperty.create("value"), "attendancesBalance");
+                binding.setValidator(new NotNullValidator());
                 bindingGroup.addBinding(binding);
 
             } else if (column.equals(Column.MONEY_BALANCE)) {
                 /*
                  * Money balance
                  */
-                moneyBalanceTextField = new JTextField();
-                moneyBalanceTextField.setEnabled(isPriviliged);
-                builder.appendI15d("Label.MoneyBalance", moneyBalanceTextField);
+                moneyBalanceEditor = new MoneyBalanceEditor();
+                moneyBalanceEditor.setEnabled(isPriviliged);
+                builder.appendI15d("Label.MoneyBalance", moneyBalanceEditor);
                 builder.nextLine();
 
                 binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                        BeanProperty.create("moneyBalance"), moneyBalanceTextField, BeanProperty.create("text"), "moneyBalance");
-                binding.setConverter(new MoneyBigDecimalToStringConverter("Money Balance"));
+                        BeanProperty.create("moneyBalance"), moneyBalanceEditor, BeanProperty.create("value"), "moneyBalance");
+                binding.setValidator(new NotNullValidator());
                 bindingGroup.addBinding(binding);
             } else if (column.equals(Column.REGISTRATION_DATE)) {
                 /*
@@ -289,12 +291,12 @@ public class ClientForm extends JPanel {
      */
     private BindingGroup bindingGroup;
     private FormBindingListener formBindingListener;
-    private JTextField attendancesBalanceSpinner;
+    private AttendancesBalanceEditor attendancesBalanceEditor;
     private JTextField cardTextField;
-    private JTextField expirationDateTextField;
+    private ExpirationDateEditor expirationDateTextField;
     private JTextField fullNameTextField;
     private JTextField idTextField;
-    private JTextField moneyBalanceTextField;
+    private JTextField moneyBalanceEditor;
     private JScrollPane noteScrollPane;
     private JTextArea noteTextArea;
     private JTextField registrationDateTextField;

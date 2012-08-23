@@ -26,7 +26,7 @@ import javax.swing.table.AbstractTableModel;
  * @author Danylo Vashchilenko
  */
 public class ClientsTableModel extends AbstractTableModel {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public enum Column {ID, CARD, FULL_NAME};
     
@@ -63,11 +63,11 @@ public class ClientsTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         if (columns[columnIndex].equals(Column.ID)) {
-            return bundle.getString("Text.ID");
+            return strings.getString("Text.ID");
         } else if (columns[columnIndex].equals(Column.CARD)) {
-            return bundle.getString("Text.Card");
+            return strings.getString("Text.Card");
         } else if (columns[columnIndex].equals(Column.FULL_NAME)) {
-            return bundle.getString("Text.FullName");
+            return strings.getString("Text.FullName");
         }
         throw new IllegalArgumentException();
     }

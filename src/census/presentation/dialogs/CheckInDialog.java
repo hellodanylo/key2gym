@@ -262,8 +262,8 @@ public class CheckInDialog extends AbstractDialog {
                     cardTextField.setBackground(Color.WHITE);
                     cardTextField.setForeground(Color.BLACK);
                 } else {
-                    cardTextField.setBackground(ColorConstants.WARNING_BACKGROUND);
-                    cardTextField.setForeground(ColorConstants.WARNING_FOREGROUND);
+                    cardTextField.setBackground(ColorConstants.ERROR_BACKGROUND);
+                    cardTextField.setForeground(ColorConstants.ERROR_FOREGROUND);
                 }
             } else {
 

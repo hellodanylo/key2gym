@@ -17,7 +17,9 @@ package census.presentation.util;
 
 import census.business.api.ValidationException;
 import census.presentation.MainFrame;
+import java.text.MessageFormat;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import java.util.Set;
 import org.jdesktop.beansbinding.Binding;
 import org.jdesktop.beansbinding.Binding.SyncFailure;
@@ -31,6 +33,7 @@ import org.jdesktop.beansbinding.PropertyStateEvent;
 public class FormBindingListener implements BindingListener {
 
     private Set<Object> invalidTargets;
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public FormBindingListener() {
         this.invalidTargets = new HashSet<>();
@@ -51,11 +54,17 @@ public class FormBindingListener implements BindingListener {
     @Override
     public void syncFailed(Binding binding, SyncFailure failure) {
         if (failure.getType().equals(Binding.SyncFailureType.CONVERSION_FAILED)) {
-            if(failure.getConversionException() instanceof UnsupportedOperationException) {
+            if (failure.getConversionException() instanceof UnsupportedOperationException) {
                 return;
             }
             invalidTargets.add(binding.getTargetObject());
             UserExceptionHandler.getInstance().processException((ValidationException) failure.getConversionException().getCause());
+        } else if (failure.getType().equals(Binding.SyncFailureType.VALIDATION_FAILED)) {
+            invalidTargets.add(binding.getTargetObject());
+            
+            String message = MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"),
+                    binding.getName());
+            UserExceptionHandler.getInstance().processException(new ValidationException(message));
         }
     }
 
