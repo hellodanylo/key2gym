@@ -15,7 +15,6 @@
  */
 package census.presentation.util;
 
-import census.business.dto.AttendanceDTO;
 import census.business.dto.OrderDTO;
 import java.text.MessageFormat;
 import java.util.LinkedList;
@@ -28,10 +27,10 @@ import javax.swing.table.AbstractTableModel;
  * @author Danylo Vashchilenko
  */
 public class OrdersTableModel extends AbstractTableModel {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public enum Column {ID, SUBJECT, TOTAL, PAID};
-    private List<OrderDTO> financialActivities;
+    private List<OrderDTO> orders;
     private Column[] columns;
 
     public OrdersTableModel(Column[] columns) {
@@ -40,21 +39,21 @@ public class OrdersTableModel extends AbstractTableModel {
 
     public OrdersTableModel(Column[] columns, List<OrderDTO> attendances) {
         this.columns = columns;
-        this.financialActivities = attendances;
+        this.orders = attendances;
     }
 
-    public void setFinancialActivities(List<OrderDTO> financialActivities) {
-        this.financialActivities = financialActivities;
+    public void setFinancialActivities(List<OrderDTO> orders) {
+        this.orders = orders;
         fireTableDataChanged();
     }
 
-    public OrderDTO getFinancialActivityAt(int index) {
-        return financialActivities.get(index);
+    public OrderDTO getOrderAt(int index) {
+        return orders.get(index);
     }
 
     @Override
     public int getRowCount() {
-        return financialActivities.size();
+        return orders.size();
     }
 
     @Override
@@ -64,23 +63,23 @@ public class OrdersTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        OrderDTO financialActivity = financialActivities.get(rowIndex);
+        OrderDTO order = orders.get(rowIndex);
         if (columns[columnIndex].equals(Column.ID)) {
-            return MessageFormat.format("{0}", financialActivity.getId());
+            return MessageFormat.format("{0}", order.getId());
         } else if (columns[columnIndex].equals(Column.SUBJECT)) {
             String subject;
-            if (financialActivity.getAttendanceId() != null) {
-                subject = java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Text.Attendance.withIDAndKey"), new Object[] {financialActivity.getAttendanceId(), financialActivity.getKeyTitle()});
-            } else if (financialActivity.getClientId() != null) {
-                subject = java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Text.Client.withFullNameAndID"), new Object[] {financialActivity.getClientFullName(), financialActivity.getClientId()});
+            if (order.getAttendanceId() != null) {
+                subject = MessageFormat.format(strings.getString("Text.Attendance.withIDAndKey"), new Object[] {order.getAttendanceId(), order.getKeyTitle()});
+            } else if (order.getClientId() != null) {
+                subject = MessageFormat.format(strings.getString("Text.Client.withFullNameAndID"), new Object[] {order.getClientFullName(), order.getClientId()});
             } else {
-                subject = bundle.getString("Text.Other");
+                subject = strings.getString("Text.Other");
             }
             return subject;
         } else if (columns[columnIndex].equals(Column.TOTAL)) {
-            return financialActivity.getTotal().toPlainString();
+            return order.getTotal().toPlainString();
         } else if (columns[columnIndex].equals(Column.PAID)) {
-            return financialActivity.getPayment().toPlainString();
+            return order.getPayment().toPlainString();
         }
         throw new IndexOutOfBoundsException();
     }
@@ -88,13 +87,13 @@ public class OrdersTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         if (columns[columnIndex].equals(Column.ID)) {
-            return bundle.getString("Text.OrderID");
+            return strings.getString("Text.OrderID");
         } else if (columns[columnIndex].equals(Column.SUBJECT)) {
-            return bundle.getString("Text.Subject");
+            return strings.getString("Text.Subject");
         } else if (columns[columnIndex].equals(Column.TOTAL)) {
-            return bundle.getString("Text.Total");
+            return strings.getString("Text.Total");
         } else if (columns[columnIndex].equals(Column.PAID)) {
-            return bundle.getString("Text.Paid");
+            return strings.getString("Text.Paid");
         }
         throw new IndexOutOfBoundsException();
     }

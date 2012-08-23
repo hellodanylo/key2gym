@@ -26,7 +26,7 @@ import javax.swing.JList;
  * @author Danylo Vashchilenko
  */
 public class SexListCellRenderer extends DefaultListCellRenderer {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     @Override
     public Component getListCellRendererComponent(
@@ -34,11 +34,11 @@ public class SexListCellRenderer extends DefaultListCellRenderer {
         if (value instanceof ClientProfileDTO.Sex) {
             ClientProfileDTO.Sex sex = (ClientProfileDTO.Sex) value;
             if (sex.equals(ClientProfileDTO.Sex.MALE)) {
-                value = bundle.getString("Text.Male");
+                value = strings.getString("Text.Male");
             } else if (sex.equals(ClientProfileDTO.Sex.FEMALE)) {
-                value = bundle.getString("Text.Female");
+                value = strings.getString("Text.Female");
             } else {
-                value = bundle.getString("Text.Unknown");
+                value = strings.getString("Text.Unknown");
             }
         }
         return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);

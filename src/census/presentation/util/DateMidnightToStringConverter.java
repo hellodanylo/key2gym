@@ -16,6 +16,7 @@
 package census.presentation.util;
 
 import census.business.api.ValidationException;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
@@ -27,10 +28,11 @@ import org.joda.time.DateMidnight;
  * @author Danylo Vashchilenko
  */
 public class DateMidnightToStringConverter extends Converter<DateMidnight, String> {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     private String format;
     private String fieldName;
+    
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public DateMidnightToStringConverter(String fieldName, String format) {
         this.format = format;
@@ -51,7 +53,7 @@ public class DateMidnightToStringConverter extends Converter<DateMidnight, Strin
         try {
             return new DateMidnight(new SimpleDateFormat(format).parse(value));
         } catch (ParseException ex) {
-            throw new IllegalArgumentException(new ValidationException(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), new Object[] {fieldName})));
+            throw new IllegalArgumentException(new ValidationException(MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), new Object[] {fieldName})));
         }
     }
 }

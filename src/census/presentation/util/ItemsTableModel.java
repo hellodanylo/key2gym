@@ -26,7 +26,7 @@ import javax.swing.table.AbstractTableModel;
  * @author Danylo Vashchilenko
  */
 public class ItemsTableModel extends AbstractTableModel {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public enum Column {TITLE, PRICE, BARCODE, QUANTITY};
     
@@ -60,13 +60,13 @@ public class ItemsTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         if (columns[columnIndex].equals(Column.TITLE)) {
-            return bundle.getString("Text.Title");
+            return strings.getString("Text.Title");
         } else if (columns[columnIndex].equals(Column.PRICE)) {
-            return bundle.getString("Text.Price");
+            return strings.getString("Text.Price");
         } else if(columns[columnIndex].equals(Column.BARCODE)) {
-            return bundle.getString("Text.Barcode");
+            return strings.getString("Text.Barcode");
         } else if(columns[columnIndex].equals(Column.QUANTITY)) {
-            return bundle.getString("Text.Quantity");
+            return strings.getString("Text.Quantity");
         }
         throw new IllegalArgumentException();
     }

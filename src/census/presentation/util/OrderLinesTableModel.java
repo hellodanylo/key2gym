@@ -27,7 +27,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class OrderLinesTableModel extends AbstractTableModel {
 
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public enum Column {
 
@@ -63,19 +63,19 @@ public class OrderLinesTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         if (columns[columnIndex].equals(Column.ITEM_TITLE)) {
-            return bundle.getString("Text.Item");
+            return strings.getString("Text.Item");
         } else if (columns[columnIndex].equals(Column.ITEM_PRICE)) {
-            return bundle.getString("Text.Price");
+            return strings.getString("Text.Price");
         } else if (columns[columnIndex].equals(Column.ITEM_ID)) {
-            return bundle.getString("Text.ItemID");
+            return strings.getString("Text.ItemID");
         } else if (columns[columnIndex].equals(Column.QUANTITY)) {
-            return bundle.getString("Text.Quantity");
+            return strings.getString("Text.Quantity");
         } else if (columns[columnIndex].equals(Column.DISCOUNT_PERCENT)) {
-            return bundle.getString("Text.DiscountPercent");
+            return strings.getString("Text.DiscountPercent");
         } else if (columns[columnIndex].equals(Column.DISCOUNT_TITLE)) {
-            return bundle.getString("Text.Discount");
+            return strings.getString("Text.Discount");
         } else if (columns[columnIndex].equals(Column.TOTAL)) {
-            return bundle.getString("Text.Total");
+            return strings.getString("Text.Total");
         }
         throw new IllegalArgumentException();
     }

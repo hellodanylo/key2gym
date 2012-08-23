@@ -16,8 +16,8 @@
 package census.presentation.util;
 
 import census.business.api.ValidationException;
-import census.presentation.MainFrame;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import org.jdesktop.beansbinding.Converter;
 
@@ -26,7 +26,7 @@ import org.jdesktop.beansbinding.Converter;
  * @author Danylo Vashchilenko
  */
 public class MoneyBigDecimalToStringConverter extends Converter<BigDecimal, String> {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
     private String fieldName;
 
     public MoneyBigDecimalToStringConverter(String fieldName) {
@@ -38,7 +38,7 @@ public class MoneyBigDecimalToStringConverter extends Converter<BigDecimal, Stri
         try {
             return value.isEmpty() ? null : new BigDecimal(value);
         } catch(NumberFormatException ex) {
-            throw new IllegalArgumentException(new ValidationException(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), new Object[] {fieldName})));
+            throw new IllegalArgumentException(new ValidationException(MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), new Object[] {fieldName})));
         }
     }
 

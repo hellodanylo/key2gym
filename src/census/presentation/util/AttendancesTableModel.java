@@ -27,7 +27,7 @@ import javax.swing.table.AbstractTableModel;
  * @author Danylo Vashchilenko
  */
 public class AttendancesTableModel extends AbstractTableModel {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
     
     public enum Column {ID, BEGIN_DATE, BEGIN, KEY, CLIENT_ID, CLIENT_FULL_NAME, END};
 
@@ -86,19 +86,19 @@ public class AttendancesTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         if (columns[columnIndex].equals(Column.BEGIN)) {
-            return bundle.getString("Text.Beginning");
+            return strings.getString("Text.Beginning");
         } else if (columns[columnIndex].equals(Column.CLIENT_ID)) {
-            return bundle.getString("Text.ClientID");
+            return strings.getString("Text.ClientID");
         }  else if (columns[columnIndex].equals(Column.CLIENT_FULL_NAME)) {
-            return bundle.getString("Text.ClientFullName");
+            return strings.getString("Text.ClientFullName");
         }  else if (columns[columnIndex].equals(Column.KEY)) {
-            return bundle.getString("Text.Key");
+            return strings.getString("Text.Key");
         }  else if (columns[columnIndex].equals(Column.END)) {
-            return bundle.getString("Text.Ending");
+            return strings.getString("Text.Ending");
         } else if (columns[columnIndex].equals(Column.BEGIN_DATE)) {
-            return bundle.getString("Text.Date");
+            return strings.getString("Text.Date");
         } else if(columns[columnIndex].equals(Column.ID)) {
-            return bundle.getString("Text.AttendanceID");
+            return strings.getString("Text.AttendanceID");
         }
         throw new IndexOutOfBoundsException();
     }

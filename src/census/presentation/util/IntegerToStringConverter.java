@@ -17,6 +17,7 @@ package census.presentation.util;
 
 import census.business.api.ValidationException;
 import java.text.MessageFormat;
+import java.util.ResourceBundle;
 import org.jdesktop.beansbinding.Converter;
 
 /**
@@ -27,6 +28,7 @@ public class IntegerToStringConverter extends Converter<Integer, String> {
 
     private String fieldName;
     private boolean canBeEmpty;
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public IntegerToStringConverter(String fieldName, boolean canBeEmpty) {
         this.fieldName = fieldName;
@@ -36,10 +38,10 @@ public class IntegerToStringConverter extends Converter<Integer, String> {
     @Override
     public Integer convertReverse(String value) {
         value = value.trim();
-        
+
         try {
-            if(value.isEmpty()) {
-                if(!canBeEmpty) {
+            if (value.isEmpty()) {
+                if (!canBeEmpty) {
                     throw new NumberFormatException();
                 } else {
                     return null;
@@ -47,7 +49,7 @@ public class IntegerToStringConverter extends Converter<Integer, String> {
             }
             return Integer.parseInt(value);
         } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(new ValidationException(MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), new Object[] {fieldName})));
+            throw new IllegalArgumentException(new ValidationException(MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), new Object[]{fieldName})));
         }
     }
 

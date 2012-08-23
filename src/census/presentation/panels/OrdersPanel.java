@@ -159,7 +159,7 @@ public class OrdersPanel extends javax.swing.JPanel {
             return null;
         }
 
-        return financialActivitiesTableModel.getFinancialActivityAt(index);
+        return financialActivitiesTableModel.getOrderAt(index);
     }
 
     public void setDate(DateMidnight date) throws SecurityException {

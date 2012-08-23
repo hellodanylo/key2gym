@@ -27,7 +27,7 @@ import javax.swing.table.AbstractTableModel;
  * @author Danylo Vashchilenko
  */
 public class FreezesTableModel extends AbstractTableModel {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
     
     public enum Column {CLIENT_FULL_NAME, DATE_ISSUED, DAYS, DATE_EXPIRED, ADMINISTRATOR_FULL_NAME, NOTE};
 
@@ -85,17 +85,17 @@ public class FreezesTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         if (columns[columnIndex].equals(Column.CLIENT_FULL_NAME)) {
-            return bundle.getString("Text.Client");
+            return strings.getString("Text.Client");
         } else if (columns[columnIndex].equals(Column.DATE_ISSUED)) {
-            return bundle.getString("Text.Issued");
+            return strings.getString("Text.Issued");
         } else if (columns[columnIndex].equals(Column.DAYS)) {
-            return bundle.getString("Text.Days");
+            return strings.getString("Text.Days");
         } else if (columns[columnIndex].equals(Column.DATE_EXPIRED)) {
-            return bundle.getString("Text.Expiration");
+            return strings.getString("Text.Expiration");
         } else if (columns[columnIndex].equals(Column.ADMINISTRATOR_FULL_NAME)) {
-            return bundle.getString("Text.Administrator");
+            return strings.getString("Text.Administrator");
         } else if(columns[columnIndex].equals(Column.NOTE)) {
-            return bundle.getString("Text.Note");
+            return strings.getString("Text.Note");
         }
         throw new IndexOutOfBoundsException();
     }

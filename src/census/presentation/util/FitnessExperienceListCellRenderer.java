@@ -26,7 +26,7 @@ import javax.swing.JList;
  * @author Danylo Vashchilenko
  */
 public class FitnessExperienceListCellRenderer extends DefaultListCellRenderer {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     @Override
     public Component getListCellRendererComponent(
@@ -34,11 +34,11 @@ public class FitnessExperienceListCellRenderer extends DefaultListCellRenderer {
         if (value instanceof ClientProfileDTO.FitnessExperience) {
             ClientProfileDTO.FitnessExperience fitnessExperience = (ClientProfileDTO.FitnessExperience) value;
             if (fitnessExperience.equals(ClientProfileDTO.FitnessExperience.NO)) {
-                value = bundle.getString("Text.No");
+                value = strings.getString("Text.No");
             } else if (fitnessExperience.equals(ClientProfileDTO.FitnessExperience.UNKNOWN)) {
-                value = bundle.getString("Text.Unknown");
+                value = strings.getString("Text.Unknown");
             } else {
-                value = bundle.getString("Text.Yes");
+                value = strings.getString("Text.Yes");
             }
         }
         return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);

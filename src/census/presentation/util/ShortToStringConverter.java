@@ -17,6 +17,7 @@ package census.presentation.util;
 
 import census.business.api.ValidationException;
 import java.text.MessageFormat;
+import java.util.ResourceBundle;
 import org.jdesktop.beansbinding.Converter;
 
 /**
@@ -27,6 +28,8 @@ public class ShortToStringConverter extends Converter<Short, String> {
 
     private String fieldName;
     private boolean canBeEmpty;
+    
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public ShortToStringConverter(String fieldName, boolean canBeEmpty) {
         this.fieldName = fieldName;
@@ -47,7 +50,7 @@ public class ShortToStringConverter extends Converter<Short, String> {
             }
             return Short.parseShort(value);
         } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException(new ValidationException(MessageFormat.format(java.util.ResourceBundle.getBundle("census/presentation/resources/Strings").getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), new Object[] {fieldName})));
+            throw new IllegalArgumentException(new ValidationException(MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), new Object[] {fieldName})));
         }
     }
 

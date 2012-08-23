@@ -44,7 +44,7 @@ public class OrdersTableCellRenderer implements TableCellRenderer {
         }
         
         if (row != -1) {
-            OrderDTO financialActivity = ((OrdersTableModel)table.getModel()).getFinancialActivityAt(row);
+            OrderDTO financialActivity = ((OrdersTableModel)table.getModel()).getOrderAt(row);
             renderer.setBackground(financialActivity.getTotal().compareTo(financialActivity.getPayment()) > 0
                     ? unpaidFinancialActivityColor : Color.white);
         }

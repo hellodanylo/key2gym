@@ -27,7 +27,7 @@ import javax.swing.table.AbstractTableModel;
  * @author Danylo Vashchilenko
  */
 public class SubscriptionsTableModel extends AbstractTableModel {
-    private ResourceBundle bundle = ResourceBundle.getBundle("census/presentation/resources/Strings");
+    private ResourceBundle strings = ResourceBundle.getBundle("census/presentation/resources/Strings");
 
     public enum Column {TITLE, PRICE, BARCODE, UNITS, TERM_DAYS, TERM_MONTHS, TERM_YEARS, TIME_RANGE};
     
@@ -58,21 +58,21 @@ public class SubscriptionsTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         if (columns[columnIndex].equals(Column.TITLE)) {
-            return bundle.getString("Text.Title");
+            return strings.getString("Text.Title");
         } else if (columns[columnIndex].equals(Column.PRICE)) {
-            return bundle.getString("Text.Price");
+            return strings.getString("Text.Price");
         } else if(columns[columnIndex].equals(Column.BARCODE)) {
-            return bundle.getString("Text.Barcode");
+            return strings.getString("Text.Barcode");
         } else if(columns[columnIndex].equals(Column.TERM_DAYS)) {
-            return bundle.getString("Text.D");
+            return strings.getString("Text.D");
         } else if(columns[columnIndex].equals(Column.TERM_MONTHS)) {
-            return bundle.getString("Text.M");
+            return strings.getString("Text.M");
         } else if(columns[columnIndex].equals(Column.TERM_YEARS)) {
-            return bundle.getString("Text.Y");
+            return strings.getString("Text.Y");
         } else if(columns[columnIndex].equals(Column.UNITS)) {
-            return bundle.getString("Text.Units");
+            return strings.getString("Text.Units");
         }else if(columns[columnIndex].equals(Column.TIME_RANGE)) {
-            return bundle.getString("Text.TimeRange");
+            return strings.getString("Text.TimeRange");
         }
         throw new IllegalArgumentException();
     }
