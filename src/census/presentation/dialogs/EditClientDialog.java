@@ -108,14 +108,14 @@ public class EditClientDialog extends AbstractDialog {
     private void buildDialog() {
         setLayout(new FormLayout("4dlu, d:g, 4dlu", "4dlu, f:[100dlu, m]:g, 4dlu, d, 4dlu"));
 
-        add(createTabbedPane(),   CC.xy(2, 2));
+        add(createTabbedPane(), CC.xy(2, 2));
         add(createButtonsPanel(), CC.xy(2, 4));
 
         getRootPane().setDefaultButton(okButton);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         pack();
     }
-    
+
     private JComponent createTabbedPane() {
         tabbedPane = new JTabbedPane();
 
@@ -124,7 +124,7 @@ public class EditClientDialog extends AbstractDialog {
         tabbedPane.addTab(getString("Tab.Attendances"), createAttendanceTab()); // NOI18N
         tabbedPane.addTab(getString("Tab.Freezes"), createFreezesTab()); // NOI18N
         tabbedPane.addTab(getString("Tab.Orders"), createOrdersTab()); // NOI18N
-        
+
         return tabbedPane;
     }
 
@@ -133,15 +133,14 @@ public class EditClientDialog extends AbstractDialog {
         panel.setLayout(new FormLayout("f:p:g", "4dlu, f:p:g"));
 
         List<Column> columnsList = Arrays.asList(
-                Column.ID, 
+                Column.ID,
                 Column.FULL_NAME,
                 Column.CARD,
                 Column.REGISTRATION_DATE,
                 Column.MONEY_BALANCE,
                 Column.ATTENDANCES_BALANCE,
                 Column.EXPIRATION_DATE,
-                Column.NOTE
-        );
+                Column.NOTE);
         clientPanel = new ClientForm(columnsList);
         panel.add(clientPanel, CC.xy(1, 2));
 
@@ -231,32 +230,33 @@ public class EditClientDialog extends AbstractDialog {
         JPanel panel = new JPanel(new FormLayout("r:d, 3dlu, f:d:g", "4dlu, d, 4dlu, f:d:g"));
 
         purchasesFilterLabel = new JLabel(getString("Label.Filter")); // NOI18N
-        panel.add(purchasesFilterLabel,     CC.xy(1, 2));
-        
+        panel.add(purchasesFilterLabel, CC.xy(1, 2));
+
         String[] periods = new String[]{
             getString("Text.Last7Days"),
             getString("Text.LastMonth"),
             getString("Text.Last3Months"),
             getString("Text.All")
         };
-        
+
         purchasesFilterComboBox = new JComboBox();
         purchasesFilterComboBox.setModel(new DefaultComboBoxModel(periods));
         purchasesFilterComboBox.addItemListener(new ItemListener() {
+
             @Override
             public void itemStateChanged(ItemEvent evt) {
                 purchasesFilterComboBoxItemStateChanged(evt);
             }
         });
-        panel.add(purchasesFilterComboBox,  CC.xy(3, 2));
+        panel.add(purchasesFilterComboBox, CC.xy(3, 2));
 
         purchasesTree = new JTree();
         purchasesTree.setRootVisible(false);
-        
+
         purchasesTreeScrollPane = new JScrollPane();
         purchasesTreeScrollPane.setViewportView(purchasesTree);
         panel.add(purchasesTreeScrollPane, CC.xywh(1, 4, 3, 1));
-        
+
         return panel;
     }
 
@@ -400,26 +400,22 @@ public class EditClientDialog extends AbstractDialog {
         TableModel attendancesTableModel;
 
         // The administrator needs to have PL_ALL permissions level to view old attendances
-        if (sessionsService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            AttendancesTableModel.Column[] attendancesTableColumns =
-                    new AttendancesTableModel.Column[]{
-                AttendancesTableModel.Column.BEGIN_DATE,
-                AttendancesTableModel.Column.BEGIN,
-                AttendancesTableModel.Column.KEY,
-                AttendancesTableModel.Column.END
-            };
-            List<AttendanceDTO> attendances;
-            try {
-                attendances = attendancesService.findAttendancesByClient(client.getId());
-            } catch (ValidationException ex) {
-                throw new RuntimeException(ex);
-            }
-            attendancesTableModel = new AttendancesTableModel(attendancesTableColumns, attendances);
-            attendancesTable.setModel(attendancesTableModel);
-        } else {
-            tabbedPane.setComponentAt(tabbedPane.indexOfComponent(attendancesTableScrollPane), new JLabel(getString("Message.AccessIsDenied"), JLabel.CENTER));
+        AttendancesTableModel.Column[] attendancesTableColumns =
+                new AttendancesTableModel.Column[]{
+            AttendancesTableModel.Column.BEGIN_DATE,
+            AttendancesTableModel.Column.BEGIN,
+            AttendancesTableModel.Column.KEY,
+            AttendancesTableModel.Column.END
+        };
+        List<AttendanceDTO> attendances;
+        try {
+            attendances = attendancesService.findAttendancesByClient(client.getId());
+        } catch (ValidationException ex) {
+            throw new RuntimeException(ex);
         }
-
+        attendancesTableModel = new AttendancesTableModel(attendancesTableColumns, attendances);
+        attendancesTable.setModel(attendancesTableModel);
+        
         /*
          * Freezes tab
          */
