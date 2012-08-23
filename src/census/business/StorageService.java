@@ -63,7 +63,7 @@ public class StorageService extends Observable {
         return entityManager;
     }
 
-    public void beginTransaction() throws IllegalStateException {
+    public void beginTransaction() {
         entityManager.getTransaction().begin();
     }
 

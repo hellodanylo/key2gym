@@ -109,7 +109,7 @@ public class ClientForm extends JPanel {
                  * Expiration date
                  */
                 expirationDateTextField = new ExpirationDateEditor();
-                expirationDateTextField.setEnabled(isPriviliged);
+                expirationDateTextField.setEditable(isPriviliged);
                 builder.appendI15d("Label.ExpirationDate", expirationDateTextField);
                 builder.nextLine();
 
@@ -122,7 +122,7 @@ public class ClientForm extends JPanel {
                  * Attendances balance
                  */
                 attendancesBalanceEditor = new AttendancesBalanceEditor();
-                attendancesBalanceEditor.setEnabled(isPriviliged);
+                attendancesBalanceEditor.setEditable(isPriviliged);
                 builder.appendI15d("Label.AttendancesBalance", attendancesBalanceEditor);
                 builder.nextLine();
 
@@ -136,7 +136,7 @@ public class ClientForm extends JPanel {
                  * Money balance
                  */
                 moneyBalanceEditor = new MoneyBalanceEditor();
-                moneyBalanceEditor.setEnabled(isPriviliged);
+                moneyBalanceEditor.setEditable(isPriviliged);
                 builder.appendI15d("Label.MoneyBalance", moneyBalanceEditor);
                 builder.nextLine();
 
@@ -149,7 +149,7 @@ public class ClientForm extends JPanel {
                  * Registration date
                  */
                 registrationDateTextField = new JTextField();
-                registrationDateTextField.setEnabled(isPriviliged);
+                registrationDateTextField.setEditable(isPriviliged);
                 builder.appendI15d("Label.RegistrationDate", registrationDateTextField);
                 builder.nextLine();
 

@@ -87,10 +87,9 @@ public class CensusStarter {
          */
         StorageService.getInstance();
 
-        //<editor-fold defaultstate="collapsed" desc="Reading and applying applicaiton properties">
         ResourceBundle applicationProperties = ResourceBundle.getBundle("etc/census");
 
-        Locale.setDefault(new Locale(applicationProperties.getString("locale.language"), applicationProperties.getString("locale.language")));
+        Locale.setDefault(new Locale(applicationProperties.getString("locale.language"), applicationProperties.getString("locale.country")));
 
         String ui = applicationProperties.getString("ui");
         try {
@@ -103,12 +102,9 @@ public class CensusStarter {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             logger.fatal("Failed to change the L&F!");
         }
-        //</editor-fold>
-
-        logger.info("Started!");
         
-        //<editor-fold defaultstate="collapsed" desc="Creating and launching a MainFrame">
-
+        logger.info("Started!");
+ 
         try {
             EventQueue.invokeAndWait(new Runnable() {
                 @Override
@@ -129,7 +125,6 @@ public class CensusStarter {
                 }
             }
         }
-        //</editor-fold>
 
         Logger.getLogger(CensusStarter.class.getName()).info("Shutting down!");
         StorageService.getInstance().closeEntityManager();

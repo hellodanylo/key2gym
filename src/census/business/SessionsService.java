@@ -40,7 +40,7 @@ public class SessionsService extends Observable {
     protected SessionsService() {
         entityManager = StorageService.getInstance().getEntityManager();
         attemptsLeft = 5;
-        bundle = ResourceBundle.getBundle("census/business/resources/Strings");
+        strings = ResourceBundle.getBundle("census/business/resources/Strings");
         listeners = new HashSet<>();
     }
 
@@ -116,7 +116,7 @@ public class SessionsService extends Observable {
         Administrator administrator = authenticateAdministrator(username, password);
 
         if (session.getAdministrator().equals(administrator)) {
-            throw new BusinessException(bundle.getString("CurrentSessionWasOpennedBySameAdministrator"));
+            throw new BusinessException(strings.getString("CurrentSessionWasOpennedBySameAdministrator"));
         }
 
         raisedAdministrator = administrator;
@@ -137,7 +137,7 @@ public class SessionsService extends Observable {
 
     public void dropRaisedAdministrator() {
         if (raisedAdministrator == null) {
-            throw new IllegalStateException(bundle.getString("NoRasiedPermissionsLevel"));
+            throw new IllegalStateException(strings.getString("NoRasiedPermissionsLevel"));
         }
 
         raisedAdministrator = null;
@@ -227,12 +227,12 @@ public class SessionsService extends Observable {
             }
 
             if (attemptsLeft == 0) {
-                throw new BusinessException(bundle.getString("LimitOfFailedAttemtsReached"));
+                throw new BusinessException(strings.getString("LimitOfFailedAttemtsReached"));
             }
         }
 
         if (!StorageService.getInstance().isTransactionActive()) {
-            throw new IllegalStateException(bundle.getString("TransactionNotActive"));
+            throw new IllegalStateException(strings.getString("TransactionNotActive"));
         }
 
         /*
@@ -272,7 +272,7 @@ public class SessionsService extends Observable {
                 recoverAttemptsTime = new DateTime().plusMinutes(1);
             }
             attemptsLeft--;
-            throw new ValidationException(MessageFormat.format(bundle.getString("UsernameAndPasswordCombinationInvalid"), attemptsLeft));
+            throw new ValidationException(MessageFormat.format(strings.getString("UsernameAndPasswordCombinationInvalid"), attemptsLeft));
         }
 
         return administrator;
@@ -319,7 +319,7 @@ public class SessionsService extends Observable {
      * Storage
      */
     private EntityManager entityManager;
-    private ResourceBundle bundle;
+    private ResourceBundle strings;
     private DateTime recoverAttemptsTime;
     private Short attemptsLeft;
     private static final short ATTEMPTS_LIMIT = 5;

@@ -40,7 +40,7 @@ public class CloseableTabPanel extends javax.swing.JPanel {
     }
 
     private void initComponents() {
-        setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
         setOpaque(false);
         
         add(new JLabel(text));

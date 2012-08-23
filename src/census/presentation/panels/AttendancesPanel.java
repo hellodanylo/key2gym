@@ -98,7 +98,7 @@ public class AttendancesPanel extends JPanel {
          */
         attendancesCountTextField = new javax.swing.JTextField();
         attendancesCountTextField.setEditable(false);
-        attendancesCountTextField.setColumns(5);
+        attendancesCountTextField.setColumns(8);
     }                   
     
     /**
