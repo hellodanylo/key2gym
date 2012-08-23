@@ -8,7 +8,7 @@
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
 <project name="Census" default="default" basedir=".">
-    <description>Builds, tests, and runs the project Census.</description>
+    <description>Builds, tests, and runs the Key2Gym project.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
@@ -94,7 +94,7 @@
     </target>
 
     <target name="release" depends="clean,jar,doc" description="Builds a distribution that can be deployed.">
-        <echo message="Preparing a distribution of Census ${version}" />
+        <echo message="Preparing a distribution of Key2Gym ${version}" />
         
         <!-- Copies mysql files to the distribution -->
         <copy todir="${dist.dir}/${mysql.dir}">
@@ -106,7 +106,7 @@
         <tstamp>
             <format property="TODAY" pattern="dd MMMM YYYY hh:mm:ss aa" />
         </tstamp>
-        <echo output="${dist.dir}/build" message="Census v${version} (${TODAY})"/>
+        <echo output="${dist.dir}/build" message="Key2Gym v${version} (${TODAY})"/>
         
         <!-- Copies legal notices and licenses -->
         <copy todir="${dist.dir}">

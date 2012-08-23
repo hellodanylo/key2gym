@@ -10,7 +10,7 @@ how to install Java Runtime Environment on your target OS.
 
 ## Database
 
-Census uses external Relational Database Management System (RDBMS) to keep all the information.
+Key2Gym uses external Relational Database Management System (RDBMS) to keep all the information.
 As for now the only supported RDBMS is MySQL. The program has been intensively
 tested with MySQL 5.1, however the later version should work as well. 
 See the [MySQL documentation](http://dev.mysql.com/doc/), if you do not know how to do any of the steps below: 
@@ -23,17 +23,17 @@ Open it and place the following lines in the `mysqld` section:
 	character-set-server=utf8
 	collation_server=utf8_unicode_ci
 3. Restart the server
-4. Execute the `mysql/census.sql` SQL script using the `mysql` client. 
+4. Execute the `mysql/key2gym.sql` SQL script using the `mysql` client. 
 Note that the script only contains tables structure, which means you have to `create` and `use` a database on your own before running the script.
-	mysql> create database `census`;
-	mysql> use `census`;
-	mysql> source dist/census.sql;
+	mysql> create database `key2gym`;
+	mysql> use `key2gym`;
+	mysql> source dist/mysql/schema_r4.sql;
 
 TODO: Describe how to set up the database.
 
-## Census
+## Key2Gym
 
 1. Unzip the distribution archive to the target folder.
-2. You can now run the program with `java -jar census.jar`.
+2. You can now run the program with `java -jar key2gym.jar`.
 
-You might want to read the [Configuration](./configuration.hmtl) to perform basic set up of Census.
+You might want to read the [Configuration](./configuration.hmtl) to perform basic set up of Key2Gym.

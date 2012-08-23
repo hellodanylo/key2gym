@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-  <persistence-unit name="Census PU" transaction-type="RESOURCE_LOCAL">
+  <persistence-unit name="PU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>census.persistence.Key</class>
-    <class>census.persistence.Item</class>
-    <class>census.persistence.ItemSubscription</class>
-    <class>census.persistence.ClientProfile</class>
-    <class>census.persistence.Client</class>
-    <class>census.persistence.AdSource</class>
-    <class>census.persistence.Attendance</class>
-    <class>census.persistence.OrderEntity</class>
-    <class>census.persistence.OrderLine</class>
-    <class>census.persistence.Administrator</class>
-    <class>census.persistence.Session</class>
-    <class>census.persistence.ClientFreeze</class>
-    <class>census.persistence.Property</class>
-    <class>census.persistence.CashAdjustment</class>
-    <class>census.persistence.TimeSplit</class>
-    <class>census.persistence.Discount</class>
+    <class>org.key2gym.persistence.Discount</class>
+    <class>org.key2gym.persistence.Attendance</class>
+    <class>org.key2gym.persistence.ItemSubscription</class>
+    <class>org.key2gym.persistence.OrderLine</class>
+    <class>org.key2gym.persistence.AdSource</class>
+    <class>org.key2gym.persistence.Property</class>
+    <class>org.key2gym.persistence.Discount</class>
+    <class>org.key2gym.persistence.CashAdjustment</class>
+    <class>org.key2gym.persistence.Item</class>
+    <class>org.key2gym.persistence.ClientFreeze</class>
+    <class>org.key2gym.persistence.ClientProfile</class>
+    <class>org.key2gym.persistence.Administrator</class>
+    <class>org.key2gym.persistence.Client</class>
+    <class>org.key2gym.persistence.Session</class>
+    <class>org.key2gym.persistence.TimeSplit</class>
+    <class>org.key2gym.persistence.OrderEntity</class>
+    <class>org.key2gym.persistence.Key</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="eclipselink.logging.logger" value="org.eclipse.persistence.logging.CommonsLoggingSessionLog"/>

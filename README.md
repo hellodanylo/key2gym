@@ -1,7 +1,7 @@
-# Census
+# Key2Gym
 
 ## About
-Census is a free sofware for running and maintaing gyms and other membership-based clubs or enterprises.
+Key2Gym is a free sofware for running and maintaing gyms and other membership-based clubs or enterprises.
 
 It helps you to:
 * Keep track of clients and their memberships
@@ -18,7 +18,7 @@ You need:
 
 1. Fork or download the repository.
 2. `cd` to the repository's root folder and run `ant release`.
-3. You can now run Census as `cd dist && java -jar census.jar`.
+3. You can now run Key2Gym as `cd dist && java -jar key2gym.jar`.
 
 Note that you have to deploy the whole environment to check out all the features.
 
