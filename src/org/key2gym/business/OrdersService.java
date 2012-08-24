@@ -479,7 +479,7 @@ public class OrdersService extends BusinessService {
          * Arguments validation.
          */
         if (orderId == null) {
-            throw new NullPointerException("The finacialActivityId is null."); //NOI18N
+            throw new NullPointerException("The orderId is null."); //NOI18N
         }
 
         if (itemId == null) {
@@ -536,11 +536,9 @@ public class OrdersService extends BusinessService {
              */
             if (quantity == 0) {
                 throw new BusinessException(bundle.getString("ItemNotInStock"));
-            } else {
-                item.setQuantity(new Integer(quantity - 1).shortValue());
             }
         }
-
+        
         /*
          * Business logic specific to orders associated with
          * clients.
@@ -594,6 +592,14 @@ public class OrdersService extends BusinessService {
         }
 
         /*
+         * The change should be here, because have to change the date after
+         * all checks have been performed.
+         */
+        if(quantity != null) {
+            item.setQuantity(new Integer(quantity - 1).shortValue());
+        }
+
+        /*
          * Attemps to find an appropriate order line.
          * Due to JPQL limitations we need a separate query,
          * when the order line's discount is null. Criteria API, JDO?
@@ -633,6 +639,7 @@ public class OrdersService extends BusinessService {
             List<OrderLine> orderLines = order.getOrderLines();
             if (orderLines == null) {
                 orderLines = new LinkedList<>();
+                order.setOrderLines(orderLines);
             }
             orderLines.add(orderLine);
         } else {
@@ -709,7 +716,7 @@ public class OrdersService extends BusinessService {
         }
 
         Property timeRangeMismatch = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
-        if (orderLine.getItem().getId().toString().equals(timeRangeMismatch.getString())) {
+        if (orderLine.getItem().getId().equals(timeRangeMismatch.getShort())) {
             throw new BusinessException(bundle.getString("ItemEnforcedCanNotBeRemoved"));
         }
 
@@ -858,7 +865,7 @@ public class OrdersService extends BusinessService {
             }
 
             /*
-             * Changes the client's money balance. TODO: note change
+             * Changes the client's money balance.
              */
             client.setMoneyBalance(newMoneyBalance);
         }
