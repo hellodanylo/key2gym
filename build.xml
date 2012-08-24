@@ -59,7 +59,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="Census-impl.jar">
+        <target name="run" depends="Key2Gym-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>
@@ -114,7 +114,7 @@
         </copy>
         
         <!-- Zips the distribution -->
-        <zip destfile="${dist.dir}/Census_v${version}.zip">
+        <zip destfile="${dist.dir}/Key2Gym_v${version}.zip">
             <fileset dir="${dist.dir}" />
         </zip>
     </target>
