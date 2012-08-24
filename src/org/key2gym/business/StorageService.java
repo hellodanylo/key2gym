@@ -25,6 +25,7 @@ import java.util.Observable;
 import java.util.Properties;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -55,7 +56,14 @@ public class StorageService extends Observable {
 
         properties.put("javax.persistence.jdbc.password", config.get("password"));
         properties.put("javax.persistence.jdbc.user", config.get("user"));
+        
+        if(config.containsKey("ddl")) {
+            properties.put("eclipselink.ddl-generation", config.get("ddl"));
+            properties.put("eclipselink.ddl-generation.table-creation-suffix", "engine=InnoDB");
+        }
 
+        Logger.getLogger(StorageService.class.getName()).info("Connecting to the storage...");
+        
         entityManager = Persistence.createEntityManagerFactory("PU", properties).createEntityManager();
     }
 
