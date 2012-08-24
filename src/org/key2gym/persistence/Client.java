@@ -44,13 +44,14 @@ public class Client {
     @Id
     @Basic(optional = false)
     @Column(name = "id_cln")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Short id;
         
     @Column(name = "card")
     private Integer card;
 
     @Basic(optional = false)
-    @Column(name = "money_balance")
+    @Column(name = "money_balance", nullable=false)
     private BigDecimal moneyBalance;
     
     @OneToMany(mappedBy = "client")
@@ -61,25 +62,25 @@ public class Client {
        
     @Basic(optional = false)
     @Lob
-    @Column(name = "full_name")
+    @Column(name = "full_name", nullable=false)
     private String fullName;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "note")
+    @Column(name = "note", nullable=false)
     private String note;
     
     @Basic(optional = false)
-    @Column(name = "registration_date")
+    @Column(name = "registration_date", nullable=false)
     @Temporal(TemporalType.DATE)
     private Date registrationDate;
     
     @Basic(optional = false)
-    @Column(name = "attendances_balance")
+    @Column(name = "attendances_balance", nullable=false)
     private short attendancesBalance;
     
     @Basic(optional = false)
-    @Column(name = "expiration_date")
+    @Column(name = "expiration_date", nullable=false)
     @Temporal(TemporalType.DATE)
     private Date expirationDate;
     

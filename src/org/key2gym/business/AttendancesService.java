@@ -43,14 +43,12 @@ import org.joda.time.LocalTime;
 public class AttendancesService extends BusinessService {
 
     /**
-     * Checks in a registered client.
-     * <p>
-     * 
-     * <ul>
-     * <li> The client's attendances balance has to be more than 0 </li>
-     * <li> The expiration date has to be at least tomorrow </li>
-     * <li> The key has to have 0 open attendances associated with it </li>
-
+     * Checks in a registered client. <p>
+     *
+     * <ul> <li> The client's attendances balance has to be more than 0 </li>
+     * <li> The expiration date has to be at least tomorrow </li> <li> The key
+     * has to have 0 open attendances associated with it </li>
+     *
      * </ul>
      *
      * @param clientId the client's ID
@@ -59,7 +57,7 @@ public class AttendancesService extends BusinessService {
      * @throws NullPointerException if any of the arguments is null
      * @throws BusinessException if current business rules restrict this
      * operation
-     * @throws IllegalStateException if the transaction is not active; if no 
+     * @throws IllegalStateException if the transaction is not active; if no
      * session is not open
      */
     public Short checkInRegisteredClient(Short clientId, Short keyId)
@@ -82,7 +80,7 @@ public class AttendancesService extends BusinessService {
         }
 
         client = (Client) entityManager.find(Client.class, clientId);
-        if(client == null) {
+        if (client == null) {
             throw new ValidationException(bundle.getString("ClientIDInvalid"));
         }
 
@@ -119,60 +117,35 @@ public class AttendancesService extends BusinessService {
         attendance.setKey(key);
         attendance.setDatetimeBegin(new Date());
         attendance.setDatetimeEnd(Attendance.DATETIME_END_UNKNOWN);
-        
+
         /*
          * Finds the client's current subscription.
          */
         ItemSubscription itemSubscription;
-        
-        List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>)entityManager
-                .createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
+
+        List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>) entityManager.createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
                 .setParameter("client", client) //NOI18N
                 .getResultList();
-        
-        if(!itemSubscriptions.isEmpty()) {
+
+        if (!itemSubscriptions.isEmpty()) {
             itemSubscription = itemSubscriptions.get(0);
-            
-            List<TimeSplit> timeSplits = entityManager
-                    .createNamedQuery("TimeSplit.findAll") //NOI18N
-                    .getResultList();
 
             /*
-            * Calculates the qunatity of penalties to apply.
-            */
-            int penalties = -1;
-            LocalTime now = new LocalTime();
-            LocalTime begin = now;
-
-            for (TimeSplit timeSplit : timeSplits) {
-                LocalTime end = new LocalTime(timeSplit.getTime());
-
-                if(timeSplit.equals(itemSubscription.getTimeSplit())) {
-                    penalties = 0;
-                } else if(penalties != -1) {
-                    penalties++;
-                } 
-
-                if(now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
-                    break;
-                }
-
-                begin = end;
-            }
+             * Calculates the qunatity of penalties to apply.
+             */
+            int penalties = calculatePenalties(itemSubscription.getTimeSplit(), new LocalTime());
 
             /*
-            * If there are penalties to apply, does it.
-            */
-            if(penalties > 0) {
+             * If there are penalties to apply, does it.
+             */
+            if (penalties > 0) {
                 Short orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), true);
-                Short itemId = ((Property)entityManager
-                        .createNamedQuery("Property.findByName") //NOI18N
+                Short itemId = ((Property) entityManager.createNamedQuery("Property.findByName") //NOI18N
                         .setParameter("name", "time_range_mismatch_penalty_item_id") //NOI18N
-                        .getSingleResult())
-                        .getShort();
+                        .getSingleResult()).getShort();
 
-                try {       
-                    for(int i = 0; i < penalties;i++) {
+                try {
+                    for (int i = 0; i < penalties; i++) {
                         OrdersService.getInstance().addPurchase(orderId, itemId, null);
                     }
                 } catch (SecurityException ex) {
@@ -182,19 +155,18 @@ public class AttendancesService extends BusinessService {
         }
 
         entityManager.persist(attendance);
+        client.getAttendances().add(attendance);
         entityManager.flush();
 
         return attendance.getId();
     }
 
     /**
-     * Checks in a casual client.
-     * <p>
-     * 
-     * <ul>
-     * <li>There should be a subscription having 1 attendance unit, a term of 1
-     * day, allowing to open an attendance right now without penalties </li>
-     * </ul>
+     * Checks in a casual client. <p>
+     *
+     * <ul> <li>There should be a subscription having 1 attendance unit, a term
+     * of 1 day, allowing to open an attendance right now without penalties
+     * </li> </ul>
      *
      * @param keyId the key's ID.
      * @return the new attendance's ID.
@@ -202,8 +174,8 @@ public class AttendancesService extends BusinessService {
      * @throws ValidationExceltion if the key's ID is invalid
      * @throws BusinessException if current business rules restrict this
      * operation
-     * @throws IllegalStateException if the transaction is not active; if no session
-     * is open
+     * @throws IllegalStateException if the transaction is not active; if no
+     * session is open
      */
     public Short checkInCasualClient(Short keyId)
             throws BusinessException, ValidationException {
@@ -226,7 +198,7 @@ public class AttendancesService extends BusinessService {
         if (key == null) {
             throw new ValidationException(bundle.getString("KeyIDInvalid"));
         }
-        
+
         if (!entityManager.createNamedQuery("Key.findAvailable").getResultList().contains(key)) { //NOI18N
             throw new BusinessException(bundle.getString("KeyNotAvailable"));
         }
@@ -245,16 +217,16 @@ public class AttendancesService extends BusinessService {
         order.setDate(attendance.getDatetimeBegin());
         order.setPayment(BigDecimal.ZERO);
 
-        ItemSubscription itemSubscription = findValidCasualSubscription();
+        ItemSubscription itemSubscription = findValidCasualSubscription(new LocalTime());
         if (itemSubscription == null) {
             throw new BusinessException(bundle.getString("AttendanceAnonymousSubscriptionNotAvailable"));
         }
-        
+
         OrderLine orderLine = new OrderLine();
         orderLine.setItem(itemSubscription.getItem());
         orderLine.setOrder(order);
-        orderLine.setQuantity((short)1);
-        
+        orderLine.setQuantity((short) 1);
+
         List<OrderLine> orderLines = new LinkedList<>();
         orderLines.add(orderLine);
         order.setOrderLines(orderLines);
@@ -270,8 +242,7 @@ public class AttendancesService extends BusinessService {
     }
 
     /**
-     * Gets an attendance by its ID.
-     * <p>
+     * Gets an attendance by its ID. <p>
      *
      * @param attendanceId the attendance's ID
      * @return the attendance, or null, if the ID is invalid
@@ -294,19 +265,16 @@ public class AttendancesService extends BusinessService {
         if (attendance == null) {
             return null;
         }
-        
+
         AttendanceDTO attendanceDTO = wrapAttendance(attendance);
         return attendanceDTO;
     }
 
     /**
-     * Finds all attendance that were open on the date.
-     * <p>
-     * 
-     * <ul>
-     * <li> The permission level has to be ALL to access attendances open not
-     * today </li>
-     * </ul>
+     * Finds all attendance that were open on the date. <p>
+     *
+     * <ul> <li> The permission level has to be ALL to access attendances open
+     * not today </li> </ul>
      *
      * @param date the date
      * @return the list of all attendances open on the date
@@ -368,11 +336,8 @@ public class AttendancesService extends BusinessService {
             throw new ValidationException(bundle.getString("ClientIDInvalid"));
         }
 
-        List<Attendance> attendances = entityManager
-                .createNamedQuery("Attendance.findByClientOrderByDateTimeBeginDesc")
-                .setParameter("client", client)
-                .getResultList();
-        
+        List<Attendance> attendances = entityManager.createNamedQuery("Attendance.findByClientOrderByDateTimeBeginDesc").setParameter("client", client).getResultList();
+
         List<AttendanceDTO> result = new LinkedList<>();
 
         for (Attendance attendance : attendances) {
@@ -383,13 +348,10 @@ public class AttendancesService extends BusinessService {
     }
 
     /**
-     * Gets whether the attendance is casual.
-     * <p>
-     * 
-     * <ul> 
-     * <li>The attendance is casual, if it does not have a client associated
-     * with it</li>
-     * </ul>
+     * Gets whether the attendance is casual. <p>
+     *
+     * <ul> <li>The attendance is casual, if it does not have a client
+     * associated with it</li> </ul>
      *
      * @param attendanceId the attendance's ID
      * @return true, if the attendance is casual; false, otherwise
@@ -414,14 +376,11 @@ public class AttendancesService extends BusinessService {
     }
 
     /**
-     * Checks out a client.
-     * <p>
-     * 
-     * <ul>
-     * <li> The attendance has to be open. </li>
-     * <li> If the attendance is anonymous, it has to have full payment 
-     * recorded in the associated order. </li>
-     * </ul>
+     * Checks out a client. <p>
+     *
+     * <ul> <li> The attendance has to be open. </li> <li> If the attendance is
+     * anonymous, it has to have full payment recorded in the associated order.
+     * </li> </ul>
      *
      * @param attendanceId the attendance's ID
      * @throws NullPointerException if the attendanceId is null
@@ -460,9 +419,9 @@ public class AttendancesService extends BusinessService {
                 throw new BusinessException(bundle.getString("ExactPaymentRequiredToCloseAnonymousAttendance"));
             }
         }
-        
+
         attendance.setDatetimeEnd(new Date());
-        
+
         entityManager.flush();
     }
 
@@ -505,10 +464,10 @@ public class AttendancesService extends BusinessService {
 
         return attendance.getId();
     }
-    
+
     /**
      * Builds an attendance DTO from an attendance entity.
-     * 
+     *
      * @param attendance the entity to build DTO from
      * @return the DTO
      */
@@ -529,36 +488,72 @@ public class AttendancesService extends BusinessService {
 
     /**
      * Finds the current time split.
-     * 
+     *
      * @return the current time split or null, if none is found
      */
-    private TimeSplit findCurrentTimeSplit() {
+    private TimeSplit findTimeSplitForTime(LocalTime time) {
         List<TimeSplit> timeSplits = entityManager.createNamedQuery("TimeSplit.findAll") //NOI18N
                 .getResultList();
-        
-        LocalTime now = new LocalTime();
+
+        LocalTime now = time;
         LocalTime begin = now;
-        
+
         for (TimeSplit timeSplit : timeSplits) {
             LocalTime end = new LocalTime(timeSplit.getTime());
 
             if (now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
                 return timeSplit;
             }
-            
+
             begin = end;
         }
-        
+
         return null;
     }
 
     /**
-     * Finds an anonymous subscription appropriate for the current moment.
+     * Calculates the quantity of penalties for a client with give time split and
+     * the time.
+     * 
+     * @param timeSplit the client's time split
+     * @param time the time to use when calculating
+     * @return the quantity of penalties
+     */
+    int calculatePenalties(TimeSplit timeSplit, LocalTime time) {
+
+        List<TimeSplit> timeSplits = entityManager.createNamedQuery("TimeSplit.findAll") //NOI18N
+                .getResultList();
+
+        int penalties = -1;
+        LocalTime now = time;
+        LocalTime begin = now;
+
+        for (TimeSplit aTimeSplit : timeSplits) {
+            LocalTime end = new LocalTime(aTimeSplit.getTime());
+
+            if (aTimeSplit.equals(timeSplit)) {
+                penalties = 0;
+            } else if (penalties != -1) {
+                penalties++;
+            }
+
+            if (now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
+                break;
+            }
+
+            begin = end;
+        }
+        
+        return penalties == -1 ? 0 : penalties ;
+    }
+
+    /**
+     * Finds an anonymous subscription appropriate for the time.
      *
      * @return the subscription, or null if none is found
      */
-    private ItemSubscription findValidCasualSubscription() {
-        TimeSplit currentTimeSplit = findCurrentTimeSplit();
+    ItemSubscription findValidCasualSubscription(LocalTime time) {
+        TimeSplit currentTimeSplit = findTimeSplitForTime(time);
 
         /*
          * No subscription can be valid now, if the current time split is null.
@@ -577,7 +572,6 @@ public class AttendancesService extends BusinessService {
         }
         return itemSubscription;
     }
-    
     /**
      * Singleton instance.
      */
