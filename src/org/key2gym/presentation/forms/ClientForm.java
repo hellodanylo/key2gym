@@ -15,15 +15,6 @@
  */
 package org.key2gym.presentation.forms;
 
-import org.key2gym.presentation.util.IntegerToStringConverter;
-import org.key2gym.presentation.util.FormBindingListener;
-import org.key2gym.presentation.util.NotNullValidator;
-import org.key2gym.presentation.util.DateMidnightToStringConverter;
-import org.key2gym.business.SessionsService;
-import org.key2gym.business.dto.ClientDTO;
-import org.key2gym.presentation.editors.AttendancesBalanceEditor;
-import org.key2gym.presentation.editors.ExpirationDateEditor;
-import org.key2gym.presentation.editors.MoneyBalanceEditor;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -35,6 +26,12 @@ import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import org.jdesktop.beansbinding.*;
+import org.key2gym.business.SessionsService;
+import org.key2gym.business.dto.ClientDTO;
+import org.key2gym.presentation.highlighters.AttendancesBalanceHighlighter;
+import org.key2gym.presentation.highlighters.ExpirationDateHighlighter;
+import org.key2gym.presentation.highlighters.MoneyBalanceHighlighter;
+import org.key2gym.presentation.util.*;
 
 /**
  *
@@ -111,41 +108,44 @@ public class ClientForm extends JPanel {
                 /*
                  * Expiration date
                  */
-                expirationDateTextField = new ExpirationDateEditor();
+                expirationDateTextField = new JTextField();
                 expirationDateTextField.setEditable(isPriviliged);
+                new ExpirationDateHighlighter(expirationDateTextField);
                 builder.appendI15d("Label.ExpirationDate", expirationDateTextField);
                 builder.nextLine();
 
                 binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                        BeanProperty.create("expirationDate"), expirationDateTextField, BeanProperty.create("value"), "expirationDate");
-                binding.setValidator(new NotNullValidator());
+                        BeanProperty.create("expirationDate"), expirationDateTextField, BeanProperty.create("text"), "expirationDate");
+                binding.setConverter(new DateMidnightToStringConverter(strings.getString("Text.ExpirationDate"), "dd-MM-yyyy"));
                 bindingGroup.addBinding(binding);
             } else if (column.equals(Column.ATTENDANCES_BALANCE)) {
                 /*
                  * Attendances balance
                  */
-                attendancesBalanceEditor = new AttendancesBalanceEditor();
-                attendancesBalanceEditor.setEditable(isPriviliged);
-                builder.appendI15d("Label.AttendancesBalance", attendancesBalanceEditor);
+                attendancesBalanceTextField = new JTextField();
+                attendancesBalanceTextField.setEditable(isPriviliged);
+                new AttendancesBalanceHighlighter(attendancesBalanceTextField);
+                builder.appendI15d("Label.AttendancesBalance", attendancesBalanceTextField);
                 builder.nextLine();
 
                 binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                        BeanProperty.create("attendancesBalance"), attendancesBalanceEditor, BeanProperty.create("value"), "attendancesBalance");
-                binding.setValidator(new NotNullValidator());
+                        BeanProperty.create("attendancesBalance"), attendancesBalanceTextField, BeanProperty.create("text"), "attendancesBalance");
+                binding.setConverter(new ShortToStringConverter(strings.getString("Text.AttendancesBalance"), false));
                 bindingGroup.addBinding(binding);
 
             } else if (column.equals(Column.MONEY_BALANCE)) {
                 /*
                  * Money balance
                  */
-                moneyBalanceEditor = new MoneyBalanceEditor();
-                moneyBalanceEditor.setEditable(isPriviliged);
-                builder.appendI15d("Label.MoneyBalance", moneyBalanceEditor);
+                moneyBalanceTextField = new JTextField();
+                moneyBalanceTextField.setEditable(isPriviliged);
+                new MoneyBalanceHighlighter(moneyBalanceTextField);
+                builder.appendI15d("Label.MoneyBalance", moneyBalanceTextField);
                 builder.nextLine();
 
                 binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
-                        BeanProperty.create("moneyBalance"), moneyBalanceEditor, BeanProperty.create("value"), "moneyBalance");
-                binding.setValidator(new NotNullValidator());
+                        BeanProperty.create("moneyBalance"), moneyBalanceTextField, BeanProperty.create("text"), "moneyBalance");
+                binding.setConverter(new MoneyBigDecimalToStringConverter(strings.getString("Text.MoneyBalance")));
                 bindingGroup.addBinding(binding);
             } else if (column.equals(Column.REGISTRATION_DATE)) {
                 /*
@@ -294,12 +294,12 @@ public class ClientForm extends JPanel {
      */
     private BindingGroup bindingGroup;
     private FormBindingListener formBindingListener;
-    private AttendancesBalanceEditor attendancesBalanceEditor;
+    private JTextField attendancesBalanceTextField;
     private JTextField cardTextField;
-    private ExpirationDateEditor expirationDateTextField;
+    private JTextField expirationDateTextField;
     private JTextField fullNameTextField;
     private JTextField idTextField;
-    private JTextField moneyBalanceEditor;
+    private JTextField moneyBalanceTextField;
     private JScrollPane noteScrollPane;
     private JTextArea noteTextArea;
     private JTextField registrationDateTextField;

@@ -15,18 +15,6 @@
  */
 package org.key2gym.presentation.dialogs;
 
-import org.key2gym.business.AttendancesService;
-import org.key2gym.business.ClientsService;
-import org.key2gym.business.KeysService;
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.dto.ClientDTO;
-import org.key2gym.business.dto.KeyDTO;
-import org.key2gym.presentation.forms.ClientForm;
-import org.key2gym.presentation.forms.ClientForm.Column;
-import org.key2gym.presentation.util.ColorConstants;
-import org.key2gym.presentation.util.KeyListCellRenderer;
-import org.key2gym.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Color;
@@ -43,6 +31,18 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import org.key2gym.business.AttendancesService;
+import org.key2gym.business.ClientsService;
+import org.key2gym.business.KeysService;
+import org.key2gym.business.api.BusinessException;
+import org.key2gym.business.api.ValidationException;
+import org.key2gym.business.dto.ClientDTO;
+import org.key2gym.business.dto.KeyDTO;
+import org.key2gym.presentation.colors.Palette;
+import org.key2gym.presentation.forms.ClientForm;
+import org.key2gym.presentation.forms.ClientForm.Column;
+import org.key2gym.presentation.util.KeyListCellRenderer;
+import org.key2gym.presentation.util.UserExceptionHandler;
 
 /**
  *
@@ -262,8 +262,8 @@ public class CheckInDialog extends AbstractDialog {
                     cardTextField.setBackground(Color.WHITE);
                     cardTextField.setForeground(Color.BLACK);
                 } else {
-                    cardTextField.setBackground(ColorConstants.ERROR_BACKGROUND);
-                    cardTextField.setForeground(ColorConstants.ERROR_FOREGROUND);
+                    cardTextField.setBackground(Palette.ERROR_BACKGROUND);
+                    cardTextField.setForeground(Palette.ERROR_FOREGROUND);
                 }
             } else {
 
@@ -273,8 +273,8 @@ public class CheckInDialog extends AbstractDialog {
                     throw new RuntimeException(ex);
                 }
 
-                cardTextField.setBackground(ColorConstants.OK_BACKGROUND);
-                cardTextField.setForeground(ColorConstants.OK_FOREGROUND);
+                cardTextField.setBackground(Palette.OK_BACKGROUND);
+                cardTextField.setForeground(Palette.OK_FOREGROUND);
             }
         }
     }

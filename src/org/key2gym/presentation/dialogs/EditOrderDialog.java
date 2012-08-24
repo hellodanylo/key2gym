@@ -15,26 +15,6 @@
  */
 package org.key2gym.presentation.dialogs;
 
-import org.key2gym.presentation.util.UserExceptionHandler;
-import org.key2gym.presentation.util.OrderLinesTableModel;
-import org.key2gym.presentation.util.MutableListModel;
-import org.key2gym.presentation.util.ColorConstants;
-import org.key2gym.presentation.util.ItemListCellRenderer;
-import org.key2gym.presentation.util.DiscountListCellRenderer;
-import org.key2gym.business.dto.AttendanceDTO;
-import org.key2gym.business.dto.OrderDTO;
-import org.key2gym.business.dto.OrderLineDTO;
-import org.key2gym.business.dto.DiscountDTO;
-import org.key2gym.business.dto.ItemDTO;
-import org.key2gym.business.dto.ClientDTO;
-import org.key2gym.business.DiscountsService;
-import org.key2gym.business.AttendancesService;
-import org.key2gym.business.OrdersService;
-import org.key2gym.business.ClientsService;
-import org.key2gym.business.ItemsService;
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.SecurityException;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -49,6 +29,13 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.*;
+import org.key2gym.business.*;
+import org.key2gym.business.api.BusinessException;
+import org.key2gym.business.api.SecurityException;
+import org.key2gym.business.api.ValidationException;
+import org.key2gym.business.dto.*;
+import org.key2gym.presentation.colors.Palette;
+import org.key2gym.presentation.util.*;
 
 /**
  * This dialog displays and edits an order. <p> Session variables: <ul> <li>
@@ -271,8 +258,8 @@ public class EditOrderDialog extends AbstractDialog {
         /*
          * Due
          */
-        dueTextField.setForeground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ?  ColorConstants.ERROR_FOREGROUND: ColorConstants.OK_FOREGROUND);
-        dueTextField.setBackground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ?  ColorConstants.ERROR_BACKGROUND : ColorConstants.OK_BACKGROUND);
+        dueTextField.setForeground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ?  Palette.ERROR_FOREGROUND: Palette.OK_FOREGROUND);
+        dueTextField.setBackground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ?  Palette.ERROR_BACKGROUND : Palette.OK_BACKGROUND);
         dueTextField.setText(order.getDue().toPlainString());
 
         /*
