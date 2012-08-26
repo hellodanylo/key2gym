@@ -68,8 +68,8 @@ public class ExpirationDateHighlighter extends AbstractHighlighter {
             Palette.EXPIRATION_DATE_SOON_FOREGROUND);
     
     private static final ColorScheme PASSED_SCHEME = new ColorScheme(
-            Palette.EXPIRATION_DATE_SOON_BACKGROUND, 
-            Palette.EXPIRATION_DATE_SOON_FOREGROUND);
+            Palette.EXPIRATION_DATE_PASSED_BACKGROUND, 
+            Palette.EXPIRATION_DATE_PASSED_FOREGROUND);
     
     private static final ColorScheme NOT_SOON_SCHEME = new ColorScheme(
             Palette.EXPIRATION_DATE_NOT_SOON_BACKGROUND,
