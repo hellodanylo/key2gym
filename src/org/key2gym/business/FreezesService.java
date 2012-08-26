@@ -15,6 +15,7 @@
  */
 package org.key2gym.business;
 
+import java.text.MessageFormat;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityException;
 import org.key2gym.business.api.ValidationException;
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import org.joda.time.DateMidnight;
+import org.omg.CORBA.INTERNAL;
 
 /**
  *
@@ -75,25 +77,29 @@ public class FreezesService extends BusinessService {
         }
 
         if (sessionService.getPermissionsLevel() > SessionsService.PL_EXTENDED) {
-            throw new SecurityException(bundle.getString("OperationDenied"));
+            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
         }
 
         Client client = entityManager.find(Client.class, clientId);
 
         if (client == null) {
-            throw new ValidationException(bundle.getString("ClientIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
 
         if (client.getExpirationDate().compareTo(new Date()) < 0) {
-            throw new BusinessException(bundle.getString("ClientSubscriptionExpired"));
+            throw new BusinessException(bundle.getString("BusinessRule.Client.SubscriptionExpired"));
         }
 
         if (days < 1 || days > 10) {
-            throw new ValidationException(bundle.getString("NumberOfDaysHasToBeBetween1And10"));
+            String message = MessageFormat.format(
+                    bundle.getString("BusinessRule.Freeze.Days.HasToBeWithinRange.withRangeBeginAndRangeEnd"),
+                    new Integer[]{1, 10}
+            );
+            throw new ValidationException(message);
         }
 
         if (note.trim().isEmpty()) {
-            throw new ValidationException(bundle.getString("NoteCanNotBeEmpty"));
+            throw new ValidationException(bundle.getString("Invalid.Freeze.Note.CanNotBeEmpty"));
         }
 
         DateMidnight today = new DateMidnight();
@@ -105,7 +111,7 @@ public class FreezesService extends BusinessService {
                 .getResultList();
 
         if (!freezes.isEmpty()) {
-            throw new BusinessException(bundle.getString("ClientHasAlreadyBennFrozenLastMonth"));
+            throw new BusinessException(bundle.getString("BusinessRule.Freeze.ClientHasAlreadyBeenFrozenLastMonth"));
         }
 
         // Rolls the expiration date
@@ -141,7 +147,7 @@ public class FreezesService extends BusinessService {
         Client client = entityManager.find(Client.class, clientId);
 
         if (client == null) {
-            throw new ValidationException(bundle.getString("ClientIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
 
         List<ClientFreeze> freezes = entityManager.createNamedQuery("ClientFreeze.findByClient").setParameter("client", client).getResultList(); //NOI18N
@@ -176,7 +182,7 @@ public class FreezesService extends BusinessService {
         assertOpenSessionExists();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("AccessDenied"));
+            throw new SecurityException(bundle.getString("Security.Access.Denied"));
         }
         
         if(begin == null) {
@@ -188,7 +194,7 @@ public class FreezesService extends BusinessService {
         }
         
         if(begin.isAfter(end)) {
-            throw new ValidationException(bundle.getString("BeginningDateCanNotBeAfterEndingDate"));
+            throw new ValidationException(bundle.getString("Invalid.DateRange.BeginningAfterEnding"));
         }
         
         List<ClientFreeze> freezes = entityManager
@@ -255,7 +261,7 @@ public class FreezesService extends BusinessService {
         assertOpenSessionExists();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("OperationDenied"));
+            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
         }
         
         assertTransactionActive();
@@ -267,12 +273,12 @@ public class FreezesService extends BusinessService {
         ClientFreeze clientFreeze = entityManager.find(ClientFreeze.class, id);
         
         if(clientFreeze == null) {
-            throw new ValidationException(bundle.getString("FreezeIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Freeze.ID"));
         }
         
   
         if(new DateMidnight(clientFreeze.getDateIssued()).plusDays(clientFreeze.getDays()).isBeforeNow()) {
-            throw new BusinessException(bundle.getString("FreezeAlreadyExpired"));
+            throw new BusinessException(bundle.getString("BusinessRule.Freeze.AlreadyExpired"));
         }
         
         Client client = clientFreeze.getClient();

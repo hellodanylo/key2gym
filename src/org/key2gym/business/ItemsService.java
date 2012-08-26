@@ -32,36 +32,38 @@ import javax.persistence.NoResultException;
  * @author Danylo Vashchilenko
  */
 public class ItemsService extends BusinessService {
-    
+
     protected ItemsService() {
     }
 
     /**
      * Adds an item.
-     * 
+     *
      * <ul>
-     * 
+     *
      * <li> The permissions level has to be PL_ALL.
-     * 
+     *
      * <li> All properties except ID are required.
-     * 
+     *
      * <li>
      *
      * @param item the item to add.
      * @throws ValidationException if any of the required properties is invalid
      * @throws IllegalStateException if the session or the transaction is not
      * active
-     * @throws NullPointerException if item or any of the required properties is null
-     * @throws SecurityException if current security rules restrict this operation
+     * @throws NullPointerException if item or any of the required properties is
+     * null
+     * @throws SecurityException if current security rules restrict this
+     * operation
      */
     public void addItem(ItemDTO item) throws ValidationException, SecurityException {
         assertOpenSessionExists();
         assertTransactionActive();
 
-        if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("OperationDenied"));
+        if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
+            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
         }
-                
+
         if (item == null) {
             throw new NullPointerException("The item is null."); //NOI18N
         }
@@ -100,20 +102,18 @@ public class ItemsService extends BusinessService {
         List<ItemDTO> result = new LinkedList<>();
         List<Item> items = entityManager.createNamedQuery("Item.findAvailable") //NOI18N
                 .getResultList();
-        
-        Property property = (Property)entityManager
-                .createNamedQuery("Property.findByName")
-                .setParameter("name", "time_range_mismatch_penalty_item_id")
-                .getSingleResult();
+
+        Property property = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
         Short penaltyItemId = Short.valueOf(property.getString());
 
         for (Item item : items) {
             /*
              * Skips the time range mismatch penalty item.
              */
-            if(item.getId().equals(penaltyItemId))
+            if (item.getId().equals(penaltyItemId)) {
                 continue;
-            
+            }
+
             result.add(wrapItem(item));
         }
         return result;
@@ -121,7 +121,7 @@ public class ItemsService extends BusinessService {
 
     /**
      * Gets all items.
-     * 
+     *
      * @return the list of all items
      */
     public List<ItemDTO> getAllItems() {
@@ -135,55 +135,51 @@ public class ItemsService extends BusinessService {
 
         return result;
     }
-    
+
     /**
-     * Gets pure items. Pure item is an item that is not associated with a 
+     * Gets pure items. Pure item is an item that is not associated with a
      * subscription.
-     * 
+     *
      * @return a list of items
      */
     public List<ItemDTO> getPureItems() {
 
-        
+
         List<ItemDTO> result = new LinkedList<>();
-        List<Item> items = entityManager
-                .createNamedQuery("Item.findPure") //NOI18N
-                .getResultList(); 
-               
-        for (Item item : items) {            
+        List<Item> items = entityManager.createNamedQuery("Item.findPure") //NOI18N
+                .getResultList();
+
+        for (Item item : items) {
             result.add(wrapItem(item));
         }
 
         return result;
     }
-    
+
     /**
-     * Gets pure items available in the stock. 
-     * Pure item is an item that is not associated with a subscription.
-     * 
+     * Gets pure items available in the stock. Pure item is an item that is not
+     * associated with a subscription.
+     *
      * @return a list of pure items available
      */
     public List<ItemDTO> getPureItemsAvailable() {
 
-        
+
         List<ItemDTO> result = new LinkedList<>();
-        List<Item> items = entityManager
-                .createNamedQuery("Item.findPureAvailable") //NOI18N
+        List<Item> items = entityManager.createNamedQuery("Item.findPureAvailable") //NOI18N
                 .getResultList();
-        
-        Property property = (Property)entityManager
-                .createNamedQuery("Property.findByName")
-                .setParameter("name", "time_range_mismatch_penalty_item_id")
-                .getSingleResult();
+
+        Property property = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
         Short penaltyItemId = Short.valueOf(property.getString());
 
         for (Item item : items) {
             /*
              * Skips the time range mismatch penalty item.
              */
-            if(item.getId().equals(penaltyItemId))
+            if (item.getId().equals(penaltyItemId)) {
                 continue;
-            
+            }
+
             result.add(wrapItem(item));
         }
 
@@ -192,34 +188,37 @@ public class ItemsService extends BusinessService {
 
     /**
      * Updates the item.
-     * 
+     *
      * <ul>
-     * 
+     *
      * <li> The permissions level has to be PL_ALL.
-     * 
+     *
      * <li> All properties are required
-     * 
+     *
      * </ul>
      *
      * @param item the item to update
      * @throws ValidationException if any of the required properties is invalid
-     * @throws IllegalStateException if the session or the transaction is not active
-     * @throws NullPointerExceptionf if item or any of the required properties is null
-     * @throws SecurityException if current security rules restrict this operation 
+     * @throws IllegalStateException if the session or the transaction is not
+     * active
+     * @throws NullPointerExceptionf if item or any of the required properties
+     * is null
+     * @throws SecurityException if current security rules restrict this
+     * operation
      */
     public void updateItem(ItemDTO item) throws ValidationException, SecurityException {
         assertOpenSessionExists();
         assertTransactionActive();
-        
-        if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("OperationDenied"));
+
+        if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
+            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
         }
 
         if (item == null) {
             throw new NullPointerException("The item is null."); //NOI18N
         }
-        
-        if(item.getId() == null) {
+
+        if (item.getId() == null) {
             throw new NullPointerException("The item's ID is null."); //NOI18N
         }
 
@@ -231,8 +230,8 @@ public class ItemsService extends BusinessService {
         /*
          * Checks the ID.
          */
-        if(entityManager.find(Item.class, item.getId()) == null) {
-            throw new ValidationException(bundle.getString("ItemIDInvalid"));
+        if (entityManager.find(Item.class, item.getId()) == null) {
+            throw new ValidationException(bundle.getString("Invalid.Item.ID"));
         }
 
         Item entityItem = new Item(
@@ -246,64 +245,67 @@ public class ItemsService extends BusinessService {
         entityManager.merge(entityItem);
         entityManager.flush();
     }
-    
+
     /**
      * Removes the item.
-     * 
+     *
      * <ul>
-     * 
+     *
      * <li> The permissions level has to be PL_ALL.
-
+     *
      * <li> The item can not be a subscription.
-     * 
+     *
      * <li> The item can not have any unarchived purchases.
-     * 
+     *
      * </ul>
-     * 
+     *
      * @param itemId the item's ID
      * @throws ValidationException if the item's ID is invalid
-     * @throws BusinessException if current business rules restrict this operation
-     * @throws IllegalStateException if the session or the transaction is not active
-     * @throws SecurityException if current security rules restrict this operation
+     * @throws BusinessException if current business rules restrict this
+     * operation
+     * @throws IllegalStateException if the session or the transaction is not
+     * active
+     * @throws SecurityException if current security rules restrict this
+     * operation
      */
     public void removeItem(Short itemId) throws ValidationException, BusinessException, SecurityException {
         assertOpenSessionExists();
         assertTransactionActive();
-        
-        if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("OperationDenied"));
+
+        if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
+            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
         }
-        
-        if(itemId == null) {
+
+        if (itemId == null) {
             throw new NullPointerException("The itemId is null."); //NOI18N
         }
-        
+
         Item item = entityManager.find(Item.class, itemId);
-        
-        if(item == null) {
-            throw new ValidationException(bundle.getString("ItemIDInvalid"));
+
+        if (item == null) {
+            throw new ValidationException(bundle.getString("Invalid.Item.ID"));
         }
-        
-        if(item.getItemSubscription() != null) {
-            throw new BusinessException(bundle.getString("ItemIsSubscription"));
+
+        if (item.getItemSubscription() != null) {
+            throw new BusinessException(bundle.getString("BusinessRule.Item.IsSubscription"));
         }
-        
-        if(!item.getOrderLines().isEmpty()) {
-            throw new BusinessException(MessageFormat.format(bundle.getString("ItemHasUnarchivedPurchases"), new Object[] {item.getTitle()}));
+
+        if (!item.getOrderLines().isEmpty()) {
+            throw new BusinessException(MessageFormat.format(bundle.getString("BusinessRule.Item.HasUnarchivedPurchases.withItemTitle"), new Object[]{item.getTitle()}));
         }
-        
+
         // TODO: note change
         entityManager.remove(item);
         entityManager.flush();
     }
-    
+
     /**
      * Wraps an item into a DTO.
-     * 
+     *
      * @param item the item to wrap
      * @return the DTO containing the item
      */
-    private ItemDTO wrapItem(Item item) {
+    ItemDTO wrapItem(Item item) {
         ItemDTO result = new ItemDTO();
         result.setId(item.getId());
         result.setBarcode(item.getBarcode());
@@ -311,80 +313,95 @@ public class ItemsService extends BusinessService {
         result.setPrice(item.getPrice().setScale(2));
         result.setQuantity(item.getQuantity());
         result.setTitle(item.getTitle());
-        
+
         return result;
     }
 
-    private void validateBarcode(Long value, Short id) throws ValidationException {
+    void validateBarcode(Long value, Short id) throws ValidationException {
         if (value == null) {
             return;
         }
         if (value < 0) {
-            throw new ValidationException(bundle.getString("BarcodeCanNotBeNegative"));
+            String message = MessageFormat.format(
+                    bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
+                    bundle.getString("Property.Barcode"));
+            throw new ValidationException(message);
         }
-        
+
         try {
-            
+
             Item item = (Item) entityManager.createNamedQuery("Item.findByBarcode") //NOI18N
                     .setParameter("barcode", value) //NOI18N
                     .getSingleResult();
-            
-            if(id != null && item.getId().equals(id))
+
+            if (id != null && item.getId().equals(id)) {
                 return;
-            
-            throw new ValidationException(MessageFormat.format(bundle.getString("AnotherItemHasSameBarcode"), new Object[] {item.getTitle()}));
-        
-        } catch(NoResultException ex) {
+            }
+
+            String message = MessageFormat.format(
+                    bundle.getString("Invalid.Item.Barcode.AlreadyInUse.withItemTitle"),
+                    item.getTitle());
+            throw new ValidationException(message);
+
+        } catch (NoResultException ex) {
             return;
         }
     }
 
-    private void validateQuantity(Short value) throws ValidationException {
+    void validateQuantity(Short value) throws ValidationException {
         if (value == null) {
             return;
         }
 
         if (value < 0) {
-            throw new ValidationException(bundle.getString("QuantityCanNotBeNegative"));
+            String message = MessageFormat.format(
+                    bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
+                    bundle.getString("Property.Quantity"));
+            throw new ValidationException(message);
         } else if (value > 255) {
-            throw new ValidationException(bundle.getString("QuantityOverLimit"));
+            String message = MessageFormat.format(
+                    bundle.getString("Invalid.Property.OverLimit.withPropertyName"),
+                    bundle.getString("Property.Quantity"));
+            throw new ValidationException(message);
         }
     }
 
-    private void validatePrice(BigDecimal value) throws ValidationException {
+    void validatePrice(BigDecimal value) throws ValidationException {
         if (value == null) {
             throw new NullPointerException("The price is null."); //NOI18N
         }
 
         if (value.scale() > 2) {
-            throw new ValidationException(bundle.getString("TwoDigitsAfterDecimalPointMax"));
+            throw new ValidationException(bundle.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
         }
-        
+
         value = value.setScale(2);
-        
+
         if (value.precision() > 5) {
-            throw new ValidationException(bundle.getString("ThreeDigitsBeforeDecimalPointMax"));
+            throw new ValidationException(bundle.getString("Invalid.Money.ThreeDigitsBeforeDecimalPointMax"));
         } else if (value.compareTo(new BigDecimal(0)) < 0) {
-            throw new ValidationException(bundle.getString("PriceCanNotBeNegative"));
+            String message = MessageFormat.format(
+                    bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
+                    bundle.getString("Property.Price"));
+            throw new ValidationException(message);
         }
     }
 
-    private void validateTitle(String value) throws ValidationException {
+    void validateTitle(String value) throws ValidationException {
         if (value == null) {
             throw new NullPointerException("The title is null."); //NOI18N
         }
         value = value.trim();
         if (value.isEmpty()) {
-            throw new ValidationException(bundle.getString("TitleCanNotBeNegative"));
+            throw new ValidationException(bundle.getString("Invalid.Item.Title.CanNotBeEmpty"));
         }
     }
-    
     /**
      * Singleton instance.
      */
     private static ItemsService instance;
-    
-   /**
+
+    /**
      * Gets an instance of this class.
      *
      * @return an instance
@@ -395,5 +412,4 @@ public class ItemsService extends BusinessService {
         }
         return instance;
     }
-
 }

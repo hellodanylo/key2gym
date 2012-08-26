@@ -16,6 +16,7 @@
 package org.key2gym.business;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -111,7 +112,7 @@ public class ClientsService extends BusinessService {
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)
                 && useSecuredProperties) {
-            throw new SecurityException(bundle.getString("AccessToSecuredPropertiesDenied"));
+            throw new SecurityException(bundle.getString("Security.Client.UpdateSecuredProperties.Denied"));
         }
 
         if (useSecuredProperties) {
@@ -168,7 +169,7 @@ public class ClientsService extends BusinessService {
         Client client = entityManager.find(Client.class, clientId);
         
         if(client == null) {
-            throw new ValidationException(bundle.getString("ClientIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
         
         ClientDTO clientDTO = new ClientDTO();
@@ -315,11 +316,11 @@ public class ClientsService extends BusinessService {
         Client originalClient = entityManager.find(Client.class, client.getId());
 
         if (originalClient == null) {
-            throw new ValidationException(bundle.getString("ClientIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
         
         if(useSecuredProperties && !sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("AccessToSecuredPropetiesDenied"));
+            throw new SecurityException(bundle.getString("Security.Client.UpdateSecuredProperties.Denied"));
         }
 
         if (!originalClient.getFullName().equals(client.getFullName())) {
@@ -358,12 +359,12 @@ public class ClientsService extends BusinessService {
          * to big.
          */
         if (client.getMoneyBalance().scale() > 2) {
-            throw new ValidationException(bundle.getString("Message.MoneyBalanceCanHasTwoDigitsAfterDecimalPointMax"));
+            throw new ValidationException(bundle.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
         }
         client.setMoneyBalance(client.getMoneyBalance().setScale(2));
         
         if (client.getMoneyBalance().precision() > 5) {
-            throw new ValidationException(bundle.getString("LimitReached"));
+            throw new ValidationException(bundle.getString("Invalid.Client.MoneyBalance.LimitReached"));
         }
         originalClient.setMoneyBalance(client.getMoneyBalance());
         
@@ -398,7 +399,7 @@ public class ClientsService extends BusinessService {
 
         Client client = entityManager.find(Client.class, clientId);
         if (client == null) {
-            throw new ValidationException(bundle.getString("ClientIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
 
         return client.getMoneyBalance().compareTo(BigDecimal.ZERO) < 0;
@@ -433,7 +434,7 @@ public class ClientsService extends BusinessService {
                     throw new NullPointerException("The full name is null."); //NOI18N
                 }
                 if (value.trim().isEmpty()) {
-                    throw new ValidationException(bundle.getString("ClientFullNameEmpty"));
+                    throw new ValidationException(bundle.getString("Invalid.Client.FullName.CanNotBeEmpty"));
                 }
             }
         };
@@ -445,7 +446,7 @@ public class ClientsService extends BusinessService {
             @Override
             public void validate(Integer value) throws ValidationException {
                 if (value != null && (value > 99999999 || value < 10000000)) {
-                    throw new ValidationException(bundle.getString("ClientCardInvalid")); //NOI18N
+                    throw new ValidationException(bundle.getString("Invalid.Client.Card")); //NOI18N
                 }
 
                 // If a card is to be assigned,
@@ -457,7 +458,13 @@ public class ClientsService extends BusinessService {
                             .getResultList(); 
 
                     if (!clients.isEmpty()) {
-                        throw new ValidationException(java.text.MessageFormat.format(bundle.getString("ClientCardAlreadyInUse"), new Object[] {clients.get(0).getFullName(), clients.get(0).getId()}));
+                        String message = MessageFormat.format(
+                                bundle.getString("Invalid.Client.Card.AlreadyInUse.withClientFullNameAndID"), 
+                                new Object[] {
+                                    clients.get(0).getFullName(), 
+                                    clients.get(0).getId()}
+                                );
+                        throw new ValidationException(message);
                     }
                 }
             }

@@ -15,6 +15,7 @@
  */
 package org.key2gym.business;
 
+import java.text.MessageFormat;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityException;
 import org.key2gym.business.api.ValidationException;
@@ -137,7 +138,7 @@ public class ClientProfilesService extends BusinessService {
         assertTransactionActive();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("OperationDenied"));
+            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
         }
         
         if(id == null) {
@@ -147,11 +148,11 @@ public class ClientProfilesService extends BusinessService {
         Client client = entityManager.find(Client.class, id);
         
         if(client == null) {
-            throw new ValidationException(bundle.getString("IDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
         
         if(client.getClientProfile() == null) {
-            throw new BusinessException(bundle.getString("ClientHasNoProfile"));
+            throw new BusinessException(bundle.getString("BusinessRule.Client.HasNoProfile"));
         }
         
         entityManager.remove(client.getClientProfile());
@@ -176,7 +177,7 @@ public class ClientProfilesService extends BusinessService {
         ClientProfile clientProfile = entityManager.find(ClientProfile.class, id);
         
         if(clientProfile == null) {
-            throw new ValidationException(bundle.getString("ClientProfileIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
         
         ClientProfileDTO clientProfileDTO = new ClientProfileDTO(
@@ -204,7 +205,7 @@ public class ClientProfilesService extends BusinessService {
             @Override
             public void validate(DateMidnight value) throws ValidationException {
                 if (value != null && value.isAfter(new Instant())) {
-                    throw new ValidationException(bundle.getString("ClientProfileBirthdayMustBeInPast"));
+                    throw new ValidationException(bundle.getString("Invalid.ClientProfile.Birthday.MustBeInPast"));
                 }
             }
         };
@@ -222,7 +223,7 @@ public class ClientProfilesService extends BusinessService {
                 AdSource adSource = entityManager.find(AdSource.class, value);
 
                 if (adSource == null) {
-                    throw new ValidationException(bundle.getString("AdSourceIDInvalid"));
+                    throw new ValidationException(bundle.getString("Invalid.AdSource.ID"));
                 }
             }
         };
@@ -238,7 +239,11 @@ public class ClientProfilesService extends BusinessService {
                 }
 
                 if (value < 0) {
-                    throw new ValidationException(bundle.getString("ClientProfileHeightCanNotBeNegative"));
+                    String message = MessageFormat.format(
+                            bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
+                            bundle.getString("Property.Height"));
+                    
+                    throw new ValidationException(message);
                 }
             }
         };
@@ -254,7 +259,11 @@ public class ClientProfilesService extends BusinessService {
                 }
 
                 if (value < 0) {
-                    throw new ValidationException(bundle.getString("ClientProfileWeightCanNotBeNegative"));
+                    String message = MessageFormat.format(
+                            bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
+                            bundle.getString("Property.Weight"));
+                    
+                    throw new ValidationException(message);
                 }
             }
         };

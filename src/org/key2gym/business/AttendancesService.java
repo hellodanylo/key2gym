@@ -15,6 +15,7 @@
  */
 package org.key2gym.business;
 
+import com.jgoodies.common.base.Strings;
 import org.key2gym.persistence.Client;
 import org.key2gym.persistence.OrderLine;
 import org.key2gym.persistence.Property;
@@ -81,30 +82,30 @@ public class AttendancesService extends BusinessService {
 
         client = (Client) entityManager.find(Client.class, clientId);
         if (client == null) {
-            throw new ValidationException(bundle.getString("ClientIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
 
         key = entityManager.find(Key.class, keyId);
         if (key == null) {
-            throw new ValidationException(bundle.getString("KeyIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Key.ID"));
         }
 
         if (!entityManager.createNamedQuery("Key.findAvailable").getResultList().contains(key)) { //NOI18N
-            throw new BusinessException(bundle.getString("KeyNotAvailable"));
+            throw new BusinessException(bundle.getString("BusinessRule.Key.NotAvailable"));
         }
 
         /*
          * Client should have attendances.
          */
         if (client.getAttendancesBalance() < 1) {
-            throw new BusinessException(bundle.getString("ClientNoAttendancesLeft"));
+            throw new BusinessException(bundle.getString("BusinessRule.Client.NoAttendancesLeft"));
         }
 
         /*
          * Client's can't be expired.
          */
         if (client.getExpirationDate().compareTo(new Date()) < 0) {
-            throw new BusinessException(bundle.getString("ClientSubscriptionExpired"));
+            throw new BusinessException(bundle.getString("BusinessRule.Client.SubscriptionExpired"));
         }
 
         client.setAttendancesBalance((short) (client.getAttendancesBalance() - 1));
@@ -196,11 +197,11 @@ public class AttendancesService extends BusinessService {
         key = entityManager.find(Key.class, keyId);
 
         if (key == null) {
-            throw new ValidationException(bundle.getString("KeyIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Key.ID"));
         }
 
         if (!entityManager.createNamedQuery("Key.findAvailable").getResultList().contains(key)) { //NOI18N
-            throw new BusinessException(bundle.getString("KeyNotAvailable"));
+            throw new BusinessException(bundle.getString("BusinessRule.Key.NotAvailable"));
         }
 
         /*
@@ -219,7 +220,7 @@ public class AttendancesService extends BusinessService {
 
         ItemSubscription itemSubscription = findValidCasualSubscription(new LocalTime());
         if (itemSubscription == null) {
-            throw new BusinessException(bundle.getString("AttendanceAnonymousSubscriptionNotAvailable"));
+            throw new BusinessException(bundle.getString("BusinessRule.Attendance.Casual.SubscriptionNotAvailable"));
         }
 
         OrderLine orderLine = new OrderLine();
@@ -296,7 +297,7 @@ public class AttendancesService extends BusinessService {
         }
 
         if (!date.equals(new DateMidnight()) && !SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("AccessDenied"));
+            throw new SecurityException(bundle.getString("Security.Access.Denied"));
         }
 
         List<Attendance> attendances = entityManager.createNamedQuery("Attendance.findByDatetimeBeginRangeOrderByDateTimeBeginDesc") //NOI18N
@@ -333,7 +334,7 @@ public class AttendancesService extends BusinessService {
         Client client = entityManager.find(Client.class, id);
 
         if (client == null) {
-            throw new ValidationException(bundle.getString("ClientIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
 
         List<Attendance> attendances = entityManager.createNamedQuery("Attendance.findByClientOrderByDateTimeBeginDesc").setParameter("client", client).getResultList();
@@ -369,7 +370,7 @@ public class AttendancesService extends BusinessService {
         Attendance attendance = entityManager.find(Attendance.class, attendanceId);
 
         if (attendance == null) {
-            throw new ValidationException(bundle.getString("AttendanceIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Attendance.ID"));
         }
 
         return attendance.getClient() == null;
@@ -401,11 +402,11 @@ public class AttendancesService extends BusinessService {
         Attendance attendance = entityManager.find(Attendance.class, attendanceId);
 
         if (attendance == null) {
-            throw new ValidationException(bundle.getString("AttendanceIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Attendance.ID"));
         }
 
         if (!attendance.getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN)) {
-            throw new BusinessException(bundle.getString("AttendanceAlreadyClosed"));
+            throw new BusinessException(bundle.getString("BusinessRule.Attendance.AlreadyClosed"));
         }
 
         OrderEntity order = attendance.getOrder();
@@ -416,7 +417,7 @@ public class AttendancesService extends BusinessService {
          */
         if (order != null) {
             if (order.getTotal().compareTo(order.getPayment()) != 0) {
-                throw new BusinessException(bundle.getString("ExactPaymentRequiredToCloseAnonymousAttendance"));
+                throw new BusinessException(bundle.getString("BusinessRule.Attendance.Casual.ExactPaymentRequiredToClose"));
             }
         }
 
@@ -450,7 +451,7 @@ public class AttendancesService extends BusinessService {
         Key key = entityManager.find(Key.class, keyId);
 
         if (key == null) {
-            throw new ValidationException(bundle.getString("KeyIDInvalid"));
+            throw new ValidationException(bundle.getString("Invalid.Key.ID"));
         }
 
         Attendance attendance;
@@ -459,7 +460,7 @@ public class AttendancesService extends BusinessService {
                     .setParameter("key", key) //NOI18N
                     .getSingleResult();
         } catch (NoResultException ex) {
-            throw new BusinessException(bundle.getString("NoOpenAttendanceWithKey"));
+            throw new BusinessException(bundle.getString("Invalid.Key.NoOpenAttendance"));
         }
 
         return attendance.getId();

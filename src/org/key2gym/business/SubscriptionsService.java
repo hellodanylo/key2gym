@@ -63,7 +63,7 @@ public class SubscriptionsService extends BusinessService {
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(MessageFormat.format(
-                    bundle.getString("OperationDenied.withName"),
+                    bundle.getString("Security.Operation.Denied.withName"),
                     bundle.getString("Operation.Create")));
         }
 
@@ -71,10 +71,10 @@ public class SubscriptionsService extends BusinessService {
             throw new NullPointerException("The subscription is null.");
         }
 
-        validateBarcode(subscription.getBarcode(), null);
-        validateTitle(subscription.getTitle());
-        validateQuantity(subscription.getQuantity());
-        validatePrice(subscription.getPrice());
+        ItemsService.getInstance().validateBarcode(subscription.getBarcode(), null);
+        ItemsService.getInstance().validateTitle(subscription.getTitle());
+        ItemsService.getInstance().validateQuantity(subscription.getQuantity());
+        ItemsService.getInstance().validatePrice(subscription.getPrice());
 
         Item entityItem = new Item(
                 null,
@@ -175,7 +175,7 @@ public class SubscriptionsService extends BusinessService {
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(MessageFormat.format(
-                    bundle.getString("OperationDenied.withName"),
+                    bundle.getString("Security.Operation.Denied.withName"),
                     bundle.getString("Operation.Update")));
         }
 
@@ -183,10 +183,10 @@ public class SubscriptionsService extends BusinessService {
             throw new NullPointerException("The subscription is null.");
         }
 
-        validateBarcode(subscription.getBarcode(), subscription.getId());
-        validateTitle(subscription.getTitle());
-        validateQuantity(subscription.getQuantity());
-        validatePrice(subscription.getPrice());
+        ItemsService.getInstance().validateBarcode(subscription.getBarcode(), subscription.getId());
+        ItemsService.getInstance().validateTitle(subscription.getTitle());
+        ItemsService.getInstance().validateQuantity(subscription.getQuantity());
+        ItemsService.getInstance().validatePrice(subscription.getPrice());
 
         if (subscription.getId() == null) {
                         throw new ValidationException(MessageFormat.format(
@@ -261,7 +261,7 @@ public class SubscriptionsService extends BusinessService {
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(MessageFormat.format(
-                    bundle.getString("OperationDenied.withName"),
+                    bundle.getString("Security.Operation.Denied.withName"),
                     bundle.getString("Operation.Removal")));
         }
 
@@ -277,76 +277,12 @@ public class SubscriptionsService extends BusinessService {
 
         if (!itemSubscription.getItem().getOrderLines().isEmpty()) {
             throw new BusinessException(MessageFormat.format(
-                    bundle.getString("ItemHasUnarchivedPurchases"),
+                    bundle.getString("BusinessRule.Item.HasUnarchivedPurchases.withItemTitle"),
                     itemSubscription.getItem().getTitle()));
         }
 
         entityManager.remove(itemSubscription);
         entityManager.flush();
-    }
-
-    private void validateBarcode(Long value, Short id) throws ValidationException {
-        if (value == null) {
-            return;
-        }
-        if (value < 0) {
-            throw new ValidationException(bundle.getString("BarcodeCanNotBeNegative"));
-        }
-
-        try {
-
-            Item item = (Item) entityManager.createNamedQuery("Item.findByBarcode") //NOI18N
-                    .setParameter("barcode", value).getSingleResult();
-
-            if (id != null && item.getId().equals(id)) {
-                return;
-            }
-
-            throw new ValidationException(MessageFormat.format(
-                    bundle.getString("AnotherItemHasSameBarcode"),
-                    item.getTitle()));
-
-        } catch (NoResultException ex) {
-            return;
-        }
-    }
-
-    private void validateQuantity(Short value) throws ValidationException {
-        if (value == null) {
-            return;
-        }
-
-        if (value < 0) {
-            throw new ValidationException(bundle.getString("QuantityCanNotBeNegative"));
-        } else if (value > 255) {
-            throw new ValidationException(bundle.getString("QuantityOverLimit"));
-        }
-    }
-
-    private void validatePrice(BigDecimal value) throws ValidationException {
-        if (value == null) {
-            throw new NullPointerException("The price is null."); //NOI18N
-        }
-
-        if (value.scale() > 2) {
-            throw new ValidationException(bundle.getString("TwoDigitsAfterDecimalPointMax"));
-        } else if (value.precision() > 5) {
-            throw new ValidationException(bundle.getString("ThreeDigitsBeforeDecimalPointMax"));
-        } else if (value.compareTo(new BigDecimal(0)) < 0) {
-            throw new ValidationException(bundle.getString("PriceCanNotBeNegative"));
-        }
-    }
-
-    private void validateTitle(String value) throws ValidationException {
-        if (value == null) {
-            throw new NullPointerException("The title is null."); //NOI18N
-        }
-        value = value.trim();
-        if (value.isEmpty()) {
-            throw new ValidationException(MessageFormat.format(
-                    bundle.getString("CanNotBeEmpty.withField"),
-                    bundle.getString("Field.Title")));
-        }
     }
 
     private void validateUnits(Short units) throws ValidationException {
