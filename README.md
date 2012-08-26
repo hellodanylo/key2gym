@@ -1,6 +1,6 @@
 # Key2Gym
 
-![Key2Gyn logo](master/src/org/key2gym/presentation/resources/splash.png)
+![Key2Gyn logo](raw/master/src/org/key2gym/presentation/resources/splash.png)
 
 ## About
 Key2Gym is a free sofware for running and maintaing gyms and other membership-based clubs or enterprises.
