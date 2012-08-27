@@ -93,7 +93,7 @@ public class FreezesService extends BusinessService {
         if (days < 1 || days > 10) {
             String message = MessageFormat.format(
                     bundle.getString("BusinessRule.Freeze.Days.HasToBeWithinRange.withRangeBeginAndRangeEnd"),
-                    new Integer[]{1, 10}
+                    1, 10
             );
             throw new ValidationException(message);
         }
