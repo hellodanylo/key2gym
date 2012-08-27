@@ -15,21 +15,24 @@
  */
 package org.key2gym;
 
-import org.key2gym.business.StorageService;
-import org.key2gym.presentation.MainFrame;
 import java.awt.EventQueue;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.key2gym.business.StorageService;
+import org.key2gym.presentation.MainFrame;
+import org.key2gym.presentation.connections.core.BasicConnection;
+import org.key2gym.presentation.connections.core.ConnectionsManager;
+import org.key2gym.presentation.dialogs.AbstractDialog;
+import org.key2gym.presentation.dialogs.ConnectionsManagerDialog;
+import org.key2gym.presentation.factories.connections.PropertiesFactory;
 
 /**
  * This is the main class of the application.
@@ -45,7 +48,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class Starter {
 
     private static final Logger logger = Logger.getLogger(Starter.class.getName());
-    private static final Map<String, String> properties = new HashMap<>();
+    private static final Properties properties = new Properties();
 
     /**
      * The main method which performs all task as described in class
@@ -90,22 +93,15 @@ public class Starter {
             }
         }
 
-        /*
-         * Storage service starts up on the first call of
-         * StorageService.getInstance().
-         */
-        StorageService.getInstance();
-
-        Properties applicationProperties = new Properties();
-        try {
-            applicationProperties.load(new FileInputStream("etc/application.properties"));
+        try(FileInputStream input = new FileInputStream("etc/application.properties")) {
+            properties.load(input);
         } catch (IOException ex) {
             logger.fatal(ex);
         }
 
-        Locale.setDefault(new Locale((String)applicationProperties.get("locale.language"), (String)applicationProperties.get("locale.country")));
+        Locale.setDefault(new Locale((String) properties.get("locale.language"), (String) properties.get("locale.country")));
 
-        String ui = (String) applicationProperties.get("ui");
+        String ui = (String) properties.get("ui");
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if (ui.equals(info.getName())) {
@@ -115,6 +111,69 @@ public class Starter {
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             logger.fatal("Failed to change the L&F!");
+        }
+
+        ConnectionsManager connectionsManager = new ConnectionsManager();
+        ConnectionsManagerDialog dialog = new ConnectionsManagerDialog(connectionsManager);
+        
+        dialog.setVisible(true);
+        
+        /*
+         * Quits if the user clicked cancel.
+         */
+        if(dialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            return;
+        }
+        
+        /*
+         * Logs an exception and quits, if the connections manager encountered
+         * an exception.
+         */
+        if(dialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            logger.fatal("The connections manager encountered an exception.", dialog.getException());
+            return;
+        }
+        
+        BasicConnection connection = connectionsManager.getSelectedConnection();
+
+        /*
+         * Attempts to load the properties factory class. 
+         */
+        String propertiesFactoryClassBinaryName = "org.key2gym.presentation.factories.connections."+connection.getType()+"PropertiesFactory";
+        Class<? extends PropertiesFactory> propertiesFactoryClass;
+        try {
+            propertiesFactoryClass = (Class<? extends PropertiesFactory>) Starter.class.getClassLoader().loadClass(propertiesFactoryClassBinaryName);
+        } catch(ClassNotFoundException ex) {
+            logger.fatal("Missing persistence properties factory for connection type: "+connection.getType(), ex);
+            return;
+        } catch(ClassCastException ex) {
+            logger.fatal("Persistence properties factory for connection type '"+connection.getType()+"' is of the wrong type.", ex);
+            return;
+        }
+        
+        PropertiesFactory propertiesFactory;
+        
+        /*
+         * Attempts to instantiate the properties factory.
+         */
+        try {
+            propertiesFactory = propertiesFactoryClass.newInstance();
+        } catch(IllegalAccessException|InstantiationException ex) {
+            logger.fatal("Failed to instantiate the persistence properties factory for connection type: "+connection.getType(), ex);
+            return;
+        }
+        
+        /*
+         * Initializes the storage service with the persistence properties generated
+         * from the selected connection.
+         */
+        
+        logger.info("Initializing the storage service with the connection: " + connection.getCodeName());
+        try {
+            StorageService.initialize(propertiesFactory.createEntityManagerFactoryProperties(connection), propertiesFactory.createEntityManagerProperties(connection));
+        } catch(Exception ex) {
+            logger.fatal("Failed to initializes the storage service.", ex);
+            return;
         }
 
         logger.info("Started!");
@@ -142,10 +201,10 @@ public class Starter {
         }
 
         Logger.getLogger(Starter.class.getName()).info("Shutting down!");
-        StorageService.getInstance().closeEntityManager();
+        StorageService.getInstance().destroy();
     }
 
-    public static Map<String, String> getProperties() {
+    public static Properties getProperties() {
         return properties;
     }
 }

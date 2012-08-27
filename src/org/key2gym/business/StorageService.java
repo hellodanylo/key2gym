@@ -15,20 +15,14 @@
  */
 package org.key2gym.business;
 
-import org.key2gym.Starter;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Properties;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import org.apache.log4j.Logger;
 
 /**
+ * Provides EntityManager for BusinessServices and transactions control for
+ * presentation tier.
  *
  * @author Danylo Vashchilenko
  */
@@ -36,43 +30,35 @@ public class StorageService extends Observable {
 
     private EntityManager entityManager;
 
-    protected StorageService() {
-
-        /*
-         * Loads the storage configuration file.
-         */
-        Properties config = new Properties();
-        try {
-            config.load(new FileInputStream("etc/storages/" + Starter.getProperties().get("storage") + ".properties"));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("javax.persistence.jdbc.url",
-                MessageFormat.format("jdbc:mysql://{0}:{1}/{2}?useUnicode=true&characterEncoding=utf8",
-                config.get("host"),
-                config.get("port"),
-                config.get("database")));
-
-        properties.put("javax.persistence.jdbc.password", config.get("password"));
-        properties.put("javax.persistence.jdbc.user", config.get("user"));
-
-        if (config.containsKey("ddl")) {
-            properties.put("eclipselink.ddl-generation", config.get("ddl"));
-            properties.put("eclipselink.ddl-generation.table-creation-suffix", "engine=InnoDB");
-        }
-
-        Logger.getLogger(StorageService.class.getName()).info("Connecting to the storage...");
-
-        entityManager = Persistence.createEntityManagerFactory("PU", properties).createEntityManager();
-
-        List<Object> result = entityManager.createNativeQuery("show variables like 'char%';").getResultList();
-
-        properties.hashCode();
+    protected StorageService(Properties factoryProperties, Properties entityManagerProperties) {
+        entityManager = Persistence.createEntityManagerFactory("PU", factoryProperties).createEntityManager(entityManagerProperties);
     }
 
-    public EntityManager getEntityManager() {
+    /**
+     * Initializes the StorageService with given properties.
+     *
+     * @param factoryProperties the properties to use when creating
+     * EntityManagerFactory
+     * @param entityManagerProperties the properties to use when creating
+     * EntityManager
+     * @throws IllegalAccessException if the service is already initialized
+     */
+    public static void initialize(Properties factoryProperties, Properties entityManagerProperties) throws IllegalAccessException {
+        if (instance != null) {
+            throw new IllegalAccessException("The storage has already been initialized!");
+        }
+        instance = new StorageService(factoryProperties, entityManagerProperties);
+    }
+
+    /**
+     * Gets the storage's entity manager.
+     * <p>
+     *
+     * <b> This method is to be used by business tier only! </b>
+     *
+     * @return the entity manager
+     */
+    EntityManager getEntityManager() {
         return entityManager;
     }
 
@@ -94,9 +80,10 @@ public class StorageService extends Observable {
         entityManager.getTransaction().rollback();
     }
 
-    public void closeEntityManager() {
-        entityManager.close();
+    public void destroy() {
+        entityManager.getEntityManagerFactory().close();
     }
+    
     /**
      * Singleton instance.
      */
@@ -105,13 +92,9 @@ public class StorageService extends Observable {
     /**
      * Gets an instance of this class.
      *
-     * @return an instance of this class
+     * @return an instance of this class, or null if it was not initialized
      */
     public static StorageService getInstance() {
-        if (instance == null) {
-            instance = new StorageService();
-        }
-
         return instance;
     }
 }
