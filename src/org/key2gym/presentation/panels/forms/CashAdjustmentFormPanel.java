@@ -34,13 +34,12 @@ import org.joda.time.DateMidnight;
  *
  * @author Danylo Vashchilenko
  */
-public class CashAdjustmentFormPanel extends JPanel {
+public class CashAdjustmentFormPanel extends FormPanel<CashAdjustmentDTO> {
 
     /**
      * Creates new form ItemForm
      */
     public CashAdjustmentFormPanel() {
-        strings = ResourceBundle.getBundle("org/key2gym/presentation/resources/Strings");
         initComponents();
         buildForm();
     }
@@ -149,7 +148,7 @@ public class CashAdjustmentFormPanel extends JPanel {
      *
      * @param cashAdjustment the new cash adjustment
      */
-    public void setCashAdjustment(CashAdjustmentDTO cashAdjustment) {
+    public void setForm(CashAdjustmentDTO cashAdjustment) {
         this.cashAdjustment = cashAdjustment;
 
         if (cashAdjustment == null) {
@@ -214,7 +213,8 @@ public class CashAdjustmentFormPanel extends JPanel {
         }
     }
 
-    public CashAdjustmentDTO getCashAdjustment() {
+    @Override
+    public CashAdjustmentDTO getForm() {
         return cashAdjustment;
     }
 
@@ -223,6 +223,7 @@ public class CashAdjustmentFormPanel extends JPanel {
      *
      * @return true, if the form is valid and has been saved
      */
+    @Override
     public boolean trySave() {
         for (Binding binding : bindingGroup.getBindings()) {
             binding.saveAndNotify();

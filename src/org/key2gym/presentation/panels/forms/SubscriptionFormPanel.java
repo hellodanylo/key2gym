@@ -36,7 +36,7 @@ import org.jdesktop.beansbinding.*;
  *
  * @author Danylo Vashchilenko
  */
-public class SubscriptionFormPanel extends JPanel {
+public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
 
     /**
      * Creates new form SubscriptionFormPanel
@@ -130,6 +130,11 @@ public class SubscriptionFormPanel extends JPanel {
 
     }
 
+    @Override
+    public SubscriptionDTO getForm() {
+        return subscription;
+    }
+
     private class BarcodeFocusAction extends AbstractAction {
 
         @Override
@@ -143,7 +148,8 @@ public class SubscriptionFormPanel extends JPanel {
      *
      * @param subscription the new subscription
      */
-    public void setSubscription(SubscriptionDTO subscription) {
+    @Override
+    public void setForm(SubscriptionDTO subscription) {
         this.subscription = subscription;
 
         if (subscription == null) {

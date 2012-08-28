@@ -15,16 +15,18 @@
  */
 package org.key2gym.presentation.actions;
 
-import org.key2gym.business.CashService;
-import org.key2gym.business.SessionsService;
-import org.key2gym.business.StorageService;
-import org.key2gym.presentation.dialogs.AbstractDialog;
-import org.key2gym.presentation.dialogs.PickDateDialog;
-import org.key2gym.presentation.dialogs.editors.CashAdjustmentEditorDialog;
-import org.key2gym.presentation.util.UserExceptionHandler;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
+import org.key2gym.business.CashService;
+import org.key2gym.business.SessionsService;
+import org.key2gym.business.StorageService;
+import org.key2gym.business.dto.CashAdjustmentDTO;
+import org.key2gym.presentation.dialogs.AbstractDialog;
+import org.key2gym.presentation.dialogs.FormDialog;
+import org.key2gym.presentation.dialogs.PickDateDialog;
+import org.key2gym.presentation.factories.FormPanelDialogsFactory;
+import org.key2gym.presentation.util.UserExceptionHandler;
 
 /**
  *
@@ -56,14 +58,15 @@ public class ManageCashAction extends BasicAction {
                 return;
             }
 
-            CashAdjustmentEditorDialog cashAdjustmentEditorDIalog = new CashAdjustmentEditorDialog(CashService.getInstance().getAdjustmentByDate(pickDateDialog.getDate()));
-            cashAdjustmentEditorDIalog.setVisible(true);
+            CashAdjustmentDTO cashAdjustment = CashService.getInstance().getAdjustmentByDate(pickDateDialog.getDate());
+            FormDialog dialog = FormPanelDialogsFactory.createCashAdjustmentEditor(getFrame(), cashAdjustment);
+            dialog.setVisible(true);
 
-            if (cashAdjustmentEditorDIalog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-                throw cashAdjustmentEditorDIalog.getException();
+            if (dialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
+                throw dialog.getException();
             }
 
-            if (cashAdjustmentEditorDIalog.getResult().equals(AbstractDialog.Result.CANCEL)) {
+            if (dialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }

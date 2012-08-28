@@ -32,7 +32,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.key2gym.presentation.factories.dialogs.SimpleFormPanelDialogFactory;
+import org.key2gym.presentation.factories.FormPanelDialogsFactory;
 import org.key2gym.presentation.panels.forms.FormPanel;
 import org.key2gym.presentation.panels.forms.ItemFormPanel;
 
@@ -179,7 +179,7 @@ public class ManageItemsDialog extends AbstractDialog {
             item = items.get(itemsTable.getSelectedRow());
         }
         
-        FormDialog dialog = SimpleFormPanelDialogFactory.createItemDialog(this, item);
+        FormDialog dialog = FormPanelDialogsFactory.createItemEditor(this, item);
 
         dialog.setVisible(true);
 

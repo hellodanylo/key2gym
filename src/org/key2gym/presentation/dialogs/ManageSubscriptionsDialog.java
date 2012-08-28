@@ -15,7 +15,6 @@
  */
 package org.key2gym.presentation.dialogs;
 
-import org.key2gym.presentation.dialogs.editors.SubscriptionEditorDialog;
 import org.key2gym.business.SubscriptionsService;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityException;
@@ -34,6 +33,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
+import org.key2gym.presentation.factories.FormPanelDialogsFactory;
 
 /**
  *
@@ -72,8 +72,8 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
         subscriptionsTableModel.setSubscriptions(subscriptions);
         subscriptionsTable.setModel(subscriptionsTableModel);
         subscriptionsScrollPane.setViewportView(subscriptionsTable);
-        
-        int[] widths = new int[]{200,50,50,137,26,26,26};
+
+        int[] widths = new int[]{200, 50, 50, 137, 26, 26, 26};
         TableColumn column;
         for (int i = 0; i < columns.length; i++) {
             column = subscriptionsTable.getColumnModel().getColumn(i);
@@ -154,7 +154,7 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
     }
 
     private void buildDialog() {
-        setContentPane(new FormDebugPanel());
+
         FormLayout layout = new FormLayout("4dlu, [400dlu, p]:g, 4dlu, p, 4dlu",
                 "4dlu, f:[200dlu, p]:g, 4dlu");
         setLayout(layout);
@@ -170,7 +170,7 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
             buttonsPanel.add(okButton, CC.xy(1, 4));
             buttonsPanel.add(cancelButton, CC.xy(1, 5));
         }
-        add(buttonsPanel,   CC.xy(4, 2));
+        add(buttonsPanel, CC.xy(4, 2));
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(getString("Title.ManageSubscriptions")); // NOI18N
@@ -185,23 +185,25 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
         AbstractDialog dialog;
 
         if (evt.getSource().equals(addButton)) {
-            dialog = new SubscriptionEditorDialog(new SubscriptionDTO());
+            dialog = FormPanelDialogsFactory.createSubscriptionEditor(this, new SubscriptionDTO());
         } else {
-            dialog = new SubscriptionEditorDialog(subscriptions.get(subscriptionsTable.getSelectedRow()));
+            dialog = FormPanelDialogsFactory.createSubscriptionEditor(this, subscriptions.get(subscriptionsTable.getSelectedRow()));
         }
 
-        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
 
         if (dialog.getResult().equals(AbstractDialog.Result.OK)) {
             subscriptions = SubscriptionsService.getInstance().getAllSubscriptions();
             subscriptionsTableModel.setSubscriptions(subscriptions);
-        } else if(dialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
+        } else if (dialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
             setResult(Result.EXCEPTION);
             setException(dialog.getException());
             dispose();
             return;
         }
+        SubscriptionsService subscriptionsService = SubscriptionsService.getInstance();
+        subscriptions = subscriptionsService.getAllSubscriptions();
+        subscriptionsTableModel.setSubscriptions(subscriptions);
     }
 
     private void removeButtonActionPerformed(ActionEvent evt) {
