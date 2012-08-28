@@ -113,7 +113,7 @@ public class SessionsService {
         Administrator administrator = authenticateAdministrator(username, password);
 
         if (session.getAdministrator().equals(administrator)) {
-            throw new BusinessException(strings.getString("CurrentSessionWasOpennedBySameAdministrator"));
+            throw new BusinessException(strings.getString("Security.Manage.CurrentSessionWasOpennedBySameAdministrator"));
         }
 
         raisedAdministrator = administrator;
@@ -131,7 +131,7 @@ public class SessionsService {
 
     public void dropRaisedAdministrator() {
         if (raisedAdministrator == null) {
-            throw new IllegalStateException(strings.getString("NoRasiedPermissionsLevel"));
+            throw new IllegalStateException("The administrator is not raised.");
         }
 
         raisedAdministrator = null;
@@ -215,12 +215,12 @@ public class SessionsService {
             }
 
             if (attemptsLeft == 0) {
-                throw new BusinessException(strings.getString("LimitOfFailedAttemtsReached"));
+                throw new BusinessException(strings.getString("Security.Authentication.LimitOfFailedAttemtsReached"));
             }
         }
 
         if (!StorageService.getInstance().isTransactionActive()) {
-            throw new IllegalStateException(strings.getString("TransactionNotActive"));
+            throw new IllegalStateException("The transaction is not active.");
         }
 
         /*
@@ -260,7 +260,7 @@ public class SessionsService {
                 recoverAttemptsTime = new DateTime().plusMinutes(1);
             }
             attemptsLeft--;
-            throw new ValidationException(MessageFormat.format(strings.getString("UsernameAndPasswordCombinationInvalid"), attemptsLeft));
+            throw new ValidationException(MessageFormat.format(strings.getString("Security.Authentication.UsernameAndPasswordCombinationInvalid.withAttemptsLeft"), attemptsLeft));
         }
 
         return administrator;
