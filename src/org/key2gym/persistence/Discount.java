@@ -33,17 +33,21 @@ import javax.persistence.*;
 public class Discount implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_dsc")
+    @Column(name = "id_dsc", nullable = false)
     private Short id;
+    
     @Basic(optional = false)
-    @Column(name = "percent")
+    @Column(name = "percent", nullable = false)
     private short percent;
+    
     @Basic(optional = false)
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
+    
     @OneToMany(mappedBy = "discount")
     private Collection<OrderLine> orderLineCollection;
 

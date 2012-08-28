@@ -48,19 +48,19 @@ public class Item implements Serializable {
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
     
     @Basic(optional = false)
-    @Column(name = "barcode")
+    @Column(name = "barcode", nullable = false)
     private Long barcode;
     
     @Basic(optional = false)
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private Short quantity;
     
     @Basic(optional = false)
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
     
     @OneToMany(mappedBy="item")

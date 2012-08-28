@@ -49,60 +49,60 @@ public class ClientProfile implements Serializable {
     private Short id;
     
     @Basic(optional = false)
-    @Column(name = "sex")
+    @Column(name = "sex", nullable = false)
     private Sex sex;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "address")
+    @Column(name = "address", nullable = false)
     private String address;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "telephone")
+    @Column(name = "telephone", nullable = false)
     private String telephone;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "goal")
+    @Column(name = "goal", nullable = false)
     private String goal;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "possible_attendance_rate")
+    @Column(name = "possible_attendance_rate", nullable = false)
     private String possibleAttendanceRate;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "health_restrictions")
+    @Column(name = "health_restrictions", nullable = false)
     private String healthRestrictions;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "favourite_sport")
+    @Column(name = "favourite_sport", nullable = false)
     private String favouriteSport;
     
     @Basic(optional = false)
-    @Column(name = "fitness_experience")
+    @Column(name = "fitness_experience", nullable = false)
     private FitnessExperience fitnessExperience;
     
     public enum FitnessExperience{NO, YES, UNKNOWN};
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "special_wishes")
+    @Column(name = "special_wishes", nullable = false)
     private String specialWishes;
     
     @Basic(optional = false)
-    @Column(name = "height")
+    @Column(name = "height", nullable = false)
     private Short height;
     
     @Basic(optional = false)
-    @Column(name = "weight")
+    @Column(name = "weight", nullable = false)
     private Short weight;
 
     @Basic(optional = false)
-    @Column(name = "birthday")
+    @Column(name = "birthday", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date birthday;
     

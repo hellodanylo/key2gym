@@ -42,15 +42,15 @@ public class Session implements Serializable {
     private Short id;
     
     @Basic(optional = false)
-    @Column(name = "datetime_begin")
+    @Column(name = "datetime_begin", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date datetimeBegin;
     
-    @Column(name = "datetime_end")
+    @Column(name = "datetime_end", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date datetimeEnd;
     
-    @JoinColumn(name = "idadm_ssn", referencedColumnName = "id_adm")
+    @JoinColumn(name = "idadm_ssn", referencedColumnName = "id_adm", nullable = false)
     @ManyToOne(optional = false)
     private Administrator administrator;
 

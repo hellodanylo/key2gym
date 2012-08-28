@@ -33,16 +33,20 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "AdSource.findAll", query = "SELECT a FROM AdSource a"),
     @NamedQuery(name = "AdSource.findById", query = "SELECT a FROM AdSource a WHERE a.id = :id")})
 public class AdSource implements Serializable {
+    
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_ads")
+    @Column(name = "id_ads", nullable = false)
     private Short id;
+    
     @Basic(optional = false)
     @Lob
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "adSource")
     private List<ClientProfile> clientProfileList;
 

@@ -36,42 +36,42 @@ public class Administrator implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id_adm")
+    @Basic
+    @Column(name = "id_adm", nullable = false, precision = 3)
     private Short id;
     
-    @Basic(optional = false)
+    @Basic
     @Lob
-    @Column(name = "username")
+    @Column(name = "username", nullable = false)
     private String username;
     
-    @Basic(optional = false)
+    @Basic
     @Lob
-    @Column(name = "full_name")
+    @Column(name = "full_name", nullable = false)
     private String fullName;
     
-    @Basic(optional = false)
+    @Basic
     @Lob
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
     
-    @Basic(optional = false)
+    @Basic
     @Lob
-    @Column(name = "address")
+    @Column(name = "address", nullable = false)
     private String address;
     
-    @Basic(optional = false)
+    @Basic
     @Lob
-    @Column(name = "telephone")
+    @Column(name = "telephone", nullable = false)
     private String telephone;
     
-    @Basic(optional = false)
+    @Basic
     @Lob
-    @Column(name = "note")
+    @Column(name = "note", nullable = false)
     private String note;
     
-    @Basic(optional = false)
-    @Column(name = "permissions_level")
+    @Basic
+    @Column(name = "permissions_level", nullable = false, precision = 1)
     private Short permissionsLevel;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "administrator")

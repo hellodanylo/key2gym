@@ -43,24 +43,24 @@ public class ClientFreeze implements Serializable {
     private Short id;
             
     @Basic(optional = false)
-    @Column(name = "date_issued")
+    @Column(name = "date_issued", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dateIssued;
     
     @Basic(optional = false)
-    @Column(name = "days")
+    @Column(name = "days", nullable = false)
     private Short days;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "note")
+    @Column(name = "note", nullable = false)
     private String note;
     
-    @JoinColumn(name = "idcln_cfz", referencedColumnName = "id_cln")
+    @JoinColumn(name = "idcln_cfz", referencedColumnName = "id_cln", nullable = false)
     @ManyToOne(optional = false)
     private Client client;
     
-    @JoinColumn(name = "idadm_cfz", referencedColumnName = "id_adm")
+    @JoinColumn(name = "idadm_cfz", referencedColumnName = "id_adm", nullable = false)
     @ManyToOne(optional=false)
     private Administrator administrator;
     

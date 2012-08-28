@@ -45,22 +45,22 @@ public class OrderEntity implements Serializable {
     private Short id;
     
     @Basic(optional = false)
-    @Column(name = "date_recorded")
+    @Column(name = "date_recorded", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dateRecorded;
     
     @Basic(optional = false)
-    @Column(name = "payment")
+    @Column(name = "payment", nullable = false)
     private BigDecimal payment;
     
     @OneToMany(mappedBy="orderEntity", cascade={CascadeType.ALL})
     private List<OrderLine> orderLines;
     
-    @JoinColumn(name = "idcln_ord", referencedColumnName = "id_cln")
+    @JoinColumn(name = "idcln_ord", referencedColumnName = "id_cln", nullable = false)
     @ManyToOne
     private Client client;
     
-    @JoinColumn(name = "idatd_ord", referencedColumnName = "id_atd")
+    @JoinColumn(name = "idatd_ord", referencedColumnName = "id_atd", nullable = false)
     @OneToOne
     private Attendance attendance;
 

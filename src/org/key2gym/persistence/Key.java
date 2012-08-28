@@ -16,7 +16,6 @@
 package org.key2gym.persistence;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -44,7 +43,7 @@ public class Key implements Serializable {
     private Short id;
 
     @Basic(optional = false)
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
         
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "key")

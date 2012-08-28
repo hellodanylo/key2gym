@@ -33,19 +33,19 @@ import javax.persistence.*;
 public class OrderLine implements Serializable {
     
     @Id
-    @Column(name = "id_orl")
+    @Column(name = "id_orl", nullable = false)
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private short id;
             
-    @JoinColumn(name="idord_orl", referencedColumnName="id_ord")//, insertable=false, updatable=false)
+    @JoinColumn(name="idord_orl", referencedColumnName="id_ord", nullable = false)//, insertable=false, updatable=false)
     @ManyToOne
     private OrderEntity orderEntity;
     
-    @JoinColumn(name="iditm_orl", referencedColumnName="id_itm")//, insertable=false, updatable=false)
+    @JoinColumn(name="iditm_orl", referencedColumnName="id_itm", nullable = false)//, insertable=false, updatable=false)
     @ManyToOne
     private Item item;
     
-    @JoinColumn(name = "iddsc_orl", referencedColumnName = "id_dsc")
+    @JoinColumn(name = "iddsc_orl", referencedColumnName = "id_dsc", nullable = false)
     @ManyToOne
     private Discount discount;
     

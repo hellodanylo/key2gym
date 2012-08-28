@@ -39,12 +39,12 @@ public class Property implements Serializable {
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "current_value")
+    @Column(name = "current_value", nullable = false)
     private String value;
 
     public Property() {

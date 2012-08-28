@@ -48,18 +48,18 @@ public class Attendance implements Serializable {
     private Short id;
     
     @Basic(optional = false)
-    @Column(name = "datetime_begin")
+    @Column(name = "datetime_begin", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date datetimeBegin;
     
     @Basic(optional = false)
-    @Column(name = "datetime_end")
+    @Column(name = "datetime_end", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date datetimeEnd;
     
     public static final Date DATETIME_END_UNKNOWN = new Date(1081058401000l);
     
-    @JoinColumn(name = "idkey_atd", referencedColumnName = "id_key")
+    @JoinColumn(name = "idkey_atd", referencedColumnName = "id_key", nullable = false)
     @ManyToOne(optional = false)
     private Key key;
     

@@ -40,12 +40,12 @@ public class TimeSplit implements Serializable {
     private Short id;
     
     @Basic(optional = false)
-    @Column(name = "end_time")
+    @Column(name = "end_time", nullable = false)
     @Temporal(TemporalType.TIME)
     private Date endTime;
     
     @Basic(optional = false)
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
     
     @OneToMany(mappedBy = "timeSplit")
