@@ -30,8 +30,8 @@ import javax.persistence.*;
     @NamedQuery(name = "Session.findById", query = "SELECT s FROM Session s WHERE s.id = :id"),
     @NamedQuery(name = "Session.findByDatetimeBegin", query = "SELECT s FROM Session s WHERE s.datetimeBegin = :datetimeBegin"),
     @NamedQuery(name = "Session.findByAdministratorAndDateTimeBeginRange", query = "SELECT s FROM Session s WHERE s.datetimeBegin BETWEEN :rangeBegin AND :rangeEnd AND s.administrator = :administrator"),
-    @NamedQuery(name = "Session.findByDatetimeEnd", query = "SELECT s FROM Session s WHERE s.datetimeEnd = :datetimeEnd")})
-
+    @NamedQuery(name = "Session.findByDatetimeEnd", query = "SELECT s FROM Session s WHERE s.datetimeEnd = :datetimeEnd"),
+    @NamedQuery(name = "Session.findOpenByDatetimeBeginRangeBeginAndAdministrator", query = "SELECT s FROM Session s WHERE s.datetimeEnd = 1081058401000 AND s.datetimeBegin >= :datetimeBeginRangeBegin AND s.administrator = :administrator")})
 public class Session implements Serializable {
     private static final long serialVersionUID = 1L;
     
@@ -48,7 +48,9 @@ public class Session implements Serializable {
     
     @Column(name = "datetime_end", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date datetimeEnd;
+    private Date datetimeEnd = DATETIME_END_UNKNOWN;
+    
+    public static Date DATETIME_END_UNKNOWN = new Date(1081058401000l);
     
     @JoinColumn(name = "idadm_ssn", referencedColumnName = "id_adm", nullable = false)
     @ManyToOne(optional = false)

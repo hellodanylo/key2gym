@@ -55,7 +55,7 @@ public class Attendance implements Serializable {
     @Basic(optional = false)
     @Column(name = "datetime_end", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date datetimeEnd;
+    private Date datetimeEnd = DATETIME_END_UNKNOWN;
     
     public static final Date DATETIME_END_UNKNOWN = new Date(1081058401000l);
     

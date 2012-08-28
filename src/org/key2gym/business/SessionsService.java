@@ -15,11 +15,6 @@
  */
 package org.key2gym.business;
 
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.SessionListener;
-import org.key2gym.business.api.ValidationException;
-import org.key2gym.persistence.Administrator;
-import org.key2gym.persistence.Session;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,6 +25,11 @@ import javax.persistence.NoResultException;
 import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.key2gym.business.api.BusinessException;
+import org.key2gym.business.api.SessionListener;
+import org.key2gym.business.api.ValidationException;
+import org.key2gym.persistence.Administrator;
+import org.key2gym.persistence.Session;
 
 /**
  *
@@ -64,9 +64,8 @@ public class SessionsService {
         /*
          * If the same session already exists, just joins it,
          */
-        List<Session> sessions = entityManager.createNamedQuery("Session.findByAdministratorAndDateTimeBeginRange") //NOI18N
-                .setParameter("rangeBegin", new DateMidnight().toDate()) //NOI18N
-                .setParameter("rangeEnd", new DateMidnight().plusDays(1).toDate()) //NOI18N
+        List<Session> sessions = entityManager.createNamedQuery("Session.findOpenByDatetimeBeginRangeBeginAndAdministrator") //NOI18N
+                .setParameter("datetimeBeginRangeBegin", new DateMidnight().toDate()) //NOI18N
                 .setParameter("administrator", administrator) //NOI18N
                 .getResultList();
 
@@ -74,12 +73,11 @@ public class SessionsService {
             session = new Session();
             session.setAdministrator(administrator);
             session.setDatetimeBegin(new Date());
-            session.setDatetimeEnd(null);
-
+           
             entityManager.persist(session);
         } else {
             session = sessions.get(0);
-            session.setDatetimeEnd(null);
+            session.setDatetimeEnd(Session.DATETIME_END_UNKNOWN);
         }
 
         entityManager.flush();
