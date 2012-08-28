@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -28,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.key2gym.business.StorageService;
 import org.key2gym.presentation.MainFrame;
+import org.key2gym.presentation.connections.core.BasicConnection;
 import org.key2gym.presentation.connections.core.BasicConnection;
 import org.key2gym.presentation.connections.core.ConnectionsManager;
 import org.key2gym.presentation.dialogs.AbstractDialog;
@@ -71,14 +73,9 @@ public class Starter {
         logger.info("Starting...");
 
         /*
-         * Puts the default values of various properties.
-         */
-        properties.put("storage", "default");
-
-        /*
          * The array contains the names of all expected arguments.
          */
-        String[] expectedArgumentsNames = new String[]{"storage"};
+        String[] expectedArgumentsNames = new String[]{"connection"};
 
         /*
          * Parses the arguments looking for expected arguments. The arguments
@@ -93,7 +90,7 @@ public class Starter {
             }
         }
 
-        try(FileInputStream input = new FileInputStream("etc/application.properties")) {
+        try (FileInputStream input = new FileInputStream("etc/application.properties")) {
             properties.load(input);
         } catch (IOException ex) {
             logger.fatal(ex);
@@ -114,64 +111,85 @@ public class Starter {
         }
 
         ConnectionsManager connectionsManager = new ConnectionsManager();
-        ConnectionsManagerDialog dialog = new ConnectionsManagerDialog(connectionsManager);
-        
-        dialog.setVisible(true);
-        
-        /*
-         * Quits if the user clicked cancel.
-         */
-        if(dialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
-            return;
+
+        if (!properties.containsKey("connection")) {
+            ConnectionsManagerDialog dialog = new ConnectionsManagerDialog(connectionsManager);
+
+            dialog.setVisible(true);
+
+            /*
+             * Quits if the user clicked cancel.
+             */
+            if (dialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
+                return;
+            }
+
+            /*
+             * Logs an exception and quits, if the connections manager encountered
+             * an exception.
+             */
+            if (dialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
+                logger.fatal("The connections manager encountered an exception.", dialog.getException());
+                return;
+            }
+        } else {
+            /*
+             * Attemps to find a connection with a code name passed in the command line.
+             */
+            List<BasicConnection> connections = connectionsManager.getConnections();
+            for (BasicConnection connection : connections) {
+                if(connection.getCodeName().equals(properties.getProperty("connection"))) {
+                    connectionsManager.selectConnection(connection);
+                }
+            }
+            
+            /*
+             * Reports and terminates, if the connection was not found.
+             */
+            if(connectionsManager.getSelectedConnection() == null) {
+                logger.fatal("Missing connection specified in the arguments: " + properties.getProperty("connection"));
+                return;
+            }
         }
-        
-        /*
-         * Logs an exception and quits, if the connections manager encountered
-         * an exception.
-         */
-        if(dialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            logger.fatal("The connections manager encountered an exception.", dialog.getException());
-            return;
-        }
-        
+
         BasicConnection connection = connectionsManager.getSelectedConnection();
 
         /*
          * Attempts to load the properties factory class. 
          */
-        String propertiesFactoryClassBinaryName = "org.key2gym.presentation.factories.connections."+connection.getType()+"PropertiesFactory";
+        String propertiesFactoryClassBinaryName = "org.key2gym.presentation.factories.connections." + connection.getType() + "PropertiesFactory";
         Class<? extends PropertiesFactory> propertiesFactoryClass;
         try {
             propertiesFactoryClass = (Class<? extends PropertiesFactory>) Starter.class.getClassLoader().loadClass(propertiesFactoryClassBinaryName);
-        } catch(ClassNotFoundException ex) {
-            logger.fatal("Missing persistence properties factory for connection type: "+connection.getType(), ex);
+        } catch (ClassNotFoundException ex) {
+            logger.fatal("Missing persistence properties factory for connection type: " + connection.getType(), ex);
             return;
-        } catch(ClassCastException ex) {
-            logger.fatal("Persistence properties factory for connection type '"+connection.getType()+"' is of the wrong type.", ex);
+        } catch (ClassCastException ex) {
+            logger.fatal("Persistence properties factory for connection type '" + connection.getType() + "' is of the wrong type.", ex);
             return;
         }
-        
+
         PropertiesFactory propertiesFactory;
-        
+
         /*
          * Attempts to instantiate the properties factory.
          */
         try {
             propertiesFactory = propertiesFactoryClass.newInstance();
-        } catch(IllegalAccessException|InstantiationException ex) {
-            logger.fatal("Failed to instantiate the persistence properties factory for connection type: "+connection.getType(), ex);
+        } catch (IllegalAccessException | InstantiationException ex) {
+            logger.fatal("Failed to instantiate the persistence properties factory for connection type: " + connection.getType(), ex);
             return;
         }
-        
+
         /*
          * Initializes the storage service with the persistence properties generated
          * from the selected connection.
          */
-        
+
         logger.info("Initializing the storage service with the connection: " + connection.getCodeName());
         try {
             StorageService.initialize(propertiesFactory.createEntityManagerFactoryProperties(connection), propertiesFactory.createEntityManagerProperties(connection));
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.fatal("Failed to initializes the storage service.", ex);
             return;
         }
