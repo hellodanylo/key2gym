@@ -20,7 +20,6 @@ import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.dto.ItemDTO;
-import org.key2gym.presentation.dialogs.editors.ItemEditorDialog;
 import org.key2gym.presentation.util.ItemsTableModel;
 import org.key2gym.presentation.util.ItemsTableModel.Column;
 import org.key2gym.presentation.util.UserExceptionHandler;
@@ -28,10 +27,14 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.key2gym.presentation.factories.dialogs.SimpleFormPanelDialogFactory;
+import org.key2gym.presentation.panels.forms.FormPanel;
+import org.key2gym.presentation.panels.forms.ItemFormPanel;
 
 /**
  *
@@ -156,7 +159,7 @@ public class ManageItemsDialog extends AbstractDialog {
             buttonsPanel.add(okButton, CC.xy(1, 4));
             buttonsPanel.add(cancelButton, CC.xy(1, 5));
         }
-        add(buttonsPanel,   CC.xy(4, 2));
+        add(buttonsPanel, CC.xy(4, 2));
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(getString("Title.ManageItems")); // NOI18N
@@ -168,22 +171,23 @@ public class ManageItemsDialog extends AbstractDialog {
 
     private void addOrEditButtonActionPerformed(ActionEvent evt) {
 
-        AbstractDialog dialog;
-
-        if (evt.getSource().equals(addButton)) {
-            dialog = new ItemEditorDialog(new ItemDTO());
+        ItemDTO item;
+        
+        if(evt.getSource().equals(addButton)) {
+            item = new ItemDTO();
         } else {
-            dialog = new ItemEditorDialog(items.get(itemsTable.getSelectedRow()));
+            item = items.get(itemsTable.getSelectedRow());
         }
+        
+        FormDialog dialog = SimpleFormPanelDialogFactory.createItemDialog(this, item);
 
-        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
 
-        if (dialog.getResult().equals(AbstractDialog.RESULT_OK)) {
+        if (dialog.getResult().equals(FormDialog.Result.OK)) {
             items = ItemsService.getInstance().getPureItems();
             itemsTableModel.setItems(items);
-        } else if(dialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
-            setResult(RESULT_EXCEPTION);
+        } else if (dialog.getResult().equals(FormDialog.Result.EXCEPTION)) {
+            setResult(Result.EXCEPTION);
             setException(dialog.getException());
             dispose();
             return;
@@ -211,7 +215,7 @@ public class ManageItemsDialog extends AbstractDialog {
                  * The exception is unexpected. We got to shutdown the dialog
                  * for the state of the transaction is now unknown.
                  */
-                setResult(EditOrderDialog.RESULT_EXCEPTION);
+                setResult(EditOrderDialog.Result.EXCEPTION);
                 setException(ex);
                 dispose();
                 return;

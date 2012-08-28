@@ -184,7 +184,7 @@ public class PickAttendanceDialog extends AbstractDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(AbstractDialog.RESULT_EXCEPTION);
+            setResult(AbstractDialog.Result.EXCEPTION);
             setException(ex);
             dispose();
             return;

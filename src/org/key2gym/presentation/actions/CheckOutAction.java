@@ -70,11 +70,11 @@ public class CheckOutAction extends BasicAction {
 
             pickAttendanceDialog.setVisible(true);
 
-            if (pickAttendanceDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (pickAttendanceDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw pickAttendanceDialog.getException();
             }
 
-            if (pickAttendanceDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (pickAttendanceDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -103,11 +103,11 @@ public class CheckOutAction extends BasicAction {
                     editOrderDialog.setFullPaymentForced(isAnonymous);
                     editOrderDialog.setVisible(true);
 
-                    if (editOrderDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                    if (editOrderDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                         throw editOrderDialog.getException();
                     }
 
-                    if (editOrderDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+                    if (editOrderDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                         storageService.rollbackTransaction();
                         return;
                     }

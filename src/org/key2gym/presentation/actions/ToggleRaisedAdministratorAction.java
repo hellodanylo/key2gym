@@ -45,12 +45,12 @@ public class ToggleRaisedAdministratorAction extends BasicAction {
                 TemporalySwapAdministratorDialog swapAdminsitratorDialog = new TemporalySwapAdministratorDialog(getFrame());
                 swapAdminsitratorDialog.setVisible(true);
 
-                if (swapAdminsitratorDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+                if (swapAdminsitratorDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                     StorageService.getInstance().rollbackTransaction();
                     return;
                 }
 
-                if (swapAdminsitratorDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                if (swapAdminsitratorDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                     throw swapAdminsitratorDialog.getException();
                 }
             }

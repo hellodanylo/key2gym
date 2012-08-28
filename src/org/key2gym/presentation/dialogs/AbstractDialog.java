@@ -21,22 +21,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import javax.swing.*;
 
 /**
- * Basic class for Key2Gym dialogs. Implements basic session variables like:
- *
- * <ul>
- *
- * <li> Result - a general result code
- *
- * <li> Exception - a runtime exception that this dialog encountered, this
- * variable is set, when Result is RESULT_EXCEPTION.
- *
- * </ul>
- *
- * Sets the result to RESULT_CANCEL, when the close button is pressed.
+ * A dialog with support of i18n, common actions and results.
+ * <p/>
+ * Results tell the dialog's called what action the users chose. There are several
+ * self-explanatory results: OK, CANCEL, CLOSE. There is also a special result:
+ * EXCEPTION, which is used the dialog encountered a runtime exception and chose
+ * to terminate.
+ * <p/>
+ * The dialog sets the result to Result.CANCEL, when the close button (on the frame) is pressed.
  *
  * @author Danylo Vashchilenko
  */
@@ -73,10 +70,6 @@ public abstract class AbstractDialog extends JDialog {
         exception = null;
     }
 
-//    public AbstractDialog(JFrame parent, boolean modal) {
-//        this(parent, modal, new Button[]{Button.OK, Button.CANCEL});
-//    }
-
     /**
      * Performs pre-closing routine.
      *
@@ -84,7 +77,7 @@ public abstract class AbstractDialog extends JDialog {
      * @see AbstractDialog
      */
     protected void formWindowClosing(java.awt.event.WindowEvent evt) {
-        setResult(RESULT_CANCEL);
+        setResult(Result.CANCEL);
     }
 
     /**
@@ -93,8 +86,8 @@ public abstract class AbstractDialog extends JDialog {
      * @param key the key to look up the string
      * @return the l15d value
      */
-    protected String getString(String key) {
-        return strings.getString(key);
+    protected String getString(String key, Object... parameters) {
+        return MessageFormat.format(strings.getString(key), parameters);
     }
 
     /**
@@ -139,7 +132,7 @@ public abstract class AbstractDialog extends JDialog {
      *
      * @return the result code
      */
-    public Integer getResult() {
+    public Result getResult() {
         return result;
     }
 
@@ -148,7 +141,7 @@ public abstract class AbstractDialog extends JDialog {
      *
      * @param result the result code
      */
-    public void setResult(Integer result) {
+    public void setResult(Result result) {
         this.result = result;
     }
 
@@ -196,17 +189,17 @@ public abstract class AbstractDialog extends JDialog {
     }
 
     protected void onOkActionPerformed(ActionEvent evt) {
-        setResult(RESULT_OK);
+        setResult(Result.OK);
         dispose();
     }
 
     protected void onCancelActionPerformed(ActionEvent evt) {
-        setResult(RESULT_CANCEL);
+        setResult(Result.CANCEL);
         dispose();
     }
 
     protected void onCloseActionPerformed(ActionEvent evt) {
-        setResult(RESULT_CLOSE);
+        setResult(Result.CLOSE);
         dispose();
     }
 
@@ -250,17 +243,15 @@ public abstract class AbstractDialog extends JDialog {
     private Action cancelAction;
     private Action okAction;
     private Action closeAction;
-    private Integer result;
+    private Result result;
     private RuntimeException exception;
     private ResourceBundle strings;
 
-    public enum Button {
+    public enum Result {
 
-        OK, CANCEL
+        OK,
+        CANCEL,
+        EXCEPTION,
+        CLOSE
     };
-    // TODO: use enumeration instead
-    public static final Integer RESULT_OK = 0;
-    public static final Integer RESULT_CANCEL = 1;
-    public static final Integer RESULT_EXCEPTION = 2;
-    public static final Integer RESULT_CLOSE = 3;
 }

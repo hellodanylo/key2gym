@@ -182,7 +182,7 @@ public class PickOrderDialog extends AbstractDialog {
         try {
 
             if (clientRadioButton.isSelected()) {
-                setResult(RESULT_OK);
+                setResult(Result.OK);
                 setClient(true);
                 dispose();
                 return;
@@ -231,7 +231,7 @@ public class PickOrderDialog extends AbstractDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(RESULT_EXCEPTION);
+            setResult(Result.EXCEPTION);
             setException(ex);
             dispose();
             return;

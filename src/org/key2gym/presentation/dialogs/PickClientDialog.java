@@ -298,7 +298,7 @@ public class PickClientDialog extends AbstractDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(org.key2gym.presentation.dialogs.EditOrderDialog.RESULT_EXCEPTION);
+            setResult(org.key2gym.presentation.dialogs.EditOrderDialog.Result.EXCEPTION);
             setException(ex);
             dispose();
             return;

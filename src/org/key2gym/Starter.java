@@ -121,7 +121,7 @@ public class Starter {
         /*
          * Quits if the user clicked cancel.
          */
-        if(dialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+        if(dialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }
         
@@ -129,7 +129,7 @@ public class Starter {
          * Logs an exception and quits, if the connections manager encountered
          * an exception.
          */
-        if(dialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+        if(dialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
             logger.fatal("The connections manager encountered an exception.", dialog.getException());
             return;
         }

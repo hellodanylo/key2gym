@@ -193,11 +193,11 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
 
-        if (dialog.getResult().equals(AbstractDialog.RESULT_OK)) {
+        if (dialog.getResult().equals(AbstractDialog.Result.OK)) {
             subscriptions = SubscriptionsService.getInstance().getAllSubscriptions();
             subscriptionsTableModel.setSubscriptions(subscriptions);
-        } else if(dialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
-            setResult(RESULT_EXCEPTION);
+        } else if(dialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
+            setResult(Result.EXCEPTION);
             setException(dialog.getException());
             dispose();
             return;
@@ -225,7 +225,7 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
                  * The exception is unexpected. We got to shutdown the dialog
                  * for the state of the transaction is now unknown.
                  */
-                setResult(EditOrderDialog.RESULT_EXCEPTION);
+                setResult(EditOrderDialog.Result.EXCEPTION);
                 setException(ex);
                 dispose();
                 return;

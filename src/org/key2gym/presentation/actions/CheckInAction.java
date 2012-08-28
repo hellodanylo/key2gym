@@ -57,11 +57,11 @@ public final class CheckInAction extends BasicAction {
             CheckInDialog checkInDialog = new CheckInDialog(getFrame());
             checkInDialog.setVisible(true);
 
-            if (checkInDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (checkInDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw checkInDialog.getException();
             }
 
-            if (checkInDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (checkInDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -89,11 +89,11 @@ public final class CheckInAction extends BasicAction {
 
                 editOrderDialog.setVisible(true);
 
-                if (editOrderDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                if (editOrderDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                     throw editOrderDialog.getException();
                 }
 
-                if (editOrderDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+                if (editOrderDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                     storageService.rollbackTransaction();
                     return;
                 }

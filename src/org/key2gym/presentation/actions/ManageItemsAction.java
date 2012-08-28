@@ -45,11 +45,11 @@ public class ManageItemsAction extends BasicAction {
             ManageItemsDialog manageItemsDialog = new ManageItemsDialog(getFrame());
             manageItemsDialog.setVisible(true);
 
-            if (manageItemsDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (manageItemsDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw manageItemsDialog.getException();
             }
 
-            if (manageItemsDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (manageItemsDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }

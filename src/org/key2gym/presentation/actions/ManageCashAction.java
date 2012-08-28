@@ -47,11 +47,11 @@ public class ManageCashAction extends BasicAction {
             PickDateDialog pickDateDialog = new PickDateDialog(getFrame());
             pickDateDialog.setVisible(true);
 
-            if (pickDateDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (pickDateDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw pickDateDialog.getException();
             }
 
-            if (pickDateDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (pickDateDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -59,11 +59,11 @@ public class ManageCashAction extends BasicAction {
             CashAdjustmentEditorDialog cashAdjustmentEditorDIalog = new CashAdjustmentEditorDialog(CashService.getInstance().getAdjustmentByDate(pickDateDialog.getDate()));
             cashAdjustmentEditorDIalog.setVisible(true);
 
-            if (cashAdjustmentEditorDIalog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (cashAdjustmentEditorDIalog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw cashAdjustmentEditorDIalog.getException();
             }
 
-            if (cashAdjustmentEditorDIalog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (cashAdjustmentEditorDIalog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }

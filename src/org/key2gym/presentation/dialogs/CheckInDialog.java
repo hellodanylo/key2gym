@@ -39,8 +39,8 @@ import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.dto.ClientDTO;
 import org.key2gym.business.dto.KeyDTO;
 import org.key2gym.presentation.colors.Palette;
-import org.key2gym.presentation.forms.ClientForm;
-import org.key2gym.presentation.forms.ClientForm.Column;
+import org.key2gym.presentation.panels.forms.ClientFormPanel;
+import org.key2gym.presentation.panels.forms.ClientFormPanel.Column;
 import org.key2gym.presentation.util.KeyListCellRenderer;
 import org.key2gym.presentation.util.UserExceptionHandler;
 
@@ -126,7 +126,7 @@ public class CheckInDialog extends AbstractDialog {
         findClientAction = new FindClientAction();
         panel.add(new JButton(findClientAction), CC.xy(3, 3));
 
-        clientDetailsPanel = new ClientForm(Arrays.asList(Column.FULL_NAME, Column.MONEY_BALANCE, Column.ATTENDANCES_BALANCE, Column.EXPIRATION_DATE));
+        clientDetailsPanel = new ClientFormPanel(Arrays.asList(Column.FULL_NAME, Column.MONEY_BALANCE, Column.ATTENDANCES_BALANCE, Column.EXPIRATION_DATE));
         clientDetailsPanel.setBorder(BorderFactory.createTitledBorder(getString("Text.BillingInformation")));
         clientDetailsPanel.setEditable(false);
         panel.add(clientDetailsPanel, CC.xywh(1, 5, 3, 1));
@@ -331,13 +331,13 @@ public class CheckInDialog extends AbstractDialog {
             PickClientDialog dialog = new PickClientDialog(CheckInDialog.this);
             dialog.setVisible(true);
 
-            if (dialog.getResult().equals(RESULT_EXCEPTION)) {
-                setResult(RESULT_EXCEPTION);
+            if (dialog.getResult().equals(Result.EXCEPTION)) {
+                setResult(Result.EXCEPTION);
                 dispose();
                 return;
             }
 
-            if (dialog.getResult().equals(RESULT_CANCEL)) {
+            if (dialog.getResult().equals(Result.CANCEL)) {
                 return;
             }
 
@@ -349,7 +349,7 @@ public class CheckInDialog extends AbstractDialog {
                 /*
                  * This is a bug, so report it and terminate the dialog.
                  */
-                setResult(RESULT_EXCEPTION);
+                setResult(Result.EXCEPTION);
                 setException(new RuntimeException(ex));
                 dispose();
                 return;
@@ -418,7 +418,7 @@ public class CheckInDialog extends AbstractDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(RESULT_EXCEPTION);
+            setResult(Result.EXCEPTION);
             setException(ex);
             dispose();
             return;
@@ -516,7 +516,7 @@ public class CheckInDialog extends AbstractDialog {
     private ButtonGroup clientButtonGroup;
     private JRadioButton registeredRadioButton;
     private JTextField cardTextField;
-    private ClientForm clientDetailsPanel;
+    private ClientFormPanel clientDetailsPanel;
     private JRadioButton casualRadionButton;
     private JComboBox keysComboBox;
     private JCheckBox openOrderCheckBox;

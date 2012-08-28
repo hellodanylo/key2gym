@@ -194,7 +194,7 @@ public class ManageFreezesDialog extends AbstractDialog {
         try {
             freezesService.remove(freezesTableModel.getFreezeAt(freezesTable.getSelectedRow()).getId());
         } catch (SecurityException | ValidationException ex) {
-            setResult(RESULT_EXCEPTION);
+            setResult(Result.EXCEPTION);
             setException(new RuntimeException(ex));
             dispose();
             return;
@@ -230,7 +230,7 @@ public class ManageFreezesDialog extends AbstractDialog {
                 freezes = freezesService.findAll();
             }
         } catch (SecurityException | ValidationException ex) {
-            setResult(RESULT_EXCEPTION);
+            setResult(Result.EXCEPTION);
             setException(new RuntimeException(ex));
             dispose();
             return;

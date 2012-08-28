@@ -47,11 +47,11 @@ public class EditOrderAction extends BasicAction {
                 PickOrderDialog pickOrderDialog = new PickOrderDialog(getFrame());
                 pickOrderDialog.setVisible(true);
 
-                if (pickOrderDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                if (pickOrderDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                     throw pickOrderDialog.getException();
                 }
 
-                if (pickOrderDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+                if (pickOrderDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                     storageService.rollbackTransaction();
                     return;
                 }
@@ -60,11 +60,11 @@ public class EditOrderAction extends BasicAction {
                     PickClientDialog pickClientDialog = new PickClientDialog(getFrame());
                     pickClientDialog.setVisible(true);
 
-                    if (pickClientDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                    if (pickClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                         throw pickClientDialog.getException();
                     }
 
-                    if (pickClientDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+                    if (pickClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                         storageService.rollbackTransaction();
                         return;
                     }
@@ -85,11 +85,11 @@ public class EditOrderAction extends BasicAction {
             editOrderDialog.setFullPaymentForced(false);
             editOrderDialog.setVisible(true);
 
-            if (editOrderDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (editOrderDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw editOrderDialog.getException();
             }
 
-            if (editOrderDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (editOrderDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }

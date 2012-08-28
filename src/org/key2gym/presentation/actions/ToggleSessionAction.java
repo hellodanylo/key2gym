@@ -45,12 +45,12 @@ public class ToggleSessionAction extends BasicAction {
                 OpenSessionDialog openSessionDialog = new OpenSessionDialog(getFrame());
                 openSessionDialog.setVisible(true);
 
-                if (openSessionDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+                if (openSessionDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                     StorageService.getInstance().rollbackTransaction();
                     return;
                 }
 
-                if (openSessionDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                if (openSessionDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                     throw openSessionDialog.getException();
                 }
             }

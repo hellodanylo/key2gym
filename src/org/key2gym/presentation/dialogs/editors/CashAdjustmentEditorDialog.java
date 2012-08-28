@@ -9,7 +9,7 @@ import org.key2gym.business.api.SecurityException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.dto.CashAdjustmentDTO;
 import org.key2gym.presentation.dialogs.AbstractDialog;
-import org.key2gym.presentation.forms.CashAdjustmentForm;
+import org.key2gym.presentation.panels.forms.CashAdjustmentFormPanel;
 import org.key2gym.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -40,7 +40,7 @@ public class CashAdjustmentEditorDialog extends AbstractDialog {
         cancelButton = new JButton(getCancelAction());
         okButton.setPreferredSize(cancelButton.getPreferredSize());
 
-        form = new CashAdjustmentForm();
+        form = new CashAdjustmentFormPanel();
         form.setCashAdjustment(cashAdjustment);
     }
 
@@ -79,7 +79,7 @@ public class CashAdjustmentEditorDialog extends AbstractDialog {
             UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (RuntimeException ex) {
-            setResult(RESULT_EXCEPTION);
+            setResult(Result.EXCEPTION);
             setException(ex);
             dispose();
             return;
@@ -94,7 +94,7 @@ public class CashAdjustmentEditorDialog extends AbstractDialog {
     /*
      * Presentation
      */
-    private CashAdjustmentForm form;
+    private CashAdjustmentFormPanel form;
     private JButton okButton;
     private JButton cancelButton;
 }

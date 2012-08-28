@@ -45,11 +45,11 @@ public class FreezeClientAction extends BasicAction {
             PickClientDialog pickClientDialog = new PickClientDialog(getFrame());
             pickClientDialog.setVisible(true);
 
-            if (pickClientDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (pickClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw pickClientDialog.getException();
             }
 
-            if (pickClientDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (pickClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -58,11 +58,11 @@ public class FreezeClientAction extends BasicAction {
             freezeClientDialog.setClientId(pickClientDialog.getClientId());
             freezeClientDialog.setVisible(true);
 
-            if (freezeClientDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (freezeClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw freezeClientDialog.getException();
             }
 
-            if (freezeClientDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (freezeClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }

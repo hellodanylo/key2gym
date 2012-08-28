@@ -40,7 +40,7 @@ import org.key2gym.presentation.util.*;
 /**
  * This dialog displays and edits an order. <p> Session variables: <ul> <li>
  * orderId - the ID of order to be shown and edited </li> <li> fullPaymentForced
- * - if true, the dialog won't exit with RESULT_OK, if the user did not record
+ * - if true, the dialog won't exit with Result.OK, if the user did not record
  * full payment </li> </ul> </p> <p> A transaction is required to be active, and
  * a session to be open, upon the dialog's creation. </p> <p> This dialog
  * supports hot swapping. The session variables can be set and reset after the
@@ -395,7 +395,7 @@ public class EditOrderDialog extends AbstractDialog {
                      * The exception is unexpected. We got to shutdown the
                      * dialog for the state of the transaction is now unknown.
                      */
-                    setResult(RESULT_EXCEPTION);
+                    setResult(Result.EXCEPTION);
                     setException(new RuntimeException(ex));
                     dispose();
                     return;
@@ -443,7 +443,7 @@ public class EditOrderDialog extends AbstractDialog {
                      * The exception is unexpected. We got to shutdown the
                      * dialog for the state of the transaction is now unknown.
                      */
-                    setResult(RESULT_EXCEPTION);
+                    setResult(Result.EXCEPTION);
                     setException(new RuntimeException(ex));
                     dispose();
                     return;
@@ -494,7 +494,7 @@ public class EditOrderDialog extends AbstractDialog {
                      * The exception is unexpected. We got to shutdown the
                      * dialog for the state of the transaction is now unknown.
                      */
-                    setResult(RESULT_EXCEPTION);
+                    setResult(Result.EXCEPTION);
                     setException(ex);
                     dispose();
                     return;
@@ -535,13 +535,13 @@ public class EditOrderDialog extends AbstractDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(RESULT_EXCEPTION);
+            setResult(Result.EXCEPTION);
             setException(ex);
             dispose();
             return;
         }
 
-        setResult(RESULT_OK);
+        setResult(Result.OK);
         dispose();
     }
 

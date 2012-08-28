@@ -29,9 +29,9 @@ import org.key2gym.business.ClientProfilesService;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityException;
 import org.key2gym.business.api.ValidationException;
-import org.key2gym.presentation.forms.ClientForm;
-import org.key2gym.presentation.forms.ClientForm.Column;
-import org.key2gym.presentation.forms.ClientProfileForm;
+import org.key2gym.presentation.panels.forms.ClientFormPanel;
+import org.key2gym.presentation.panels.forms.ClientFormPanel.Column;
+import org.key2gym.presentation.panels.forms.ClientProfileFormPanel;
 import org.key2gym.presentation.util.AttendancesTableModel;
 import org.key2gym.presentation.util.FreezesTableModel;
 import org.key2gym.presentation.util.UserExceptionHandler;
@@ -150,7 +150,7 @@ public class EditClientDialog extends AbstractDialog {
                 Column.ATTENDANCES_BALANCE,
                 Column.EXPIRATION_DATE,
                 Column.NOTE);
-        clientPanel = new ClientForm(columnsList);
+        clientPanel = new ClientFormPanel(columnsList);
         panel.add(clientPanel, CC.xy(1, 2));
 
         return panel;
@@ -166,7 +166,7 @@ public class EditClientDialog extends AbstractDialog {
 
         panel.add(attachedCheckBox, CC.xy(1, 2));
 
-        clientProfilePanel = new ClientProfileForm();
+        clientProfilePanel = new ClientProfileFormPanel();
         panel.add(clientProfilePanel, CC.xy(1, 4));
 
         return panel;
@@ -323,7 +323,7 @@ public class EditClientDialog extends AbstractDialog {
              * GUI garantess that restricted operations can not be permored, so
              * this is probably a bug.
              */
-            setResult(EditOrderDialog.RESULT_EXCEPTION);
+            setResult(EditOrderDialog.Result.EXCEPTION);
             setException(new RuntimeException(ex));
             dispose();
             return;
@@ -335,13 +335,13 @@ public class EditClientDialog extends AbstractDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(EditOrderDialog.RESULT_EXCEPTION);
+            setResult(EditOrderDialog.Result.EXCEPTION);
             setException(ex);
             dispose();
             return;
         }
 
-        setResult(RESULT_OK);
+        setResult(Result.OK);
         dispose();
     }
 
@@ -515,9 +515,9 @@ public class EditClientDialog extends AbstractDialog {
     private JScrollPane attendancesTableScrollPane;
     private JButton cancelButton;
     private ClientDTO client;
-    private ClientForm clientPanel;
+    private ClientFormPanel clientPanel;
     private ClientProfileDTO clientProfile;
-    private ClientProfileForm clientProfilePanel;
+    private ClientProfileFormPanel clientProfilePanel;
     private JScrollPane freezeNoteScrollPane;
     private JTextArea freezeNoteTextArea;
     private JTable freezesTable;

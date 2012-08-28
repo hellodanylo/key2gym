@@ -9,7 +9,7 @@ import org.key2gym.business.api.SecurityException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.dto.SubscriptionDTO;
 import org.key2gym.presentation.dialogs.AbstractDialog;
-import org.key2gym.presentation.forms.SubscriptionForm;
+import org.key2gym.presentation.panels.forms.SubscriptionFormPanel;
 import org.key2gym.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -42,7 +42,7 @@ public class SubscriptionEditorDialog extends AbstractDialog {
         cancelButton = new JButton(getCancelAction());
         okButton.setPreferredSize(cancelButton.getPreferredSize());
 
-        form = new SubscriptionForm();
+        form = new SubscriptionFormPanel();
         form.setSubscription(subscription);
     }
 
@@ -95,7 +95,7 @@ public class SubscriptionEditorDialog extends AbstractDialog {
             UserExceptionHandler.getInstance().processException(ex);
             return;
         } catch (RuntimeException ex) {
-            setResult(RESULT_EXCEPTION);
+            setResult(Result.EXCEPTION);
             setException(ex);
             dispose();
             return;
@@ -110,7 +110,7 @@ public class SubscriptionEditorDialog extends AbstractDialog {
     /*
      * Presentation
      */
-    private SubscriptionForm form;
+    private SubscriptionFormPanel form;
     private JButton okButton;
     private JButton cancelButton;
 }

@@ -23,8 +23,8 @@ import org.key2gym.business.api.SecurityException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.dto.ClientDTO;
 import org.key2gym.business.dto.ClientProfileDTO;
-import org.key2gym.presentation.forms.ClientForm;
-import org.key2gym.presentation.forms.ClientProfileForm;
+import org.key2gym.presentation.panels.forms.ClientFormPanel;
+import org.key2gym.presentation.panels.forms.ClientProfileFormPanel;
 import org.key2gym.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -65,22 +65,22 @@ public class RegisterClientDialog extends AbstractDialog {
 
         setLayout(new FormLayout("4dlu, p, 4dlu, d, 4dlu", "4dlu, d, 4dlu, d, 4dlu, d, 4dlu"));
         
-        List<ClientForm.Column> columnsList = Arrays.asList(
-                ClientForm.Column.ID, 
-                ClientForm.Column.FULL_NAME,
-                ClientForm.Column.CARD,
-                ClientForm.Column.REGISTRATION_DATE,
-                ClientForm.Column.MONEY_BALANCE,
-                ClientForm.Column.ATTENDANCES_BALANCE,
-                ClientForm.Column.EXPIRATION_DATE,
-                ClientForm.Column.NOTE
+        List<ClientFormPanel.Column> columnsList = Arrays.asList(
+                ClientFormPanel.Column.ID, 
+                ClientFormPanel.Column.FULL_NAME,
+                ClientFormPanel.Column.CARD,
+                ClientFormPanel.Column.REGISTRATION_DATE,
+                ClientFormPanel.Column.MONEY_BALANCE,
+                ClientFormPanel.Column.ATTENDANCES_BALANCE,
+                ClientFormPanel.Column.EXPIRATION_DATE,
+                ClientFormPanel.Column.NOTE
         );
-        clientPanel = new ClientForm(columnsList);
+        clientPanel = new ClientFormPanel(columnsList);
         clientPanel.setClient(client);
         clientPanel.setBorder(BorderFactory.createTitledBorder(getString("Text.BasicInformation"))); // NOI18N
         add(clientPanel, CC.xy(2, 2));
 
-        clientProfilePanel = new ClientProfileForm();
+        clientProfilePanel = new ClientProfileFormPanel();
         clientProfilePanel.setClientProfile(clientProfile);
         clientProfilePanel.setBorder(BorderFactory.createTitledBorder(getString("Text.ProfileInformation"))); // NOI18N
         clientProfilePanel.setPreferredSize(new Dimension(400, 400));
@@ -158,7 +158,7 @@ public class RegisterClientDialog extends AbstractDialog {
             }
         } catch (SecurityException ex) {
             // Should not be thrown with current implemetation
-            setResult(EditOrderDialog.RESULT_EXCEPTION);
+            setResult(EditOrderDialog.Result.EXCEPTION);
             setException(new RuntimeException(ex));
             dispose();
             return;
@@ -173,7 +173,7 @@ public class RegisterClientDialog extends AbstractDialog {
              * The exception is unexpected. We got to shutdown the dialog for
              * the state of the transaction is now unknown.
              */
-            setResult(EditOrderDialog.RESULT_EXCEPTION);
+            setResult(EditOrderDialog.Result.EXCEPTION);
             setException(ex);
             dispose();
             return;
@@ -182,7 +182,7 @@ public class RegisterClientDialog extends AbstractDialog {
         setClientId(client.getId());
         setEditFinancialActivityDialogRequested(openOrderCheckBox.isSelected());
         setOpenAttendanceDialogRequested(openAttendanceCheckBox.isSelected());
-        setResult(AbstractDialog.RESULT_OK);
+        setResult(AbstractDialog.Result.OK);
         dispose();
     }
 
@@ -237,8 +237,8 @@ public class RegisterClientDialog extends AbstractDialog {
      */
     private JCheckBox attachProfileCheckBox;
     private JButton cancelButton;
-    private ClientForm clientPanel;
-    private ClientProfileForm clientProfilePanel;
+    private ClientFormPanel clientPanel;
+    private ClientProfileFormPanel clientProfilePanel;
     private JButton okButton;
     private JCheckBox openAttendanceCheckBox;
     private JCheckBox openOrderCheckBox;

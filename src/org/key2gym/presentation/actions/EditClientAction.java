@@ -47,11 +47,11 @@ public class EditClientAction extends BasicAction {
             final PickClientDialog pickClientDialog = new PickClientDialog(getFrame());
             pickClientDialog.setVisible(true);
 
-            if (pickClientDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (pickClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw pickClientDialog.getException();
             }
 
-            if (pickClientDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (pickClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -66,11 +66,11 @@ public class EditClientAction extends BasicAction {
             }.start();
             editClientDialog.setVisible(true);
 
-            if (editClientDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (editClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw editClientDialog.getException();
             }
 
-            if (editClientDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (editClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }

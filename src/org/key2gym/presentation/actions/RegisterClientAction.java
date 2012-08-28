@@ -62,11 +62,11 @@ public class RegisterClientAction extends BasicAction {
             registerClientDialog = new RegisterClientDialog(getFrame());
             registerClientDialog.setVisible(true);
 
-            if (registerClientDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+            if (registerClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 throw registerClientDialog.getException();
             }
 
-            if (registerClientDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+            if (registerClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 storageService.rollbackTransaction();
                 return;
             }
@@ -86,11 +86,11 @@ public class RegisterClientAction extends BasicAction {
 
                 editFinancialActivityDialog.setVisible(true);
 
-                if (editFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                if (editFinancialActivityDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                     throw editFinancialActivityDialog.getException();
                 }
 
-                if (editFinancialActivityDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+                if (editFinancialActivityDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                     storageService.rollbackTransaction();
                     return;
                 }
@@ -105,11 +105,11 @@ public class RegisterClientAction extends BasicAction {
                 openAttendanceDialog.setClientId(registerClientDialog.getClientId());
                 openAttendanceDialog.setVisible(true);
 
-                if (openAttendanceDialog.getResult().equals(AbstractDialog.RESULT_EXCEPTION)) {
+                if (openAttendanceDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                     throw openAttendanceDialog.getException();
                 }
 
-                if (openAttendanceDialog.getResult().equals(AbstractDialog.RESULT_CANCEL)) {
+                if (openAttendanceDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                     storageService.rollbackTransaction();
                     return;
                 }

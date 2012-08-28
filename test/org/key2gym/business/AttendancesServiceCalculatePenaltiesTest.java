@@ -87,7 +87,7 @@ public class AttendancesServiceCalculatePenaltiesTest {
 
     @AfterClass
     public static void tearDownClass() {
-        StorageService.getInstance().closeEntityManager();
+        StorageService.getInstance().destroy();
     }
 
     @Test
