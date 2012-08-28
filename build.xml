@@ -119,35 +119,26 @@
         </zip>
     </target>
         
-    <macrodef name="markdown2html" description="Used by doc target to convert markdown files to html.">
+    <macrodef name="build-html" description="Used by doc target to prepare html documentation pages.">
         <attribute name="name" />
         <sequential>
             <!-- Creates the documentation folder in case the project was not built. -->
             <mkdir dir="${dist.dir}/${doc.dir}" />
             
-            <!-- Converts a markdown documentation file to HTML format and writes it to a temporary file. -->
-            <exec executable="perl" output="${dist.dir}/${doc.dir}/@{name}.html.temp"> 
-                <arg value="${doc.dir}/markdown.pl" />
-                <arg value="${doc.dir}/@{name}.md" />
-            </exec>
-            
             <!-- Adds header and footer to the temporary file and writes it to the final file. -->
             <concat destfile="${dist.dir}/${doc.dir}/@{name}.html">
                 <filelist dir="${doc.dir}" files="header.html" />
-                <filelist dir="${dist.dir}/${doc.dir}" files="@{name}.html.temp" />
+                <filelist dir="${doc.dir}" files="@{name}.html" />
                 <filelist dir="${doc.dir}" files="footer.html" />
             </concat>
-            
-            <!-- Deletes the temporaty file. -->
-            <delete verbose="false" file="${dist.dir}/${doc.dir}/@{name}.html.temp" />
             
         </sequential>
     </macrodef>
         
     <target name="doc" depends="init" description="Generates the end-user documentation.">
-        <markdown2html name="index" />
-        <markdown2html name="deployment" />
-        <markdown2html name="configuration" />
+        <build-html name="index" />
+        <build-html name="deployment" />
+        <build-html name="configuration" />
         
         <!-- Copies stylesheet files. -->
         <copy todir="${dist.dir}/${doc.dir}">

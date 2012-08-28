@@ -5,6 +5,11 @@ body {
 	margin-bottom: 20px;
 }
 
+/* Bold text */
+b {
+	font-weight: bold; 
+}
+
 /* Darker background for headers */
 h1, h2, h3 {
 	margin: 10px;
@@ -21,27 +26,27 @@ h2 {
 	font: bold 1em Arial;
 }
 
-/* Font for all normal text */
-p, td, a {
+p {
+	margin-top: 10px;
+}
+
+/* Default font for plain text. */
+section, td {
 	font: 13px Arial, Freesans, sans-serif;
 	color: black;
 }
 
 /* TextField-like look for all major tags */
-h1, h2, h3, p {
+h1, h2, h3, section {
 	box-shadow:inset 0 0 3px #000000;
 }
 
-p, table {
+section, table {
 	margin: 5px 5px 0px 20px;
 	background-color: white;
 	display: block;
 	max-width: 800px;
 	padding: 10px;
-}
-
-p {
-	line-height: 1.6;
 }
 
 table {
@@ -54,34 +59,40 @@ thead td {
 	border: 1px solid gray;	
 }
 
+/* Border for all cells */
 tr, td {
 	border: 1px solid gray;
+}
+
+/* Text style for all cells */
+td {
 	padding: 10px;
 	vertical-align: middle;
 	text-align: center;
 }
 
+/* Text style for long cells */
+td.description {
+	text-align: left;
+}
+
 code {
-	margin: 5px 5px 0px 40px;
-	padding: 0px 5px;
+	margin: 0px 2px 0px 2px;
+	padding: 0px 2px 0px 2px;
 	border: 1px solid #EAEAEA;
 	background-color: #F8F8F8;
 	display: inline-block;
-	font-family: 0.8em Tahoma;
-	line-height: 1.3;
+	font-family: monospace;
+	color: gray;
 }
 
-p code {
-	margin: 0px 2px;
+pre code {
+	display: block;
 }
 
-ul,ol {
-	/* Giving lists room to breath. */
-	margin: 1em;
+ul, ol {
 	/* Bringing lists on to the page with breathing room. */
-	margin-left: 60px;
-	/* Making right border aligned with others. */	
-	max-width: 785px;
+	margin: 10px 0px 10px 40px;
 }
 
 ol li {

@@ -24,5 +24,17 @@ import java.util.Properties;
 public class MySQLEclipseLinkConnection extends MySQLConnection {
     public MySQLEclipseLinkConnection(Properties properties) {
         super(properties);
+        ddl = properties.getProperty("ddl");
     }
+
+    public String getDDL() {
+        return ddl;
+    }
+
+    public void setDDL(String ddl) {
+        this.ddl = ddl;
+        getProperties().put("ddl", ddl);
+    }
+    
+    private String ddl;
 }

@@ -56,10 +56,16 @@ public class MySQLEclipseLinkPropertiesFactory implements PropertiesFactory<MySQ
         properties.put("eclipselink.logging.logger", "org.eclipse.persistence.logging.CommonsLoggingSessionLog");
         properties.put("eclipselink.logging.level", "CONFIG");
 
-//        if (cib.containsKey("ddl")) {
-//            properties.put("eclipselink.ddl-generation", config.get("ddl"));
-//            properties.put("eclipselink.ddl-generation.table-creation-suffix", "engine=InnoDB");
-//        }
+        /*
+         * Optinal ddl option allows to automatically generate the schema.
+         */
+        if (connection.getDDL() != null) {
+            properties.put("eclipselink.ddl-generation", connection.getDDL());
+            /*
+             * Requires to set InnoDB as the engine for the new tables.
+             */
+            properties.put("eclipselink.ddl-generation.table-creation-suffix", "engine=InnoDB");
+        }
 
         return properties;
     }

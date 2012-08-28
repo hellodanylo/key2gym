@@ -1,0 +1,111 @@
+<h1>Configuration</h1>
+
+<section>
+<a href="./index.html">Back to Index.</a>
+</section>
+
+<section>
+This page explains how to configure Key2Gym. 
+</section>
+
+<h2>Connections</h2>
+
+<section>
+Connections describe how the application should connect to the storage that is to be used. 
+Connections are stored as files in <code>etc/connections/</code>. A connection file's name has the following format: <code>&lt;codeName&gt;.properties.</code> A connection file itself is a <a href="http://en.wikipedia.org/wiki/.properties">Java-style properties file</a>.
+
+<p/>
+
+The following is the table of supported properties:
+</section>
+
+<table>
+
+<thead>
+
+<tr>
+<td>Key</td>
+<td>Description</td>
+<td>Required</td>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>type</td>
+<td class="description">Defines the type of this connection. Built-in types of connections: <code>MySQLEclipseLink</code>. Other connections can be supported by adding new classes at runtime.</td>
+<td>Yes</td>
+</tr>
+
+<tr>
+<td>title</td>
+<td class="description">The string that is going to displayed in the application as the description of this connection. Any string. Note that you have to escape the Unicode characters. See the <a href="http://en.wikipedia.org/wiki/.properties">properties format description</a> for details. </td>
+<td>Yes</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<section>
+All other keys are type-specific.
+<p/>
+<code>MySQLEclipseLink</code> is the only built-in connection type as for now. It's recommended to use with all MySQL serves. The following is the table of properties specific to this connection type:
+</section>
+
+<table>
+
+<thead>
+<tr>
+<td>Key</td>
+<td>Description</td>
+<td>Required</td>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>host</td>
+<td class="description">The server's host name, which usuall is a FQDN or IP address of the server. The whole range of valid values is environment-specific.</td>
+<td>Yes</td>
+</tr>
+
+<tr>
+<td>port</td>
+<td class="description">The server's port number, which can be any number in the range of 1-65535. Default port for MySQL servers is 3306.</td>
+<td>Yes</td>
+</tr>
+
+<tr>
+<td>user</td>
+<td class="description">The MySQL user. The user must have permissions to create, alter and remove tables, as well as select, update and delete rows in the target database.</td>
+<td>Yes</td>
+</tr>
+
+<tr>
+<td>password</td>
+<td class="description">The MySQL user's password. The password has to be plain text.</td>
+<td>Yes</td>
+</tr>
+
+<tr>
+<td>database</td>
+<td class="description">The MySQL database to use. The database must already exist. See <code>ddl</code> property to see what options are, if the database does not have the proper schema.</td>
+<td>Yes</td>
+</tr>
+
+<tr>
+<td>ddl</td>
+<td class="description">Defines the tables generation strategy. If the values is <code>create-tables</code>, the application will create only missing tables. If the values is <code>drop-and-create-tables</code>, the application will <b>drop and create</b> new tables <b>each</b> time the connection is openned.</td>
+<td>No</td>
+</tr>
+
+</tbody>
+</table>
+
+<section><a href="./index.html">Back to Index.</a></section>
+
+
+

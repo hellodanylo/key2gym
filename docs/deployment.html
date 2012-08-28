@@ -1,0 +1,54 @@
+<h1>Deployment</h1>
+
+<section><a href="./index.html">Back to Index.</a></section>
+
+<section>This page explains how to deploy a distribution of Key2Gym.</section>
+
+<h2>Java</h2>
+
+<section>
+This program is written in Java. Therefore, it requires Java Runtime Environment
+to be available at the target computer. Go to <a href="http://java.com"> Java website</a> for instructions on
+how to install Java Runtime Environment on your target OS.
+</section>
+
+<h2>Database</h2>
+
+<section>
+Key2Gym uses external Relational Database Management System (RDBMS) to keep all the information.
+As for now the only supported RDBMS is MySQL. The program has been intensively
+tested with MySQL 5.1, however the later version should work as well. 
+See the <a href="http://dev.mysql.com/doc/">MySQL documentation</a>, if you do not know how to do any of the steps below:
+
+<ol>
+<li>Go to <a href="http://mysql.com">MySQL website</a> to obtain a distribution of MySQL server. If you are running
+Linux/Unix/BSD, we suggest you to install the MySQL server from the official repository.</li>
+
+<li>Restart the server</li>
+
+<li>Execute the <code>mysql/key2gym.sql</code> SQL script using the <code>mysql</code> client. 
+Note that the script only contains tables structure, which means you have to <code>create</code> and <code>use</code> a database on your own before running the script.</li>
+</ol>
+
+<p/>
+
+<pre><code>mysql> create database `key2gym`;
+mysql> use `key2gym`;
+mysql> source dist/mysql/key2gym.sql;</code></pre>
+
+</p>
+</section>
+
+<section>TODO: Describe how to set up the database.</section>
+
+<h2>Key2Gym</h2>
+
+<section>
+<ol>
+<il>Unzip the distribution archive to the target folder.</il>
+<il>Configure the application as explained on the <a href="./configuration.html">Configuration</a> page.</il>
+<il>You can now run the program with <code>java -jar key2gym.jar</code>.
+</ol>
+</section>
+
+<section><a href="./index.html">Back to Index</a></section>
