@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -44,31 +43,34 @@ public class Attendance implements Serializable {
     @Id
     @Basic(optional = false)
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id_atd")
+    @Column(name = "id_atd", columnDefinition="SMALLINT UNSIGNED")
     private Short id;
     
     @Basic(optional = false)
-    @Column(name = "datetime_begin", nullable = false)
+    @Column(name = "datetime_begin", columnDefinition="TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date datetimeBegin;
     
     @Basic(optional = false)
-    @Column(name = "datetime_end", nullable = false)
+    @Column(name = "datetime_end", columnDefinition="TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date datetimeEnd = DATETIME_END_UNKNOWN;
     
+    /**
+     * The same as 2004-04-04 09:00:01.
+     */
     public static final Date DATETIME_END_UNKNOWN = new Date(1081058401000l);
     
-    @JoinColumn(name = "idkey_atd", referencedColumnName = "id_key", nullable = false)
+    @JoinColumn(name = "idkey_atd", nullable = false)
     @ManyToOne(optional = false)
     private Key key;
+
+    @JoinColumn(name = "idcln_atd", nullable = true)
+    @ManyToOne(optional = true)
+    private Client client;
     
     @OneToOne(mappedBy = "attendance")
     private OrderEntity orderEntity;
-        
-    @JoinColumn(name = "idcln_atd", referencedColumnName = "id_cln")
-    @ManyToOne(optional = false)
-    private Client client;
 
     public Attendance() {
     }

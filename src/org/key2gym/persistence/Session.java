@@ -31,7 +31,7 @@ import javax.persistence.*;
     @NamedQuery(name = "Session.findByDatetimeBegin", query = "SELECT s FROM Session s WHERE s.datetimeBegin = :datetimeBegin"),
     @NamedQuery(name = "Session.findByAdministratorAndDateTimeBeginRange", query = "SELECT s FROM Session s WHERE s.datetimeBegin BETWEEN :rangeBegin AND :rangeEnd AND s.administrator = :administrator"),
     @NamedQuery(name = "Session.findByDatetimeEnd", query = "SELECT s FROM Session s WHERE s.datetimeEnd = :datetimeEnd"),
-    @NamedQuery(name = "Session.findOpenByDatetimeBeginRangeBeginAndAdministrator", query = "SELECT s FROM Session s WHERE s.datetimeEnd = 1081058401000 AND s.datetimeBegin >= :datetimeBeginRangeBegin AND s.administrator = :administrator")})
+    @NamedQuery(name = "Session.findOpenByDatetimeBeginRangeBeginAndAdministrator", query = "SELECT s FROM Session s WHERE s.datetimeEnd = 1081058401000l AND s.datetimeBegin >= :datetimeBeginRangeBegin AND s.administrator = :administrator")})
 public class Session implements Serializable {
     private static final long serialVersionUID = 1L;
     

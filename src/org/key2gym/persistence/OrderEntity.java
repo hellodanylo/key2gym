@@ -41,7 +41,8 @@ public class OrderEntity implements Serializable {
     
     @Id
     @Basic(optional = false)
-    @Column(name = "id_ord")
+    @Column(name = "id_ord", columnDefinition="SMALLINT UNSIGNED")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Short id;
     
     @Basic(optional = false)
@@ -50,17 +51,17 @@ public class OrderEntity implements Serializable {
     private Date dateRecorded;
     
     @Basic(optional = false)
-    @Column(name = "payment", nullable = false)
+    @Column(name = "payment", nullable = false, precision = 6, scale = 2)
     private BigDecimal payment;
     
     @OneToMany(mappedBy="orderEntity", cascade={CascadeType.ALL})
     private List<OrderLine> orderLines;
     
-    @JoinColumn(name = "idcln_ord", referencedColumnName = "id_cln", nullable = false)
+    @JoinColumn(name = "idcln_ord", referencedColumnName = "id_cln", nullable = true)
     @ManyToOne
     private Client client;
     
-    @JoinColumn(name = "idatd_ord", referencedColumnName = "id_atd", nullable = false)
+    @JoinColumn(name = "idatd_ord", referencedColumnName = "id_atd", nullable = true)
     @OneToOne
     private Attendance attendance;
 

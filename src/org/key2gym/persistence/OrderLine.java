@@ -33,7 +33,7 @@ import javax.persistence.*;
 public class OrderLine implements Serializable {
     
     @Id
-    @Column(name = "id_orl", nullable = false)
+    @Column(name = "id_orl", columnDefinition="SMALLINT UNSIGNED")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private short id;
             
@@ -45,11 +45,11 @@ public class OrderLine implements Serializable {
     @ManyToOne
     private Item item;
     
-    @JoinColumn(name = "iddsc_orl", referencedColumnName = "id_dsc", nullable = false)
+    @JoinColumn(name = "iddsc_orl", referencedColumnName = "id_dsc", nullable = true)
     @ManyToOne
     private Discount discount;
     
-    @Column(name="quantity")
+    @Column(name="quantity", columnDefinition="TINYINT UNSIGNED NULL")
     private short quantity;
 
     public short getId() {

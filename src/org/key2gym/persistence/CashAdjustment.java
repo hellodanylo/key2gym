@@ -41,10 +41,10 @@ public class CashAdjustment implements Serializable {
     private Date dateRecorded;
     
     @Basic(optional = false)
-    @Column(name = "amount", nullable = false)
+    @Column(name = "amount", columnDefinition="DECIMAL(6,2) NOT NULL")
     private BigDecimal amount;
     
-    @Column(name = "note", nullable = false)
+    @Column(name = "note", columnDefinition = "TEXT NOT NULL")
     private String note;
 
     public CashAdjustment() {

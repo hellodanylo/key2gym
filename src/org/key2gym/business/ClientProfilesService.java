@@ -82,10 +82,18 @@ public class ClientProfilesService extends BusinessService {
          */
         getBirthdayValidator().validate(clientProfile.getBirthday());
         if(clientProfile.getBirthday() == null) {
-            clientProfile.setBirthday(new DateMidnight(ClientProfile.defaultBirthday));
+            clientProfile.setBirthday(new DateMidnight(ClientProfile.DATE_BIRTHDAY_UNKNOWN));
         }
         
-        getAdSourceIdValidator().validate(clientProfile.getAdSourceId());
+        if (clientProfile.getAdSourceId() == null) {
+            throw new NullPointerException("The ad source's ID is null."); //NOI18N
+        }
+
+        AdSource adSource = entityManager.find(AdSource.class, clientProfile.getAdSourceId());
+
+        if (adSource == null) {
+            throw new ValidationException(bundle.getString("Invalid.AdSource.ID"));
+        }
         
         /*
          * Builds an exact copy of the entity, because it's not a good 
@@ -106,7 +114,7 @@ public class ClientProfilesService extends BusinessService {
                 clientProfile.getSpecialWishes(), 
                 clientProfile.getHeight(),
                 clientProfile.getWeight(), 
-                clientProfile.getAdSourceId());
+                adSource);
         
         if(entityManager.find(ClientProfile.class, clientProfile.getClientId()) == null) {
             entityManager.persist(entityClientProfile);
@@ -183,7 +191,7 @@ public class ClientProfilesService extends BusinessService {
         ClientProfileDTO clientProfileDTO = new ClientProfileDTO(
                 clientProfile.getId(), 
                 ClientProfileDTO.Sex.values()[clientProfile.getSex().ordinal()], 
-                clientProfile.getBirthday().equals(ClientProfile.defaultBirthday) ? null : new DateMidnight(clientProfile.getBirthday()), 
+                clientProfile.getBirthday().equals(ClientProfile.DATE_BIRTHDAY_UNKNOWN) ? null : new DateMidnight(clientProfile.getBirthday()), 
                 clientProfile.getAddress(), 
                 clientProfile.getTelephone(), 
                 clientProfile.getGoal(),
@@ -194,7 +202,7 @@ public class ClientProfilesService extends BusinessService {
                 clientProfile.getSpecialWishes(), 
                 clientProfile.getHeight(),
                 clientProfile.getWeight(), 
-                clientProfile.getAdSourceId());
+                clientProfile.getAdSource().getId());
         
         return clientProfileDTO;
     }
@@ -206,24 +214,6 @@ public class ClientProfilesService extends BusinessService {
             public void validate(DateMidnight value) throws ValidationException {
                 if (value != null && value.isAfter(new Instant())) {
                     throw new ValidationException(bundle.getString("Invalid.ClientProfile.Birthday.MustBeInPast"));
-                }
-            }
-        };
-    }
-
-    private Validator getAdSourceIdValidator() {
-        return new Validator<Short>() {
-
-            @Override
-            public void validate(Short value) throws ValidationException {
-                if (value == null) {
-                    throw new NullPointerException("The ad source's ID is null."); //NOI18N
-                }
-
-                AdSource adSource = entityManager.find(AdSource.class, value);
-
-                if (adSource == null) {
-                    throw new ValidationException(bundle.getString("Invalid.AdSource.ID"));
                 }
             }
         };

@@ -36,42 +36,42 @@ public class Administrator implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic
-    @Column(name = "id_adm", nullable = false, precision = 3)
+    @Basic(optional=false)
+    @Column(name = "id_adm", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private Short id;
     
-    @Basic
+    @Basic(optional=false)
     @Lob
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", columnDefinition="TINYTEXT NOT NULL")
     private String username;
     
-    @Basic
+    @Basic(optional=false)
     @Lob
-    @Column(name = "full_name", nullable = false)
+    @Column(name = "full_name", columnDefinition="TINYTEXT NOT NULL")
     private String fullName;
     
-    @Basic
+    @Basic(optional=false)
     @Lob
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", columnDefinition="TINYTEXT NOT NULL")
     private String password;
     
-    @Basic
+    @Basic(optional=false)
     @Lob
-    @Column(name = "address", nullable = false)
+    @Column(name = "address", columnDefinition="TINYTEXT NOT NULL")
     private String address;
     
-    @Basic
+    @Basic(optional=false)
     @Lob
-    @Column(name = "telephone", nullable = false)
+    @Column(name = "telephone", columnDefinition="TINYTEXT NOT NULL")
     private String telephone;
     
-    @Basic
+    @Basic(optional=false)
     @Lob
-    @Column(name = "note", nullable = false)
+    @Column(name = "note", columnDefinition="TEXT NOT NULL")
     private String note;
     
-    @Basic
-    @Column(name = "permissions_level", nullable = false, precision = 1)
+    @Basic(optional=false)
+    @Column(name = "permissions_level", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private Short permissionsLevel;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "administrator")

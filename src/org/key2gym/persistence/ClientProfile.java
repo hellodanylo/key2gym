@@ -45,60 +45,60 @@ public class ClientProfile implements Serializable {
 
     @Id
     @Basic(optional = false)
-    @Column(name = "idcln_cpf")
+    @Column(name = "idcln_cpf", columnDefinition="SMALLINT UNSIGNED")
     private Short id;
     
     @Basic(optional = false)
-    @Column(name = "sex", nullable = false)
+    @Column(name = "sex", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private Sex sex;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "address", nullable = false)
+    @Column(name = "address", columnDefinition="TINYTEXT NOT NULL")
     private String address;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "telephone", nullable = false)
+    @Column(name = "telephone", columnDefinition="TINYTEXT NOT NULL")
     private String telephone;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "goal", nullable = false)
+    @Column(name = "goal", columnDefinition="TINYTEXT NOT NULL")
     private String goal;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "possible_attendance_rate", nullable = false)
+    @Column(name = "possible_attendance_rate", columnDefinition="TINYTEXT NOT NULL")
     private String possibleAttendanceRate;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "health_restrictions", nullable = false)
+    @Column(name = "health_restrictions", columnDefinition="TINYTEXT NOT NULL")
     private String healthRestrictions;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "favourite_sport", nullable = false)
+    @Column(name = "favourite_sport", columnDefinition="TINYTEXT NOT NULL")
     private String favouriteSport;
     
     @Basic(optional = false)
-    @Column(name = "fitness_experience", nullable = false)
+    @Column(name = "fitness_experience", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private FitnessExperience fitnessExperience;
     
     public enum FitnessExperience{NO, YES, UNKNOWN};
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "special_wishes", nullable = false)
+    @Column(name = "special_wishes", columnDefinition="TINYTEXT NOT NULL")
     private String specialWishes;
     
     @Basic(optional = false)
-    @Column(name = "height", nullable = false)
+    @Column(name = "height", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private Short height;
     
     @Basic(optional = false)
-    @Column(name = "weight", nullable = false)
+    @Column(name = "weight", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private Short weight;
 
     @Basic(optional = false)
@@ -106,21 +106,9 @@ public class ClientProfile implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date birthday;
     
-    public static Date defaultBirthday; 
-    static {
-        try {
-            defaultBirthday = new SimpleDateFormat("dd-MM-yyyy").parse("16-05-2096");
-        } catch (ParseException ex) {
-            Logger.getLogger(ClientProfile.class.getName()).error("Failed to create default birthday value!", ex);
-            defaultBirthday = null;
-        }
-    }
-    
-    @Basic(optional=false)
-    @Column(name="idads_cpf")
-    private Short adSourceId;
-     
-    @JoinColumn(name = "idads_cpf", referencedColumnName = "id_ads", insertable=false, updatable=false)
+    public static Date DATE_BIRTHDAY_UNKNOWN = new Date();
+
+    @JoinColumn(name = "idads_cpf", referencedColumnName = "id_ads")
     @ManyToOne(optional = false)
     private AdSource adSource;
     
@@ -133,7 +121,20 @@ public class ClientProfile implements Serializable {
     public ClientProfile() {
     }
     
-    public ClientProfile(Short id, Sex sex, Date birthday, String address, String telephone, String goal, String possibleAttendanceRate, String healthRestrictions, String favouriteSport, FitnessExperience fitnessExperience, String specialWishes, Short height, Short weight, Short adSourceId) {
+    public ClientProfile(Short id, 
+            Sex sex, 
+            Date birthday, 
+            String address, 
+            String telephone, 
+            String goal, 
+            String possibleAttendanceRate, 
+            String healthRestrictions, 
+            String favouriteSport,
+            FitnessExperience fitnessExperience, 
+            String specialWishes, 
+            Short height, 
+            Short weight, 
+            AdSource adSource) {
         this.id = id;
         this.sex = sex;
         this.birthday = birthday;
@@ -147,7 +148,7 @@ public class ClientProfile implements Serializable {
         this.specialWishes = specialWishes;
         this.height = height;
         this.weight = weight;
-        this.adSourceId = adSourceId;
+        this.adSource = adSource;
     }
 
     public Short getId() {
@@ -252,14 +253,6 @@ public class ClientProfile implements Serializable {
 
     public void setAdSource(AdSource adSource) {
         this.adSource = adSource;
-    }
-    
-    public void setAdSourceId(Short adSourceId) {
-        this.adSourceId = adSourceId;
-    }
-    
-    public Short getAdSourceId() {
-        return adSourceId;
     }
 
     public Client getClient() {

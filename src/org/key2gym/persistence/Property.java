@@ -26,70 +26,55 @@ import javax.persistence.*;
 @Table(name = "property_pty")
 @NamedQueries({
     @NamedQuery(name = "Property.findAll", query = "SELECT p FROM Property p"),
-    @NamedQuery(name = "Property.findById", query = "SELECT p FROM Property p WHERE p.id = :id"),
-    @NamedQuery(name = "Property.findByName", query = "SELECT p FROM Property p WHERE p.name = :name")})
+    @NamedQuery(name = "Property.findById", query = "SELECT p FROM Property p WHERE p.id = :id")})
 public class Property implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_pty")
-    private Short id;
+    @Lob
+    @Column(name = "id_pty", columnDefinition="VARCHAR(20) NOT NULL")
+    private String id;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "name", nullable = false)
-    private String name;
-    
-    @Basic(optional = false)
-    @Lob
-    @Column(name = "current_value", nullable = false)
-    private String value;
+    @Column(name = "property_value", columnDefinition="TINYTEXT NOT NULL")
+    private String propertyValue;
 
     public Property() {
     }
 
-    public Property(Short idPty) {
+    public Property(String idPty) {
         this.id = idPty;
     }
 
-    public Property(Short id, String name, String value) {
+    public Property(String id, String value) {
         this.id = id;
-        this.name = name;
-        this.value = value;
+        this.propertyValue = value;
     }
 
-    public Short getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getString() {
-        return value;
+        return propertyValue;
     }
 
     public void setString(String value) {
-        this.value = value;
+        this.propertyValue = value;
     }
     
     public Short getShort() {
-        return Short.valueOf(value);
+        return Short.valueOf(propertyValue);
     }
     
     public Integer getInteger() {
-        return Integer.valueOf(value);
+        return Integer.valueOf(propertyValue);
     }
 
     @Override

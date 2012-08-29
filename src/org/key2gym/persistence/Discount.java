@@ -37,15 +37,15 @@ public class Discount implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_dsc", nullable = false)
+    @Column(name = "id_dsc", columnDefinition="TINYINT UNSIGNED")
     private Short id;
     
     @Basic(optional = false)
-    @Column(name = "percent", nullable = false)
+    @Column(name = "percent", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private short percent;
     
     @Basic(optional = false)
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", columnDefinition="TINYTEXT NOT NULL")
     private String title;
     
     @OneToMany(mappedBy = "discount")

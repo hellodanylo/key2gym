@@ -36,7 +36,7 @@ public class TimeSplit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_tsp")
+    @Column(name = "id_tsp", columnDefinition="TINYINT UNSIGNED")
     private Short id;
     
     @Basic(optional = false)
@@ -45,7 +45,7 @@ public class TimeSplit implements Serializable {
     private Date endTime;
     
     @Basic(optional = false)
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", columnDefinition="TINYTEXT NOT NULL")
     private String title;
     
     @OneToMany(mappedBy = "timeSplit")

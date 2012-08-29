@@ -43,24 +43,24 @@ public class Item implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_itm")
+    @Column(name = "id_itm", columnDefinition="TINYINT UNSIGNED")
     private Short id;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", columnDefinition="TINYTEXT NOT NULL")
     private String title;
     
     @Basic(optional = false)
-    @Column(name = "barcode", nullable = false)
+    @Column(name = "barcode", columnDefinition="BIGINT UNSIGNED NOT NULL")
     private Long barcode;
     
     @Basic(optional = false)
-    @Column(name = "quantity", nullable = false)
+    @Column(name = "quantity", columnDefinition="TINYINT UNSIGNED NULL")
     private Short quantity;
     
     @Basic(optional = false)
-    @Column(name = "price", nullable = false)
+    @Column(name = "price", precision = 5, scale = 2, nullable = false)
     private BigDecimal price;
     
     @OneToMany(mappedBy="item")

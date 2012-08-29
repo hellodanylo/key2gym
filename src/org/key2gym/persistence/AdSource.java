@@ -39,12 +39,12 @@ public class AdSource implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_ads", nullable = false)
+    @Column(name = "id_ads", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private Short id;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", columnDefinition="TINYTEXT NOT NULL")
     private String title;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "adSource")

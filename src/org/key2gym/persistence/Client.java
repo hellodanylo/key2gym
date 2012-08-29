@@ -15,6 +15,7 @@
  */
 package org.key2gym.persistence;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -36,19 +37,19 @@ import javax.persistence.*;
     @NamedQuery(name = "Client.findByRegistrationDate", query = "SELECT c FROM Client c WHERE c.registrationDate = :registrationDate"),
     @NamedQuery(name = "Client.findByAttendancesBalance", query = "SELECT c FROM Client c WHERE c.attendancesBalance = :attendancesBalance"),
     @NamedQuery(name = "Client.findByExpirationDate", query = "SELECT c FROM Client c WHERE c.expirationDate = :expirationDate")})
-public class Client {
+public class Client implements Serializable {
   
     @Id
     @Basic(optional = false)
-    @Column(name = "id_cln")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "id_cln", columnDefinition="SMALLINT UNSIGNED")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Short id;
         
-    @Column(name = "card")
+    @Column(name = "card", columnDefinition="INT UNSIGNED NULL")
     private Integer card;
 
     @Basic(optional = false)
-    @Column(name = "money_balance", nullable=false)
+    @Column(name = "money_balance", scale = 2, precision = 6, nullable = false)
     private BigDecimal moneyBalance;
     
     @OneToMany(mappedBy = "client")
@@ -59,25 +60,25 @@ public class Client {
        
     @Basic(optional = false)
     @Lob
-    @Column(name = "full_name", nullable=false)
+    @Column(name = "full_name", columnDefinition="TINYTEXT NOT NULL")
     private String fullName;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "note", nullable=false)
+    @Column(name = "note", columnDefinition="TEXT NOT NULL")
     private String note;
     
     @Basic(optional = false)
-    @Column(name = "registration_date", nullable=false)
+    @Column(name = "registration_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date registrationDate;
     
     @Basic(optional = false)
-    @Column(name = "attendances_balance", nullable=false)
+    @Column(name = "attendances_balance", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private short attendancesBalance;
     
     @Basic(optional = false)
-    @Column(name = "expiration_date", nullable=false)
+    @Column(name = "expiration_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date expirationDate;
     

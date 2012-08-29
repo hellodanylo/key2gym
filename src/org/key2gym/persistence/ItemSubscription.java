@@ -41,23 +41,23 @@ public class ItemSubscription implements Serializable {
     
     @Id
     @Basic(optional = false)
-    @Column(name = "iditm_its")
+    @Column(name = "iditm_its", columnDefinition="TINYINT UNSIGNED")
     private Short id;
     
     @Basic(optional = false)
-    @Column(name = "units", nullable = false)
+    @Column(name = "units", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private short units;
     
     @Basic(optional = false)
-    @Column(name = "term_days", nullable = false)
+    @Column(name = "term_days", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private short termDays;
     
     @Basic(optional = false)
-    @Column(name = "term_months", nullable = false)
+    @Column(name = "term_months", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private short termMonths;
     
     @Basic(optional = false)
-    @Column(name = "term_years", nullable = false)
+    @Column(name = "term_years", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private short termYears;
     
     @JoinColumn(name = "idtsp_its", referencedColumnName = "id_tsp", nullable = false)

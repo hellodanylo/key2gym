@@ -39,7 +39,7 @@ public class ClientFreeze implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_cfz")
+    @Column(name = "id_cfz", columnDefinition="TINYINT UNSIGNED")
     private Short id;
             
     @Basic(optional = false)
@@ -48,15 +48,15 @@ public class ClientFreeze implements Serializable {
     private Date dateIssued;
     
     @Basic(optional = false)
-    @Column(name = "days", nullable = false)
+    @Column(name = "days", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private Short days;
     
     @Basic(optional = false)
     @Lob
-    @Column(name = "note", nullable = false)
+    @Column(name = "note", columnDefinition="TEXT NOT NULL")
     private String note;
     
-    @JoinColumn(name = "idcln_cfz", referencedColumnName = "id_cln", nullable = false)
+    @JoinColumn(name = "idcln_cfz", nullable = false)
     @ManyToOne(optional = false)
     private Client client;
     
