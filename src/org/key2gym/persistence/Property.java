@@ -69,10 +69,6 @@ public class Property implements Serializable {
         this.propertyValue = value;
     }
     
-    public Short getShort() {
-        return Short.valueOf(propertyValue);
-    }
-    
     public Integer getInteger() {
         return Integer.valueOf(propertyValue);
     }

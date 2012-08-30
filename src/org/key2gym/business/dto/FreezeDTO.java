@@ -27,19 +27,19 @@ public class FreezeDTO {
         
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
      
-    public Short getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
 
-    public void setClientId(Short clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
 
@@ -59,19 +59,19 @@ public class FreezeDTO {
         this.administratorFullName = administratorFullName;
     }
 
-    public Short getAdministratorId() {
+    public Integer getAdministratorId() {
         return administratorId;
     }
 
-    public void setAdministratorId(Short administratorId) {
+    public void setAdministratorId(Integer administratorId) {
         this.administratorId = administratorId;
     }
 
-    public Short getDays() {
+    public Integer getDays() {
         return days;
     }
 
-    public void setDays(Short days) {
+    public void setDays(Integer days) {
         this.days = days;
     }
 
@@ -91,12 +91,12 @@ public class FreezeDTO {
         this.clientFullName = clientFullName;
     }
     
-    private Short id;
-    private Short clientId;
+    private Integer id;
+    private Integer clientId;
     private String clientFullName;
     private DateMidnight dateIssued;
-    private Short administratorId;
+    private Integer administratorId;
     private String administratorFullName;
-    private Short days;
+    private Integer days;
     private String note;
 }

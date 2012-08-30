@@ -30,11 +30,11 @@ public class AdministratorDTO {
         this.fullName = fullName;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -46,11 +46,11 @@ public class AdministratorDTO {
         this.note = note;
     }
 
-    public Short getPermissionsLevel() {
+    public Integer getPermissionsLevel() {
         return permissionsLevel;
     }
 
-    public void setPermissionsLevel(Short permissionsLevel) {
+    public void setPermissionsLevel(Integer permissionsLevel) {
         this.permissionsLevel = permissionsLevel;
     }
 
@@ -64,9 +64,9 @@ public class AdministratorDTO {
     
     
 
-    private Short id;
+    private Integer id;
     private String userName;
     private String fullName;
-    private Short permissionsLevel;
+    private Integer permissionsLevel;
     private String note;    
 }

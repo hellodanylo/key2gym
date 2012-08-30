@@ -33,7 +33,7 @@ public class AdministratorsService extends BusinessService {
     * @throws NullPointerException if the id is null
     * @return the administrator
     */
-    public AdministratorDTO getById(Short id) {
+    public AdministratorDTO getById(Integer id) {
         assertOpenSessionExists();
         
         if (id == null) {

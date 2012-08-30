@@ -37,13 +37,14 @@ import javax.persistence.*;
     @NamedQuery(name = "OrderEntity.findDefaultByDateRecorded", query = "SELECT o FROM OrderEntity o WHERE o.attendance IS NULL AND o.client IS NULL AND o.dateRecorded = :dateRecorded"),
     @NamedQuery(name = "OrderEntity.findByDateRecordedOrderByIdDesc", query = "SELECT o FROM OrderEntity o WHERE o.dateRecorded = :dateRecorded ORDER BY o.id DESC"),
     @NamedQuery(name = "OrderEntity.sumPaymentsForDateRecorded", query = "SELECT SUM(o.payment) FROM OrderEntity o WHERE o.dateRecorded = :dateRecorded")})
+@SequenceGenerator(name="id_orf_seq", allocationSize = 1)
 public class OrderEntity implements Serializable {
     
     @Id
     @Basic(optional = false)
     @Column(name = "id_ord", columnDefinition="SMALLINT UNSIGNED")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Short id;
+    private Integer id;
     
     @Basic(optional = false)
     @Column(name = "date_recorded", nullable = false)
@@ -68,21 +69,21 @@ public class OrderEntity implements Serializable {
     public OrderEntity() {
     }
 
-    public OrderEntity(Short id) {
+    public OrderEntity(Integer id) {
         this.id = id;
     }
 
-    public OrderEntity(Short id, Date dateRecorded, BigDecimal payment) {
+    public OrderEntity(Integer id, Date dateRecorded, BigDecimal payment) {
         this.id = id;
         this.dateRecorded = dateRecorded;
         this.payment = payment;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

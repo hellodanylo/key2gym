@@ -23,43 +23,43 @@ import java.math.BigDecimal;
  */
 public class SubscriptionDTO {
     
-    public Short getTermDays() {
+    public Integer getTermDays() {
         return termDays;
     }
 
-    public void setTermDays(Short termDays) {
+    public void setTermDays(Integer termDays) {
         this.termDays = termDays;
     }
 
-    public Short getTermMonths() {
+    public Integer getTermMonths() {
         return termMonths;
     }
 
-    public void setTermMonths(Short termMonths) {
+    public void setTermMonths(Integer termMonths) {
         this.termMonths = termMonths;
     }
 
-    public Short getTermYears() {
+    public Integer getTermYears() {
         return termYears;
     }
 
-    public void setTermYears(Short termYears) {
+    public void setTermYears(Integer termYears) {
         this.termYears = termYears;
     }
 
-    public Short getTimeSplitId() {
+    public Integer getTimeSplitId() {
         return timeSplitId;
     }
 
-    public void setTimeSplitId(Short timeSplitId) {
+    public void setTimeSplitId(Integer timeSplitId) {
         this.timeSplitId = timeSplitId;
     }
 
-    public Short getUnits() {
+    public Integer getUnits() {
         return units;
     }
 
-    public void setUnits(Short units) {
+    public void setUnits(Integer units) {
         this.units = units;
     }
 
@@ -71,11 +71,11 @@ public class SubscriptionDTO {
         this.barcode = barcode;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -87,11 +87,11 @@ public class SubscriptionDTO {
         this.price = price;
     }
 
-    public Short getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Short quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -103,14 +103,14 @@ public class SubscriptionDTO {
         this.title = title;
     }
     
-    private Short id;
+    private Integer id;
     private String title;
     private Long barcode;
-    private Short quantity;
+    private Integer quantity;
     private BigDecimal price;
-    private Short units;
-    private Short termDays;
-    private Short termMonths;
-    private Short termYears;
-    private Short timeSplitId;
+    private Integer units;
+    private Integer termDays;
+    private Integer termMonths;
+    private Integer termYears;
+    private Integer timeSplitId;
 }

@@ -237,10 +237,10 @@ public class ClientProfileFormPanel extends JPanel {
             binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("adSourceId"), adSourceComboBox, BeanProperty.create("selectedItem"), "adSource"); //NOI18N
             binding.setSourceNullValue(0);
-            binding.setConverter(new Converter<Short, AdSource>() {
+            binding.setConverter(new Converter<Integer, AdSource>() {
 
                 @Override
-                public AdSource convertForward(Short value) {
+                public AdSource convertForward(Integer value) {
                     for (AdSource adSource : adSources) {
                         if (adSource.getId().equals(value)) {
                             return adSource;
@@ -251,7 +251,7 @@ public class ClientProfileFormPanel extends JPanel {
                 }
 
                 @Override
-                public Short convertReverse(AdSource value) {
+                public Integer convertReverse(AdSource value) {
                     return value.getId();
                 }
             });

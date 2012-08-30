@@ -79,10 +79,10 @@ public class CheckOutAction extends BasicAction {
                 return;
             }
             
-            Short attendanceId = pickAttendanceDialog.getAttendanceId();
+            Integer attendanceId = pickAttendanceDialog.getAttendanceId();
             
             if(pickAttendanceDialog.isEditOrderDialogRequested()) {
-                Short financialActivityId;
+                Integer financialActivityId;
                 Boolean isAnonymous;
 
                 try {

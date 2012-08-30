@@ -141,7 +141,7 @@ public class ClientProfilesService extends BusinessService {
      * @throws ValidationException if the id is invalid
      * @throws BusinessException if current business rules restrict this operation
      */
-    public void detachClientProfile(Short id) throws SecurityException, ValidationException, BusinessException {
+    public void detachClientProfile(Integer id) throws SecurityException, ValidationException, BusinessException {
         assertOpenSessionExists();
         assertTransactionActive();
         
@@ -175,7 +175,7 @@ public class ClientProfilesService extends BusinessService {
      * @throws ValidationException the ID is invalid 
      * @throws IllegalStateException if no session is open
      */
-    public ClientProfileDTO getById(Short id) throws ValidationException {
+    public ClientProfileDTO getById(Integer id) throws ValidationException {
         assertOpenSessionExists();
         
         if(id == null) {
@@ -220,10 +220,10 @@ public class ClientProfilesService extends BusinessService {
     }
 
     private Validator getHeightValidator() {
-        return new Validator<Short>() {
+        return new Validator<Integer>() {
 
             @Override
-            public void validate(Short value) throws ValidationException {
+            public void validate(Integer value) throws ValidationException {
                 if (value == null) {
                     throw new NullPointerException("The height is null."); //NOI18N
                 }
@@ -240,10 +240,10 @@ public class ClientProfilesService extends BusinessService {
     }
 
     private Validator getWeightValidator() {
-        return new Validator<Short>() {
+        return new Validator<Integer>() {
 
             @Override
-            public void validate(Short value) throws ValidationException {
+            public void validate(Integer value) throws ValidationException {
                 if (value == null) {
                     throw new NullPointerException("The weight is null."); //NOI18N
                 }

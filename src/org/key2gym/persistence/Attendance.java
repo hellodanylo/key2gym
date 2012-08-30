@@ -44,7 +44,7 @@ public class Attendance implements Serializable {
     @Basic(optional = false)
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id_atd", columnDefinition="SMALLINT UNSIGNED")
-    private Short id;
+    private Integer id;
     
     @Basic(optional = false)
     @Column(name = "datetime_begin", columnDefinition="TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00'")
@@ -75,21 +75,21 @@ public class Attendance implements Serializable {
     public Attendance() {
     }
 
-    public Attendance(Short idAtd) {
+    public Attendance(Integer idAtd) {
         this.id = idAtd;
     }
 
-    public Attendance(Short id, Date datetimeBegin, Date datetimeEnd) {
+    public Attendance(Integer id, Date datetimeBegin, Date datetimeEnd) {
         this.id = id;
         this.datetimeBegin = datetimeBegin;
         this.datetimeEnd = datetimeEnd;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

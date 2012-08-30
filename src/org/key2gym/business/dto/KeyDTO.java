@@ -23,16 +23,16 @@ import org.key2gym.persistence.Key;
  */
 public class KeyDTO {
 
-    public KeyDTO(Short id, String title) {
+    public KeyDTO(Integer id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -44,6 +44,6 @@ public class KeyDTO {
         this.title = title;
     }
     
-    private Short id;
+    private Integer id;
     private String title;
 }

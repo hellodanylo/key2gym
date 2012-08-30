@@ -28,19 +28,19 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "ad_source_ads")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "AdSource.findAll", query = "SELECT a FROM AdSource a"),
     @NamedQuery(name = "AdSource.findById", query = "SELECT a FROM AdSource a WHERE a.id = :id")})
+@SequenceGenerator(name="id_ads_seq", allocationSize = 1)
 public class AdSource implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="id_ads_seq")
     @Basic(optional = false)
     @Column(name = "id_ads", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private Short id;
+    private Integer id;
     
     @Basic(optional = false)
     @Lob
@@ -53,20 +53,20 @@ public class AdSource implements Serializable {
     public AdSource() {
     }
 
-    public AdSource(Short id) {
+    public AdSource(Integer id) {
         this.id = id;
     }
 
-    public AdSource(Short id, String title) {
+    public AdSource(Integer id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

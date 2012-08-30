@@ -29,11 +29,11 @@ public class OrderDTO {
         
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -69,19 +69,19 @@ public class OrderDTO {
         return date;
     }
 
-    public Short getAttendanceId() {
+    public Integer getAttendanceId() {
         return attendanceId;
     }
 
-    public void setAttendanceId(Short attendanceId) {
+    public void setAttendanceId(Integer attendanceId) {
         this.attendanceId = attendanceId;
     }
 
-    public Short getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
 
-    public void setClientId(Short clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
 
@@ -117,15 +117,15 @@ public class OrderDTO {
         this.moneyBalance = moneyBalance;
     }
     
-    private Short id;
+    private Integer id;
     private BigDecimal payment;
     private BigDecimal total;
     private BigDecimal due;
     private List<OrderLineDTO> orderLines;
     private DateMidnight date;
-    private Short clientId;
+    private Integer clientId;
     private String clientFullName;
-    private Short attendanceId;
+    private Integer attendanceId;
     private String keyTitle;
     private BigDecimal moneyBalance;
 }

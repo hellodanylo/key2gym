@@ -1,4 +1,4 @@
--- Creates sequences for primary keys.
+-- Creates sequences for primary keys
 CREATE SEQUENCE id_dsc_seq;
 CREATE SEQUENCE id_atd_seq;
 CREATE SEQUENCE id_its_seq;
@@ -14,19 +14,19 @@ CREATE SEQUENCE id_ord_seq;
 CREATE SEQUENCE id_key_seq;
 
 -- Creates tables
-CREATE TABLE discount_dsc (id_dsc INTEGER NOT NULL DEFAULT nextval('id_dsc_seq'), percent SMALLINT NOT NULL, title TEXT NOT NULL, PRIMARY KEY (id_dsc));
-CREATE TABLE attendance_atd (id_atd INTEGER NOT NULL DEFAULT nextval('id_atd_seq'), datetime_begin TIMESTAMP NOT NULL, datetime_end TIMESTAMP NOT NULL, idcln_atd INTEGER, idkey_atd SMALLINT, PRIMARY KEY (id_atd));
-CREATE TABLE item_subscription_its (iditm_its INTEGER NOT NULL DEFAULT nextval('id_its_seq'), term_days SMALLINT NOT NULL, term_months SMALLINT NOT NULL, term_years SMALLINT NOT NULL, units SMALLINT NOT NULL, idtsp_its SMALLINT, PRIMARY KEY (iditm_its));
-CREATE TABLE order_line_orl (id_orl INTEGER NOT NULL DEFAULT nextval('id_orl_seq'), quantity SMALLINT NULL, iddsc_orl SMALLINT, iditm_orl SMALLINT, idord_orl INTEGER, PRIMARY KEY (id_orl));
+CREATE TABLE discount_dsc (id_dsc INTEGER NOT NULL DEFAULT nextval('id_dsc_seq'), percent INTEGER NOT NULL, title TEXT NOT NULL, PRIMARY KEY (id_dsc));
+CREATE TABLE attendance_atd (id_atd INTEGER NOT NULL DEFAULT nextval('id_atd_seq'), datetime_begin TIMESTAMP NOT NULL, datetime_end TIMESTAMP NOT NULL, idcln_atd INTEGER NULL, idkey_atd INTEGER NOT NULL, PRIMARY KEY (id_atd));
+CREATE TABLE item_subscription_its (iditm_its INTEGER NOT NULL DEFAULT nextval('id_its_seq'), term_days INTEGER NOT NULL, term_months INTEGER NOT NULL, term_years INTEGER NOT NULL, units INTEGER NOT NULL, idtsp_its INTEGER, PRIMARY KEY (iditm_its));
+CREATE TABLE order_line_orl (id_orl INTEGER NOT NULL DEFAULT nextval('id_orl_seq'), quantity INTEGER NOT NULL, iddsc_orl INTEGER NULL, iditm_orl INTEGER NOT NULL, idord_orl INTEGER NOT NULL, PRIMARY KEY (id_orl));
 CREATE TABLE ad_source_ads (id_ads INTEGER NOT NULL DEFAULT nextval('id_ads_seq'), title TEXT NOT NULL, PRIMARY KEY (id_ads));
-CREATE TABLE property_pty (id_pty VARCHAR(20) NOT NULL, property_value TEXT NOT NULL, PRIMARY KEY (id_pty));
+CREATE TABLE property_pty (id_pty TEXT NOT NULL, property_value TEXT NOT NULL, PRIMARY KEY (id_pty));
 CREATE TABLE cash_adjustment_cad (date_recorded DATE NOT NULL, amount DECIMAL(6,2) NOT NULL, note TEXT NOT NULL, PRIMARY KEY (date_recorded));
-CREATE TABLE item_itm (id_itm INTEGER NOT NULL DEFAULT nextval('id_itm_seq'), barcode BIGINT NOT NULL, price DECIMAL(5,2) NOT NULL, quantity SMALLINT NULL, title TEXT NOT NULL, PRIMARY KEY (id_itm));
-CREATE TABLE client_freeze_cfz (id_cfz INTEGER NOT NULL DEFAULT nextval('id_cfz_seq'), date_issued DATE NOT NULL, days SMALLINT NOT NULL, note TEXT NOT NULL, idadm_cfz SMALLINT NOT NULL, idcln_cfz INTEGER, PRIMARY KEY (id_cfz));
-CREATE TABLE client_profile_cpf (idcln_cpf INTEGER NOT NULL, address TEXT NOT NULL, birthday DATE NOT NULL, favourite_sport TEXT NOT NULL, fitness_experience SMALLINT NOT NULL, goal TEXT NOT NULL, health_restrictions TEXT NOT NULL, height SMALLINT NOT NULL, possible_attendance_rate TEXT NOT NULL, sex SMALLINT NOT NULL, special_wishes TEXT NOT NULL, telephone TEXT NOT NULL, weight SMALLINT NOT NULL, idads_cpf SMALLINT NOT NULL, PRIMARY KEY (idcln_cpf));
-CREATE TABLE administrator_adm (id_adm INTEGER NOT NULL DEFAULT nextval('id_adm_seq'), address TEXT NOT NULL, full_name TEXT NOT NULL, note TEXT NOT NULL, password TEXT NOT NULL, permissions_level SMALLINT NOT NULL, telephone TEXT NOT NULL, username TEXT NOT NULL, PRIMARY KEY (id_adm));
-CREATE TABLE client_cln (id_cln INTEGER NOT NULL DEFAULT nextval('id_cln_seq'), attendances_balance SMALLINT NOT NULL, card BIGINT NULL, expiration_date DATE NOT NULL, full_name TEXT NOT NULL, money_balance DECIMAL(6,2) NOT NULL, note TEXT NOT NULL, registration_date DATE NOT NULL, PRIMARY KEY (id_cln));
-CREATE TABLE session_ssn (id_ssn INTEGER NOT NULL DEFAULT nextval('id_ssn_seq'), datetime_begin TIMESTAMP NOT NULL, datetime_end TIMESTAMP NOT NULL, idadm_ssn SMALLINT NOT NULL, PRIMARY KEY (id_ssn));
+CREATE TABLE item_itm (id_itm INTEGER NOT NULL DEFAULT nextval('id_itm_seq'), barcode BIGINT NULL, price DECIMAL(5,2) NOT NULL, quantity INTEGER NULL, title TEXT NOT NULL, PRIMARY KEY (id_itm));
+CREATE TABLE client_freeze_cfz (id_cfz INTEGER NOT NULL DEFAULT nextval('id_cfz_seq'), date_issued DATE NOT NULL, days INTEGER NOT NULL, note TEXT NOT NULL, idadm_cfz INTEGER NOT NULL, idcln_cfz INTEGER NOT NULL, PRIMARY KEY (id_cfz));
+CREATE TABLE client_profile_cpf (idcln_cpf INTEGER NOT NULL, address TEXT NOT NULL, birthday DATE NOT NULL, favourite_sport TEXT NOT NULL, fitness_experience INTEGER NOT NULL, goal TEXT NOT NULL, health_restrictions TEXT NOT NULL, height INTEGER NOT NULL, possible_attendance_rate TEXT NOT NULL, sex INTEGER NOT NULL, special_wishes TEXT NOT NULL, telephone TEXT NOT NULL, weight INTEGER NOT NULL, idads_cpf INTEGER NOT NULL, PRIMARY KEY (idcln_cpf));
+CREATE TABLE administrator_adm (id_adm INTEGER NOT NULL DEFAULT nextval('id_adm_seq'), address TEXT NOT NULL, full_name TEXT NOT NULL, note TEXT NOT NULL, password TEXT NOT NULL, permissions_level INTEGER NOT NULL, telephone TEXT NOT NULL, username TEXT NOT NULL, PRIMARY KEY (id_adm));
+CREATE TABLE client_cln (id_cln INTEGER NOT NULL DEFAULT nextval('id_cln_seq'), attendances_balance INTEGER NOT NULL, card BIGINT NULL, expiration_date DATE NOT NULL, full_name TEXT NOT NULL, money_balance DECIMAL(6,2) NOT NULL, note TEXT NOT NULL, registration_date DATE NOT NULL, PRIMARY KEY (id_cln));
+CREATE TABLE session_ssn (id_ssn INTEGER NOT NULL DEFAULT nextval('id_ssn_seq'), datetime_begin TIMESTAMP NOT NULL, datetime_end TIMESTAMP NOT NULL, idadm_ssn INTEGER NOT NULL, PRIMARY KEY (id_ssn));
 CREATE TABLE time_split_tsp (id_tsp INTEGER NOT NULL DEFAULT nextval('id_tsp_seq'), end_time TIME NOT NULL, title TEXT NOT NULL, PRIMARY KEY (id_tsp));
 CREATE TABLE order_ord (id_ord INTEGER NOT NULL DEFAULT nextval('id_ord_seq'), date_recorded DATE NOT NULL, payment DECIMAL(6,2) NOT NULL, idcln_ord INTEGER, idatd_ord INTEGER, PRIMARY KEY (id_ord));
 CREATE TABLE key_key (id_key INTEGER NOT NULL DEFAULT nextval('id_key_seq'), title TEXT NOT NULL, PRIMARY KEY (id_key));
@@ -46,7 +46,7 @@ ALTER SEQUENCE id_tsp_seq OWNED BY time_split_tsp.id_tsp;
 ALTER SEQUENCE id_ord_seq OWNED BY order_ord.id_ord;
 ALTER SEQUENCE id_key_seq OWNED BY key_key.id_key;
 
--- Sets contstraints
+-- Adds contstraints
 ALTER TABLE attendance_atd ADD CONSTRAINT idcln_atd FOREIGN KEY (idcln_atd) REFERENCES client_cln (id_cln);
 ALTER TABLE attendance_atd ADD CONSTRAINT idkey_atd FOREIGN KEY (idkey_atd) REFERENCES key_key (id_key);
 ALTER TABLE item_subscription_its ADD CONSTRAINT idtsp_its FOREIGN KEY (idtsp_its) REFERENCES time_split_tsp (id_tsp);

@@ -27,7 +27,7 @@ public class ItemDTO {
         
     }
 
-    public ItemDTO(Short id, Long barcode, String title, Short quantity, BigDecimal price) {
+    public ItemDTO(Integer id, Long barcode, String title, Integer quantity, BigDecimal price) {
         this.id = id;
         this.barcode = barcode;
         this.title = title;
@@ -43,11 +43,11 @@ public class ItemDTO {
         this.barcode = barcode;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -67,11 +67,11 @@ public class ItemDTO {
         this.price = price;
     }
 
-    public Short getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Short quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -83,10 +83,10 @@ public class ItemDTO {
         this.title = title;
     }
     
-    private Short id;
+    private Integer id;
     private String title;
     private Long barcode;
-    private Short quantity;
+    private Integer quantity;
     private BigDecimal price;
     private Boolean itemSubscription;
 }

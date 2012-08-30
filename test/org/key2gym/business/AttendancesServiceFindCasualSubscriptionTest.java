@@ -88,7 +88,7 @@ public class AttendancesServiceFindCasualSubscriptionTest {
         entityManager.persist(item);
         entityManager.flush();
         
-        ItemSubscription subscription = new ItemSubscription(null, (short)1, (short)1, (short)0, (short)0);
+        ItemSubscription subscription = new ItemSubscription(null, 1, 1, 0, 0);
         subscription.setItem(item);
         subscription.setTimeSplit(timeSplit);
         subscription.setId(item.getId());

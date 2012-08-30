@@ -39,15 +39,15 @@ public class TimeSplitDTO {
         this.title = title;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     
-    Short id;
+    Integer id;
     LocalTime time;
     String title;
 }

@@ -104,7 +104,7 @@ public class ItemsService extends BusinessService {
                 .getResultList();
 
         Property property = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
-        Short penaltyItemId = Short.valueOf(property.getString());
+        Integer penaltyItemId = Integer.valueOf(property.getString());
 
         for (Item item : items) {
             /*
@@ -170,7 +170,7 @@ public class ItemsService extends BusinessService {
                 .getResultList();
 
         Property property = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
-        Short penaltyItemId = Short.valueOf(property.getString());
+        Integer penaltyItemId = Integer.valueOf(property.getString());
 
         for (Item item : items) {
             /*
@@ -268,7 +268,7 @@ public class ItemsService extends BusinessService {
      * @throws SecurityException if current security rules restrict this
      * operation
      */
-    public void removeItem(Short itemId) throws ValidationException, BusinessException, SecurityException {
+    public void removeItem(Integer itemId) throws ValidationException, BusinessException, SecurityException {
         assertOpenSessionExists();
         assertTransactionActive();
 
@@ -317,7 +317,7 @@ public class ItemsService extends BusinessService {
         return result;
     }
 
-    void validateBarcode(Long value, Short id) throws ValidationException {
+    void validateBarcode(Long value, Integer id) throws ValidationException {
         if (value == null) {
             return;
         }
@@ -348,7 +348,7 @@ public class ItemsService extends BusinessService {
         }
     }
 
-    void validateQuantity(Short value) throws ValidationException {
+    void validateQuantity(Integer value) throws ValidationException {
         if (value == null) {
             return;
         }

@@ -262,10 +262,10 @@ public class PickClientDialog extends AbstractDialog {
 
         try {
             if (idRadioButton.isSelected()) {
-                Short id;
+                Integer id;
 
                 try {
-                    id = Short.parseShort(idTextField.getText().trim());
+                    id = Integer.parseInt(idTextField.getText().trim());
                 } catch (NumberFormatException ex) {
                     throw new ValidationException(MessageFormat.format(getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), getString("Text.ID")));
                 }
@@ -281,7 +281,7 @@ public class PickClientDialog extends AbstractDialog {
                 }
 
                 ClientsService clientsService = ClientsService.getInstance();
-                Short clientId = clientsService.findByCard(card);
+                Integer clientId = clientsService.findByCard(card);
 
                 clients = new LinkedList<>();
                 if (clientId != null) {
@@ -335,17 +335,17 @@ public class PickClientDialog extends AbstractDialog {
     /*
      * Session variables
      */
-    private Short clientId;
+    private Integer clientId;
     /*
      * GUI
      */
     private ClientsTableModel clientsTableModel;
 
-    public Short getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
 
-    public void setClientId(Short clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
     private JButton cancelButton;

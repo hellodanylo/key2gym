@@ -28,7 +28,7 @@ public class ClientDTO {
         
     }
 
-    public ClientDTO(Short id, String fullName, Integer card, DateMidnight registrationDate, BigDecimal moneyBalance, Short attendancesBalance, DateMidnight expirationDate, String note) {
+    public ClientDTO(Integer id, String fullName, Integer card, DateMidnight registrationDate, BigDecimal moneyBalance, Integer attendancesBalance, DateMidnight expirationDate, String note) {
         this.id = id;
         this.fullName = fullName;
         this.card = card;
@@ -55,11 +55,11 @@ public class ClientDTO {
         this.note = note;
     }
 
-    public Short getAttendancesBalance() {
+    public Integer getAttendancesBalance() {
         return attendancesBalance;
     }
 
-    public void setAttendancesBalance(Short attendancesBalance) {
+    public void setAttendancesBalance(Integer attendancesBalance) {
         this.attendancesBalance = attendancesBalance;
     }
 
@@ -79,11 +79,11 @@ public class ClientDTO {
         this.fullName = fullName;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -102,11 +102,11 @@ public class ClientDTO {
     public void setRegistrationDate(DateMidnight registrationDate) {
         this.registrationDate = registrationDate;
     }
-    private Short id;
+    private Integer id;
     private String fullName;
     private DateMidnight registrationDate;
     private BigDecimal moneyBalance;
-    private Short attendancesBalance;
+    private Integer attendancesBalance;
     private DateMidnight expirationDate;
     private String note;
     private Integer card;

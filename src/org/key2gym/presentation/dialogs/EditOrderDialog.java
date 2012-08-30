@@ -480,7 +480,7 @@ public class EditOrderDialog extends AbstractDialog {
                     return;
                 }
 
-                Short itemId = ((ItemDTO) itemsList.getSelectedValue()).getId();
+                Integer itemId = ((ItemDTO) itemsList.getSelectedValue()).getId();
 
                 try {
                     DiscountDTO discount = (DiscountDTO) discountsComboBox.getSelectedItem();
@@ -562,7 +562,7 @@ public class EditOrderDialog extends AbstractDialog {
      * @param orderId the
      * @see EditOrderDialog for details about hot swapping
      */
-    public void setOrderId(Short orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
 
         updateGUI(false);
@@ -576,7 +576,7 @@ public class EditOrderDialog extends AbstractDialog {
         this.fullPaymentForced = fullPaymentForced;
     }
 
-    public Short getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
     /*
@@ -584,7 +584,7 @@ public class EditOrderDialog extends AbstractDialog {
      */
     private OrderLinesTableModel orderLinesTableModel;
     private MutableListModel<ItemDTO> itemsListModel;
-    private Short orderId;
+    private Integer orderId;
     private Boolean fullPaymentForced;
     /*
      * Business

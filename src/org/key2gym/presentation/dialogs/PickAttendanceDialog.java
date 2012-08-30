@@ -105,7 +105,7 @@ public class PickAttendanceDialog extends AbstractDialog {
             Boolean keyFound = false;
 
             for (KeyDTO key : keys) {
-                Short attendanceId;
+                Integer attendanceId;
                 try {
                     attendanceId = attendancesService.findOpenAttendanceByKey(key.getId());
                 } catch (ValidationException | BusinessException ex) {
@@ -165,8 +165,8 @@ public class PickAttendanceDialog extends AbstractDialog {
     @Override
     protected void onOkActionPerformed(ActionEvent evt) {
         AttendancesService attendancesService;
-        Short keyId;
-        Short attendanceId;
+        Integer keyId;
+        Integer attendanceId;
 
         try {
             attendancesService = AttendancesService.getInstance();
@@ -196,19 +196,19 @@ public class PickAttendanceDialog extends AbstractDialog {
         super.onOkActionPerformed(evt);
     }
 
-    public Short getAttendanceId() {
+    public Integer getAttendanceId() {
         return attendanceId;
     }
 
-    public void setAttendanceId(Short attendanceId) {
+    public void setAttendanceId(Integer attendanceId) {
         this.attendanceId = attendanceId;
     }
 
-    public Short getKeyId() {
+    public Integer getKeyId() {
         return keyId;
     }
 
-    public void setKeyId(Short keyId) {
+    public void setKeyId(Integer keyId) {
         this.keyId = keyId;
     }
 
@@ -232,8 +232,8 @@ public class PickAttendanceDialog extends AbstractDialog {
      * Session variables
      */
     private Boolean attendanceLocked;
-    private Short attendanceId;
-    private Short keyId;
+    private Integer attendanceId;
+    private Integer keyId;
     private Boolean editOrderDialogRequested;
     /*
      * Components

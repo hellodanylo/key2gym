@@ -77,14 +77,14 @@ public class AttendancesServiceCheckInTest {
         clients = new LinkedList<>();
 
         Client client;
-        client = new Client((short)1);
+        client = new Client(1);
         client.setFullName("");
-        client.setAttendancesBalance((short)0);
+        client.setAttendancesBalance(0);
         client.setCard(12345678);
         client.setMoneyBalance(BigDecimal.ZERO);
         client.setRegistrationDate(new Date());
         client.setExpirationDate(new DateMidnight().plusDays(10).toDate());
-        client.setAttendancesBalance((short) 5);
+        client.setAttendancesBalance( 5);
         client.setNote("");
         clients.add(client);
         entityManager.persist(client);
@@ -99,7 +99,7 @@ public class AttendancesServiceCheckInTest {
         
         subscriptions = new LinkedList<>();
         
-        ItemSubscription subscription = new ItemSubscription(null, (short)1, (short)1, (short)0, (short)0);
+        ItemSubscription subscription = new ItemSubscription(null, 1, 1, 0, 0);
         subscription.setItem(item);
         subscription.setTimeSplit(timeSplit);
         subscription.setId(item.getId());
@@ -135,7 +135,7 @@ public class AttendancesServiceCheckInTest {
         assertNotNull(entityManager.find(Attendance.class, result));
 
         // The client's attendances balance should have been decreased
-        assertEquals(4, (short) client.getAttendancesBalance());
+        assertEquals(4, (int)client.getAttendancesBalance());
 
         // An ttendance should have been recorded
         assertEquals(1, client.getAttendances().size());

@@ -71,7 +71,7 @@ public final class CheckInAction extends BasicAction {
              */
             if (checkInDialog.isOrderRequested()) {
 
-                Short orderId = null;
+                Integer orderId = null;
                 EditOrderDialog editOrderDialog = new EditOrderDialog(getFrame());
 
                 try {

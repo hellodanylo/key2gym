@@ -28,7 +28,7 @@ public class ClientProfileDTO {
         
     }
 
-    public ClientProfileDTO(Short clientId, Sex sex, DateMidnight birthday, String address, String telephone, String goal, String possibleAttendanceRate, String healthRestrictions, String favouriteSport, FitnessExperience fitnessExperience, String specialWishes, Short height, Short weight, Short adSourceId) {
+    public ClientProfileDTO(Integer clientId, Sex sex, DateMidnight birthday, String address, String telephone, String goal, String possibleAttendanceRate, String healthRestrictions, String favouriteSport, FitnessExperience fitnessExperience, String specialWishes, Integer height, Integer weight, Integer adSourceId) {
         this.clientId = clientId;
         this.sex = sex;
         this.birthday = birthday;
@@ -53,11 +53,11 @@ public class ClientProfileDTO {
         this.birthday = birthday;
     }
 
-    public Short getAdSourceId() {
+    public Integer getAdSourceId() {
         return adSourceId;
     }
 
-    public void setAdSourceId(Short adSourceId) {
+    public void setAdSourceId(Integer adSourceId) {
         this.adSourceId = adSourceId;
     }
 
@@ -69,11 +69,11 @@ public class ClientProfileDTO {
         this.address = address;
     }
 
-    public Short getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
 
-    public void setClientId(Short clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
 
@@ -109,11 +109,11 @@ public class ClientProfileDTO {
         this.healthRestrictions = healthRestrictions;
     }
 
-    public Short getHeight() {
+    public Integer getHeight() {
         return height;
     }
 
-    public void setHeight(Short height) {
+    public void setHeight(Integer height) {
         this.height = height;
     }
 
@@ -149,11 +149,11 @@ public class ClientProfileDTO {
         this.telephone = telephone;
     }
 
-    public Short getWeight() {
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(Short weight) {
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
     
@@ -166,11 +166,11 @@ public class ClientProfileDTO {
     private String favouriteSport;
     private FitnessExperience fitnessExperience;
     private String specialWishes;
-    private Short height;
-    private Short weight;
+    private Integer height;
+    private Integer weight;
     private DateMidnight birthday;
-    private Short adSourceId;
-    private Short clientId;
+    private Integer adSourceId;
+    private Integer clientId;
     
     public enum Sex {FEMALE, MALE, UNKNOWN};
     public enum FitnessExperience{NO, YES, UNKNOWN};

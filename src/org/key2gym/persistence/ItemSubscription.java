@@ -42,23 +42,23 @@ public class ItemSubscription implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "iditm_its", columnDefinition="TINYINT UNSIGNED")
-    private Short id;
+    private Integer id;
     
     @Basic(optional = false)
     @Column(name = "units", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private short units;
+    private Integer units;
     
     @Basic(optional = false)
     @Column(name = "term_days", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private short termDays;
+    private Integer termDays;
     
     @Basic(optional = false)
     @Column(name = "term_months", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private short termMonths;
+    private Integer termMonths;
     
     @Basic(optional = false)
     @Column(name = "term_years", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private short termYears;
+    private Integer termYears;
     
     @JoinColumn(name = "idtsp_its", referencedColumnName = "id_tsp", nullable = false)
     @ManyToOne(optional = false)
@@ -71,11 +71,11 @@ public class ItemSubscription implements Serializable {
     public ItemSubscription() {
     }
 
-    public ItemSubscription(Short id) {
+    public ItemSubscription(Integer id) {
         this.id = id;
     }
 
-    public ItemSubscription(Short id, short units, short termDays, short termMonthes, short termYears) {
+    public ItemSubscription(Integer id, Integer units, Integer termDays, Integer termMonthes, Integer termYears) {
         this.id = id;
         this.units = units;
         this.termDays = termDays;
@@ -83,43 +83,43 @@ public class ItemSubscription implements Serializable {
         this.termYears = termYears;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public short getUnits() {
+    public Integer getUnits() {
         return units;
     }
 
-    public void setUnits(short units) {
+    public void setUnits(Integer units) {
         this.units = units;
     }
 
-    public short getTermDays() {
+    public Integer getTermDays() {
         return termDays;
     }
 
-    public void setTermDays(short termDays) {
+    public void setTermDays(Integer termDays) {
         this.termDays = termDays;
     }
 
-    public short getTermMonths() {
+    public Integer getTermMonths() {
         return termMonths;
     }
 
-    public void setTermMonths(short termMonths) {
+    public void setTermMonths(Integer termMonths) {
         this.termMonths = termMonths;
     }
 
-    public short getTermYears() {
+    public Integer getTermYears() {
         return termYears;
     }
 
-    public void setTermYears(short termYears) {
+    public void setTermYears(Integer termYears) {
         this.termYears = termYears;
     }
 

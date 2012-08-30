@@ -148,7 +148,7 @@ public class RegisterClientDialog extends AbstractDialog {
         try {
             if (!isClientRegistered) {
                 // TODO: security check
-                Short clientId = clientsService.registerClient(client, SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL));
+                Integer clientId = clientsService.registerClient(client, SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL));
                 client.setId(clientId);
                 isClientRegistered = true;
             }
@@ -193,11 +193,11 @@ public class RegisterClientDialog extends AbstractDialog {
         }
     }
 
-    public Short getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
 
-    public void setClientId(Short clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
 
@@ -222,7 +222,7 @@ public class RegisterClientDialog extends AbstractDialog {
      */
     private Boolean editFinancialActivityDialogRequested;
     private Boolean openAttendanceDialogRequested;
-    private Short clientId;
+    private Integer clientId;
     /*
      * Business
      */

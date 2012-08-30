@@ -32,12 +32,12 @@ public class AdSourcesService extends BusinessService {
      * @throws IllegalStateException if the session is not active
      * @return the list of IDs of all ad sources
      */
-    public List<Short> getAdSourcesIds() {
+    public List<Integer> getAdSourcesIds() {
         assertOpenSessionExists();
 
         List<AdSource> adSources = (List<AdSource>) entityManager.createNamedQuery("AdSource.findAll") //NOI18N
                 .getResultList();
-        List<Short> result = new LinkedList<>();
+        List<Integer> result = new LinkedList<>();
 
         for (AdSource adSource : adSources) {
             result.add(adSource.getId());
@@ -72,7 +72,7 @@ public class AdSourcesService extends BusinessService {
      * @throws IllegalStateException if the session is not active
      * @return the ad source
      */
-    public AdSource findAdSourceById(Short adSourceId) throws ValidationException {
+    public AdSource findAdSourceById(Integer adSourceId) throws ValidationException {
         assertOpenSessionExists();
 
         if (adSourceId == null) {

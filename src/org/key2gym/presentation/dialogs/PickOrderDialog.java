@@ -200,7 +200,7 @@ public class PickOrderDialog extends AbstractDialog {
                     AttendancesService attendancesService = AttendancesService.getInstance();
                     OrdersService financialActivitiesService = OrdersService.getInstance();
 
-                    Short attendanceId = attendancesService.findOpenAttendanceByKey(key.getId());
+                    Integer attendanceId = attendancesService.findOpenAttendanceByKey(key.getId());
                     AttendanceDTO attendanceDTO = attendancesService.getAttendanceById(attendanceId);
                     if (attendanceDTO.getClientId() == null) {
                         /*
@@ -243,11 +243,11 @@ public class PickOrderDialog extends AbstractDialog {
         super.onOkActionPerformed(evt);
     }
 
-    public Short getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Short financialActivityId) {
+    public void setOrderId(Integer financialActivityId) {
         this.orderId = financialActivityId;
     }
 
@@ -261,7 +261,7 @@ public class PickOrderDialog extends AbstractDialog {
     /*
      * Session variables
      */
-    private Short orderId;
+    private Integer orderId;
     private Boolean client;
     /*
      * Components

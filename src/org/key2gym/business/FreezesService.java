@@ -60,7 +60,7 @@ public class FreezesService extends BusinessService {
      * @throws SecurityException if current security rules restrict this
      * operation
      */
-    public void addFreeze(Short clientId, Short days, String note) throws ValidationException, BusinessException, org.key2gym.business.api.SecurityException {
+    public void addFreeze(Integer clientId, Integer days, String note) throws ValidationException, BusinessException, org.key2gym.business.api.SecurityException {
         assertOpenSessionExists();
         assertTransactionActive();
 
@@ -137,7 +137,7 @@ public class FreezesService extends BusinessService {
      * @throws ValidationException if the client's ID is invalid
      * @return the list of all freezes for the client
      */
-    public List<FreezeDTO> findFreezesForClient(Short clientId) throws ValidationException {
+    public List<FreezeDTO> findFreezesForClient(Integer clientId) throws ValidationException {
         assertOpenSessionExists();
 
         if (clientId == null) {
@@ -257,7 +257,7 @@ public class FreezesService extends BusinessService {
      * @throws ValidationException if the freeze's ID is invalid
      * @throws BusinessException if current business rules restrict this operation
      */
-    public void remove(Short id) throws SecurityException, ValidationException, BusinessException {
+    public void remove(Integer id) throws SecurityException, ValidationException, BusinessException {
         assertOpenSessionExists();
         
         if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {

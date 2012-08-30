@@ -35,16 +35,16 @@ import javax.persistence.*;
     @NamedQuery(name = "Item.findByBarcode", query = "SELECT i FROM Item i WHERE i.barcode = :barcode"),
     @NamedQuery(name = "Item.findByQuantity", query = "SELECT i FROM Item i WHERE i.quantity = :quantity"),
     @NamedQuery(name = "Item.findByPrice", query = "SELECT i FROM Item i WHERE i.price = :price")})
-
+@SequenceGenerator(name="id_itm_seq", allocationSize = 1)
 public class Item implements Serializable {
     
    private static final long serialVersionUID = 1L;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="id_itm_seq")
     @Basic(optional = false)
     @Column(name = "id_itm", columnDefinition="TINYINT UNSIGNED")
-    private Short id;
+    private Integer id;
     
     @Basic(optional = false)
     @Lob
@@ -57,7 +57,7 @@ public class Item implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "quantity", columnDefinition="TINYINT UNSIGNED NULL")
-    private Short quantity;
+    private Integer quantity;
     
     @Basic(optional = false)
     @Column(name = "price", precision = 5, scale = 2, nullable = false)
@@ -73,11 +73,11 @@ public class Item implements Serializable {
     public Item() {
     }
 
-    public Item(Short id) {
+    public Item(Integer id) {
         this.id = id;
     }
 
-    public Item(Short id, Long barcode, String title, Short quantity, BigDecimal price) {
+    public Item(Integer id, Long barcode, String title, Integer quantity, BigDecimal price) {
         this.id = id;
         this.barcode = barcode;
         this.title = title;
@@ -85,11 +85,11 @@ public class Item implements Serializable {
         this.price = price;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -125,11 +125,11 @@ public class Item implements Serializable {
         this.barcode = barcode;
     }
 
-    public Short getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Short quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

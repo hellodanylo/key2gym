@@ -48,7 +48,7 @@ public class ClientsService extends BusinessService {
         ClientDTO client = new ClientDTO();
 
         client.setId(getNextId());
-        client.setAttendancesBalance(new Integer(0).shortValue());
+        client.setAttendancesBalance(0);
         client.setExpirationDate(new DateMidnight());
         client.setMoneyBalance(BigDecimal.ZERO.setScale(2));
         client.setRegistrationDate(new DateMidnight());
@@ -84,7 +84,7 @@ public class ClientsService extends BusinessService {
      * operation
      * @throws IllegalStateException if the transaction or the session is not active
      */
-    public Short registerClient(ClientDTO client, Boolean useSecuredProperties) throws BusinessException, ValidationException, SecurityException {
+    public Integer registerClient(ClientDTO client, Boolean useSecuredProperties) throws BusinessException, ValidationException, SecurityException {
         assertTransactionActive();
         assertOpenSessionExists();
         
@@ -133,7 +133,7 @@ public class ClientsService extends BusinessService {
             }
             newClient.setExpirationDate(client.getExpirationDate().toDate());
         } else {
-            newClient.setAttendancesBalance(new Integer(0).shortValue());
+            newClient.setAttendancesBalance(0);
             newClient.setMoneyBalance(BigDecimal.ZERO);
             newClient.setRegistrationDate(new Date());
             newClient.setExpirationDate(client.getRegistrationDate().toDate());
@@ -159,7 +159,7 @@ public class ClientsService extends BusinessService {
      * @throws NullPointerException if the clientId is null
      * @throws ValidationException if the client's ID is invalid
      */
-    public ClientDTO getById(Short clientId) throws ValidationException {
+    public ClientDTO getById(Integer clientId) throws ValidationException {
         assertOpenSessionExists();
         
         if (clientId == null) {
@@ -193,7 +193,7 @@ public class ClientsService extends BusinessService {
      * @throws IllegalStateException if the session is not active
      * @throws NullPointerException if the card is null
      */
-    public Short findByCard(Integer card){
+    public Integer findByCard(Integer card){
         assertOpenSessionExists();
         
         if (card == null) {
@@ -390,7 +390,7 @@ public class ClientsService extends BusinessService {
      * @throws ValidationException if the client's ID is invalid 
      * @throws IllegalStateException if the session is not active
      */
-    public Boolean hasDebt(Short clientId) throws ValidationException {
+    public Boolean hasDebt(Integer clientId) throws ValidationException {
         assertOpenSessionExists();
         
         if (clientId == null) {
@@ -411,15 +411,14 @@ public class ClientsService extends BusinessService {
      * @throws IllegalStateException if the session is not active
      * @return the next client's ID
      */
-    public Short getNextId() {
+    public Integer getNextId() {
         assertOpenSessionExists();
         
         try {
-            return new Integer(1 + (Short) entityManager
+            return 1 + (Integer)entityManager
                     .createNamedQuery("Client.findAllIdsOrderByIdDesc") //NOI18N
                     .setMaxResults(1)
-                    .getSingleResult())
-                    .shortValue();
+                    .getSingleResult();
         } catch (NoResultException ex) {
             return 1;
         }

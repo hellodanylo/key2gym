@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Key.findByTitle", query = "SELECT k FROM Key k WHERE k.title = :title"),
     @NamedQuery(name = "Key.findAvailable", query = "SELECT k From Key k WHERE k.id NOT IN (SELECT a.key.id FROM Attendance a WHERE a.datetimeEnd = '2004-04-04 09:00:01')"),
     @NamedQuery(name = "Key.findTaken", query = "SELECT k From Key k WHERE k.id IN (SELECT a.key.id FROM Attendance a WHERE a.datetimeEnd = '2004-04-04 09:00:01')")})
+@SequenceGenerator(name="id_key_seq", allocationSize = 1)
 public class Key implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,7 +43,7 @@ public class Key implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_key", columnDefinition="TINYINT UNSIGNED")
-    private Short id;
+    private Integer id;
 
     @Basic(optional = false)
     @Column(name = "title", columnDefinition="TINYTEXT NOT NULL")
@@ -54,16 +55,16 @@ public class Key implements Serializable {
     public Key() {
     }
 
-    public Key(Short id, String title) {
+    public Key(Integer id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

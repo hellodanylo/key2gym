@@ -31,19 +31,19 @@ public class AttendanceDTO {
         this.clientFullName = clientFullName;
     }
 
-    public Short getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
 
-    public void setClientId(Short clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -63,11 +63,11 @@ public class AttendanceDTO {
         this.DateTimeEnd = DateTimeEnd;
     }
 
-    public Short getKeyId() {
+    public Integer getKeyId() {
         return keyId;
     }
 
-    public void setKeyId(Short keyId) {
+    public void setKeyId(Integer keyId) {
         this.keyId = keyId;
     }
 
@@ -79,11 +79,11 @@ public class AttendanceDTO {
         this.keyTitle = keyString;
     }
     
-    private Short id;
+    private Integer id;
     private DateTime DateTimeBegin;
     private String clientFullName;
-    private Short clientId;
+    private Integer clientId;
     private String keyTitle;
-    private Short keyId;
+    private Integer keyId;
     private DateTime DateTimeEnd;  
 }

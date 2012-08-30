@@ -289,10 +289,10 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
                     subscription, BeanProperty.create("timeSplitId"), timeSplitComboBox, BeanProperty.create("selectedItem"), "timeSplit");
             binding.setSourceNullValue(timeSplits.get(0));
             binding.setSourceUnreadableValue(timeSplits.get(0));
-            binding.setConverter(new Converter<Short, TimeSplitDTO>() {
+            binding.setConverter(new Converter<Integer, TimeSplitDTO>() {
 
                 @Override
-                public TimeSplitDTO convertForward(Short value) {
+                public TimeSplitDTO convertForward(Integer value) {
                     for (TimeSplitDTO timeRange : timeSplits) {
                         if (timeRange.getId().equals(value)) {
                             return timeRange;
@@ -302,7 +302,7 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
                 }
 
                 @Override
-                public Short convertReverse(TimeSplitDTO value) {
+                public Integer convertReverse(TimeSplitDTO value) {
                     return value.getId();
                 }
             });

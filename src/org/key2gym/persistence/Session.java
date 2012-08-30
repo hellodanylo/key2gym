@@ -32,6 +32,7 @@ import javax.persistence.*;
     @NamedQuery(name = "Session.findByAdministratorAndDateTimeBeginRange", query = "SELECT s FROM Session s WHERE s.datetimeBegin BETWEEN :rangeBegin AND :rangeEnd AND s.administrator = :administrator"),
     @NamedQuery(name = "Session.findByDatetimeEnd", query = "SELECT s FROM Session s WHERE s.datetimeEnd = :datetimeEnd"),
     @NamedQuery(name = "Session.findOpenByDatetimeBeginRangeBeginAndAdministrator", query = "SELECT s FROM Session s WHERE s.datetimeEnd = 1081058401000l AND s.datetimeBegin >= :datetimeBeginRangeBegin AND s.administrator = :administrator")})
+@SequenceGenerator(name="id_ssn_seq", allocationSize = 1)
 public class Session implements Serializable {
     private static final long serialVersionUID = 1L;
     
@@ -39,7 +40,7 @@ public class Session implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_ssn")
-    private Short id;
+    private Integer id;
     
     @Basic(optional = false)
     @Column(name = "datetime_begin", nullable = false)
@@ -59,20 +60,20 @@ public class Session implements Serializable {
     public Session() {
     }
 
-    public Session(Short id) {
+    public Session(Integer id) {
         this.id = id;
     }
 
-    public Session(Short id, Date datetimeBegin) {
+    public Session(Integer id, Date datetimeBegin) {
         this.id = id;
         this.datetimeBegin = datetimeBegin;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

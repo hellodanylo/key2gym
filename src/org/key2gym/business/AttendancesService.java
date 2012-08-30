@@ -61,7 +61,7 @@ public class AttendancesService extends BusinessService {
      * @throws IllegalStateException if the transaction is not active; if no
      * session is not open
      */
-    public Short checkInRegisteredClient(Short clientId, Short keyId)
+    public Integer checkInRegisteredClient(Integer clientId, Integer keyId)
             throws BusinessException, ValidationException {
         Client client;
         Key key;
@@ -108,7 +108,7 @@ public class AttendancesService extends BusinessService {
             throw new BusinessException(bundle.getString("BusinessRule.Client.SubscriptionExpired"));
         }
 
-        client.setAttendancesBalance((short) (client.getAttendancesBalance() - 1));
+        client.setAttendancesBalance((Integer) (client.getAttendancesBalance() - 1));
 
         /*
          * Builds an attendance record.
@@ -140,10 +140,10 @@ public class AttendancesService extends BusinessService {
              * If there are penalties to apply, does it.
              */
             if (penalties > 0) {
-                Short orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), true);
-                Short itemId = ((Property) entityManager.createNamedQuery("Property.findByName") //NOI18N
+                Integer orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), true);
+                Integer itemId = ((Property) entityManager.createNamedQuery("Property.findByName") //NOI18N
                         .setParameter("name", "time_range_mismatch_penalty_item_id") //NOI18N
-                        .getSingleResult()).getShort();
+                        .getSingleResult()).getInteger();
 
                 try {
                     for (int i = 0; i < penalties; i++) {
@@ -178,7 +178,7 @@ public class AttendancesService extends BusinessService {
      * @throws IllegalStateException if the transaction is not active; if no
      * session is open
      */
-    public Short checkInCasualClient(Short keyId)
+    public Integer checkInCasualClient(Integer keyId)
             throws BusinessException, ValidationException {
         Attendance attendance;
         Key key;
@@ -226,7 +226,7 @@ public class AttendancesService extends BusinessService {
         OrderLine orderLine = new OrderLine();
         orderLine.setItem(itemSubscription.getItem());
         orderLine.setOrder(order);
-        orderLine.setQuantity((short) 1);
+        orderLine.setQuantity((Integer) 1);
 
         List<OrderLine> orderLines = new LinkedList<>();
         orderLines.add(orderLine);
@@ -252,7 +252,7 @@ public class AttendancesService extends BusinessService {
      * operation
      * @throws IllegalStateException if no session is open
      */
-    public AttendanceDTO getAttendanceById(Short attendanceId)
+    public AttendanceDTO getAttendanceById(Integer attendanceId)
             throws IllegalArgumentException, SecurityException {
 
         assertOpenSessionExists();
@@ -322,7 +322,7 @@ public class AttendancesService extends BusinessService {
      * @throws ValidationException if the client's ID is invalid
      * @throws IllegalStateException if no session is open
      */
-    public List<AttendanceDTO> findAttendancesByClient(Short id)
+    public List<AttendanceDTO> findAttendancesByClient(Integer id)
             throws ValidationException {
 
         assertOpenSessionExists();
@@ -360,7 +360,7 @@ public class AttendancesService extends BusinessService {
      * @throws NullPointerException if the attendanceId is null
      * @throws ValidationException if the attendance's ID is invalid
      */
-    public Boolean isCasual(Short attendanceId) throws ValidationException {
+    public Boolean isCasual(Integer attendanceId) throws ValidationException {
         assertOpenSessionExists();
 
         if (attendanceId == null) {
@@ -390,7 +390,7 @@ public class AttendancesService extends BusinessService {
      * @throws IllegalStateException if the transaction or the session is not
      * active operation
      */
-    public void checkOut(Short attendanceId)
+    public void checkOut(Integer attendanceId)
             throws BusinessException, ValidationException {
 
         assertOpenSessionExists();
@@ -437,7 +437,7 @@ public class AttendancesService extends BusinessService {
      * provided
      * @throws IllegalStateException if no session is open
      */
-    public Short findOpenAttendanceByKey(Short keyId) throws ValidationException, BusinessException {
+    public Integer findOpenAttendanceByKey(Integer keyId) throws ValidationException, BusinessException {
 
         assertOpenSessionExists();
 

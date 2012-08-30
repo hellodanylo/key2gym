@@ -98,7 +98,7 @@ public class SessionsService {
         return session != null;
     }
 
-    public Short getTopmostAdministratorId() {
+    public Integer getTopmostAdministratorId() {
         if (raisedAdministrator == null) {
             return session.getAdministrator().getId();
         } else {
@@ -177,7 +177,7 @@ public class SessionsService {
      * @throws IllegalStateException if there isn't any open sessions
      * @return the number representing the administrator's permissions level.
      */
-    public Short getPermissionsLevel() {
+    public Integer getPermissionsLevel() {
         if (session == null) {
             throw new IllegalStateException("There isn't any open sessions.");
         }
@@ -307,8 +307,8 @@ public class SessionsService {
     private EntityManager entityManager;
     private ResourceBundle strings;
     private DateTime recoverAttemptsTime;
-    private Short attemptsLeft;
-    private static final short ATTEMPTS_LIMIT = 5;
+    private Integer attemptsLeft;
+    private static final Integer ATTEMPTS_LIMIT = 5;
     private Session session;
     private Administrator raisedAdministrator;
     private Set<SessionListener> listeners;
@@ -317,9 +317,9 @@ public class SessionsService {
     /*
      * Permissions levels
      */
-    public static final Short PL_ALL = 1;
-    public static final Short PL_EXTENDED = 3;
-    public static final Short PL_BASIC = 5;
+    public static final Integer PL_ALL = 1;
+    public static final Integer PL_EXTENDED = 3;
+    public static final Integer PL_BASIC = 5;
     
     /**
      * Singleton instance.

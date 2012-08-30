@@ -37,13 +37,14 @@ import javax.persistence.*;
     @NamedQuery(name = "Client.findByRegistrationDate", query = "SELECT c FROM Client c WHERE c.registrationDate = :registrationDate"),
     @NamedQuery(name = "Client.findByAttendancesBalance", query = "SELECT c FROM Client c WHERE c.attendancesBalance = :attendancesBalance"),
     @NamedQuery(name = "Client.findByExpirationDate", query = "SELECT c FROM Client c WHERE c.expirationDate = :expirationDate")})
+@SequenceGenerator(name="id_cln_seq", allocationSize = 1)
 public class Client implements Serializable {
   
     @Id
     @Basic(optional = false)
     @Column(name = "id_cln", columnDefinition="SMALLINT UNSIGNED")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Short id;
+    private Integer id;
         
     @Column(name = "card", columnDefinition="INT UNSIGNED NULL")
     private Integer card;
@@ -75,7 +76,7 @@ public class Client implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "attendances_balance", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private short attendancesBalance;
+    private Integer attendancesBalance;
     
     @Basic(optional = false)
     @Column(name = "expiration_date", nullable = false)
@@ -92,11 +93,11 @@ public class Client implements Serializable {
     public Client() {
     }
 
-    public Client(Short id) {
+    public Client(Integer id) {
         this.id = id;
     }
 
-    public Client(Short id, Integer card, String fullName, String note, Date registrationDate, Short attendancesBalance, Date expirationDate) {
+    public Client(Integer id, Integer card, String fullName, String note, Date registrationDate, Integer attendancesBalance, Date expirationDate) {
         this.id = id;
         this.card = card;
         this.fullName = fullName;
@@ -106,11 +107,11 @@ public class Client implements Serializable {
         this.expirationDate = expirationDate;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -138,11 +139,11 @@ public class Client implements Serializable {
         this.registrationDate = registrationDate;
     }
 
-    public Short getAttendancesBalance() {
+    public Integer getAttendancesBalance() {
         return attendancesBalance;
     }
 
-    public void setAttendancesBalance(Short attendancesBalance) {
+    public void setAttendancesBalance(Integer attendancesBalance) {
         this.attendancesBalance = attendancesBalance;
     }
 

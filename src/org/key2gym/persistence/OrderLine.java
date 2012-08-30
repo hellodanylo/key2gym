@@ -29,13 +29,13 @@ import javax.persistence.*;
     @NamedQuery(name="OrderLine.findByOrderAndItemAndDiscount", query="SELECT ol FROM OrderLine ol WHERE ol.orderEntity = :order AND ol.item = :item AND ol.discount = :discount"),
     @NamedQuery(name="OrderLine.findByOrderAndItemAndNoDiscount", query="SELECT ol FROM OrderLine ol WHERE ol.orderEntity = :order AND ol.item = :item AND ol.discount IS NULL")
 })
-
+@SequenceGenerator(name="id_orl_seq", allocationSize = 1)
 public class OrderLine implements Serializable {
     
     @Id
     @Column(name = "id_orl", columnDefinition="SMALLINT UNSIGNED")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private short id;
+    private Integer id;
             
     @JoinColumn(name="idord_orl", referencedColumnName="id_ord", nullable = false)//, insertable=false, updatable=false)
     @ManyToOne
@@ -50,13 +50,13 @@ public class OrderLine implements Serializable {
     private Discount discount;
     
     @Column(name="quantity", columnDefinition="TINYINT UNSIGNED NULL")
-    private short quantity;
+    private Integer quantity;
 
-    public short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -76,11 +76,11 @@ public class OrderLine implements Serializable {
         this.orderEntity = order;
     }
 
-    public short getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(short quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

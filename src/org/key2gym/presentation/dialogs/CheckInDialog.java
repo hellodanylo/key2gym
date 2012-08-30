@@ -235,7 +235,7 @@ public class CheckInDialog extends AbstractDialog {
             }
 
             if (valid) {
-                Short id = ClientsService.getInstance().findByCard(card);
+                Integer id = ClientsService.getInstance().findByCard(card);
 
                 if (id != null) {
                     /*
@@ -370,7 +370,7 @@ public class CheckInDialog extends AbstractDialog {
     @Override
     protected void onOkActionPerformed(ActionEvent e) {
 
-        Short selectedKeyId;
+        Integer selectedKeyId;
         AttendancesService attendancesService;
 
         try {
@@ -470,11 +470,11 @@ public class CheckInDialog extends AbstractDialog {
         }
     }
 
-    public Short getAttendanceId() {
+    public Integer getAttendanceId() {
         return attendanceId;
     }
 
-    public void setAttendanceId(Short attendanceId) {
+    public void setAttendanceId(Integer attendanceId) {
         this.attendanceId = attendanceId;
     }
 
@@ -494,11 +494,11 @@ public class CheckInDialog extends AbstractDialog {
         this.orderRequested = openOrderRequested;
     }
 
-    public void setClientId(Short clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
     }
 
-    public Short getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
     private static final String ACTION_CASUAL = "casual";
@@ -506,10 +506,10 @@ public class CheckInDialog extends AbstractDialog {
     /*
      * Session variables
      */
-    private Short attendanceId;
+    private Integer attendanceId;
     private Boolean anonymous;
     private Boolean orderRequested;
-    private Short clientId;
+    private Integer clientId;
     /*
      * Components
      */

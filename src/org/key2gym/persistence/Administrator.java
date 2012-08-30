@@ -30,6 +30,7 @@ import javax.persistence.*;
     @NamedQuery(name = "Administrator.findById", query = "SELECT a FROM Administrator a WHERE a.id = :id"),
     @NamedQuery(name = "Administrator.findByUsernameAndPassword", query = "SELECT a FROM Administrator a WHERE a.username = :username AND a.password = :password"),
     @NamedQuery(name = "Administrator.findByPermissionsLevel", query = "SELECT a FROM Administrator a WHERE a.permissionsLevel = :permissionsLevel")})
+@SequenceGenerator(name="id_adm_seq", allocationSize = 1)
 public class Administrator implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -38,7 +39,7 @@ public class Administrator implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional=false)
     @Column(name = "id_adm", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private Short id;
+    private Integer id;
     
     @Basic(optional=false)
     @Lob
@@ -72,7 +73,7 @@ public class Administrator implements Serializable {
     
     @Basic(optional=false)
     @Column(name = "permissions_level", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private Short permissionsLevel;
+    private Integer permissionsLevel;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "administrator")
     private List<Session> sessionsList;
@@ -80,11 +81,11 @@ public class Administrator implements Serializable {
     public Administrator() {
     }
 
-    public Administrator(Short id) {
+    public Administrator(Integer id) {
         this.id = id;
     }
 
-    public Administrator(Short id, String username, String fullName, String password, String address, String telephone, String note, Short permissionsLevel) {
+    public Administrator(Integer id, String username, String fullName, String password, String address, String telephone, String note, Integer permissionsLevel) {
         this.id = id;
         this.username = username;
         this.fullName = fullName;
@@ -95,11 +96,11 @@ public class Administrator implements Serializable {
         this.permissionsLevel = permissionsLevel;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -151,11 +152,11 @@ public class Administrator implements Serializable {
         this.note = note;
     }
 
-    public Short getPermissionsLevel() {
+    public Integer getPermissionsLevel() {
         return permissionsLevel;
     }
 
-    public void setPermissionsLevel(Short permissionsLevel) {
+    public void setPermissionsLevel(Integer permissionsLevel) {
         this.permissionsLevel = permissionsLevel;
     }
     

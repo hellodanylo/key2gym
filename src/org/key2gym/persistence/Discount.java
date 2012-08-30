@@ -30,6 +30,7 @@ import javax.persistence.*;
     @NamedQuery(name = "Discount.findById", query = "SELECT d FROM Discount d WHERE d.id = :id"),
     @NamedQuery(name = "Discount.findByPercent", query = "SELECT d FROM Discount d WHERE d.percent = :percent"),
     @NamedQuery(name = "Discount.findByTitle", query = "SELECT d FROM Discount d WHERE d.title = :title")})
+@SequenceGenerator(name="id_dsc_seq", allocationSize = 1)
 public class Discount implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,11 +39,11 @@ public class Discount implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_dsc", columnDefinition="TINYINT UNSIGNED")
-    private Short id;
+    private Integer id;
     
     @Basic(optional = false)
     @Column(name = "percent", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private short percent;
+    private Integer percent;
     
     @Basic(optional = false)
     @Column(name = "title", columnDefinition="TINYTEXT NOT NULL")
@@ -54,29 +55,29 @@ public class Discount implements Serializable {
     public Discount() {
     }
 
-    public Discount(Short idDsc) {
+    public Discount(Integer idDsc) {
         this.id = idDsc;
     }
 
-    public Discount(Short idDsc, short percent, String title) {
+    public Discount(Integer idDsc, Integer percent, String title) {
         this.id = idDsc;
         this.percent = percent;
         this.title = title;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setIdDsc(Short idDsc) {
+    public void setIdDsc(Integer idDsc) {
         this.id = idDsc;
     }
 
-    public short getPercent() {
+    public Integer getPercent() {
         return percent;
     }
 
-    public void setPercent(short percent) {
+    public void setPercent(Integer percent) {
         this.percent = percent;
     }
 

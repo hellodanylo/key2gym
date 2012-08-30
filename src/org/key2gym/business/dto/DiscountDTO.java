@@ -20,23 +20,23 @@ package org.key2gym.business.dto;
  * @author Danylo Vashchilenko
  */
 public class DiscountDTO {
-    private Short id;
+    private Integer id;
     private String title;
-    private Short percent;
+    private Integer percent;
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Short getPercent() {
+    public Integer getPercent() {
         return percent;
     }
 
-    public void setPercent(Short percent) {
+    public void setPercent(Integer percent) {
         this.percent = percent;
     }
 

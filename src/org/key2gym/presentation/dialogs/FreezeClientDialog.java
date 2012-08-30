@@ -50,7 +50,7 @@ public class FreezeClientDialog extends AbstractDialog {
                 "4dlu, d, 3dlu, f:d:g, 4dlu, d, 4dlu"));
 
         daysSpinner = new JSpinner();
-        daysSpinner.setModel(new SpinnerNumberModel(Short.valueOf((short)1), Short.valueOf((short)1), Short.valueOf((short)10), Short.valueOf((short)1)));
+        daysSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
         add(new JLabel(getString("Label.Days")), CC.xy(2, 2));
         add(daysSpinner, CC.xy(4, 2));
         
@@ -82,7 +82,7 @@ public class FreezeClientDialog extends AbstractDialog {
 
     @Override
     protected void onOkActionPerformed(ActionEvent evt) {                                         
-        Short days = (Short) daysSpinner.getValue();
+        Integer days = (Integer)daysSpinner.getValue();
         String note = noteTextArea.getText();
         
         try {
@@ -96,14 +96,14 @@ public class FreezeClientDialog extends AbstractDialog {
     }                                        
                                       
 
-    public void setClientId(Short id) {
+    public void setClientId(Integer id) {
         this.clientId = id;
     }
     
     /*
      * Session variables
      */
-    private Short clientId;
+    private Integer clientId;
     
     /*
      * Business services

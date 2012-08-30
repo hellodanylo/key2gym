@@ -50,7 +50,7 @@ public class EditOrderAction extends BasicAction {
             storageService = StorageService.getInstance();
             storageService.beginTransaction();
 
-            Short orderId;
+            Integer orderId;
 
             if (e.getActionCommand().equals(ACTION_CONTEXT)) {
                 orderId = MainFrame.getInstance().getSelectedOrder().getId();

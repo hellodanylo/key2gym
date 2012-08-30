@@ -32,6 +32,7 @@ import javax.persistence.*;
     @NamedQuery(name = "ClientFreeze.findByDateIssued", query = "SELECT c FROM ClientFreeze c WHERE c.dateIssued = :dateIssued"),
     @NamedQuery(name = "ClientFreeze.findByDateIssuedRange" , query = "SELECT c FROM ClientFreeze c WHERE c.dateIssued BETWEEN :rangeBegin AND :rangeEnd"),
     @NamedQuery(name = "ClientFreeze.findByClientAndDateIssuedRange" , query = "SELECT c FROM ClientFreeze c WHERE c.client = :client AND c.dateIssued BETWEEN :rangeBegin AND :rangeEnd")})
+@SequenceGenerator(name="id_cfz_seq", allocationSize = 1)
 public class ClientFreeze implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,7 +41,7 @@ public class ClientFreeze implements Serializable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_cfz", columnDefinition="TINYINT UNSIGNED")
-    private Short id;
+    private Integer id;
             
     @Basic(optional = false)
     @Column(name = "date_issued", nullable = false)
@@ -49,7 +50,7 @@ public class ClientFreeze implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "days", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private Short days;
+    private Integer days;
     
     @Basic(optional = false)
     @Lob
@@ -68,11 +69,11 @@ public class ClientFreeze implements Serializable {
     public ClientFreeze() {
     }
     
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -92,11 +93,11 @@ public class ClientFreeze implements Serializable {
         this.dateIssued = dateIssued;
     }
 
-    public Short getDays() {
+    public Integer getDays() {
         return days;
     }
 
-    public void setDays(Short days) {
+    public void setDays(Integer days) {
         this.days = days;
     }
 

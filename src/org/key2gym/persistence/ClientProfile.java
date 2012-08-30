@@ -40,13 +40,13 @@ import org.apache.log4j.Logger;
     @NamedQuery(name = "ClientProfile.findByHeight", query = "SELECT c FROM ClientProfile c WHERE c.height = :height"),
     @NamedQuery(name = "ClientProfile.findByWeight", query = "SELECT c FROM ClientProfile c WHERE c.weight = :weight"),
     @NamedQuery(name = "ClientProfile.findByAdSource", query = "SELECT c FROM ClientProfile c WHERE c.adSource = :adSource")})
-
+@SequenceGenerator(name="id_cpf_seq", allocationSize = 1)
 public class ClientProfile implements Serializable {
 
     @Id
     @Basic(optional = false)
     @Column(name = "idcln_cpf", columnDefinition="SMALLINT UNSIGNED")
-    private Short id;
+    private Integer id;
     
     @Basic(optional = false)
     @Column(name = "sex", columnDefinition="TINYINT UNSIGNED NOT NULL")
@@ -95,11 +95,11 @@ public class ClientProfile implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "height", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private Short height;
+    private Integer height;
     
     @Basic(optional = false)
     @Column(name = "weight", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private Short weight;
+    private Integer weight;
 
     @Basic(optional = false)
     @Column(name = "birthday", nullable = false)
@@ -121,7 +121,7 @@ public class ClientProfile implements Serializable {
     public ClientProfile() {
     }
     
-    public ClientProfile(Short id, 
+    public ClientProfile(Integer id, 
             Sex sex, 
             Date birthday, 
             String address, 
@@ -132,8 +132,8 @@ public class ClientProfile implements Serializable {
             String favouriteSport,
             FitnessExperience fitnessExperience, 
             String specialWishes, 
-            Short height, 
-            Short weight, 
+            Integer height, 
+            Integer weight, 
             AdSource adSource) {
         this.id = id;
         this.sex = sex;
@@ -151,11 +151,11 @@ public class ClientProfile implements Serializable {
         this.adSource = adSource;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -231,19 +231,19 @@ public class ClientProfile implements Serializable {
         this.specialWishes = specialWishes;
     }
 
-    public Short getHeight() {
+    public Integer getHeight() {
         return height;
     }
 
-    public void setHeight(Short height) {
+    public void setHeight(Integer height) {
         this.height = height;
     }
 
-    public Short getWeight() {
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(Short weight) {
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
 

@@ -357,7 +357,7 @@ public class EditClientDialog extends AbstractDialog {
      *
      * @return the client's ID
      */
-    public Short getClientId() {
+    public Integer getClientId() {
         return clientId;
     }
 
@@ -368,7 +368,7 @@ public class EditClientDialog extends AbstractDialog {
      * @param clientId the client's ID
      * @see EditClientDialog for details about hot swapping
      */
-    public void setClientId(Short clientId) {
+    public void setClientId(Integer clientId) {
         this.clientId = clientId;
 
         try {
@@ -504,7 +504,7 @@ public class EditClientDialog extends AbstractDialog {
     /*
      * Presentation
      */
-    private Short clientId;
+    private Integer clientId;
     private Boolean clientProfileAttached;
     private FreezesTableModel freezesTableModel;
     /*

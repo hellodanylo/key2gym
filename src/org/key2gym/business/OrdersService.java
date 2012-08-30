@@ -60,7 +60,7 @@ public class OrdersService extends BusinessService {
      * @return the ID of the order, or null, if none was found and
      * a new one was not requested.
      */
-    public Short findByClientIdAndDate(Short clientId, DateMidnight date, Boolean createIfDoesNotExist)
+    public Integer findByClientIdAndDate(Integer clientId, DateMidnight date, Boolean createIfDoesNotExist)
             throws ValidationException {
 
         assertOpenSessionExists();
@@ -136,7 +136,7 @@ public class OrdersService extends BusinessService {
      * @return the ID of the order, or null, if none was found and
      * a new one was not requested.
      */
-    public Short findCurrentForClientByCard(Integer card, Boolean createIfDoesNotExist)
+    public Integer findCurrentForClientByCard(Integer card, Boolean createIfDoesNotExist)
             throws IllegalArgumentException, IllegalStateException, ValidationException {
         assertOpenSessionExists();
 
@@ -204,7 +204,7 @@ public class OrdersService extends BusinessService {
      * @return the ID of the order or null, if none was found and a
      * new one was not requested.
      */
-    public Short findForAttendanceById(Short attendanceId)
+    public Integer findForAttendanceById(Integer attendanceId)
             throws IllegalArgumentException, IllegalStateException, ValidationException, BusinessException {
 
         assertOpenSessionExists();
@@ -254,7 +254,7 @@ public class OrdersService extends BusinessService {
      * @throws IllegalStateException if a new order is required,
      * but the transaction is not active.
      */
-    public Short findCurrentDefault(Boolean createIfDoesNotExist)
+    public Integer findCurrentDefault(Boolean createIfDoesNotExist)
             throws IllegalArgumentException, IllegalStateException, ValidationException {
 
         /*
@@ -344,7 +344,7 @@ public class OrdersService extends BusinessService {
      * @throws ValidationException if the beginning date is after the ending
      * date, or the client's ID is invalid
      */
-    public List<OrderDTO> findForClientWithinPeriod(Short id, DateMidnight begin, DateMidnight end) throws ValidationException {
+    public List<OrderDTO> findForClientWithinPeriod(Integer id, DateMidnight begin, DateMidnight end) throws ValidationException {
         assertOpenSessionExists();
 
         if (id == null) {
@@ -417,7 +417,7 @@ public class OrdersService extends BusinessService {
      * @throws ValidationException if the order's ID is invalid
      * @throws IllegalStateException if no session is open
      */
-    public OrderDTO getById(Short id) throws ValidationException {
+    public OrderDTO getById(Integer id) throws ValidationException {
         assertOpenSessionExists();
 
         /*
@@ -464,7 +464,7 @@ public class OrdersService extends BusinessService {
      * @throws IllegalStateException if the transaction is not active; if no
      * session is open
      */
-    public void addPurchase(Short orderId, Short itemId, Short discountId)
+    public void addPurchase(Integer orderId, Integer itemId, Integer discountId)
             throws BusinessException, IllegalArgumentException, IllegalStateException, ValidationException, SecurityException {
         assertOpenSessionExists();
         assertTransactionActive();
@@ -522,7 +522,7 @@ public class OrdersService extends BusinessService {
         /*
          * Checks the item's quantity.
          */
-        Short quantity = item.getQuantity();
+        Integer quantity = item.getQuantity();
         if (quantity != null) {
             /*
              * If the item is not in stock, notifies the presentation.
@@ -562,7 +562,7 @@ public class OrdersService extends BusinessService {
                  * attendance's balance is not zeroed, if he buys another
                  * subscription before the expiration date.
                  */
-                short attendancesBalance = client.getAttendancesBalance();
+                Integer attendancesBalance = client.getAttendancesBalance();
                 /*
                  * Expiration base is the date from which we count the
                  * expiration date by adding the Item Subscription's term. It's
@@ -590,7 +590,7 @@ public class OrdersService extends BusinessService {
          * all checks have been performed.
          */
         if(quantity != null) {
-            item.setQuantity(new Integer(quantity - 1).shortValue());
+            item.setQuantity(quantity - 1);
         }
 
         /*
@@ -626,7 +626,7 @@ public class OrdersService extends BusinessService {
             orderLine = new OrderLine();
             orderLine.setItem(item);
             orderLine.setOrder(order);
-            orderLine.setQuantity((short) 1);
+            orderLine.setQuantity((Integer) 1);
             orderLine.setDiscount(discount);
             entityManager.persist(orderLine);
 
@@ -637,7 +637,7 @@ public class OrdersService extends BusinessService {
             }
             orderLines.add(orderLine);
         } else {
-            orderLine.setQuantity((short) (orderLine.getQuantity() + 1));
+            orderLine.setQuantity((Integer) (orderLine.getQuantity() + 1));
         }
        
         entityManager.flush();
@@ -668,7 +668,7 @@ public class OrdersService extends BusinessService {
      * @throws IllegalStateException if the transaction is not active, or if no
      * session is open
      */
-    public void removePurchase(Short orderLineId)
+    public void removePurchase(Integer orderLineId)
             throws BusinessException, IllegalArgumentException, ValidationException, SecurityException {
         assertOpenSessionExists();
         assertTransactionActive();
@@ -710,7 +710,7 @@ public class OrdersService extends BusinessService {
         }
 
         Property timeRangeMismatch = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
-        if (orderLine.getItem().getId().equals(timeRangeMismatch.getShort())) {
+        if (orderLine.getItem().getId().equals(timeRangeMismatch.getInteger())) {
             throw new BusinessException(bundle.getString("BusinessRule.Order.OrderLineForceAndCanNotBeRemoved"));
         }
 
@@ -734,7 +734,7 @@ public class OrdersService extends BusinessService {
                  * subscription before the expiration date.
                  */
                 Integer attendancesBalance = client.getAttendancesBalance() - item.getItemSubscription().getUnits();
-                client.setAttendancesBalance(attendancesBalance.shortValue());
+                client.setAttendancesBalance(attendancesBalance);
 
                 /*
                  * We count the expiration date by substracting the item
@@ -752,14 +752,14 @@ public class OrdersService extends BusinessService {
          * the state it already had before the item was purchased.
          */
         if (item.getQuantity() != null) {
-            item.setQuantity((short) (item.getQuantity() + 1));
+            item.setQuantity((Integer) (item.getQuantity() + 1));
         }
 
         /*
          * Decreases the quantity on the order line, and removes it, if the
          * quantity is now zero.
          */
-        orderLine.setQuantity((short) (orderLine.getQuantity() - 1));
+        orderLine.setQuantity((Integer) (orderLine.getQuantity() - 1));
         if (orderLine.getQuantity() == 0) {
             // EntityManager won't remove this relationship upon EntityManager.remove call
             order.getOrderLines().remove(orderLine);
@@ -791,7 +791,7 @@ public class OrdersService extends BusinessService {
      * @throws IllegalStateException if the transaction or the session is not
      * active
      */
-    public void recordPayment(Short orderId, BigDecimal amount)
+    public void recordPayment(Integer orderId, BigDecimal amount)
             throws BusinessException, IllegalArgumentException, ValidationException, SecurityException {
         assertOpenSessionExists();
         assertTransactionActive();
@@ -904,10 +904,10 @@ public class OrdersService extends BusinessService {
      *
      * @return the ID
      */
-    public Short getNextId() {
+    public Integer getNextId() {
         try {
-            return new Integer((Short) entityManager.createNamedQuery("OrderEntity.findAllIdsOrderByIdDesc") //NOI18N
-                    .setMaxResults(1).getSingleResult() + 1).shortValue();
+            return (Integer) entityManager.createNamedQuery("OrderEntity.findAllIdsOrderByIdDesc") //NOI18N
+                    .setMaxResults(1).getSingleResult() + 1;
         } catch (NoResultException ex) {
             return 1;
         }

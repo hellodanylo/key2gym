@@ -29,6 +29,7 @@ import javax.persistence.*;
 @NamedQueries({
     @NamedQuery(name = "TimeSplit.findAll", query = "SELECT t FROM TimeSplit t ORDER BY t.endTime ASC"),
     @NamedQuery(name = "TimeSplit.findById", query = "SELECT t FROM TimeSplit t WHERE t.id = :id")})
+@SequenceGenerator(name="id_tsp_seq", allocationSize = 1)
 public class TimeSplit implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,7 +38,7 @@ public class TimeSplit implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_tsp", columnDefinition="TINYINT UNSIGNED")
-    private Short id;
+    private Integer id;
     
     @Basic(optional = false)
     @Column(name = "end_time", nullable = false)
@@ -54,21 +55,21 @@ public class TimeSplit implements Serializable {
     public TimeSplit() {
     }
 
-    public TimeSplit(Short id) {
+    public TimeSplit(Integer id) {
         this.id = id;
     }
 
-    public TimeSplit(Short id, Date endTime, String title) {
+    public TimeSplit(Integer id, Date endTime, String title) {
         this.id = id;
         this.endTime = endTime;
         this.title = title;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

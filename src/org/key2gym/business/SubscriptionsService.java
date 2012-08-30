@@ -255,7 +255,7 @@ public class SubscriptionsService extends BusinessService {
      * operation
      *
      */
-    public void removeSubscription(Short id) throws ValidationException, BusinessException, SecurityException {
+    public void removeSubscription(Integer id) throws ValidationException, BusinessException, SecurityException {
         assertOpenSessionExists();
         assertTransactionActive();
 
@@ -285,7 +285,7 @@ public class SubscriptionsService extends BusinessService {
         entityManager.flush();
     }
 
-    private void validateUnits(Short units) throws ValidationException {
+    private void validateUnits(Integer units) throws ValidationException {
         if (units == null) {
             throw new NullPointerException("The units is null.");
         }
@@ -297,7 +297,7 @@ public class SubscriptionsService extends BusinessService {
         }
     }
 
-    private void validateTerm(Short term) throws ValidationException {
+    private void validateTerm(Integer term) throws ValidationException {
         if (term == null) {
             throw new NullPointerException("The term is null.");
         }

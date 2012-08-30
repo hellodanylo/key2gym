@@ -24,19 +24,19 @@ import java.math.BigDecimal;
  */
 public class OrderLineDTO {
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Short getDiscountPercent() {
+    public Integer getDiscountPercent() {
         return discountPercent;
     }
 
-    public void setDiscountPercent(Short discountPercent) {
+    public void setDiscountPercent(Integer discountPercent) {
         this.discountPercent = discountPercent;
     }
 
@@ -48,11 +48,11 @@ public class OrderLineDTO {
         this.discountTitle = discountTitle;
     }
 
-    public Short getItemId() {
+    public Integer getItemId() {
         return itemId;
     }
 
-    public void setItemId(Short itemId) {
+    public void setItemId(Integer itemId) {
         this.itemId = itemId;
     }
 
@@ -72,11 +72,11 @@ public class OrderLineDTO {
         this.itemTitle = itemTitle;
     }
 
-    public Short getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Short quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -88,21 +88,21 @@ public class OrderLineDTO {
         this.total = total;
     }
 
-    public Short getDiscountId() {
+    public Integer getDiscountId() {
         return discountId;
     }
 
-    public void setDiscountId(Short discountId) {
+    public void setDiscountId(Integer discountId) {
         this.discountId = discountId;
     }
        
-    Short id;
-    Short itemId;
+    Integer id;
+    Integer itemId;
     String itemTitle;
     BigDecimal itemPrice;
-    Short quantity;
-    Short discountId;
+    Integer quantity;
+    Integer discountId;
     String discountTitle;
-    Short discountPercent;
+    Integer discountPercent;
     BigDecimal total;
 }
