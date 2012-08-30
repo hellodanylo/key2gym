@@ -13,16 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.factories.connections;
+package org.key2gym.persistence.connections.configurations;
 
 import java.util.Properties;
-import org.key2gym.presentation.connections.core.BasicConnection;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public interface PropertiesFactory<T extends BasicConnection> {
-    public Properties createEntityManagerFactoryProperties(T connection);
-    public Properties createEntityManagerProperties(T conneciton);
+public class MySQLEclipseLinkConnectionConfiguration extends MySQLConnectionConfiguration {
+    public MySQLEclipseLinkConnectionConfiguration(Properties properties) {
+        super(properties);
+        ddl = properties.getProperty("ddl");
+    }
+
+    public String getDDL() {
+        return ddl;
+    }
+
+    public void setDDL(String ddl) {
+        this.ddl = ddl;
+        getProperties().put("ddl", ddl);
+    }
+    
+    private String ddl;
 }

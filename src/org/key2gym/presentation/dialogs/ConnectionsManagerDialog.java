@@ -22,8 +22,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.*;
-import org.key2gym.presentation.connections.core.BasicConnection;
-import org.key2gym.presentation.connections.core.ConnectionsManager;
+import org.key2gym.persistence.connections.configurations.ConnectionConfiguration;
+import org.key2gym.persistence.connections.ConnectionConfigurationsManager;
 import org.key2gym.presentation.util.ConnectionsListCellRenderer;
 import org.key2gym.presentation.util.MutableListModel;
 
@@ -33,7 +33,7 @@ import org.key2gym.presentation.util.MutableListModel;
  */
 public class ConnectionsManagerDialog extends AbstractDialog {
 
-    public ConnectionsManagerDialog(ConnectionsManager connectionsManager) {
+    public ConnectionsManagerDialog(ConnectionConfigurationsManager connectionsManager) {
         super(null, true);
         this.connectionsManager = connectionsManager;
 
@@ -53,7 +53,7 @@ public class ConnectionsManagerDialog extends AbstractDialog {
         connectionsList = new JList();
 
         connectionsListModel = new MutableListModel();
-        List<BasicConnection> connections = connectionsManager.getConnections();
+        List<ConnectionConfiguration> connections = connectionsManager.getConnections();
         connectionsListModel.set(connections);
         connectionsList.setModel(connectionsListModel);
         if (connections.size() > 0) {
@@ -93,10 +93,10 @@ public class ConnectionsManagerDialog extends AbstractDialog {
     /*
      * Misc
      */
-    private ConnectionsManager connectionsManager;
+    private ConnectionConfigurationsManager connectionsManager;
     private MutableListModel connectionsListModel;
     /*
      * Components
      */
-    private JList<BasicConnection> connectionsList;
+    private JList<ConnectionConfiguration> connectionsList;
 }

@@ -1,0 +1,30 @@
+ALTER TABLE attendance_atd DROP FOREIGN KEY FK_attendance_atd_idcln_atd
+ALTER TABLE attendance_atd DROP FOREIGN KEY FK_attendance_atd_idkey_atd
+ALTER TABLE item_subscription_its DROP FOREIGN KEY FK_item_subscription_its_idtsp_its
+ALTER TABLE item_subscription_its DROP FOREIGN KEY FK_item_subscription_its_iditm_its
+ALTER TABLE order_line_orl DROP FOREIGN KEY FK_order_line_orl_idord_orl
+ALTER TABLE order_line_orl DROP FOREIGN KEY FK_order_line_orl_iditm_orl
+ALTER TABLE order_line_orl DROP FOREIGN KEY FK_order_line_orl_iddsc_orl
+ALTER TABLE client_freeze_cfz DROP FOREIGN KEY FK_client_freeze_cfz_idcln_cfz
+ALTER TABLE client_freeze_cfz DROP FOREIGN KEY FK_client_freeze_cfz_idadm_cfz
+ALTER TABLE client_profile_cpf DROP FOREIGN KEY FK_client_profile_cpf_idads_cpf
+ALTER TABLE client_profile_cpf DROP FOREIGN KEY FK_client_profile_cpf_idcln_cpf
+ALTER TABLE session_ssn DROP FOREIGN KEY FK_session_ssn_idadm_ssn
+ALTER TABLE order_ord DROP FOREIGN KEY FK_order_ord_idatd_ord
+ALTER TABLE order_ord DROP FOREIGN KEY FK_order_ord_idcln_ord
+DROP TABLE discount_dsc
+DROP TABLE attendance_atd
+DROP TABLE item_subscription_its
+DROP TABLE order_line_orl
+DROP TABLE ad_source_ads
+DROP TABLE property_pty
+DROP TABLE cash_adjustment_cad
+DROP TABLE item_itm
+DROP TABLE client_freeze_cfz
+DROP TABLE client_profile_cpf
+DROP TABLE administrator_adm
+DROP TABLE client_cln
+DROP TABLE session_ssn
+DROP TABLE time_split_tsp
+DROP TABLE order_ord
+DROP TABLE key_key

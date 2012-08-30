@@ -13,25 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.util;
+package org.key2gym.persistence.connections.factories;
 
-import java.awt.Component;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import org.key2gym.persistence.connections.configurations.ConnectionConfiguration;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public class ConnectionsListCellRenderer extends DefaultListCellRenderer {
-
-    @Override
-    public Component getListCellRendererComponent(
-            JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if (ConnectionConfiguration.class.isAssignableFrom(value.getClass())) {
-            value = ((ConnectionConfiguration)value).getTitle();
-        }
-        return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+public abstract class PersistenceFactory<T extends ConnectionConfiguration> {
+    
+    public PersistenceFactory(T connectionConfig) {
+        this.connectionConfig = connectionConfig;
     }
+    
+    public abstract EntityManagerFactory getEntityManagerFactory();
+    public abstract DataSource getDataSource();
+    
+    public T getConnectionConfiguration() {
+        return connectionConfig;
+    }
+    
+    public static String PERSITENCE_UNIT = "PU";
+    
+    private T connectionConfig;
 }

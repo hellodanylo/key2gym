@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.connections.core;
+package org.key2gym.persistence.connections.configurations;
 
 import java.util.Properties;
 
@@ -21,9 +21,9 @@ import java.util.Properties;
  *
  * @author Danylo Vashchilenko
  */
-public class BasicConnection {
+public class ConnectionConfiguration {
     
-    public BasicConnection(Properties properties) {
+    public ConnectionConfiguration(Properties properties) {
         this.properties = properties;
         this.codeName = properties.getProperty("codeName");
         this.title = properties.getProperty("title");

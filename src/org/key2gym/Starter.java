@@ -29,12 +29,11 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.key2gym.business.StorageService;
 import org.key2gym.presentation.MainFrame;
-import org.key2gym.presentation.connections.core.BasicConnection;
-import org.key2gym.presentation.connections.core.BasicConnection;
-import org.key2gym.presentation.connections.core.ConnectionsManager;
+import org.key2gym.persistence.connections.configurations.ConnectionConfiguration;
+import org.key2gym.persistence.connections.ConnectionConfigurationsManager;
 import org.key2gym.presentation.dialogs.AbstractDialog;
 import org.key2gym.presentation.dialogs.ConnectionsManagerDialog;
-import org.key2gym.presentation.factories.connections.PropertiesFactory;
+import org.key2gym.persistence.connections.factories.PersistenceFactory;
 
 /**
  * This is the main class of the application.
@@ -110,7 +109,7 @@ public class Starter {
             logger.fatal("Failed to change the L&F!");
         }
 
-        ConnectionsManager connectionsManager = new ConnectionsManager();
+        ConnectionConfigurationsManager connectionsManager = new ConnectionConfigurationsManager();
 
         if (!properties.containsKey("connection")) {
             ConnectionsManagerDialog dialog = new ConnectionsManagerDialog(connectionsManager);
@@ -136,8 +135,8 @@ public class Starter {
             /*
              * Attemps to find a connection with a code name passed in the command line.
              */
-            List<BasicConnection> connections = connectionsManager.getConnections();
-            for (BasicConnection connection : connections) {
+            List<ConnectionConfiguration> connections = connectionsManager.getConnections();
+            for (ConnectionConfiguration connection : connections) {
                 if(connection.getCodeName().equals(properties.getProperty("connection"))) {
                     connectionsManager.selectConnection(connection);
                 }
@@ -152,31 +151,31 @@ public class Starter {
             }
         }
 
-        BasicConnection connection = connectionsManager.getSelectedConnection();
+        ConnectionConfiguration connection = connectionsManager.getSelectedConnection();
 
         /*
          * Attempts to load the properties factory class. 
          */
-        String propertiesFactoryClassBinaryName = "org.key2gym.presentation.factories.connections." + connection.getType() + "PropertiesFactory";
-        Class<? extends PropertiesFactory> propertiesFactoryClass;
+        String propertiesFactoryClassBinaryName = PersistenceFactory.class.getPackage().getName() + "." + connection.getType() + "PersistenceFactory";
+        Class<? extends PersistenceFactory> propertiesFactoryClass;
         try {
-            propertiesFactoryClass = (Class<? extends PropertiesFactory>) Starter.class.getClassLoader().loadClass(propertiesFactoryClassBinaryName);
+            propertiesFactoryClass = (Class<? extends PersistenceFactory>) Starter.class.getClassLoader().loadClass(propertiesFactoryClassBinaryName);
         } catch (ClassNotFoundException ex) {
-            logger.fatal("Missing persistence properties factory for connection type: " + connection.getType(), ex);
+            logger.fatal("Missing persistence factory for connection type: " + connection.getType(), ex);
             return;
         } catch (ClassCastException ex) {
-            logger.fatal("Persistence properties factory for connection type '" + connection.getType() + "' is of the wrong type.", ex);
+            logger.fatal("Persistence factory for connection type '" + connection.getType() + "' is of the wrong type.", ex);
             return;
         }
 
-        PropertiesFactory propertiesFactory;
+        PersistenceFactory propertiesFactory;
 
         /*
          * Attempts to instantiate the properties factory.
          */
         try {
-            propertiesFactory = propertiesFactoryClass.newInstance();
-        } catch (IllegalAccessException | InstantiationException ex) {
+            propertiesFactory = propertiesFactoryClass.getConstructor(connection.getClass()).newInstance(connection);
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | InstantiationException ex) {
             logger.fatal("Failed to instantiate the persistence properties factory for connection type: " + connection.getType(), ex);
             return;
         }
@@ -188,7 +187,7 @@ public class Starter {
 
         logger.info("Initializing the storage service with the connection: " + connection.getCodeName());
         try {
-            StorageService.initialize(propertiesFactory.createEntityManagerFactoryProperties(connection), propertiesFactory.createEntityManagerProperties(connection));
+            StorageService.initialize(propertiesFactory.getEntityManagerFactory());
         } catch (Exception ex) {
             logger.fatal("Failed to initializes the storage service.", ex);
             return;

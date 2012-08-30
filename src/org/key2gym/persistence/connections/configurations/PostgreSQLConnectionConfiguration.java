@@ -1,20 +1,9 @@
 /*
- * Copyright 2012 Danylo Vashchilenko
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 
-package org.key2gym.presentation.connections.core;
+package org.key2gym.persistence.connections.configurations;
 
 import java.util.Properties;
 
@@ -22,8 +11,8 @@ import java.util.Properties;
  *
  * @author Danylo Vashchilenko
  */
-public class MySQLConnection extends NetworkConnection {
-    public MySQLConnection(Properties properties) {
+public class PostgreSQLConnectionConfiguration extends NetworkConnectionConfiguration {
+    public PostgreSQLConnectionConfiguration(Properties properties) {
         super(properties);
         this.database = properties.getProperty("database");
         this.user = properties.getProperty("user");
@@ -56,11 +45,7 @@ public class MySQLConnection extends NetworkConnection {
         this.user = user;
         getProperties().put("user", user);
     }
-    
-    public static boolean isSupported(String type) {
-        return type.equals("mysql");
-    }
-    
+
     private String user;
     private String password;
     private String database;

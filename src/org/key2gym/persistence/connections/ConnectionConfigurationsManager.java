@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.connections.core;
+package org.key2gym.persistence.connections;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import org.apache.log4j.Logger;
+import org.key2gym.persistence.connections.configurations.ConnectionConfiguration;
 
 /**
  * This class is responsible for loading and managing connections.
@@ -39,8 +40,8 @@ import org.apache.log4j.Logger;
  * 
  * <ul>
  * 
- * <li> a subclass of <code>BasicConnection</code> </li>
- * <li> named in the following format: &lt;CodeName&gt;Connection </li>
+ * <li> a subclass of <code>ConnectionConfiguration</code> </li>
+ * <li> named in the following format: &lt;CodeName&gt;ConnectionConfiguration </li>
  * <li> located in the <code>org.key2gym.presentation.connections.core</code>
  * package </li>
  * 
@@ -49,9 +50,9 @@ import org.apache.log4j.Logger;
  * 
  * @author Danylo Vashchilenko
  */
-public class ConnectionsManager {
+public class ConnectionConfigurationsManager {
 
-    public ConnectionsManager() {
+    public ConnectionConfigurationsManager() {
         Logger logger = Logger.getLogger(this.getClass().getName());
 
         connectionsList = new LinkedList<>();
@@ -101,28 +102,28 @@ public class ConnectionsManager {
 
             String type = properties.getProperty("type");
 
-            String connectionClassBinaryName = BasicConnection.class.getPackage().getName() + "." + type + "Connection";
+            String connectionClassBinaryName = ConnectionConfiguration.class.getPackage().getName() + "." + type + "ConnectionConfiguration";
             Class connectionClass;
 
             try {
                 connectionClass = classLoader.loadClass(connectionClassBinaryName);
             } catch (ClassNotFoundException ex) {
-                logger.error("Missing connection class for '" + type + "': " + connectionClassBinaryName);
+                logger.error("Missing connection configuration class for '" + type + "': " + connectionClassBinaryName);
                 continue;
             }
 
-            if (!BasicConnection.class.isAssignableFrom(connectionClass)) {
+            if (!ConnectionConfiguration.class.isAssignableFrom(connectionClass)) {
                 logger.error(connectionClass.getName() + " is of a wrong type.");
                 continue;
             }
 
-            BasicConnection connection;
+            ConnectionConfiguration connection;
 
             /*
              * Attemps to instantiate the connection class.
              */
             try {
-                connection = (BasicConnection) connectionClass.getConstructor(Properties.class).newInstance(properties);
+                connection = (ConnectionConfiguration) connectionClass.getConstructor(Properties.class).newInstance(properties);
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
                 logger.error("Failed to instantiate " + connectionClass.getName() + ".", ex);
                 continue;
@@ -130,7 +131,7 @@ public class ConnectionsManager {
 
             connectionsList.add(connection);
 
-            logger.debug("Loaded connection: '" + codeName + "'.");
+            logger.debug("Loaded connection configuration: '" + codeName + "'.");
         }
     }
 
@@ -139,7 +140,7 @@ public class ConnectionsManager {
      * 
      * @return the list of all connections.
      */
-    public List<BasicConnection> getConnections() {
+    public List<ConnectionConfiguration> getConnections() {
         return connectionsList;
     }
 
@@ -148,7 +149,7 @@ public class ConnectionsManager {
      * 
      * @param connection the new selected connection
      */
-    public void selectConnection(BasicConnection connection) {
+    public void selectConnection(ConnectionConfiguration connection) {
         this.selectedConnection = connection;
     }
 
@@ -157,13 +158,13 @@ public class ConnectionsManager {
      * 
      * @return the selected connection
      */
-    public BasicConnection getSelectedConnection() {
+    public ConnectionConfiguration getSelectedConnection() {
         return selectedConnection;
     }
 
     /*
      * Connections
      */
-    private List<BasicConnection> connectionsList;
-    private BasicConnection selectedConnection;
+    private List<ConnectionConfiguration> connectionsList;
+    private ConnectionConfiguration selectedConnection;
 }

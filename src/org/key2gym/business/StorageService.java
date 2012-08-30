@@ -16,9 +16,8 @@
 package org.key2gym.business;
 
 import java.util.Observable;
-import java.util.Properties;
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
+import javax.persistence.EntityManagerFactory;
 
 /**
  * Provides EntityManager for BusinessServices and transactions control for
@@ -29,9 +28,11 @@ import javax.persistence.Persistence;
 public class StorageService extends Observable {
 
     private EntityManager entityManager;
+    private EntityManagerFactory factory;
 
-    protected StorageService(Properties factoryProperties, Properties entityManagerProperties) {
-        entityManager = Persistence.createEntityManagerFactory("PU", factoryProperties).createEntityManager(entityManagerProperties);
+    protected StorageService(EntityManagerFactory factory) {
+        this.factory = factory;
+        this.entityManager = factory.createEntityManager();
     }
 
     /**
@@ -43,11 +44,11 @@ public class StorageService extends Observable {
      * EntityManager
      * @throws IllegalAccessException if the service is already initialized
      */
-    public static void initialize(Properties factoryProperties, Properties entityManagerProperties) throws IllegalAccessException {
+    public static void initialize(EntityManagerFactory factory) throws IllegalAccessException {
         if (instance != null) {
             throw new IllegalAccessException("The storage has already been initialized!");
         }
-        instance = new StorageService(factoryProperties, entityManagerProperties);
+        instance = new StorageService(factory);
     }
 
     /**

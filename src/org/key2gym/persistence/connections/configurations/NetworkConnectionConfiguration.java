@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.connections.core;
+package org.key2gym.persistence.connections.configurations;
 
 import java.util.Properties;
 
@@ -21,20 +21,32 @@ import java.util.Properties;
  *
  * @author Danylo Vashchilenko
  */
-public class MySQLEclipseLinkConnection extends MySQLConnection {
-    public MySQLEclipseLinkConnection(Properties properties) {
-        super(properties);
-        ddl = properties.getProperty("ddl");
-    }
-
-    public String getDDL() {
-        return ddl;
-    }
-
-    public void setDDL(String ddl) {
-        this.ddl = ddl;
-        getProperties().put("ddl", ddl);
-    }
+public class NetworkConnectionConfiguration extends ConnectionConfiguration {
     
-    private String ddl;
+    public NetworkConnectionConfiguration(Properties properties) {
+        super(properties);
+        this.host = properties.getProperty("host");
+        this.port = properties.getProperty("port");
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+        getProperties().put("host", host);
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+        getProperties().put("port", port);
+    }
+
+    private String host;
+    private String port;
 }
