@@ -19,7 +19,7 @@ CREATE TABLE attendance_atd (id_atd INTEGER NOT NULL DEFAULT nextval('id_atd_seq
 CREATE TABLE item_subscription_its (iditm_its INTEGER NOT NULL DEFAULT nextval('id_its_seq'), term_days INTEGER NOT NULL, term_months INTEGER NOT NULL, term_years INTEGER NOT NULL, units INTEGER NOT NULL, idtsp_its INTEGER, PRIMARY KEY (iditm_its));
 CREATE TABLE order_line_orl (id_orl INTEGER NOT NULL DEFAULT nextval('id_orl_seq'), quantity INTEGER NOT NULL, iddsc_orl INTEGER NULL, iditm_orl INTEGER NOT NULL, idord_orl INTEGER NOT NULL, PRIMARY KEY (id_orl));
 CREATE TABLE ad_source_ads (id_ads INTEGER NOT NULL DEFAULT nextval('id_ads_seq'), title TEXT NOT NULL, PRIMARY KEY (id_ads));
-CREATE TABLE property_pty (id_pty TEXT NOT NULL, property_value TEXT NOT NULL, PRIMARY KEY (id_pty));
+CREATE TABLE property_pty (id_pty INTEGER NOT NULL, name TEXT NOT NULL, current_value TEXT NOT NULL, PRIMARY KEY (id_pty));
 CREATE TABLE cash_adjustment_cad (date_recorded DATE NOT NULL, amount DECIMAL(6,2) NOT NULL, note TEXT NOT NULL, PRIMARY KEY (date_recorded));
 CREATE TABLE item_itm (id_itm INTEGER NOT NULL DEFAULT nextval('id_itm_seq'), barcode BIGINT NULL, price DECIMAL(5,2) NOT NULL, quantity INTEGER NULL, title TEXT NOT NULL, PRIMARY KEY (id_itm));
 CREATE TABLE client_freeze_cfz (id_cfz INTEGER NOT NULL DEFAULT nextval('id_cfz_seq'), date_issued DATE NOT NULL, days INTEGER NOT NULL, note TEXT NOT NULL, idadm_cfz INTEGER NOT NULL, idcln_cfz INTEGER NOT NULL, PRIMARY KEY (id_cfz));

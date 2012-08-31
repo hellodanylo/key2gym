@@ -42,6 +42,8 @@ public class PostgreSQLEclipseLinkPersistenceFactory extends PersistenceFactory<
         Flyway flyway = new Flyway();
 
         flyway.setDataSource(dataSource);
+        flyway.setSqlMigrationPrefix("V");
+        flyway.setLocations("db/schemas", "org/key2gym/persistence/migration");
         flyway.migrate();
 
         /*
