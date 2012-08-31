@@ -66,7 +66,7 @@ public class Starter {
          * the class path.
          */
         try {
-            PropertyConfigurator.configure(new FileInputStream("etc/log.properties"));
+            PropertyConfigurator.configure(new FileInputStream("etc/logging.properties"));
         } catch (FileNotFoundException ex) {
             java.util.logging.Logger.getLogger(Starter.class.getName()).log(Level.SEVERE, null, ex);
             return;
