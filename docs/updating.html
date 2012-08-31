@@ -1,0 +1,53 @@
+<h1>3. Updating</h1>
+
+<section>This page describes how to update the application.</section>
+
+<h2>3.1. General information</h2>
+<section>
+Updating the application can be separated into 3 parts: binary, database, environment.
+<p/>
+
+<ul>
+
+<li>Binary includes the <code>key2gym.jar</code> file and the <code>lib</code> folder. These
+files can be simply replaced by the files from the newer distribution.</li>
+<p/>
+
+<li>Database includes the schema and data used by the application. This step is
+done automatically upon the first launch of the updated application. You can check
+logs to see the result of an attempt to update the database's schema and data.</li>
+<p/>
+
+<li>Environment includes all the configuration files, that are located in the <code>etc</code>
+folder. There are 2 options for performing this step: replacing configuration files
+with the files from the newer distribution and altering them to match the needs, or
+comparing the newer files with the older files to ensure that the your configuration files
+match the syntax and the format of the newer configuration files.</li>
+<p/>
+
+</ul>
+
+You also should check out the rest of this page to see version-specific steps
+of updating the application.
+</section>
+
+<h2>3.2. 2.2.0 - 2.3.0</h2>
+<section>
+Follow general steps but pay attention to the following changes:
+<ul>
+<li><code>etc/log.properties</code> is renamed to <code>etc/logging.properties</code>.</li>
+<li>The support of MySQL database is <b>dropped</b>. It's been replaced with PostgreSQL.
+Check <a href="./configuration.html">Configuration</a> page for instructions on how
+to setup the PostgreSQL server. The following command can be used to generate
+compatible dump: 
+<p/>
+
+<pre><code>mysqldump --compatible=postgresql,ansi --no-create-info --skip-quote-names --default-character-set=utf8 --skip-add-locks --complete-insert database</code></pre>
+<p/>
+
+You can than execute the result SQL file on the PostgreSQL server.
+<p/>
+
+Note that <code>MySQLEclipseLink</code> is now an unsupported connection type. Use <code>PostgreSQLEclipseLink</code> instead.
+</ul>
+</section>

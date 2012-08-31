@@ -139,6 +139,7 @@
         <build-html name="index" />
         <build-html name="deployment" />
         <build-html name="configuration" />
+        <build-html name="updating" />
         
         <!-- Copies stylesheet files. -->
         <copy todir="${dist.dir}/${doc.dir}">

@@ -34,6 +34,7 @@ p {
 section, td {
 	font: 13px Arial, Freesans, sans-serif;
 	color: black;
+        line-height: 1.4em;
 }
 
 /* TextField-like look for all major tags */
@@ -77,17 +78,14 @@ td.description {
 }
 
 code {
-	margin: 0px 2px 0px 2px;
-	padding: 0px 2px 0px 2px;
+	margin: 0px 1px 0px 1px;
+	padding: 0px 1px 0px 1px;
 	border: 1px solid #EAEAEA;
 	background-color: #F8F8F8;
-	display: inline-block;
+	display: inline;
 	font-family: monospace;
 	color: gray;
-}
-
-pre code {
-	display: block;
+        word-wrap: break-word;
 }
 
 ul, ol {

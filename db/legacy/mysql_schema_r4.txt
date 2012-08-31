@@ -1,2 +1,0 @@
-Use the following command to dump data in a format compatible with schema v1:
-mysqldump --compatible=postgresql,ansi --no-create-info --skip-quote-names --dump-date --default-character-set=utf8 --skip-add-locks --complete-insert database
