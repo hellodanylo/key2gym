@@ -1,6 +1,6 @@
 # Key2Gym
 
-![Key2Gyn logo](http://github.com/equalsdanny/key2gym/raw/master/src/org/key2gym/presentation/resources/splash-wide.png)
+![Key2Gyn logo](https://raw.github.com/equalsdanny/key2gym/develop/src/org/key2gym/presentation/resources/logo-wide.png)
 
 ## About
 Key2Gym is a free sofware for running and maintaing gyms and other membership-based clubs or enterprises.
