@@ -30,7 +30,7 @@
             <td>The application locale's country</td>
             <td>Yes</td>
         </tr>
-        
+
         <tr>
             <td>ui</td>
             <td>The Java L&amp;F to use in the application. It's recommended to use <code>Nimbus</code> as the application's L&amp;F.</td>
@@ -161,6 +161,13 @@
     start up. If you want to always use the same connection, specify <code>connection</code> command-line argument.
     For example, if you want to use connection described in <code>myconnection.properties</code>,
     your command-line argument should be <code>--connection=myconnection</code>.
+</section>
+
+<h2>2.3. Logging</h2>
+<section>
+    Key2Gym uses Log4J as its logging provider. The logging configuration
+    file is located in <code>etc/logging.properties</code> and is a Log4J logging properties file.
+    You can find the documentation on this file <a href="http://logging.apache.org/log4j/1.2/manual.html">here</a>.
 </section>
 
 

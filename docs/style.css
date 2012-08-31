@@ -1,104 +1,106 @@
 body {
-	/* Gray background */
-	background-color: #d6d9df;
-	/* Some space in the footer */
-	margin-bottom: 20px;
+    /* Gray background */
+    background-color: #d6d9df;
+    /* Some space in the footer */
+    margin-bottom: 20px;
 }
 
 /* Bold text */
 b {
-	font-weight: bold; 
+    font-weight: bold; 
 }
 
 /* Darker background for headers */
 h1, h2, h3 {
-	margin: 10px;
-	padding: 10px;	
-	background-color: #37556F;
-	color: white;
+    margin: 10px;
+    padding: 10px;	
+    background-color: #37556F;
+    color: white;
 }
 
 h1 {
-	font: bold 2em Arial;
+    font: bold 2em Arial;
 }
 
 h2 {
-	font: bold 1em Arial;
+    font: bold 1em Arial;
 }
 
 p {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 /* Default font for plain text. */
 section, td {
-	font: 13px Arial, Freesans, sans-serif;
-	color: black;
-        line-height: 1.4em;
+    font: 13px Arial, Freesans, sans-serif;
+    color: black;
+    line-height: 1.4em;
 }
 
 /* TextField-like look for all major tags */
 h1, h2, h3, section {
-	box-shadow:inset 0 0 3px #000000;
+    box-shadow:inset 0 0 3px #000000;
 }
 
 section, table {
-	margin: 5px 5px 0px 20px;
-	background-color: white;
-	display: block;
-	max-width: 800px;
-	padding: 10px;
+    margin: 5px 5px 0px 20px;
+    background-color: white;
+    display: block;
+    max-width: 800px;
+    padding: 10px;
 }
 
 table {
-	width: 820px;
+    width: 820px;
 }
 
 thead td {
-	background-color: #316594;
-	color: white;
-	border: 1px solid gray;	
+    background-color: #316594;
+    color: white;
+    border: 1px solid gray;	
 }
 
 /* Border for all cells */
 tr, td {
-	border: 1px solid gray;
+    border: 1px solid gray;
 }
 
 /* Text style for all cells */
 td {
-	padding: 10px;
-	vertical-align: middle;
-	text-align: center;
+    padding: 10px;
+    vertical-align: middle;
+    text-align: center;
 }
 
 /* Text style for long cells */
 td.description {
-	text-align: left;
+    text-align: left;
 }
 
 code {
-	margin: 0px 1px 0px 1px;
-	padding: 0px 1px 0px 1px;
-	border: 1px solid #EAEAEA;
-	background-color: #F8F8F8;
-	display: inline;
-	font-family: monospace;
-	color: gray;
-        word-wrap: break-word;
+    margin: 0px 1px 0px 1px;
+    padding: 0px 1px 0px 1px;
+    border: 1px solid #EAEAEA;
+    background-color: #F8F8F8;
+    display: inline;
+    font-family: monospace;
+    color: gray;
+    word-wrap: break-word;
+    display: inline-block;
+    white-space: normal;
 }
 
 ul, ol {
-	/* Bringing lists on to the page with breathing room. */
-	margin: 10px 0px 10px 40px;
+    /* Bringing lists on to the page with breathing room. */
+    margin: 10px 0px 10px 40px;
 }
 
 ol li {
-	/* Giving OL's LIs generated numbers. */
-	list-style: decimal outside;
+    /* Giving OL's LIs generated numbers. */
+    list-style: decimal outside;
 }
 
 ul li {
-	/* Giving UL's LIs generated disc markers. */
-	list-style: disc outside;
+    /* Giving UL's LIs generated disc markers. */
+    list-style: disc outside;
 }

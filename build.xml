@@ -95,11 +95,6 @@
         <copy todir="${dist.dir}/${etc.dir}">
             <fileset dir="${etc.dir}" />
         </copy>  
-        
-        <!-- Copies database schemas to the distribution -->
-        <copy todir="${dist.dir}/db">
-            <fileset dir="db" />
-        </copy>
             
         <!-- Generates build file -->
         <touch file="${dist.dir}/build"/>
