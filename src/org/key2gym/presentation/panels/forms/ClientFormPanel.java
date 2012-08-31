@@ -130,7 +130,7 @@ public class ClientFormPanel extends JPanel {
 
                 binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
                         BeanProperty.create("attendancesBalance"), attendancesBalanceTextField, BeanProperty.create("text"), "attendancesBalance");
-                binding.setConverter(new ShortToStringConverter(strings.getString("Text.AttendancesBalance"), false));
+                binding.setConverter(new IntegerToStringConverter(strings.getString("Text.AttendancesBalance"), false));
                 bindingGroup.addBinding(binding);
 
             } else if (column.equals(Column.MONEY_BALANCE)) {

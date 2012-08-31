@@ -15,14 +15,14 @@
  */
 package org.key2gym.persistence.connections.factories;
 
+import com.googlecode.flyway.core.Flyway;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.mchange.v2.c3p0.DataSources;
-import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import java.text.MessageFormat;
 import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
+import org.apache.log4j.Logger;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.key2gym.persistence.connections.configurations.MySQLEclipseLinkConnectionConfiguration;
 
@@ -31,12 +31,14 @@ import org.key2gym.persistence.connections.configurations.MySQLEclipseLinkConnec
  * @author Danylo Vashchilenko
  */
 public class MySQLEclipseLinkPersistenceFactory extends PersistenceFactory<MySQLEclipseLinkConnectionConfiguration> {
-    
+
     public MySQLEclipseLinkPersistenceFactory(MySQLEclipseLinkConnectionConfiguration config) {
         super(config);
         
+        Logger.getLogger(MySQLEclipseLinkPersistenceFactory.class).warn("The use of this connection type is DEPRECATED. The schema is not maintained anymore. Use it at yout own risk.");
+
         Properties properties = new Properties();
-        
+
         dataSource = new ComboPooledDataSource(config.getCodeName());
         dataSource.setJdbcUrl(MessageFormat.format("jdbc:mysql://{0}:{1}/{2}?useUnicode=true&characterEncoding=utf8",
                 config.getHost(),
@@ -44,11 +46,13 @@ public class MySQLEclipseLinkPersistenceFactory extends PersistenceFactory<MySQL
                 config.getDatabase()));
         dataSource.setUser(config.getUser());
         dataSource.setPassword(config.getPassword());
-        
+
         dataSource.setInitialPoolSize(1);
         dataSource.setMaxPoolSize(1);
         dataSource.setMaxIdleTime(0);
-        
+        dataSource.setMinPoolSize(1);
+        dataSource.setCheckoutTimeout(5000);
+
         /*
          * Specifies EclipseLink as the persistence provider.
          */
@@ -58,30 +62,17 @@ public class MySQLEclipseLinkPersistenceFactory extends PersistenceFactory<MySQL
          * Sets the data source.
          */
         properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE, dataSource);
-        
+
         /*
          * Specifies Apache log4j wrapper as the custom logger.
          */
         properties.put(PersistenceUnitProperties.LOGGING_LOGGER, "org.eclipse.persistence.logging.CommonsLoggingSessionLog");
         properties.put(PersistenceUnitProperties.LOGGING_LEVEL, "CONFIG");
 
-        /*
-         * Optinal ddl option allows to automatically generate the schema.
-         */
-        if (config.getDDL() != null) {
-            properties.put(PersistenceUnitProperties.DDL_GENERATION, config.getDDL());
-            
-            properties.put(PersistenceUnitProperties.DDL_GENERATION_MODE, PersistenceUnitProperties.DDL_BOTH_GENERATION);
-            /*Karen
-             * Requires to set InnoDB as the engine for the new tables.
-             */
-            properties.put(PersistenceUnitProperties.TABLE_CREATION_SUFFIX, "engine=InnoDB");
-        }
-        
         factory = Persistence.createEntityManagerFactory(PERSITENCE_UNIT, properties);
 
     }
-    
+
     @Override
     public DataSource getDataSource() {
         return dataSource;
@@ -91,7 +82,6 @@ public class MySQLEclipseLinkPersistenceFactory extends PersistenceFactory<MySQL
     public EntityManagerFactory getEntityManagerFactory() {
         return factory;
     }
-    
     private ComboPooledDataSource dataSource;
     private EntityManagerFactory factory;
 }

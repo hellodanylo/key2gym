@@ -1,6 +1,6 @@
 # Key2Gym
 
-![Key2Gyn logo](http://github.com/equalsdanny/key2gym/raw/master/src/org/key2gym/presentation/resources/splash.png)
+![Key2Gyn logo](http://github.com/equalsdanny/key2gym/raw/master/src/org/key2gym/presentation/resources/splash-wide.png)
 
 ## About
 Key2Gym is a free sofware for running and maintaing gyms and other membership-based clubs or enterprises.
@@ -16,7 +16,6 @@ It helps you to:
 You need:
 * JDK 1.7+
 * Ant 1.7.0+
-* Perl 5.6.0+
 
 1. Fork or download the repository.
 2. `cd` to the repository's root folder and run `ant release`.

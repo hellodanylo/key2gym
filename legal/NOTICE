@@ -9,23 +9,27 @@ The license is available in 'LICENSE'.
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
+The license is available in 'LICENSE'.
 
 Apache Commons Logging
 Copyright 2003-2007 The Apache Software Foundation
+The license is available in 'LICENSE'.
 
 Apache log4j
 Copyright 2010 The Apache Software Foundation
+The license is available in 'LICENSE'.
 
 This product includes software developed by
 Joda.org (http://www.joda.org/).
+The license is available in 'LICENSE'.
 
 Better Beans Binding
 Copyright (C) 2009 by Tidalwave s.a.s. (http://www.tidalwave.it)
 The license is available in 'LICENSE-LGPL21'.
 
-MySQL Connector/J
-Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
-The license is available in 'LICENSE-GPL2'.
+c3p0
+Copyright 2012 Machinery For Change, Inc.
+The license is available in 'LICENSE-LGPL'.
 
 EclipseLink
 The license is available in 'LICENSE-EPL'.
@@ -33,5 +37,6 @@ The license is available in 'LICENSE-EPL'.
 JGoodiesForms
 The license is available in 'LICENSE-JGOODIES'.
 
-Markdown
-The license is available in 'LICENSE-MARKDOWN'
+Flyway
+Copyright (C) 2010-2012 the original author or authors.
+The license is available in 'LICENSE'.

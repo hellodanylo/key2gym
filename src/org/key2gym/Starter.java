@@ -15,11 +15,14 @@
  */
 package org.key2gym;
 
+import com.googlecode.flyway.core.Flyway;
+import com.mchange.v2.c3p0.DataSources;
 import java.awt.EventQueue;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -137,15 +140,15 @@ public class Starter {
              */
             List<ConnectionConfiguration> connections = connectionsManager.getConnections();
             for (ConnectionConfiguration connection : connections) {
-                if(connection.getCodeName().equals(properties.getProperty("connection"))) {
+                if (connection.getCodeName().equals(properties.getProperty("connection"))) {
                     connectionsManager.selectConnection(connection);
                 }
             }
-            
+
             /*
              * Reports and terminates, if the connection was not found.
              */
-            if(connectionsManager.getSelectedConnection() == null) {
+            if (connectionsManager.getSelectedConnection() == null) {
                 logger.fatal("Missing connection specified in the arguments: " + properties.getProperty("connection"));
                 return;
             }
@@ -168,18 +171,18 @@ public class Starter {
             return;
         }
 
-        PersistenceFactory propertiesFactory;
+        PersistenceFactory persistenceFactory;
 
         /*
          * Attempts to instantiate the properties factory.
          */
         try {
-            propertiesFactory = propertiesFactoryClass.getConstructor(connection.getClass()).newInstance(connection);
+            persistenceFactory = propertiesFactoryClass.getConstructor(connection.getClass()).newInstance(connection);
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | InstantiationException ex) {
             logger.fatal("Failed to instantiate the persistence properties factory for connection type: " + connection.getType(), ex);
             return;
         }
-
+                
         /*
          * Initializes the storage service with the persistence properties generated
          * from the selected connection.
@@ -187,7 +190,7 @@ public class Starter {
 
         logger.info("Initializing the storage service with the connection: " + connection.getCodeName());
         try {
-            StorageService.initialize(propertiesFactory.getEntityManagerFactory());
+            StorageService.initialize(persistenceFactory.getEntityManagerFactory());
         } catch (Exception ex) {
             logger.fatal("Failed to initializes the storage service.", ex);
             return;
@@ -218,7 +221,15 @@ public class Starter {
         }
 
         Logger.getLogger(Starter.class.getName()).info("Shutting down!");
+        
         StorageService.getInstance().destroy();
+        
+        try {
+            DataSources.destroy(persistenceFactory.getDataSource());
+        } catch(SQLException ex) {
+            logger.error("Failed to destroy the data source.", ex);
+            return;
+        }
     }
 
     public static Properties getProperties() {

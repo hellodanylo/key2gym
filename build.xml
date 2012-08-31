@@ -72,7 +72,11 @@
 
     -->
     
-    <target name="jar" depends="compile" description="Builds a jar file and basic environment.">
+    <target name="jar" depends="compile" description="Builds a jar file and basic environment." />
+
+    <target name="release" depends="clean,jar,doc" description="Builds a distribution that can be deployed.">
+        <echo message="Preparing a distribution of Key2Gym ${version}" />
+        
         <!-- Generates the manifest file from the project's properties -->
         <jar basedir="${build.classes.dir}" file="${dist.jar}">
             <manifest>
@@ -89,16 +93,12 @@
             
         <!-- Copies configuration files to the distribution -->
         <copy todir="${dist.dir}/${etc.dir}">
-            <fileset dir="${etc.dir}" />
-        </copy>    
-    </target>
-
-    <target name="release" depends="clean,jar,doc" description="Builds a distribution that can be deployed.">
-        <echo message="Preparing a distribution of Key2Gym ${version}" />
+            <fileset dir="${etc.dir}" excludes="**/*.properties"/>
+        </copy>  
         
-        <!-- Copies mysql files to the distribution -->
-        <copy todir="${dist.dir}/${mysql.dir}">
-            <fileset dir="${mysql.dir}" excludes="**/*.mwb*" />
+        <!-- Copies database schemas to the distribution -->
+        <copy todir="${dist.dir}/db">
+            <fileset dir="db" />
         </copy>
             
         <!-- Generates build file -->

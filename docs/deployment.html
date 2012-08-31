@@ -15,39 +15,49 @@ how to install Java Runtime Environment on your target OS.
 <h2>Database</h2>
 
 <section>
-Key2Gym uses external Relational Database Management System (RDBMS) to keep all the information.
-As for now the only supported RDBMS is MySQL. The program has been intensively
-tested with MySQL 5.1, however the later version should work as well. 
-See the <a href="http://dev.mysql.com/doc/">MySQL documentation</a>, if you do not know how to do any of the steps below:
-
-<ol>
-<li>Go to <a href="http://mysql.com">MySQL website</a> to obtain a distribution of MySQL server. If you are running
-Linux/Unix/BSD, we suggest you to install the MySQL server from the official repository.</li>
-
-<li>Restart the server</li>
-
-<li>Execute the <code>mysql/key2gym.sql</code> SQL script using the <code>mysql</code> client. 
-Note that the script only contains tables structure, which means you have to <code>create</code> and <code>use</code> a database on your own before running the script.</li>
-</ol>
+Key2Gym uses external Relational Database Management System (RDBMS) to store its business data.
+As for now the only supported RDBMS is PostgreSQL. The program has been intensively
+tested with PostgreSQL 9.1, however the later version should work as well. Go to <a href="http://www.postgresql.org/">PostgreSQL website</a> to obtain a distribution of PostgreSQL server. If you are running
+Linux/Unix/BSD, we suggest you to install the PostgreSQL server from the official repository. 
+See the <a href="http://www.postgresql.org/docs/9.1/static/index.html">PostgreSQL documentation</a>, if you need help with installing or configuring the server.
 
 <p/>
+The following is a typical setup of a user and a database:
+<p/>
 
-<pre><code>mysql> create database `key2gym`;
-mysql> use `key2gym`;
-mysql> source dist/mysql/key2gym.sql;</code></pre>
+<pre><code>postgres=# CREATE USER myuser PASSWORD 'mypassword';
+postgres=# CREATE DATABASE mydatabase OWNER myuser;
+postgres=# \c mydatabase
+postgres=# ALTER SCHEMA public OWNER TO myuser;</code></pre>
+<p/>
 
-</p>
+Note that you also need to modify <code>pg_hba.conf</code> to accept TCP/IP connections from
+the hosts, where the application is going to be used. For example, if the application
+is going to be run from the same host as the server, you need to have:
+<p/>
+
+<pre><code>host     mydatabase     myuser     127.0.0.1/32    password</code></pre>
+<p/>
+
+The application will automatically create the schema on the database you specify
+in the connection properties file (see <a href="./configuration.html">Configuration</a> page). 
+When you update the application, it will also update the schema on the first launch 
+without any data being lost, as well.
+<p/>
+
+WARNING: <b>DO NOT</b> apply any SQL scripts from the <code>db</code> folder yourself.
+This will cause schema inconsistency and possible loss.
+
 </section>
 
-<section>TODO: Describe how to set up the database.</section>
 
 <h2>Key2Gym</h2>
 
 <section>
 <ol>
-<il>Unzip the distribution archive to the target folder.</il>
-<il>Configure the application as explained on the <a href="./configuration.html">Configuration</a> page.</il>
-<il>You can now run the program with <code>java -jar key2gym.jar</code>.
+<li>Unzip the distribution archive to the target folder.</li>
+<li>Configure the application as explained on the <a href="./configuration.html">Configuration</a> page.</li>
+<li>You can now run the program with <code>java -jar key2gym.jar</code>.</li>
 </ol>
 </section>
 
