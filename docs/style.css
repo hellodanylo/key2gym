@@ -77,6 +77,10 @@ td.description {
     text-align: left;
 }
 
+pre {
+    margin: 5px 0px 5px 0px;
+}
+
 code {
     margin: 0px 1px 0px 1px;
     padding: 0px 1px 0px 1px;
@@ -93,6 +97,10 @@ code {
 ul, ol {
     /* Bringing lists on to the page with breathing room. */
     margin: 10px 0px 10px 40px;
+}
+
+li {
+    margin: 5px 0px 5px 0px;
 }
 
 ol li {

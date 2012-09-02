@@ -4,50 +4,50 @@
 
 <h2>3.1. General information</h2>
 <section>
-Updating the application can be separated into 3 parts: binary, database, environment.
-<p/>
+    Updating the application can be separated into 3 parts: binary, database, environment.
+    <p/>
 
-<ul>
+    <ul>
 
-<li>Binary includes the <code>key2gym.jar</code> file and the <code>lib</code> folder. These
-files can be simply replaced by the files from the newer distribution.</li>
-<p/>
+        <li>Binary includes the <code>key2gym.jar</code> file and the <code>lib</code> folder. These
+            files can be simply replaced by the files from the newer distribution.</li>
+        <li>Database includes the schema and data used by the application. This step is
+            done automatically upon the first launch of the updated application. You can check
+            logs to see the result of an attempt to update the database's schema and data.</li>
+        <li>Environment includes all the configuration files, that are located in the <code>etc</code>
+            folder. There are 2 options for performing this step: replacing configuration files
+            with the files from the newer distribution and altering them to match the needs, or
+            comparing the newer files with the older files to ensure that the your configuration files
+            match the syntax and the format of the newer configuration files.</li>
+    </ul>
 
-<li>Database includes the schema and data used by the application. This step is
-done automatically upon the first launch of the updated application. You can check
-logs to see the result of an attempt to update the database's schema and data.</li>
-<p/>
-
-<li>Environment includes all the configuration files, that are located in the <code>etc</code>
-folder. There are 2 options for performing this step: replacing configuration files
-with the files from the newer distribution and altering them to match the needs, or
-comparing the newer files with the older files to ensure that the your configuration files
-match the syntax and the format of the newer configuration files.</li>
-<p/>
-
-</ul>
-
-You also should check out the rest of this page to see version-specific steps
-of updating the application.
+    You also should check out the rest of this page to see version-specific steps
+    of updating the application.
 </section>
 
 <h2>3.2. 2.2.0 - 2.3.0</h2>
 <section>
-Follow general steps but pay attention to the following changes:
-<ul>
-<li><code>etc/log.properties</code> is renamed to <code>etc/logging.properties</code>.</li>
-<li>The support of MySQL database is <b>dropped</b>. It's been replaced with PostgreSQL.
-Check <a href="./configuration.html">Configuration</a> page for instructions on how
-to setup the PostgreSQL server. The following command can be used to generate
-compatible dump: 
-<p/>
+    Follow general steps but pay attention to the following changes:
+    <ul>
+        <li><code>etc/log.properties</code> is renamed to <code>etc/logging.properties</code>.</li>
+        <li>The support of MySQL database is <b>dropped</b>. It's been replaced with PostgreSQL.
+            Check <a href="./configuration.html">Configuration</a> page for instructions on how
+            to setup the PostgreSQL server. In order to migrate you need to perform the following steps:
+            <p/>
 
-<pre><code>mysqldump --compatible=postgresql,ansi --no-create-info --skip-quote-names --default-character-set=utf8 --skip-add-locks --complete-insert database</code></pre>
-<p/>
+            <ul>
+                <li>Excecute the following commands on the database:
+                    <pre><code>UPDATE order_line_orl SET `iddsc_orl` = NULL WHERE `iddsc_orl` = 0<br/>
+DELETE FROM `session_ssn`</code></pre></li>
+                <li>Generate a compatible dump: 
+                    <pre><code>mysqldump --skip-opt --no-create-info --compatible=postgresql,ansi --skip-quote-names --default-character-set=utf8 --complete-insert database --tables client_cln ad_source_ads client_profile_cpf administrator_adm client_freeze_cfz key_key attendance_atd item_itm time_split_tsp item_subscription_its discount_dsc order_ord order_line_orl property_pty session_ssn</code></pre>
+                </li>
+                <li>Create a new database in PostgreSQL and migrate to version 1.</li>
+                <li>Import the generated dump: <code>psql -f mysql_dump.sql</code></li>
+                <li>Migrate to version 2.</li>
+            </ul>
 
-You can than execute the result SQL file on the PostgreSQL server.
-<p/>
-
-Note that <code>MySQLEclipseLink</code> is now an unsupported connection type. Use <code>PostgreSQLEclipseLink</code> instead.
-</ul>
+            Note that <code>MySQLEclipseLink</code> is now an unsupported connection type. Use <code>PostgreSQLEclipseLink</code> instead.
+        </li>
+    </ul>
 </section>
