@@ -22,7 +22,7 @@ import org.key2gym.business.dto.ClientProfileDTO.Sex;
 import org.key2gym.persistence.AdSource;
 import org.key2gym.presentation.util.FormBindingListener;
 import org.key2gym.presentation.util.DateMidnightToStringConverter;
-import org.key2gym.presentation.util.FitnessExperienceListCellRenderer;
+import org.key2gym.presentation.renderers.FitnessExperienceListCellRenderer;
 import org.key2gym.presentation.util.SexListCellRenderer;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.*;
 import org.jdesktop.beansbinding.*;
+import org.key2gym.presentation.renderers.AdSourceCellRenderer;
 
 /**
  *
@@ -80,19 +81,13 @@ public class ClientProfileFormPanel extends JPanel {
          * Ad sources.
          */
         adSourceComboBox = new JComboBox();
-        adSourceComboBox.setRenderer(new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof AdSource) {
-                    AdSource adSource = (AdSource) value;
-                    setText(adSource.getTitle());
-                }
-                return this;
-            }
-        });
+        adSourceComboBox.setRenderer(new AdSourceCellRenderer());
+        
+        /*
+         * Adds "No ad source" option
+         */
+        adSources.add(null);  
+        
         adSourceComboBox.setModel(new DefaultComboBoxModel(adSources.toArray()));
         adSourceComboBox.setSelectedIndex(0);
 

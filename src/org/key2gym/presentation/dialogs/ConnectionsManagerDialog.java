@@ -24,7 +24,7 @@ import java.util.List;
 import javax.swing.*;
 import org.key2gym.persistence.connections.configurations.ConnectionConfiguration;
 import org.key2gym.persistence.connections.ConnectionConfigurationsManager;
-import org.key2gym.presentation.util.ConnectionsListCellRenderer;
+import org.key2gym.presentation.renderers.ConnectionsListCellRenderer;
 import org.key2gym.presentation.util.MutableListModel;
 
 /**

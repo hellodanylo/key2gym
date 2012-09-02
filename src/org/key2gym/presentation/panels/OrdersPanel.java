@@ -23,7 +23,7 @@ import org.key2gym.business.api.SecurityException;
 import org.key2gym.business.dto.OrderDTO;
 import org.key2gym.presentation.actions.BasicAction;
 import org.key2gym.presentation.actions.EditOrderAction;
-import org.key2gym.presentation.util.OrdersTableCellRenderer;
+import org.key2gym.presentation.renderers.OrdersTableCellRenderer;
 import org.key2gym.presentation.util.OrdersTableModel;
 import org.key2gym.presentation.util.OrdersTableModel.Column;
 import com.jgoodies.forms.factories.CC;

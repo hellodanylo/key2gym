@@ -13,21 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.util;
-
-import org.key2gym.business.dto.KeyDTO;
-import java.awt.Component;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+package org.key2gym.business.dto;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public class KeyListCellRenderer extends DefaultListCellRenderer {
+public class AdSourceDTO {
 
-    @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        return super.getListCellRendererComponent(list, value instanceof KeyDTO ? ((KeyDTO)value).getTitle() : value, index, isSelected, cellHasFocus);
+    public Integer getId() {
+        return id;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    private Integer id;
+    private String title;
 }

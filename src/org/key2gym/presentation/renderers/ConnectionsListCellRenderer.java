@@ -13,33 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.util;
+package org.key2gym.presentation.renderers;
 
-import org.key2gym.business.dto.ClientProfileDTO;
 import java.awt.Component;
-import java.util.ResourceBundle;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import org.key2gym.persistence.connections.configurations.ConnectionConfiguration;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public class FitnessExperienceListCellRenderer extends DefaultListCellRenderer {
-    private ResourceBundle strings = ResourceBundle.getBundle("org/key2gym/presentation/resources/Strings");
+public class ConnectionsListCellRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(
             JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if (value instanceof ClientProfileDTO.FitnessExperience) {
-            ClientProfileDTO.FitnessExperience fitnessExperience = (ClientProfileDTO.FitnessExperience) value;
-            if (fitnessExperience.equals(ClientProfileDTO.FitnessExperience.NO)) {
-                value = strings.getString("Text.No");
-            } else if (fitnessExperience.equals(ClientProfileDTO.FitnessExperience.UNKNOWN)) {
-                value = strings.getString("Text.Unknown");
-            } else {
-                value = strings.getString("Text.Yes");
-            }
+        if (ConnectionConfiguration.class.isAssignableFrom(value.getClass())) {
+            value = ((ConnectionConfiguration)value).getTitle();
         }
         return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     }

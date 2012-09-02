@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.key2gym.presentation.util;
+package org.key2gym.presentation.renderers;
 
 import org.key2gym.business.dto.OrderDTO;
 import java.awt.Color;
@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import org.key2gym.presentation.util.OrdersTableModel;
 
 /**
  *

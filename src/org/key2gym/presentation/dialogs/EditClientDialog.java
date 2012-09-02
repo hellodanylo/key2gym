@@ -481,7 +481,7 @@ public class EditClientDialog extends AbstractDialog {
                         new Object[]{
                             orderLine.getItemTitle(),
                             orderLine.getQuantity(),
-                            orderLine.getDiscountTitle() == null ? getString("Text.Discount.None") : orderLine.getDiscountTitle()
+                            orderLine.getDiscountTitle() == null ? getString("Text.None") : orderLine.getDiscountTitle()
                         });
                 itemNode = new DefaultMutableTreeNode(nodeText);
                 dateNode.add(itemNode);

@@ -23,7 +23,7 @@ import org.key2gym.business.api.SecurityException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.dto.AttendanceDTO;
 import org.key2gym.business.dto.KeyDTO;
-import org.key2gym.presentation.util.KeyListCellRenderer;
+import org.key2gym.presentation.renderers.KeyListCellRenderer;
 import org.key2gym.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;

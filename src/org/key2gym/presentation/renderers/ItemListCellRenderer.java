@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.util;
+package org.key2gym.presentation.renderers;
 
 import org.key2gym.business.dto.ItemDTO;
 import java.awt.Component;

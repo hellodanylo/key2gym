@@ -41,7 +41,7 @@ import org.key2gym.business.dto.KeyDTO;
 import org.key2gym.presentation.colors.Palette;
 import org.key2gym.presentation.panels.forms.ClientFormPanel;
 import org.key2gym.presentation.panels.forms.ClientFormPanel.Column;
-import org.key2gym.presentation.util.KeyListCellRenderer;
+import org.key2gym.presentation.renderers.KeyListCellRenderer;
 import org.key2gym.presentation.util.UserExceptionHandler;
 
 /**

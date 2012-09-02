@@ -20,7 +20,7 @@ import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.dto.SubscriptionDTO;
 import org.key2gym.business.dto.TimeSplitDTO;
 import org.key2gym.presentation.util.FormBindingListener;
-import org.key2gym.presentation.util.TimeSplitListCellRenderer;
+import org.key2gym.presentation.renderers.TimeSplitListCellRenderer;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;

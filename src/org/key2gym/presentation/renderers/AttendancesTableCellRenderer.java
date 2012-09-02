@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.util;
+package org.key2gym.presentation.renderers;
 
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import org.key2gym.presentation.util.AttendancesTableModel;
 
 /**
  *

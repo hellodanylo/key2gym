@@ -20,7 +20,7 @@ import org.key2gym.business.SessionsService;
 import org.key2gym.business.StorageService;
 import org.key2gym.business.api.SecurityException;
 import org.key2gym.business.dto.AttendanceDTO;
-import org.key2gym.presentation.util.AttendancesTableCellRenderer;
+import org.key2gym.presentation.renderers.AttendancesTableCellRenderer;
 import org.key2gym.presentation.util.AttendancesTableModel;
 import org.key2gym.presentation.util.AttendancesTableModel.Column;
 import com.jgoodies.forms.factories.CC;

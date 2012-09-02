@@ -15,6 +15,8 @@
  */
 package org.key2gym.presentation.dialogs;
 
+import org.key2gym.presentation.renderers.ItemListCellRenderer;
+import org.key2gym.presentation.renderers.DiscountListCellRenderer;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;

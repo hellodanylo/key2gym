@@ -13,24 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.util;
+package org.key2gym.presentation.renderers;
 
+import org.key2gym.business.dto.TimeSplitDTO;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import org.key2gym.persistence.connections.configurations.ConnectionConfiguration;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public class ConnectionsListCellRenderer extends DefaultListCellRenderer {
+public class TimeSplitListCellRenderer extends DefaultListCellRenderer {
 
     @Override
-    public Component getListCellRendererComponent(
-            JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if (ConnectionConfiguration.class.isAssignableFrom(value.getClass())) {
-            value = ((ConnectionConfiguration)value).getTitle();
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        if(value instanceof TimeSplitDTO) {
+            TimeSplitDTO timeSplit = (TimeSplitDTO)value;
+            value = timeSplit.getTitle();
         }
         return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     }

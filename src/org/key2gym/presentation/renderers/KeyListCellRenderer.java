@@ -13,16 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.util;
+package org.key2gym.presentation.renderers;
 
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.ValidationException;
-import java.util.Map;
+import org.key2gym.business.dto.KeyDTO;
+import java.awt.Component;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public interface CensusActionListener {
-    public void actionPerformed(String actionName, Map<String, Object> properties) throws BusinessException, ValidationException;
+public class KeyListCellRenderer extends DefaultListCellRenderer {
+
+    @Override
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        return super.getListCellRendererComponent(list, value instanceof KeyDTO ? ((KeyDTO)value).getTitle() : value, index, isSelected, cellHasFocus);
+    }
 }

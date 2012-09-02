@@ -16,10 +16,10 @@
 package org.key2gym;
 
 import com.googlecode.flyway.core.Flyway;
+import com.googlecode.flyway.core.metadatatable.MetaDataTableRow;
 import com.googlecode.flyway.core.migration.SchemaVersion;
 import java.awt.EventQueue;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -92,6 +92,8 @@ public class Starter {
 
         logger.info("Starting...");
 
+        ResourceBundle strings = ResourceBundle.getBundle("org/key2gym/presentation/resources/Strings");
+
         /*
          * Parses command line and fills the registry.
          */
@@ -126,7 +128,7 @@ public class Starter {
 
             Flyway flyway = new Flyway();
             flyway.setDataSource(persistenceFactory.getDataSource());
-            
+
             /*
              * Migrates the database, if requested.
              */
@@ -134,26 +136,30 @@ public class Starter {
 
                 flyway.setSqlMigrationPrefix(MIGRATION_PREFIX);
                 flyway.setLocations(MIGRATION_CLASS_PATH);
-                
+
                 /*
                  * If the user wants to migrate to a specific version,
                  * passes this version to Flyway.
                  */
-                if(!properties.getProperty(PROPERTY_MIGRATE).equals(ARGUMENT_MIGRATE_LATEST)) {
+                if (!properties.getProperty(PROPERTY_MIGRATE).equals(ARGUMENT_MIGRATE_LATEST)) {
                     flyway.setTarget(new SchemaVersion(properties.getProperty(PROPERTY_MIGRATE)));
                 }
                 flyway.migrate();
             }
-            
+
             /*
              * Checks whether the database has the correct version.
              */
-            if(flyway.status().getVersion().compareTo(PersistenceSchemaVersion.CURRENT) < 0) {
-                ResourceBundle strings = ResourceBundle.getBundle("org/key2gym/presentation/resources/Strings");
-                JOptionPane.showMessageDialog(null, MessageFormat.format(strings.getString("Message.MigrationRequired.withDatabaseAndApplicationVersions"), flyway.status().getVersion(), PersistenceSchemaVersion.CURRENT));
+            MetaDataTableRow status = flyway.status();
+
+            if (status == null) {
+                JOptionPane.showMessageDialog(null, strings.getString("Message.MigrationRequired.Initial"));
+                return;
+            } else if (status.getVersion().compareTo(PersistenceSchemaVersion.CURRENT) < 0) {
+                JOptionPane.showMessageDialog(null, MessageFormat.format(strings.getString("Message.MigrationRequired.withDatabaseAndApplicationVersions"), status.getVersion(), PersistenceSchemaVersion.CURRENT));
                 return;
             }
-            
+
 
             /*
              * Initializes the storage service with the persistence properties generated

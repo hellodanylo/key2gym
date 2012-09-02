@@ -13,25 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.presentation.util;
+package org.key2gym.presentation.renderers;
 
-import org.key2gym.business.dto.TimeSplitDTO;
 import java.awt.Component;
+import java.util.ResourceBundle;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import org.key2gym.business.dto.AdSourceDTO;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public class TimeSplitListCellRenderer extends DefaultListCellRenderer {
+public class AdSourceCellRenderer extends DefaultListCellRenderer {
 
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if(value instanceof TimeSplitDTO) {
-            TimeSplitDTO timeSplit = (TimeSplitDTO)value;
-            value = timeSplit.getTitle();
+    public Component getListCellRendererComponent(
+            JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        
+        if(value == null) {
+            setText(ResourceBundle.getBundle("org/key2gym/presentation/resources/Strings").getString("Text.None"));
+        } else if (value instanceof AdSourceDTO) {
+            setText(((AdSourceDTO)value).getTitle());
         }
-        return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        
+        return this;
     }
 }
