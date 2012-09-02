@@ -1,0 +1,44 @@
+<h2>3. Launching</h2>
+
+<section>This page explains how to launch Key2Gym after you have deployed it. 
+    See <a href="./deployment.html">Deployment</a> page for details on deployment.</section>
+
+<h2>3.1. Running the JAR file</h2>
+<section>This application is written in Java, and therefore requires a JRE
+    to be installed in order to run it. Once you have setup a JRE, you can run the application with
+    the following command:
+    
+    <pre><code>java -jar key2gym.jar</code></pre>
+    
+    See the following section for details on available command-line arguments.
+</section>
+
+<h2>3.2. Command-line arguments</h2>
+
+<section>The following is the table of available command-line arguments:</section>
+
+<table>
+    <thead>
+        <tr>
+            <td>Argument</td>
+            <td>Description</td>
+            <td>Example</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>connection</td>
+            <td class="description">Specifies which connection to use. The value of this option
+                is the connection's code name. This option will prevent
+                connections chooser dialog from appearing.</td>
+            <td>java -jar key2gym.jar --connect=mycodename</td>
+        </tr>
+        <tr>
+            <td>migrate</td>
+            <td class="description">Causes the database's schema to migrate to the specified version.
+                If <code>latest</code> is specified, the application will migrate
+                the schema to the latest version available.
+            <td>java -jar key2gym.jar --migrate=latest</td>
+        </tr>
+    </tbody>
+</table>

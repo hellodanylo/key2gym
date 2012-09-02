@@ -78,7 +78,11 @@ td.description {
 }
 
 pre {
-    margin: 5px 0px 5px 0px;
+    margin: 10px 0px 10px 0px;
+}
+
+pre code {
+    line-height: 1.6em;
 }
 
 code {

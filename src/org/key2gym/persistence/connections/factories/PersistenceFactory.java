@@ -15,28 +15,59 @@
  */
 package org.key2gym.persistence.connections.factories;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mchange.v2.c3p0.DataSources;
+import java.sql.SQLException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import org.apache.log4j.Logger;
 import org.key2gym.persistence.connections.configurations.ConnectionConfiguration;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public abstract class PersistenceFactory<T extends ConnectionConfiguration> {
+public abstract class PersistenceFactory<T extends ConnectionConfiguration> implements AutoCloseable {
     
     public PersistenceFactory(T connectionConfig) {
         this.connectionConfig = connectionConfig;
+        this.factory = null;
+        this.dataSource = null;
     }
-    
-    public abstract EntityManagerFactory getEntityManagerFactory();
-    public abstract DataSource getDataSource();
     
     public T getConnectionConfiguration() {
         return connectionConfig;
     }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    protected void setDataSource(ComboPooledDataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public EntityManagerFactory getEntityManagerFactory() {
+        return factory;
+    }
+
+    protected void setEntityManagerFactory(EntityManagerFactory factory) {
+        this.factory = factory;
+    }
+
+    @Override
+    public void close() {
+        try {
+            DataSources.destroy(dataSource);
+        } catch (SQLException ex) {
+            Logger.getLogger(this.getClass()).error("Failed to destroy the data source:", ex);
+            return;
+        }
+    }
     
     public static String PERSITENCE_UNIT = "PU";
-    
+            
+    private ComboPooledDataSource dataSource;
+    private EntityManagerFactory factory;
     private T connectionConfig;
 }

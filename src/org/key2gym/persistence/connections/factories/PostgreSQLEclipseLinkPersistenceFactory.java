@@ -6,11 +6,14 @@ package org.key2gym.persistence.connections.factories;
 
 import com.googlecode.flyway.core.Flyway;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mchange.v2.c3p0.DataSources;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
+import org.apache.log4j.Logger;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.key2gym.persistence.connections.configurations.PostgreSQLEclipseLinkConnectionConfiguration;
 
@@ -25,7 +28,7 @@ public class PostgreSQLEclipseLinkPersistenceFactory extends PersistenceFactory<
 
         Properties properties = new Properties();
 
-        dataSource = new ComboPooledDataSource(config.getCodeName());
+        ComboPooledDataSource dataSource = new ComboPooledDataSource(config.getCodeName());
         dataSource.setJdbcUrl(MessageFormat.format("jdbc:postgresql://{0}:{1}/{2}",
                 config.getHost(),
                 config.getPort(),
@@ -38,13 +41,8 @@ public class PostgreSQLEclipseLinkPersistenceFactory extends PersistenceFactory<
         dataSource.setMaxIdleTime(0);
         dataSource.setMinPoolSize(1);
         dataSource.setCheckoutTimeout(5000);
-
-        Flyway flyway = new Flyway();
-
-        flyway.setDataSource(dataSource);
-        flyway.setSqlMigrationPrefix("V");
-        flyway.setLocations("db/schemas", "org/key2gym/persistence/migration");
-        flyway.migrate();
+        
+        setDataSource(dataSource);
 
         /*
          * Specifies EclipseLink as the persistence provider.
@@ -61,19 +59,9 @@ public class PostgreSQLEclipseLinkPersistenceFactory extends PersistenceFactory<
          */
         properties.put(PersistenceUnitProperties.LOGGING_LOGGER, "org.eclipse.persistence.logging.CommonsLoggingSessionLog");
         properties.put(PersistenceUnitProperties.LOGGING_LEVEL, "INFO");
-        
-        factory = Persistence.createEntityManagerFactory(PERSITENCE_UNIT, properties);
+
+        setEntityManagerFactory(Persistence.createEntityManagerFactory(PERSITENCE_UNIT, properties));
     }
 
-    @Override
-    public DataSource getDataSource() {
-        return dataSource;
-    }
 
-    @Override
-    public EntityManagerFactory getEntityManagerFactory() {
-        return factory;
-    }
-    private ComboPooledDataSource dataSource;
-    private EntityManagerFactory factory;
 }

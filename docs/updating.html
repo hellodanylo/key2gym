@@ -1,8 +1,8 @@
-<h1>3. Updating</h1>
+<h1>4. Updating</h1>
 
 <section>This page describes how to update the application.</section>
 
-<h2>3.1. General information</h2>
+<h2>4.1. General information</h2>
 <section>
     Updating the application can be separated into 3 parts: binary, database, environment.
     <p/>
@@ -11,9 +11,8 @@
 
         <li>Binary includes the <code>key2gym.jar</code> file and the <code>lib</code> folder. These
             files can be simply replaced by the files from the newer distribution.</li>
-        <li>Database includes the schema and data used by the application. This step is
-            done automatically upon the first launch of the updated application. You can check
-            logs to see the result of an attempt to update the database's schema and data.</li>
+        <li>Database includes the schema and data used by the application. You need launch the application
+            with a <code>migrate</code> argument to perform a migration.</li>
         <li>Environment includes all the configuration files, that are located in the <code>etc</code>
             folder. There are 2 options for performing this step: replacing configuration files
             with the files from the newer distribution and altering them to match the needs, or
@@ -25,7 +24,7 @@
     of updating the application.
 </section>
 
-<h2>3.2. 2.2.0 - 2.3.0</h2>
+<h2>4.2. 2.2.0 - 2.3.0</h2>
 <section>
     Follow general steps but pay attention to the following changes:
     <ul>

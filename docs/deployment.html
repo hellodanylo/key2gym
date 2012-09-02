@@ -5,52 +5,43 @@
 <h2>1.1. Java</h2>
 
 <section>
-This program is written in Java. Therefore, it requires Java Runtime Environment
-to be available at the target computer. Go to <a href="http://java.com"> Java website</a> for instructions on
-how to install Java Runtime Environment on your target OS.
+    This program is written in Java. Therefore, it requires Java Runtime Environment
+    to be available at the target computer. Go to <a href="http://java.com"> Java website</a> for instructions on
+    how to install Java Runtime Environment on your target OS. All examples of launching the application
+    in this documentation assume you have the <code>java</code> program on the path.
 </section>
 
 <h2>1.2. Database</h2>
 
 <section>
-Key2Gym uses external Relational Database Management System (RDBMS) to store its business data.
-As for now the only supported RDBMS is PostgreSQL. The program has been intensively
-tested with PostgreSQL 9.1, however the later version should work as well. Go to <a href="http://www.postgresql.org/">PostgreSQL website</a> to obtain a distribution of PostgreSQL server. If you are running
-Linux/Unix/BSD, we suggest you to install the PostgreSQL server from the official repository. 
-See the <a href="http://www.postgresql.org/docs/9.1/static/index.html">PostgreSQL documentation</a>, if you need help with installing or configuring the server.
+    Key2Gym uses external Relational Database Management System (RDBMS) to store its business data.
+    As for now the only supported RDBMS is PostgreSQL. The program has been intensively
+    tested with PostgreSQL 9.1, however the later version should work as well. Go to <a href="http://www.postgresql.org/">PostgreSQL website</a> to obtain a distribution of PostgreSQL server. If you are running
+    Linux/Unix/BSD, we suggest you to install the PostgreSQL server from the official repository. 
+    See the <a href="http://www.postgresql.org/docs/9.1/static/index.html">PostgreSQL documentation</a>, if you need help with installing or configuring the server.
 
-<p/>
-The following is a typical setup of a user and a database:
-<p/>
+    <p/>
+    The following is a typical setup of a user and a database:
 
-<pre><code>postgres=# CREATE USER myuser PASSWORD 'mypassword';<br/>
+    <pre><code>postgres=# CREATE USER myuser PASSWORD 'mypassword';<br/>
 postgres=# CREATE DATABASE mydatabase OWNER myuser;<br/>
 postgres=# \c mydatabase<br/>
 postgres=# ALTER SCHEMA public OWNER TO myuser;</code></pre>
-<p/>
 
-Note that you also need to modify <code>pg_hba.conf</code> to accept TCP/IP connections from
-the hosts, where the application is going to be used. For example, if the application
-is going to be run from the same host as the server, you need to have:
-<p/>
+    Note that you also need to modify <code>pg_hba.conf</code> to accept TCP/IP connections from
+    the hosts, where the application is going to be used. For example, if the application
+    is going to be run from the same host as the server, you need to have:
 
-<pre><code>host     mydatabase     myuser     127.0.0.1/32    password</code></pre>
-<p/>
-
-The application will automatically create the schema on the database you specify
-in the connection properties file (see <a href="./configuration.html">Configuration</a> page). 
-When you update the application, it will also update the schema on the first launch 
-without any data being lost, as well.
-<p/>
-
+    <pre><code>host     mydatabase     myuser     127.0.0.1/32    password</code></pre>
 </section>
 
 <h2>1.3. Key2Gym</h2>
 
 <section>
-<ol>
-<li>Unzip the distribution archive to the target folder.</li>
-<li>Configure the application as explained on the <a href="./configuration.html">Configuration</a> page.</li>
-<li>You can now run the program with <code>java -jar key2gym.jar</code>.</li>
-</ol>
+    <ol>
+        <li>Unzip the distribution archive to the target folder.</li>
+        <li>Configure the application as explained on the <a href="./configuration.html">Configuration</a> page.</li>
+        <li>Migrate the database schema to the latest version. See <a href="launching.html">Launching</a> page for details.
+        <li>You can now run the program as explained on the <a href="launching.html">Launching</a> page.</li>
+    </ol>
 </section>

@@ -16,27 +16,35 @@
 package org.key2gym;
 
 import com.googlecode.flyway.core.Flyway;
-import com.mchange.v2.c3p0.DataSources;
+import com.googlecode.flyway.core.migration.SchemaVersion;
 import java.awt.EventQueue;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
+import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.key2gym.business.StorageService;
-import org.key2gym.presentation.MainFrame;
-import org.key2gym.persistence.connections.configurations.ConnectionConfiguration;
+import org.key2gym.persistence.PersistenceSchemaVersion;
 import org.key2gym.persistence.connections.ConnectionConfigurationsManager;
+import org.key2gym.persistence.connections.configurations.ConnectionConfiguration;
+import org.key2gym.persistence.connections.factories.PersistenceFactory;
+import org.key2gym.presentation.MainFrame;
 import org.key2gym.presentation.dialogs.AbstractDialog;
 import org.key2gym.presentation.dialogs.ConnectionsManagerDialog;
-import org.key2gym.persistence.connections.factories.PersistenceFactory;
 
 /**
  * This is the main class of the application.
@@ -44,8 +52,19 @@ import org.key2gym.persistence.connections.factories.PersistenceFactory;
  * It's responsible for the following tasks:
  * <p/>
  *
- * <ul> <li> Initializing Logging system </li> <li> Reading and applying
- * application properties. <li> Launching MainFrame </li> </ul>
+ * <ul> 
+ * 
+ * <li> Initializing Logging system.</li> 
+ * 
+ * <li> Processing command line arguments. </li>
+ * 
+ * <li> Reading and applying application properties.</li>
+ * 
+ * <li> Choosing connection to use. </li>
+ * 
+ * <li> Launching MainFrame.</li> 
+ * 
+ * </ul>
  *
  * @author Danylo Vashchilenko
  */
@@ -62,44 +81,144 @@ public class Starter {
      */
     public static void main(String[] args) {
         /*
-         * Configures the logger using 'etc/log.properties' which should be on
-         * the class path.
+         * Configures the logger using 'etc/log.properties'.
          */
-        try {
-            PropertyConfigurator.configure(new FileInputStream("etc/logging.properties"));
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Starter.class.getName()).log(Level.SEVERE, null, ex);
+        try (InputStream input = new FileInputStream(PATH_LOGGING_PROPERTIES)) {
+            PropertyConfigurator.configure(input);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(Starter.class.getName()).log(Level.SEVERE, "Failed to load logging properties:", ex);
             return;
         }
 
         logger.info("Starting...");
 
         /*
-         * The array contains the names of all expected arguments.
+         * Parses command line and fills the registry.
          */
-        String[] expectedArgumentsNames = new String[]{"connection"};
+        parseCommandLine(args);
 
         /*
-         * Parses the arguments looking for expected arguments. The arguments
-         * are in the '--ARGUMENTNAME=ARGUMENTVALUE' format.
+         * Fills the registry with properties from the application properties file.
          */
-        for (String arg : args) {
-            for (String expectedArgumentName : expectedArgumentsNames) {
-                String preffix = "--" + expectedArgumentName + "=";
-                if (arg.startsWith(preffix)) {
-                    properties.put(expectedArgumentName, arg.substring(preffix.length()));
-                }
-            }
-        }
-
-        try (FileInputStream input = new FileInputStream("etc/application.properties")) {
+        try (FileInputStream input = new FileInputStream(PATH_APPLICATION_PROPERTIES)) {
             properties.load(input);
         } catch (IOException ex) {
-            logger.fatal(ex);
+            logger.fatal("Failed to load the application properties file:", ex);
+            return;
         }
 
-        Locale.setDefault(new Locale((String) properties.get("locale.language"), (String) properties.get("locale.country")));
+        /*
+         * Changes the application's locale.
+         */
+        initLocale();
 
+        /*
+         * Changes the application's L&F.
+         */
+        initUI();
+
+        /*
+         * Finds the appropriate persistence factory. The block is enclosed
+         * in try-with-resources in order to ensure that the connection is closed.
+         */
+        try (PersistenceFactory persistenceFactory = findPersistenceFactory()) {
+
+
+            Flyway flyway = new Flyway();
+            flyway.setDataSource(persistenceFactory.getDataSource());
+            
+            /*
+             * Migrates the database, if requested.
+             */
+            if (properties.containsKey(PROPERTY_MIGRATE)) {
+
+                flyway.setSqlMigrationPrefix(MIGRATION_PREFIX);
+                flyway.setLocations(MIGRATION_CLASS_PATH);
+                
+                /*
+                 * If the user wants to migrate to a specific version,
+                 * passes this version to Flyway.
+                 */
+                if(!properties.getProperty(PROPERTY_MIGRATE).equals(ARGUMENT_MIGRATE_LATEST)) {
+                    flyway.setTarget(new SchemaVersion(properties.getProperty(PROPERTY_MIGRATE)));
+                }
+                flyway.migrate();
+            }
+            
+            /*
+             * Checks whether the database has the correct version.
+             */
+            if(flyway.status().getVersion().compareTo(PersistenceSchemaVersion.CURRENT) < 0) {
+                ResourceBundle strings = ResourceBundle.getBundle("org/key2gym/presentation/resources/Strings");
+                JOptionPane.showMessageDialog(null, MessageFormat.format(strings.getString("Message.MigrationRequired.withDatabaseAndApplicationVersions"), flyway.status().getVersion(), PersistenceSchemaVersion.CURRENT));
+                return;
+            }
+            
+
+            /*
+             * Initializes the storage service with the persistence properties generated
+             * from the selected connection.
+             */
+            logger.info("Initializing the storage service with the connection: " + persistenceFactory.getConnectionConfiguration().getCodeName());
+            try {
+                StorageService.initialize(persistenceFactory.getEntityManagerFactory());
+            } catch (Exception ex) {
+                logger.fatal("Failed to initializes the storage service:", ex);
+                return;
+            }
+
+            logger.info("Started!");
+
+            launchAndWaitMainFrame();
+
+            logger.info("Shutting down!");
+
+            /*
+             * Releases all resources. 
+             */
+            StorageService.getInstance().destroy();
+        }
+    }
+
+    /**
+     * Parses the command-line arguments and puts the values into the application
+     * registry.
+     * <p/>
+     * This method will terminate the VM, if the command line contains malformed arguments.
+     * 
+     * @param args the command-line arguments. 
+     */
+    private static void parseCommandLine(String[] args) {
+
+        Options options = new Options();
+        options.addOption(ARGUMENT_CONNECTION, true, "use the connection with the code name specified.");
+        options.addOption(ARGUMENT_MIGRATE, true, "migrate to the schema version specified.");
+
+        CommandLine cmd = null;
+        try {
+            cmd = new GnuParser().parse(options, args);
+        } catch (ParseException ex) {
+            logger.fatal("Failed to parse command line:", ex);
+            System.exit(1);
+        }
+
+        if (cmd.hasOption(ARGUMENT_CONNECTION)) {
+            properties.put(PROPERTY_CONNECTION, cmd.getOptionValue(ARGUMENT_CONNECTION));
+        }
+
+        if (cmd.hasOption(ARGUMENT_MIGRATE)) {
+            properties.put(PROPERTY_MIGRATE, cmd.getOptionValue(ARGUMENT_MIGRATE));
+        }
+    }
+
+    private static void initLocale() {
+        Locale.setDefault(new Locale(properties.getProperty(PROPERTY_LOCALE_LANGUAGE), properties.getProperty(PROPERTY_LOCALE_COUNTRY)));
+    }
+
+    /**
+     * Changes the application's L&F according to the registry.
+     */
+    private static void initUI() {
         String ui = (String) properties.get("ui");
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -109,12 +228,28 @@ public class Starter {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            logger.fatal("Failed to change the L&F!");
+            logger.error("Failed to change the L&F:", ex);
         }
+    }
+
+    /**
+     * Finds the appropriate persistence factory.
+     * 
+     * The method first checks the registry to see whether
+     * the connection has already been chosen. If it's not there, starts
+     * the connections chooser dialog. Then instantiates a persistence factory
+     * with the chosen connection.
+     * <p/>
+     * 
+     * This method will terminate the VM, if a fatal exception is encountered.
+     * 
+     * @return the appropriate persistence factory
+     */
+    private static PersistenceFactory findPersistenceFactory() {
 
         ConnectionConfigurationsManager connectionsManager = new ConnectionConfigurationsManager();
 
-        if (!properties.containsKey("connection")) {
+        if (!properties.containsKey(PROPERTY_CONNECTION)) {
             ConnectionsManagerDialog dialog = new ConnectionsManagerDialog(connectionsManager);
 
             dialog.setVisible(true);
@@ -123,7 +258,7 @@ public class Starter {
              * Quits if the user clicked cancel.
              */
             if (dialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
-                return;
+                System.exit(1);
             }
 
             /*
@@ -132,15 +267,16 @@ public class Starter {
              */
             if (dialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
                 logger.fatal("The connections manager encountered an exception.", dialog.getException());
-                return;
+                System.exit(1);
             }
         } else {
             /*
              * Attemps to find a connection with a code name passed in the command line.
              */
             List<ConnectionConfiguration> connections = connectionsManager.getConnections();
+            String connectionCodeName = properties.getProperty(PROPERTY_CONNECTION);
             for (ConnectionConfiguration connection : connections) {
-                if (connection.getCodeName().equals(properties.getProperty("connection"))) {
+                if (connection.getCodeName().equals(connectionCodeName)) {
                     connectionsManager.selectConnection(connection);
                 }
             }
@@ -149,8 +285,8 @@ public class Starter {
              * Reports and terminates, if the connection was not found.
              */
             if (connectionsManager.getSelectedConnection() == null) {
-                logger.fatal("Missing connection specified in the arguments: " + properties.getProperty("connection"));
-                return;
+                logger.fatal("Missing connection specified in the arguments: " + properties.getProperty(PROPERTY_CONNECTION));
+                System.exit(1);
             }
         }
 
@@ -160,18 +296,18 @@ public class Starter {
          * Attempts to load the properties factory class. 
          */
         String propertiesFactoryClassBinaryName = PersistenceFactory.class.getPackage().getName() + "." + connection.getType() + "PersistenceFactory";
-        Class<? extends PersistenceFactory> propertiesFactoryClass;
+        Class<? extends PersistenceFactory> propertiesFactoryClass = null;
         try {
             propertiesFactoryClass = (Class<? extends PersistenceFactory>) Starter.class.getClassLoader().loadClass(propertiesFactoryClassBinaryName);
         } catch (ClassNotFoundException ex) {
             logger.fatal("Missing persistence factory for connection type: " + connection.getType(), ex);
-            return;
+            System.exit(1);
         } catch (ClassCastException ex) {
             logger.fatal("Persistence factory for connection type '" + connection.getType() + "' is of the wrong type.", ex);
-            return;
+            System.exit(1);
         }
 
-        PersistenceFactory persistenceFactory;
+        PersistenceFactory persistenceFactory = null;
 
         /*
          * Attempts to instantiate the properties factory.
@@ -180,24 +316,16 @@ public class Starter {
             persistenceFactory = propertiesFactoryClass.getConstructor(connection.getClass()).newInstance(connection);
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | InstantiationException ex) {
             logger.fatal("Failed to instantiate the persistence properties factory for connection type: " + connection.getType(), ex);
-            return;
-        }
-                
-        /*
-         * Initializes the storage service with the persistence properties generated
-         * from the selected connection.
-         */
-
-        logger.info("Initializing the storage service with the connection: " + connection.getCodeName());
-        try {
-            StorageService.initialize(persistenceFactory.getEntityManagerFactory());
-        } catch (Exception ex) {
-            logger.fatal("Failed to initializes the storage service.", ex);
-            return;
+            System.exit(1);
         }
 
-        logger.info("Started!");
+        return persistenceFactory;
+    }
 
+    /**
+     * Launches and waits for the MainFrame to close.
+     */
+    private static void launchAndWaitMainFrame() {
         try {
             EventQueue.invokeAndWait(new Runnable() {
 
@@ -207,7 +335,7 @@ public class Starter {
                 }
             });
         } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(Starter.class.getName()).error("Unexpected Exception!", ex);
+            logger.error("Unexpected exception:", ex);
         }
 
         synchronized (MainFrame.getInstance()) {
@@ -215,22 +343,35 @@ public class Starter {
                 try {
                     MainFrame.getInstance().wait();
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(Starter.class.getName()).error("Unexpected Exception!", ex);
+                    logger.error("Unexpected exception:", ex);
                 }
             }
         }
-
-        Logger.getLogger(Starter.class.getName()).info("Shutting down!");
-        
-        StorageService.getInstance().destroy();
-        
-        try {
-            DataSources.destroy(persistenceFactory.getDataSource());
-        } catch(SQLException ex) {
-            logger.error("Failed to destroy the data source.", ex);
-            return;
-        }
     }
+    /*
+     * Environment files.
+     */
+    private static final String PATH_APPLICATION_PROPERTIES = "etc/application.properties";
+    private static final String PATH_LOGGING_PROPERTIES = "etc/logging.properties";
+    /*
+     * Command-line arguments.
+     */
+    private static final String ARGUMENT_CONNECTION = "connection";
+    private static final String ARGUMENT_MIGRATE = "migrate";
+    private static final String ARGUMENT_MIGRATE_LATEST = "latest";
+
+    /*
+     * Application registry properties.
+     */
+    private static final String PROPERTY_LOCALE_COUNTRY = "locale.country";
+    private static final String PROPERTY_LOCALE_LANGUAGE = "locale.language";
+    private static final String PROPERTY_CONNECTION = "connection";
+    private static final String PROPERTY_MIGRATE = "migrate";
+    /*
+     * Migration
+     */
+    private static final String MIGRATION_CLASS_PATH = "org/key2gym/persistence/migration";
+    private static final String MIGRATION_PREFIX = "V";
 
     public static Properties getProperties() {
         return properties;
