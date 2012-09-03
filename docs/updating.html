@@ -62,7 +62,6 @@
                     select column_name || '_seq', reset_sequence(table_name, column_name, column_name || '_seq') from information_schema.columns where column_default like 'nextval%';</code></pre>
                 </li>
             </ul>
-
             Note that <code>MySQLEclipseLink</code> is now an unsupported connection type. Use <code>PostgreSQLEclipseLink</code> instead.
         </li>
     </ul>

@@ -85,7 +85,7 @@ public class ClientProfileFormPanel extends JPanel {
         /*
          * Adds "No ad source" option
          */
-        adSources.add(null);  
+        adSources.add(0, null);
         
         adSourceComboBox.setModel(new DefaultComboBoxModel(adSources.toArray()));
         adSourceComboBox.setSelectedIndex(0);
@@ -101,7 +101,7 @@ public class ClientProfileFormPanel extends JPanel {
          * Fitness experience
          */
         fitnessExperienceComboBox = new JComboBox();
-        fitnessExperienceComboBox.setModel(new DefaultComboBoxModel(new FitnessExperience[]{FitnessExperience.NO, FitnessExperience.YES, FitnessExperience.UNKNOWN}));
+        fitnessExperienceComboBox.setModel(new DefaultComboBoxModel(new FitnessExperience[]{FitnessExperience.UNKNOWN, FitnessExperience.NO, FitnessExperience.YES}));
         fitnessExperienceComboBox.setRenderer(new FitnessExperienceListCellRenderer());
 
     }

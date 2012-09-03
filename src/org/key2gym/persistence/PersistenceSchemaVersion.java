@@ -25,5 +25,5 @@ import com.googlecode.flyway.core.migration.SchemaVersion;
  * @author Danylo Vashchilenko
  */
 public class PersistenceSchemaVersion {
-    public static SchemaVersion CURRENT = new SchemaVersion("2");
+    public static SchemaVersion CURRENT = new SchemaVersion("3");
 }
