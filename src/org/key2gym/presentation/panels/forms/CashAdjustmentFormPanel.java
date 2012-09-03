@@ -90,11 +90,11 @@ public class CashAdjustmentFormPanel extends FormPanel<CashAdjustmentDTO> {
         
         setLayout(layout);
         
-        label = new JLabel(strings.getString("Label.Date"));
+        label = new JLabel(getString("Label.Date"));
         add(label,                      CC.xy(1, 1));
         add(dateTextField,              CC.xy(3, 1));
 
-        label = new JLabel(strings.getString("Label.Adjustment"));
+        label = new JLabel(getString("Label.Adjustment"));
         add(label,                      CC.xy(1, 3));
         add(totalAdjustmentTextField,   CC.xy(3, 3));
 
@@ -105,7 +105,7 @@ public class CashAdjustmentFormPanel extends FormPanel<CashAdjustmentDTO> {
         adjustmentPanel.add(subtractButton,         CC.xy(3, 1));
         add(adjustmentPanel,            CC.xy(3, 5));
 
-        label = new JLabel(strings.getString("Label.Note"));
+        label = new JLabel(getString("Label.Note"));
         label.setVerticalAlignment(SwingConstants.TOP);
         add(label,                      CC.xy(1, 7));
         add(noteTextAreaScrollPane,     CC.xy(3, 7));
@@ -117,7 +117,7 @@ public class CashAdjustmentFormPanel extends FormPanel<CashAdjustmentDTO> {
         try {
             augend = new BigDecimal(newAdjustmentTextField.getText().trim());
         } catch (NumberFormatException ex) {
-            String message = MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), strings.getString("Text.Adjustmnet"));
+            String message = MessageFormat.format(getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), getString("Text.Adjustmnet"));
             UserExceptionHandler.getInstance().processException(new ValidationException(message));
             return;
         }
@@ -133,7 +133,7 @@ public class CashAdjustmentFormPanel extends FormPanel<CashAdjustmentDTO> {
         try {
             subtrahend = new BigDecimal(newAdjustmentTextField.getText().trim());
         } catch (NumberFormatException ex) {
-            String message = MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), strings.getString("Text.Adjustmnet"));
+            String message = MessageFormat.format(getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), getString("Text.Adjustmnet"));
             UserExceptionHandler.getInstance().processException(new ValidationException(message));
             return;
         }
@@ -237,7 +237,6 @@ public class CashAdjustmentFormPanel extends FormPanel<CashAdjustmentDTO> {
     /*
      * Presentation
      */
-    private ResourceBundle strings;
     private BindingGroup bindingGroup;
     private FormBindingListener formBindingListener;
     private JTextField dateTextField;
