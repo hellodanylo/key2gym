@@ -36,6 +36,8 @@ public class AdSourceCellRenderer extends DefaultListCellRenderer {
             setText(ResourceBundle.getBundle("org/key2gym/presentation/resources/Strings").getString("Text.None"));
         } else if (value instanceof AdSourceDTO) {
             setText(((AdSourceDTO)value).getTitle());
+        } else {
+             throw new RuntimeException("The value type is not supported.");
         }
         
         return this;

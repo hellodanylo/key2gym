@@ -15,23 +15,22 @@
  */
 package org.key2gym.presentation.panels.forms;
 
-import org.key2gym.business.AdSourcesService;
-import org.key2gym.business.dto.ClientProfileDTO;
-import org.key2gym.business.dto.ClientProfileDTO.FitnessExperience;
-import org.key2gym.business.dto.ClientProfileDTO.Sex;
-import org.key2gym.persistence.AdSource;
-import org.key2gym.presentation.util.FormBindingListener;
-import org.key2gym.presentation.util.DateMidnightToStringConverter;
-import org.key2gym.presentation.renderers.FitnessExperienceListCellRenderer;
-import org.key2gym.presentation.util.SexListCellRenderer;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
-import java.awt.Component;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.*;
 import org.jdesktop.beansbinding.*;
+import org.key2gym.business.AdSourcesService;
+import org.key2gym.business.dto.AdSourceDTO;
+import org.key2gym.business.dto.ClientProfileDTO;
+import org.key2gym.business.dto.ClientProfileDTO.FitnessExperience;
+import org.key2gym.business.dto.ClientProfileDTO.Sex;
 import org.key2gym.presentation.renderers.AdSourceCellRenderer;
+import org.key2gym.presentation.renderers.FitnessExperienceListCellRenderer;
+import org.key2gym.presentation.util.DateMidnightToStringConverter;
+import org.key2gym.presentation.util.FormBindingListener;
+import org.key2gym.presentation.util.SexListCellRenderer;
 
 /**
  *
@@ -232,11 +231,11 @@ public class ClientProfileFormPanel extends JPanel {
             binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("adSourceId"), adSourceComboBox, BeanProperty.create("selectedItem"), "adSource"); //NOI18N
             binding.setSourceNullValue(0);
-            binding.setConverter(new Converter<Integer, AdSource>() {
+            binding.setConverter(new Converter<Integer, AdSourceDTO>() {
 
                 @Override
-                public AdSource convertForward(Integer value) {
-                    for (AdSource adSource : adSources) {
+                public AdSourceDTO convertForward(Integer value) {
+                    for (AdSourceDTO adSource : adSources) {
                         if (adSource.getId().equals(value)) {
                             return adSource;
                         }
@@ -246,7 +245,7 @@ public class ClientProfileFormPanel extends JPanel {
                 }
 
                 @Override
-                public Integer convertReverse(AdSource value) {
+                public Integer convertReverse(AdSourceDTO value) {
                     return value.getId();
                 }
             });
@@ -278,7 +277,7 @@ public class ClientProfileFormPanel extends JPanel {
     /*
      * Presentation
      */
-    private List<AdSource> adSources;
+    private List<AdSourceDTO> adSources;
     private BindingGroup bindingGroup;
     private FormBindingListener formBindingListener;
     private ResourceBundle bundle = ResourceBundle.getBundle("org/key2gym/presentation/resources/Strings");

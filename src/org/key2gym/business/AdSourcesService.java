@@ -19,6 +19,7 @@ import org.key2gym.business.api.ValidationException;
 import org.key2gym.persistence.AdSource;
 import java.util.LinkedList;
 import java.util.List;
+import org.key2gym.business.dto.AdSourceDTO;
 
 /**
  *
@@ -52,16 +53,26 @@ public class AdSourcesService extends BusinessService {
      * @throws IllegalStateException if the session is not active
      * @return the list of all ad sources.
      */
-    public List<AdSource> getAdSources() {
+    public List<AdSourceDTO> getAdSources() {
         assertOpenSessionExists();
 
         List<AdSource> adSources = entityManager.createNamedQuery("AdSource.findAll").getResultList(); //NOI18N
-
+        List<AdSourceDTO> adSourceDTOs = new LinkedList<>();
+        
         for (AdSource adSource : adSources) {
-            entityManager.detach(adSource);
+            adSourceDTOs.add(wrapAdSource(adSource));
         }
 
-        return adSources;
+        return adSourceDTOs;
+    }
+    
+    AdSourceDTO wrapAdSource(AdSource adSource) {
+        AdSourceDTO dto = new AdSourceDTO();
+        
+        dto.setId(adSource.getId());
+        dto.setTitle(adSource.getTitle());
+        
+        return dto;
     }
 
     /**
