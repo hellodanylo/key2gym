@@ -15,20 +15,19 @@
  */
 package org.key2gym.presentation.panels.forms;
 
-import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.dto.CashAdjustmentDTO;
-import org.key2gym.presentation.util.FormBindingListener;
-import org.key2gym.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
-import java.util.ResourceBundle;
 import javax.swing.*;
 import org.jdesktop.beansbinding.*;
 import org.joda.time.DateMidnight;
+import org.key2gym.business.api.ValidationException;
+import org.key2gym.business.dto.CashAdjustmentDTO;
+import org.key2gym.presentation.util.FormBindingListener;
+import org.key2gym.presentation.util.UserExceptionHandler;
 
 /**
  *
