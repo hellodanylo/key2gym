@@ -21,6 +21,7 @@ import com.googlecode.flyway.core.migration.SchemaVersion;
 /**
  * This class contains the constant holding the version of this application's
  * schema version.
+ * 
  * @author Danylo Vashchilenko
  */
 public class PersistenceSchemaVersion {

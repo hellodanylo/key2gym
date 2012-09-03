@@ -36,14 +36,31 @@
 
             <ul>
                 <li>Excecute the following commands on the database:
-                    <pre><code>UPDATE order_line_orl SET `iddsc_orl` = NULL WHERE `iddsc_orl` = 0<br/>
-DELETE FROM `session_ssn`</code></pre></li>
+                    <pre><code>UPDATE order_line_orl SET `iddsc_orl` = NULL WHERE `iddsc_orl` = 0;<br/>
+                    DELETE FROM `session_ssn`;</code></pre></li>
                 <li>Generate a compatible dump: 
                     <pre><code>mysqldump --skip-opt --no-create-info --compatible=postgresql,ansi --skip-quote-names --default-character-set=utf8 --complete-insert database --tables client_cln ad_source_ads client_profile_cpf administrator_adm client_freeze_cfz key_key attendance_atd item_itm time_split_tsp item_subscription_its discount_dsc order_ord order_line_orl property_pty session_ssn</code></pre>
                 </li>
                 <li>Create a new database in PostgreSQL and migrate to version 1.</li>
                 <li>Import the generated dump: <code>psql -f mysql_dump.sql</code></li>
-                <li>Migrate to version 2.</li>
+                <li>Migrate to the <code>latest</code> version.</li>
+                <li>
+                    You now have to update sequences to match just imported data. We provide you this handy script to help with that:
+                    <pre><code>CREATE OR REPLACE FUNCTION reset_sequence(tablename text, columnname text, sequence_name text)<br/>
+                    RETURNS void AS<br/>
+                    $BODY$<br/>
+                        DECLARE<br/>
+                        BEGIN<br/>
+                        <br/>
+                        EXECUTE 'SELECT setval( ''' || sequence_name  || ''', ' || '(SELECT MAX(' || columnname || ') FROM ' || tablename || ')' || '+1)';<br/>
+                        <br/>
+                        END;<br/>
+                        <br/>
+                        $BODY$<br/>
+                    LANGUAGE plpgsql;<br/>
+                    <br/>
+                    select column_name || '_seq', reset_sequence(table_name, column_name, column_name || '_seq') from information_schema.columns where column_default like 'nextval%';</code></pre>
+                </li>
             </ul>
 
             Note that <code>MySQLEclipseLink</code> is now an unsupported connection type. Use <code>PostgreSQLEclipseLink</code> instead.
