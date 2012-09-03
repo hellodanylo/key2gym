@@ -103,7 +103,7 @@ public class ItemsService extends BusinessService {
         List<Item> items = entityManager.createNamedQuery("Item.findAvailable") //NOI18N
                 .getResultList();
 
-        Property property = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
+        Property property = entityManager.find(Property.class, "time_range_mismatch_penalty_item_id");
         Integer penaltyItemId = Integer.valueOf(property.getString());
 
         for (Item item : items) {
@@ -169,7 +169,7 @@ public class ItemsService extends BusinessService {
         List<Item> items = entityManager.createNamedQuery("Item.findPureAvailable") //NOI18N
                 .getResultList();
 
-        Property property = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
+        Property property = entityManager.find(Property.class, "time_range_mismatch_penalty_item_id");
         Integer penaltyItemId = Integer.valueOf(property.getString());
 
         for (Item item : items) {

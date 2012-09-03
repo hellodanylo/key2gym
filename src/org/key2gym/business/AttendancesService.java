@@ -141,9 +141,7 @@ public class AttendancesService extends BusinessService {
              */
             if (penalties > 0) {
                 Integer orderId = OrdersService.getInstance().findByClientIdAndDate(clientId, new DateMidnight(), true);
-                Integer itemId = ((Property) entityManager.createNamedQuery("Property.findByName") //NOI18N
-                        .setParameter("name", "time_range_mismatch_penalty_item_id") //NOI18N
-                        .getSingleResult()).getInteger();
+                Integer itemId = entityManager.find(Property.class, "time_range_mismatch_penalty_item_id").getInteger();
 
                 try {
                     for (int i = 0; i < penalties; i++) {

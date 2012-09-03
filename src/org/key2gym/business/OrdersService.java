@@ -709,7 +709,7 @@ public class OrdersService extends BusinessService {
             throw new BusinessException(bundle.getString("BusinessRule.Order.Casual.SubscriptionCanNotBeRemoved"));
         }
 
-        Property timeRangeMismatch = (Property) entityManager.createNamedQuery("Property.findByName").setParameter("name", "time_range_mismatch_penalty_item_id").getSingleResult();
+        Property timeRangeMismatch = entityManager.find(Property.class, "time_range_mismatch_penalty_item_id");
         if (orderLine.getItem().getId().equals(timeRangeMismatch.getInteger())) {
             throw new BusinessException(bundle.getString("BusinessRule.Order.OrderLineForceAndCanNotBeRemoved"));
         }
