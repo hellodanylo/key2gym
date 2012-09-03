@@ -141,9 +141,7 @@ public class ClientsService extends BusinessService {
         
         newClient.setAttendances(null);
         newClient.setFinancialAcitivities(null);
-        newClient.setId(getNextId());
 
-        // TODO: note changes
         entityManager.persist(newClient);
         entityManager.flush();
         

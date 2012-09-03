@@ -156,15 +156,15 @@ public class ItemFormPanel extends FormPanel<ItemDTO> {
                     item, BeanProperty.create("quantity"), quantityTextField, BeanProperty.create("text"), "quantity");
             binding.setSourceUnreadableValue("");
             binding.setSourceNullValue("");
-            binding.setConverter(new Converter<Short, String>() {
+            binding.setConverter(new Converter<Integer, String>() {
 
                 @Override
-                public String convertForward(Short value) {
+                public String convertForward(Integer value) {
                     return value == null ? strings.getString("Messages.Infinite") : value.toString();
                 }
 
                 @Override
-                public Short convertReverse(String value) {
+                public Integer convertReverse(String value) {
                     if (value == null) {
                         return null;
                     }
@@ -173,7 +173,7 @@ public class ItemFormPanel extends FormPanel<ItemDTO> {
                         return null;
                     }
                     try {
-                        return Short.parseShort(value);
+                        return Integer.parseInt(value);
                     } catch (NumberFormatException ex) {
                         throw new RuntimeException(new ValidationException(strings.getString("Message.QuantityHasToBeNumber")));
                     }
@@ -223,6 +223,7 @@ public class ItemFormPanel extends FormPanel<ItemDTO> {
         }
     }
 
+    @Override
     public ItemDTO getForm() {
         return item;
     }
@@ -249,8 +250,8 @@ public class ItemFormPanel extends FormPanel<ItemDTO> {
     private ResourceBundle strings;
     private BindingGroup bindingGroup;
     private FormBindingListener formBindingListener;
-    private javax.swing.JTextField barcodeTextField;
-    private javax.swing.JTextField priceTextField;
-    private javax.swing.JTextField quantityTextField;
-    private javax.swing.JTextField titleTextField;
+    private JTextField barcodeTextField;
+    private JTextField priceTextField;
+    private JTextField quantityTextField;
+    private JTextField titleTextField;
 }

@@ -31,9 +31,9 @@ public class AttendancesBalanceHighlighter extends AbstractHighlighter {
 
     @Override
     protected ColorScheme getHighlightModelFor(String text) {
-        Short attendancesBalance;
+        Integer attendancesBalance;
         try {
-            attendancesBalance = Short.parseShort(text);
+            attendancesBalance = Integer.parseInt(text);
         } catch (NumberFormatException ex) {
             attendancesBalance = null;
         }

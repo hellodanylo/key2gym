@@ -16,7 +16,7 @@ CREATE SEQUENCE id_key_seq;
 -- Creates tables
 CREATE TABLE discount_dsc (id_dsc INTEGER NOT NULL DEFAULT nextval('id_dsc_seq'), percent INTEGER NOT NULL, title TEXT NOT NULL, PRIMARY KEY (id_dsc));
 CREATE TABLE attendance_atd (id_atd INTEGER NOT NULL DEFAULT nextval('id_atd_seq'), datetime_begin TIMESTAMP NOT NULL, datetime_end TIMESTAMP NOT NULL, idcln_atd INTEGER NULL, idkey_atd INTEGER NOT NULL, PRIMARY KEY (id_atd));
-CREATE TABLE item_subscription_its (iditm_its INTEGER NOT NULL DEFAULT nextval('id_its_seq'), term_days INTEGER NOT NULL, term_months INTEGER NOT NULL, term_years INTEGER NOT NULL, units INTEGER NOT NULL, idtsp_its INTEGER, PRIMARY KEY (iditm_its));
+CREATE TABLE item_subscription_its (iditm_its INTEGER NOT NULL, term_days INTEGER NOT NULL, term_months INTEGER NOT NULL, term_years INTEGER NOT NULL, units INTEGER NOT NULL, idtsp_its INTEGER, PRIMARY KEY (iditm_its));
 CREATE TABLE order_line_orl (id_orl INTEGER NOT NULL DEFAULT nextval('id_orl_seq'), quantity INTEGER NOT NULL, iddsc_orl INTEGER NULL, iditm_orl INTEGER NOT NULL, idord_orl INTEGER NOT NULL, PRIMARY KEY (id_orl));
 CREATE TABLE ad_source_ads (id_ads INTEGER NOT NULL DEFAULT nextval('id_ads_seq'), title TEXT NOT NULL, PRIMARY KEY (id_ads));
 CREATE TABLE property_pty (id_pty INTEGER NOT NULL, name TEXT NOT NULL, current_value TEXT NOT NULL, PRIMARY KEY (id_pty));

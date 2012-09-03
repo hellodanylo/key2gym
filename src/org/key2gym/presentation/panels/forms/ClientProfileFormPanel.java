@@ -61,13 +61,13 @@ public class ClientProfileFormPanel extends JPanel {
          * Height
          */
         heightSpinner = new JSpinner();
-        heightSpinner.setModel(new SpinnerNumberModel(Short.valueOf((short) 175), Short.valueOf((short) 0), Short.valueOf((short) 400), Short.valueOf((short) 5)));
+        heightSpinner.setModel(new SpinnerNumberModel(175, 0, null, 5));
 
         /*
          * Weight
          */
         weightSpinner = new JSpinner();
-        weightSpinner.setModel(new SpinnerNumberModel(Short.valueOf((short) 70), Short.valueOf((short) 0), Short.valueOf((short) 400), Short.valueOf((short) 5)));
+        weightSpinner.setModel(new SpinnerNumberModel(70, 0, null, 5));
 
         addressTextField = new JTextField();
         telephoneTextField = new JTextField();
@@ -221,12 +221,12 @@ public class ClientProfileFormPanel extends JPanel {
 
             binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("height"), heightSpinner, BeanProperty.create("value"), "height"); //NOI18N
-            binding.setSourceNullValue((short) 175);
+            binding.setSourceNullValue(175);
             bindingGroup.addBinding(binding);
 
             binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,
                     BeanProperty.create("weight"), weightSpinner, BeanProperty.create("value"), "weight"); //NOI18N
-            binding.setSourceNullValue((short) 70);
+            binding.setSourceNullValue(70);
             bindingGroup.addBinding(binding);
 
             binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, clientProfile,

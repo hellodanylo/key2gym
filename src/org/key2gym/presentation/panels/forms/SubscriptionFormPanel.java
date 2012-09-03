@@ -66,25 +66,25 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
          * Units
          */
         unitsSpinner = new JSpinner();
-        unitsSpinner.setModel(new SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
+        unitsSpinner.setModel(new SpinnerNumberModel(0, 0, null, 1));
 
         /*
          * Days
          */
         daysSpinner = new JSpinner();
-        daysSpinner.setModel(new SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
+        daysSpinner.setModel(new SpinnerNumberModel(0, 0, null, 1));
 
         /*
          * Months
          */
         monthsSpinner = new JSpinner();
-        monthsSpinner.setModel(new SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
+        monthsSpinner.setModel(new SpinnerNumberModel(0, 0, null, 1));
 
         /*
          * Years
          */
         yearsSpinner = new JSpinner();
-        yearsSpinner.setModel(new SpinnerNumberModel(Short.valueOf((short) 0), Short.valueOf((short) 0), Short.valueOf((short) 999), Short.valueOf((short) 1)));
+        yearsSpinner.setModel(new SpinnerNumberModel(0, 0, null, 1));
 
         /*
          * Time split
@@ -251,8 +251,8 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
              */
             binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE,
                     subscription, BeanProperty.create("units"), unitsSpinner, BeanProperty.create("value"), "units");
-            binding.setSourceNullValue((short) 0);
-            binding.setSourceUnreadableValue((short) 0);
+            binding.setSourceNullValue(0);
+            binding.setSourceUnreadableValue(0);
             bindingGroup.addBinding(binding);
 
             /**
@@ -260,8 +260,8 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
              */
             binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE,
                     subscription, BeanProperty.create("termDays"), daysSpinner, BeanProperty.create("value"), "termDays");
-            binding.setSourceNullValue((short) 0);
-            binding.setSourceUnreadableValue((short) 0);
+            binding.setSourceNullValue(0);
+            binding.setSourceUnreadableValue(0);
             bindingGroup.addBinding(binding);
 
             /**
@@ -269,8 +269,8 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
              */
             binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE,
                     subscription, BeanProperty.create("termMonths"), monthsSpinner, BeanProperty.create("value"), "termMonths");
-            binding.setSourceNullValue((short) 0);
-            binding.setSourceUnreadableValue((short) 0);
+            binding.setSourceNullValue(0);
+            binding.setSourceUnreadableValue(0);
             bindingGroup.addBinding(binding);
 
             /**
@@ -278,8 +278,8 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
              */
             binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE,
                     subscription, BeanProperty.create("termYears"), yearsSpinner, BeanProperty.create("value"), "termYears");
-            binding.setSourceNullValue((short) 0);
-            binding.setSourceUnreadableValue((short) 0);
+            binding.setSourceNullValue(0);
+            binding.setSourceUnreadableValue(0);
             bindingGroup.addBinding(binding);
 
             /**

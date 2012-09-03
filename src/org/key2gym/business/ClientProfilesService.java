@@ -53,10 +53,10 @@ public class ClientProfilesService extends BusinessService {
     public void updateClientProfile(ClientProfileDTO clientProfile) throws BusinessException, ValidationException {
         assertTransactionActive();
         assertOpenSessionExists();
-        
+
         if (clientProfile == null) {
             throw new NullPointerException("The clientProfile is null."); //NOI18N
-        } else if(clientProfile.getClientId() == null) {
+        } else if (clientProfile.getClientId() == null) {
             throw new NullPointerException("The clientProfile.getClientId() is null."); //NOI18N
         } else if (clientProfile.getAddress() == null) {
             throw new NullPointerException("The clientProfile.getAddress() is null."); //NOI18N
@@ -73,58 +73,58 @@ public class ClientProfilesService extends BusinessService {
         } else if (clientProfile.getSpecialWishes() == null) {
             throw new NullPointerException("The clientProfile.getSpecialWishes() is null."); //NOI18N
         }
-        
+
         getHeightValidator().validate(clientProfile.getHeight());
         getWeightValidator().validate(clientProfile.getWeight());
-        
+
         /*
          * Birthday
          */
         getBirthdayValidator().validate(clientProfile.getBirthday());
-        if(clientProfile.getBirthday() == null) {
+        if (clientProfile.getBirthday() == null) {
             clientProfile.setBirthday(new DateMidnight(ClientProfile.DATE_BIRTHDAY_UNKNOWN));
         }
-        
-        if (clientProfile.getAdSourceId() == null) {
-            throw new NullPointerException("The ad source's ID is null."); //NOI18N
+
+        AdSource adSource = null;
+
+        if (clientProfile.getAdSourceId() != null) {
+            entityManager.find(AdSource.class, clientProfile.getAdSourceId());
+
+            if (adSource == null) {
+                throw new ValidationException(bundle.getString("Invalid.AdSource.ID"));
+            }
         }
 
-        AdSource adSource = entityManager.find(AdSource.class, clientProfile.getAdSourceId());
-
-        if (adSource == null) {
-            throw new ValidationException(bundle.getString("Invalid.AdSource.ID"));
-        }
-        
         /*
          * Builds an exact copy of the entity, because it's not a good 
          * practive to make entites instances used as DTO managed.
          */
-        ClientProfile entityClientProfile = 
+        ClientProfile entityClientProfile =
                 new ClientProfile(
-                clientProfile.getClientId(), 
-                ClientProfile.Sex.values()[clientProfile.getSex().ordinal()], 
-                clientProfile.getBirthday().toDate(), 
-                clientProfile.getAddress(), 
-                clientProfile.getTelephone(), 
+                clientProfile.getClientId(),
+                ClientProfile.Sex.values()[clientProfile.getSex().ordinal()],
+                clientProfile.getBirthday().toDate(),
+                clientProfile.getAddress(),
+                clientProfile.getTelephone(),
                 clientProfile.getGoal(),
-                clientProfile.getPossibleAttendanceRate(), 
-                clientProfile.getHealthRestrictions(), 
-                clientProfile.getFavouriteSport(), 
-                ClientProfile.FitnessExperience.values()[clientProfile.getFitnessExperience().ordinal()], 
-                clientProfile.getSpecialWishes(), 
+                clientProfile.getPossibleAttendanceRate(),
+                clientProfile.getHealthRestrictions(),
+                clientProfile.getFavouriteSport(),
+                ClientProfile.FitnessExperience.values()[clientProfile.getFitnessExperience().ordinal()],
+                clientProfile.getSpecialWishes(),
                 clientProfile.getHeight(),
-                clientProfile.getWeight(), 
+                clientProfile.getWeight(),
                 adSource);
-        
-        if(entityManager.find(ClientProfile.class, clientProfile.getClientId()) == null) {
+
+        if (entityManager.find(ClientProfile.class, clientProfile.getClientId()) == null) {
             entityManager.persist(entityClientProfile);
         } else {
             entityManager.merge(entityClientProfile);
         }
-        
+
         entityManager.flush();
     }
-    
+
     /**
      * Detaches the profile from the client by its ID.
      * <p>
@@ -144,29 +144,29 @@ public class ClientProfilesService extends BusinessService {
     public void detachClientProfile(Integer id) throws SecurityException, ValidationException, BusinessException {
         assertOpenSessionExists();
         assertTransactionActive();
-        
-        if(!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
+
+        if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(bundle.getString("Security.Operation.Denied"));
         }
-        
-        if(id == null) {
+
+        if (id == null) {
             throw new NullPointerException("The id is null."); //NOI18N
         }
-        
+
         Client client = entityManager.find(Client.class, id);
-        
-        if(client == null) {
+
+        if (client == null) {
             throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
-        
-        if(client.getClientProfile() == null) {
+
+        if (client.getClientProfile() == null) {
             throw new BusinessException(bundle.getString("BusinessRule.Client.HasNoProfile"));
         }
-        
+
         entityManager.remove(client.getClientProfile());
         entityManager.flush();
     }
-    
+
     /**
      * Gets a client profile by ID.
      * 
@@ -177,36 +177,36 @@ public class ClientProfilesService extends BusinessService {
      */
     public ClientProfileDTO getById(Integer id) throws ValidationException {
         assertOpenSessionExists();
-        
-        if(id == null) {
+
+        if (id == null) {
             throw new NullPointerException("The id is null."); //NOI18N
         }
-        
+
         ClientProfile clientProfile = entityManager.find(ClientProfile.class, id);
-        
-        if(clientProfile == null) {
+
+        if (clientProfile == null) {
             throw new ValidationException(bundle.getString("Invalid.Client.ID"));
         }
-        
+
         ClientProfileDTO clientProfileDTO = new ClientProfileDTO(
-                clientProfile.getId(), 
-                ClientProfileDTO.Sex.values()[clientProfile.getSex().ordinal()], 
-                clientProfile.getBirthday().equals(ClientProfile.DATE_BIRTHDAY_UNKNOWN) ? null : new DateMidnight(clientProfile.getBirthday()), 
-                clientProfile.getAddress(), 
-                clientProfile.getTelephone(), 
+                clientProfile.getId(),
+                ClientProfileDTO.Sex.values()[clientProfile.getSex().ordinal()],
+                clientProfile.getBirthday().equals(ClientProfile.DATE_BIRTHDAY_UNKNOWN) ? null : new DateMidnight(clientProfile.getBirthday()),
+                clientProfile.getAddress(),
+                clientProfile.getTelephone(),
                 clientProfile.getGoal(),
-                clientProfile.getPossibleAttendanceRate(), 
-                clientProfile.getHealthRestrictions(), 
-                clientProfile.getFavouriteSport(), 
-                ClientProfileDTO.FitnessExperience.values()[clientProfile.getFitnessExperience().ordinal()], 
-                clientProfile.getSpecialWishes(), 
+                clientProfile.getPossibleAttendanceRate(),
+                clientProfile.getHealthRestrictions(),
+                clientProfile.getFavouriteSport(),
+                ClientProfileDTO.FitnessExperience.values()[clientProfile.getFitnessExperience().ordinal()],
+                clientProfile.getSpecialWishes(),
                 clientProfile.getHeight(),
-                clientProfile.getWeight(), 
+                clientProfile.getWeight(),
                 clientProfile.getAdSource().getId());
-        
+
         return clientProfileDTO;
     }
-    
+
     private Validator getBirthdayValidator() {
         return new Validator<DateMidnight>() {
 
@@ -232,7 +232,7 @@ public class ClientProfilesService extends BusinessService {
                     String message = MessageFormat.format(
                             bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
                             bundle.getString("Property.Height"));
-                    
+
                     throw new ValidationException(message);
                 }
             }
@@ -252,13 +252,12 @@ public class ClientProfilesService extends BusinessService {
                     String message = MessageFormat.format(
                             bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
                             bundle.getString("Property.Weight"));
-                    
+
                     throw new ValidationException(message);
                 }
             }
         };
     }
-    
     /**
      * Singleton instance.
      */
