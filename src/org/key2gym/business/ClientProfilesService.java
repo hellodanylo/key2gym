@@ -202,7 +202,7 @@ public class ClientProfilesService extends BusinessService {
                 clientProfile.getSpecialWishes(),
                 clientProfile.getHeight(),
                 clientProfile.getWeight(),
-                clientProfile.getAdSource().getId());
+                clientProfile.getAdSource() == null ? null : clientProfile.getAdSource().getId());
 
         return clientProfileDTO;
     }
