@@ -82,24 +82,24 @@ public class CheckOutAction extends BasicAction {
             Integer attendanceId = pickAttendanceDialog.getAttendanceId();
             
             if(pickAttendanceDialog.isEditOrderDialogRequested()) {
-                Integer financialActivityId;
+                Integer orderId;
                 Boolean isAnonymous;
 
                 try {
                     isAnonymous = AttendancesService.getInstance().isCasual(attendanceId);
                     if(isAnonymous) {
-                        financialActivityId = OrdersService.getInstance().findForAttendanceById(attendanceId);
+                        orderId = OrdersService.getInstance().findForAttendanceById(attendanceId);
                     } else {
-                        financialActivityId = OrdersService.getInstance().findByClientIdAndDate(AttendancesService.getInstance().getAttendanceById(attendanceId).getClientId(), new DateMidnight(), true);
+                        orderId = OrdersService.getInstance().findByClientIdAndDate(AttendancesService.getInstance().getAttendanceById(attendanceId).getClientId(), new DateMidnight(), true);
                     }
-                } catch (ValidationException | SecurityException ex) {
+                } catch (ValidationException ex) {
                     throw new RuntimeException(ex);
                 }
 
-                if(financialActivityId != null) {
+                if(orderId != null) {
 
                     EditOrderDialog editOrderDialog = new EditOrderDialog(getFrame());
-                    editOrderDialog.setOrderId(financialActivityId);
+                    editOrderDialog.setOrderId(orderId);
                     editOrderDialog.setFullPaymentForced(isAnonymous);
                     editOrderDialog.setVisible(true);
 

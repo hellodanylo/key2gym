@@ -15,22 +15,27 @@
  */
 package org.key2gym.presentation.dialogs;
 
-import org.key2gym.business.AttendancesService;
-import org.key2gym.business.KeysService;
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.dto.KeyDTO;
-import org.key2gym.presentation.renderers.KeyListCellRenderer;
-import org.key2gym.presentation.util.UserExceptionHandler;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import org.key2gym.business.AttendancesService;
+import org.key2gym.business.ClientsService;
+import org.key2gym.business.KeysService;
+import org.key2gym.business.api.BusinessException;
+import org.key2gym.business.api.ValidationException;
+import org.key2gym.business.dto.AttendanceDTO;
+import org.key2gym.business.dto.ClientDTO;
+import org.key2gym.business.dto.KeyDTO;
+import org.key2gym.presentation.panels.forms.ClientFormPanel;
+import org.key2gym.presentation.panels.forms.ClientFormPanel.Column;
+import org.key2gym.presentation.renderers.KeyListCellRenderer;
+import org.key2gym.presentation.util.UserExceptionHandler;
 
 /**
  *
@@ -55,13 +60,17 @@ public class PickAttendanceDialog extends AbstractDialog {
     }
 
     private void initComponents() throws BusinessException {
-        
-        setLayout(new FormLayout("4dlu, l:d, 3dlu, d:g, 4dlu", "4dlu, d:g, 3dlu, d, 4dlu, d, 4dlu"));
-        
-        add(new JLabel(getString("Label.Key")), CC.xy(2,2));
+
+        setLayout(new FormLayout("4dlu, l:d, 3dlu, [150dlu, d]:g, 4dlu", "4dlu, d:g, 3dlu, d, 3dlu, d, 4dlu, d, 4dlu"));
+
+        add(new JLabel(getString("Label.Key")), CC.xy(2, 2));
         add(createKeysComboBox(), CC.xy(4, 2));
-        add(createOptionsPanel(), CC.xywh(2, 4, 3, 1));
-        add(createButtonsPanel(), CC.xywh(2, 6, 3 ,1));
+        add(createClientPanel(), CC.xywh(2, 4, 3, 1));
+        add(createOptionsPanel(), CC.xywh(2, 6, 3, 1));
+        add(createButtonsPanel(), CC.xywh(2, 8, 3, 1));
+        
+        // Updates the client panel
+        onSelectedKeyChanged();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(getString("Title.PickAttendance")); // NOI18N
@@ -71,7 +80,7 @@ public class PickAttendanceDialog extends AbstractDialog {
     }
 
     private JComboBox createKeysComboBox() throws BusinessException {
-        
+
         keysComboBox = new JComboBox();
 
         /*
@@ -81,9 +90,16 @@ public class PickAttendanceDialog extends AbstractDialog {
         if (keys.isEmpty()) {
             throw new BusinessException(getString("Message.NoAttendanceIsOpen"));
         }
-        
+
         keysComboBox.setRenderer(new KeyListCellRenderer());
         keysComboBox.setModel(new DefaultComboBoxModel(keys.toArray()));
+        keysComboBox.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                onSelectedKeyChanged();
+            }
+        });
 
         if (getKeyId() != null) {
             /*
@@ -130,38 +146,76 @@ public class PickAttendanceDialog extends AbstractDialog {
             }
         }
 
-        if (isEditOrderDialogRequested()) {
-            openOrderCheckBox.doClick();
-        }
-        
         return keysComboBox;
     }
-    
+
+    private JPanel createClientPanel() {
+        clientPanel = new ClientFormPanel(Arrays.asList(Column.FULL_NAME, Column.MONEY_BALANCE, Column.ATTENDANCES_BALANCE, Column.EXPIRATION_DATE));
+        clientPanel.setBorder(BorderFactory.createTitledBorder(getString("Text.BillingInformation")));
+        clientPanel.setEditable(false);
+        return clientPanel;
+    }
+
     private JPanel createOptionsPanel() {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder(getString("Text.AdditionalActions"))); // NOI18N
         openOrderCheckBox = new JCheckBox();
         openOrderCheckBox.setSelected(true);
         openOrderCheckBox.setText(getString("CheckBox.OpenOrder")); // NOI18N
-        
+
+        if (isEditOrderDialogRequested()) {
+            openOrderCheckBox.doClick();
+        }
+
         panel.add(openOrderCheckBox);
-        
+
         return panel;
     }
-    
+
     private JPanel createButtonsPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        
+
         okButton = new JButton(getOkAction());
         cancelButton = new JButton(getCancelAction());
         okButton.setPreferredSize(cancelButton.getPreferredSize());
-        
+
         panel.add(okButton);
         panel.add(cancelButton);
-        
+
         return panel;
     }
-    
+
+    private void onSelectedKeyChanged() {
+        KeyDTO key = (KeyDTO) keysComboBox.getSelectedItem();
+
+        if (key == null) {
+            clientPanel.setClient(null);
+            return;
+        }
+
+        AttendancesService attendancesService = AttendancesService.getInstance();
+
+        ClientDTO client;
+        AttendanceDTO attendance;
+
+        try {
+            attendance = attendancesService.getAttendanceById(attendancesService.findOpenAttendanceByKey(key.getId()));
+
+            if (attendance.getClientId() != null) {
+                client = ClientsService.getInstance().getById(attendance.getClientId());
+            } else {
+                client = null;
+            }
+        } catch (ValidationException|BusinessException ex) {
+            setResult(Result.EXCEPTION);
+            setException(new RuntimeException(ex));
+            dispose();
+            return;
+        }
+        
+        clientPanel.setClient(client);
+    }
+
     @Override
     protected void onOkActionPerformed(ActionEvent evt) {
         AttendancesService attendancesService;
@@ -227,7 +281,6 @@ public class PickAttendanceDialog extends AbstractDialog {
     public void setEditOrderDialogRequested(Boolean requested) {
         this.editOrderDialogRequested = requested;
     }
-    
     /*
      * Session variables
      */
@@ -238,8 +291,9 @@ public class PickAttendanceDialog extends AbstractDialog {
     /*
      * Components
      */
-    private JButton cancelButton;
     private JComboBox keysComboBox;
+    private ClientFormPanel clientPanel;
+    private JButton cancelButton;
     private JButton okButton;
-    private JCheckBox openOrderCheckBox;                
+    private JCheckBox openOrderCheckBox;
 }

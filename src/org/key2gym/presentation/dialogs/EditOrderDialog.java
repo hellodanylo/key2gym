@@ -260,8 +260,8 @@ public class EditOrderDialog extends AbstractDialog {
         /*
          * Due
          */
-        dueTextField.setForeground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ?  Palette.ERROR_FOREGROUND: Palette.OK_FOREGROUND);
-        dueTextField.setBackground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ?  Palette.ERROR_BACKGROUND : Palette.OK_BACKGROUND);
+        dueTextField.setForeground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ? Palette.ERROR_FOREGROUND : Palette.OK_FOREGROUND);
+        dueTextField.setBackground(order.getDue().compareTo(BigDecimal.ZERO) > 0 ? Palette.ERROR_BACKGROUND : Palette.OK_BACKGROUND);
         dueTextField.setText(order.getDue().toPlainString());
 
         /*
@@ -297,13 +297,13 @@ public class EditOrderDialog extends AbstractDialog {
         List<OrderLineDTO> orderLines = order.getOrderLines();
         index = orderLinesTable.getSelectedRow();
         orderLinesTableModel.setOrderLines(orderLines);
-        
+
         if (index >= orderLines.size()) {
             index = orderLines.size() - 1;
-        } else if(index == -1 && orderLines.size() > 0) {
+        } else if (index == -1 && orderLines.size() > 0) {
             index = 0;
         }
-        
+
         orderLinesTable.getSelectionModel().setSelectionInterval(index, index);
 
         /*
@@ -326,11 +326,7 @@ public class EditOrderDialog extends AbstractDialog {
             if (order.getClientId() == null) {
                 if (order.getAttendanceId() != null) {
                     AttendanceDTO attendance;
-                    try {
-                        attendance = attendancesService.getAttendanceById(order.getAttendanceId());
-                    } catch (SecurityException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    attendance = attendancesService.getAttendanceById(order.getAttendanceId());
                     subject = MessageFormat.format(getString("Text.Attendance.withIDAndKey"),
                             new Object[]{
                                 attendance.getId(),
@@ -468,7 +464,7 @@ public class EditOrderDialog extends AbstractDialog {
 
             {
                 putValue(NAME, getString("Button.Add"));
-                putValue(LARGE_ICON_KEY, new ImageIcon(getClass().getResource("/org/key2gym/presentation/resources/plus16.png"))); 
+                putValue(LARGE_ICON_KEY, new ImageIcon(getClass().getResource("/org/key2gym/presentation/resources/plus16.png")));
             }
 
             @Override

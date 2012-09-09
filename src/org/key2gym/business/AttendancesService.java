@@ -246,12 +246,9 @@ public class AttendancesService extends BusinessService {
      * @param attendanceId the attendance's ID
      * @return the attendance, or null, if the ID is invalid
      * @throws NullPointerException if attendanceId is null
-     * @throws SecurityException if current security rules restrict this
-     * operation
      * @throws IllegalStateException if no session is open
      */
-    public AttendanceDTO getAttendanceById(Integer attendanceId)
-            throws IllegalArgumentException, SecurityException {
+    public AttendanceDTO getAttendanceById(Integer attendanceId) {
 
         assertOpenSessionExists();
 

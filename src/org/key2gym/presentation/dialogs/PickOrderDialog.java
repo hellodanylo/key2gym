@@ -214,7 +214,7 @@ public class PickOrderDialog extends AbstractDialog {
                     /*
                      * All exceptions are unexpected, and, therefore, are bugs.
                      */
-                } catch (BusinessException | ValidationException | SecurityException ex) {
+                } catch (BusinessException | ValidationException ex) {
                     throw new RuntimeException(ex);
                 }
                 /*
