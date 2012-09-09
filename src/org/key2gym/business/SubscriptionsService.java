@@ -63,8 +63,8 @@ public class SubscriptionsService extends BusinessService {
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(MessageFormat.format(
-                    bundle.getString("Security.Operation.Denied.withName"),
-                    bundle.getString("Operation.Create")));
+                    strings.getString("Security.Operation.Denied.withName"),
+                    strings.getString("Operation.Create")));
         }
 
         if (subscription == null) {
@@ -95,8 +95,8 @@ public class SubscriptionsService extends BusinessService {
 
         if (timeRange == null) {
             throw new ValidationException(MessageFormat.format(
-                    bundle.getString("IDInvalid.withName"),
-                    bundle.getString("ID.TimeSplit")));
+                    strings.getString("IDInvalid.withName"),
+                    strings.getString("ID.TimeSplit")));
         }
 
         ItemSubscription entityItemSubscription = new ItemSubscription(
@@ -175,8 +175,8 @@ public class SubscriptionsService extends BusinessService {
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(MessageFormat.format(
-                    bundle.getString("Security.Operation.Denied.withName"),
-                    bundle.getString("Operation.Update")));
+                    strings.getString("Security.Operation.Denied.withName"),
+                    strings.getString("Operation.Update")));
         }
 
         if (subscription == null) {
@@ -190,8 +190,8 @@ public class SubscriptionsService extends BusinessService {
 
         if (subscription.getId() == null) {
                         throw new ValidationException(MessageFormat.format(
-                    bundle.getString("IDInvalid.withName"),
-                    bundle.getString("ID.Subscription")
+                    strings.getString("IDInvalid.withName"),
+                    strings.getString("ID.Subscription")
             ));
         }
 
@@ -217,8 +217,8 @@ public class SubscriptionsService extends BusinessService {
         TimeSplit timeSplit = entityManager.find(TimeSplit.class, subscription.getTimeSplitId());
         if (timeSplit == null) {
             throw new ValidationException(MessageFormat.format(
-                    bundle.getString("IDInvalid.withName"),
-                    bundle.getString("ID.TimeSplit")));
+                    strings.getString("IDInvalid.withName"),
+                    strings.getString("ID.TimeSplit")));
         }
 
         ItemSubscription entityItemSubscription = new ItemSubscription(
@@ -261,8 +261,8 @@ public class SubscriptionsService extends BusinessService {
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
             throw new SecurityException(MessageFormat.format(
-                    bundle.getString("Security.Operation.Denied.withName"),
-                    bundle.getString("Operation.Removal")));
+                    strings.getString("Security.Operation.Denied.withName"),
+                    strings.getString("Operation.Removal")));
         }
 
         if (id == null) {
@@ -277,7 +277,7 @@ public class SubscriptionsService extends BusinessService {
 
         if (!itemSubscription.getItem().getOrderLines().isEmpty()) {
             throw new BusinessException(MessageFormat.format(
-                    bundle.getString("BusinessRule.Item.HasUnarchivedPurchases.withItemTitle"),
+                    strings.getString("BusinessRule.Item.HasUnarchivedPurchases.withItemTitle"),
                     itemSubscription.getItem().getTitle()));
         }
 
@@ -292,8 +292,8 @@ public class SubscriptionsService extends BusinessService {
 
         if (units < 0) {
             throw new ValidationException(MessageFormat.format(
-                    bundle.getString("CanNotBeNegative.withField"),
-                    bundle.getString("Field.Units")));
+                    strings.getString("CanNotBeNegative.withField"),
+                    strings.getString("Field.Units")));
         }
     }
 
@@ -304,8 +304,8 @@ public class SubscriptionsService extends BusinessService {
 
         if (term < 0) {
             throw new ValidationException(MessageFormat.format(
-                    bundle.getString("CanNotBeNegative.withField"),
-                    bundle.getString("Field.Term")));
+                    strings.getString("CanNotBeNegative.withField"),
+                    strings.getString("Field.Term")));
         }
     }
     /**

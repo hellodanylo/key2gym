@@ -19,16 +19,19 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import org.key2gym.business.CashService;
 import org.key2gym.business.ItemsService;
+import org.key2gym.business.KeysService;
 import org.key2gym.business.SubscriptionsService;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.dto.CashAdjustmentDTO;
 import org.key2gym.business.dto.ItemDTO;
+import org.key2gym.business.dto.KeyDTO;
 import org.key2gym.business.dto.SubscriptionDTO;
 import org.key2gym.presentation.dialogs.AbstractDialog;
 import org.key2gym.presentation.dialogs.FormDialog;
 import org.key2gym.presentation.dialogs.actions.OkAction;
 import org.key2gym.presentation.panels.forms.CashAdjustmentFormPanel;
 import org.key2gym.presentation.panels.forms.ItemFormPanel;
+import org.key2gym.presentation.panels.forms.KeyFormPanel;
 import org.key2gym.presentation.panels.forms.SubscriptionFormPanel;
 import org.key2gym.presentation.util.UserExceptionHandler;
 
@@ -45,10 +48,10 @@ public class FormDialogActionsFactory {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!formPanel.trySave()) {
+                if (!formPanel.trySave()) {
                     return;
                 }
-                
+
                 try {
                     if (item.getId() == null) {
                         ItemsService.getInstance().addItem(item);
@@ -76,10 +79,10 @@ public class FormDialogActionsFactory {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!formPanel.trySave()) {
+                if (!formPanel.trySave()) {
                     return;
                 }
-                
+
                 try {
                     if (subscription.getId() == null) {
                         SubscriptionsService.getInstance().addSubscription(subscription);
@@ -99,18 +102,49 @@ public class FormDialogActionsFactory {
             }
         };
     }
-    
-        public static Action createCashAdjustmentOkAction(final FormDialog dialog, final CashAdjustmentFormPanel formPanel) {
+
+    public static Action createKeyOkAction(final FormDialog dialog, final KeyFormPanel formPanel) {
+        final KeyDTO key = formPanel.getForm();
+
+        return new OkAction(dialog) {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!formPanel.trySave()) {
+                    return;
+                }
+
+                try {
+                    if (key.getId() == null) {
+                        KeysService.getInstance().addKey(key);
+                    } else {
+                        KeysService.getInstance().updateKey(key);
+                    }
+                } catch (ValidationException ex) {
+                    UserExceptionHandler.getInstance().processException(ex);
+                    return;
+                } catch (org.key2gym.business.api.SecurityException ex) {
+                    dialog.setResult(AbstractDialog.Result.EXCEPTION);
+                    dialog.setException(new RuntimeException(ex));
+                    return;
+                }
+
+                super.actionPerformed(e);
+            }
+        };
+    }
+
+    public static Action createCashAdjustmentOkAction(final FormDialog dialog, final CashAdjustmentFormPanel formPanel) {
         final CashAdjustmentDTO cashAdjustment = formPanel.getForm();
 
         return new OkAction(dialog) {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!formPanel.trySave()) {
+                if (!formPanel.trySave()) {
                     return;
                 }
-                
+
                 try {
                     CashService.getInstance().recordCashAdjustment(cashAdjustment);
                 } catch (ValidationException ex) {

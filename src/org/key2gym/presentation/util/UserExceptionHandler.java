@@ -47,7 +47,7 @@ public class UserExceptionHandler implements CensusExceptionListener {
         } else if (ex instanceof BusinessException) {
             messageType = JOptionPane.ERROR_MESSAGE;
         } else {
-            throw new RuntimeException("Unexpexted exception type.");
+            throw new RuntimeException("Unexpexted exception type.", ex);
         }
         JOptionPane.showMessageDialog(getComponent(), ex.getMessage(), strings.getString("Title.Message"), messageType);
     }

@@ -15,6 +15,7 @@
  */
 package org.key2gym.business;
 
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import javax.persistence.EntityManager;
 
@@ -30,7 +31,7 @@ public abstract class BusinessService {
 
     protected StorageService storageService;
     protected SessionsService sessionService;
-    protected ResourceBundle bundle;
+    protected ResourceBundle strings;
     protected EntityManager entityManager;
     
     /**
@@ -39,7 +40,7 @@ public abstract class BusinessService {
     protected BusinessService() {
         storageService = StorageService.getInstance();
         sessionService = SessionsService.getInstance();
-        bundle = ResourceBundle.getBundle("org/key2gym/business/resources/Strings");
+        strings = ResourceBundle.getBundle("org/key2gym/business/resources/Strings");
         entityManager = storageService.getEntityManager();
     }
     
@@ -63,5 +64,13 @@ public abstract class BusinessService {
         if (!sessionService.hasOpenSession()) {
             throw new IllegalStateException("A session has to be open."); //NOI18N
         }
+    }
+    
+    protected String getString(String key, String... arguments) {
+        return MessageFormat.format(strings.getString(key), (Object[]) arguments);
+    }
+    
+    protected String getString(String key) {
+        return strings.getString(key);
     }
 }

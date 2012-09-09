@@ -86,7 +86,7 @@ public class OrdersService extends BusinessService {
         client = entityManager.find(Client.class, clientId);
 
         if (client == null) {
-            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
+            throw new ValidationException(strings.getString("Invalid.Client.ID"));
         }
 
         /*
@@ -156,7 +156,7 @@ public class OrdersService extends BusinessService {
                     .setParameter("card", card) //NOI18N
                     .setMaxResults(1).getSingleResult();
         } catch (NoResultException ex) {
-            throw new ValidationException(bundle.getString("Invalid.Client.Card"));
+            throw new ValidationException(strings.getString("Invalid.Client.Card"));
         }
 
         try {
@@ -222,11 +222,11 @@ public class OrdersService extends BusinessService {
         attendance = (Attendance) entityManager.find(Attendance.class, attendanceId);
 
         if (attendance == null) {
-            throw new ValidationException(bundle.getString("Invalid.Attendance.ID"));
+            throw new ValidationException(strings.getString("Invalid.Attendance.ID"));
         }
 
         if (attendance.getClient() != null) {
-            throw new BusinessException(bundle.getString("BusinessRule.Attendance.MustBeAnonymous"));
+            throw new BusinessException(strings.getString("BusinessRule.Attendance.MustBeAnonymous"));
         }
 
         try {
@@ -316,7 +316,7 @@ public class OrdersService extends BusinessService {
 
         if (!DateMidnight.now().equals(date)
                 && !sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Access.Denied"));
+            throw new SecurityException(strings.getString("Security.Access.Denied"));
         }
 
         List<OrderEntity> orders = entityManager.createNamedQuery("OrderEntity.findByDateRecordedOrderByIdDesc") //NOI18N
@@ -360,13 +360,13 @@ public class OrdersService extends BusinessService {
         }
 
         if (begin.isAfter(end)) {
-            throw new ValidationException(bundle.getString("Invalid.DateRange.BeginningAfterEnding"));
+            throw new ValidationException(strings.getString("Invalid.DateRange.BeginningAfterEnding"));
         }
 
         Client client = entityManager.find(Client.class, id);
 
         if (client == null) {
-            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
+            throw new ValidationException(strings.getString("Invalid.Client.ID"));
         }
 
         List<OrderEntity> financialActivities = entityManager.createNamedQuery("OrderEntity.findByClientAndDateRecordedRangeOrderByDateRecordedDesc") //NOI18N
@@ -436,7 +436,7 @@ public class OrdersService extends BusinessService {
         OrderEntity order = entityManager.find(OrderEntity.class, id);
 
         if (order == null) {
-            throw new ValidationException(bundle.getString("Invalid.Order.ID"));
+            throw new ValidationException(strings.getString("Invalid.Order.ID"));
         }
 
         OrderDTO orderDTO = wrapOrderEntity(order);
@@ -488,7 +488,7 @@ public class OrdersService extends BusinessService {
                 orderId);
 
         if (order == null) {
-            throw new ValidationException(bundle.getString("Invalid.Order.ID"));
+            throw new ValidationException(strings.getString("Invalid.Order.ID"));
         }
 
         Boolean requiresAllPermissions = (order.getAttendance() != null
@@ -496,17 +496,17 @@ public class OrdersService extends BusinessService {
                 || !isToday(order.getDate());
 
         if (requiresAllPermissions && !sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
+            throw new SecurityException(strings.getString("Security.Operation.Denied"));
         }
 
         item = entityManager.find(Item.class, itemId);
 
         if (item == null) {
-            throw new ValidationException(bundle.getString("Invalid.Item.ID"));
+            throw new ValidationException(strings.getString("Invalid.Item.ID"));
         }
 
         if (item.getItemSubscription() != null && order.getClient() == null) {
-            throw new BusinessException(bundle.getString("BusinessRule.Order.Casual.CanNotPurchaseSubscriptions"));
+            throw new BusinessException(strings.getString("BusinessRule.Order.Casual.CanNotPurchaseSubscriptions"));
         }
         
         if(discountId == null) {
@@ -515,7 +515,7 @@ public class OrdersService extends BusinessService {
             discount = entityManager.find(Discount.class, discountId);
 
             if(discount == null) {
-                throw new ValidationException(bundle.getString("Invalid.Discount.ID"));
+                throw new ValidationException(strings.getString("Invalid.Discount.ID"));
             }
         }
 
@@ -529,7 +529,7 @@ public class OrdersService extends BusinessService {
              * Otherwise, decreases the quantity.
              */
             if (quantity == 0) {
-                throw new BusinessException(bundle.getString("BusinessRule.Order.ItemNotInStock"));
+                throw new BusinessException(strings.getString("BusinessRule.Order.ItemNotInStock"));
             }
         }
         
@@ -551,7 +551,7 @@ public class OrdersService extends BusinessService {
             }
             BigDecimal newMoneyBalance = client.getMoneyBalance().subtract(amount);
             if (newMoneyBalance.precision() > 5) {
-                throw new ValidationException(bundle.getString("Invalid.Client.MoneyBalance.LimitReached"));
+                throw new ValidationException(strings.getString("Invalid.Client.MoneyBalance.LimitReached"));
             }
             client.setMoneyBalance(newMoneyBalance);
 
@@ -681,7 +681,7 @@ public class OrdersService extends BusinessService {
         }
         
         if(orderLineId < 0) {
-            throw new BusinessException(bundle.getString("BusinessRule.Order.OrderLineForceAndCanNotBeRemoved"));
+            throw new BusinessException(strings.getString("BusinessRule.Order.OrderLineForceAndCanNotBeRemoved"));
         }
 
         OrderEntity order;
@@ -691,7 +691,7 @@ public class OrdersService extends BusinessService {
         orderLine = entityManager.find(OrderLine.class, orderLineId);
         
         if (orderLine == null) {
-            throw new ValidationException(bundle.getString("Invalid.OrderLine.ID"));
+            throw new ValidationException(strings.getString("Invalid.OrderLine.ID"));
         }
         
         order = orderLine.getOrder();
@@ -702,16 +702,16 @@ public class OrdersService extends BusinessService {
                 || !isToday(order.getDate());
 
         if (requiresAllPermissions && !sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
+            throw new SecurityException(strings.getString("Security.Operation.Denied"));
         }
 
         if (order.getAttendance() != null && item.getItemSubscription() != null) {
-            throw new BusinessException(bundle.getString("BusinessRule.Order.Casual.SubscriptionCanNotBeRemoved"));
+            throw new BusinessException(strings.getString("BusinessRule.Order.Casual.SubscriptionCanNotBeRemoved"));
         }
 
         Property timeRangeMismatch = entityManager.find(Property.class, "time_range_mismatch_penalty_item_id");
         if (orderLine.getItem().getId().equals(timeRangeMismatch.getInteger())) {
-            throw new BusinessException(bundle.getString("BusinessRule.Order.OrderLineForceAndCanNotBeRemoved"));
+            throw new BusinessException(strings.getString("BusinessRule.Order.OrderLineForceAndCanNotBeRemoved"));
         }
 
         /*
@@ -813,7 +813,7 @@ public class OrdersService extends BusinessService {
         OrderEntity order = entityManager.find(OrderEntity.class, orderId);
 
         if (order == null) {
-            throw new ValidationException(bundle.getString("Invalid.Order.ID"));
+            throw new ValidationException(strings.getString("Invalid.Order.ID"));
         }
 
         Boolean requiresAllPermissions = (order.getAttendance() != null
@@ -821,7 +821,7 @@ public class OrdersService extends BusinessService {
                 || !isToday(order.getDate());
 
         if (requiresAllPermissions && !sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
+            throw new SecurityException(strings.getString("Security.Operation.Denied"));
         }
 
         /*
@@ -829,7 +829,7 @@ public class OrdersService extends BusinessService {
          * big.
          */
         if (amount.scale() > 2) {
-            throw new ValidationException(bundle.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
+            throw new ValidationException(strings.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
         }
         amount = amount.setScale(2);
 
@@ -837,7 +837,7 @@ public class OrdersService extends BusinessService {
         BigDecimal newTotalPaymentMaid = order.getPayment().add(amount);
 
         if (newTotalPaymentMaid.precision() > 5) {
-            throw new ValidationException(bundle.getString("Invalid.Order.Total.LimitReached"));
+            throw new ValidationException(strings.getString("Invalid.Order.Total.LimitReached"));
         }
 
         /*
@@ -849,12 +849,12 @@ public class OrdersService extends BusinessService {
             BigDecimal newMoneyBalance = client.getMoneyBalance().add(amount);
 
             if (newMoneyBalance.precision() > 5) {
-                throw new ValidationException(bundle.getString("Invalid.Client.MoneyBalance.LimitReached"));
+                throw new ValidationException(strings.getString("Invalid.Client.MoneyBalance.LimitReached"));
             }
 
             if (newTotalPaymentMaid.compareTo(BigDecimal.ZERO) < 0) {
                 if (newMoneyBalance.compareTo(BigDecimal.ZERO) < 0) {
-                    throw new BusinessException(bundle.getString("Invalid.Order.NotEnoughMoneyToWithdraw"));
+                    throw new BusinessException(strings.getString("Invalid.Order.NotEnoughMoneyToWithdraw"));
                 }
             }
 
@@ -893,7 +893,7 @@ public class OrdersService extends BusinessService {
                 orderId);
 
         if (order == null) {
-            throw new ValidationException(bundle.getString("Invalid.Order.ID"));
+            throw new ValidationException(strings.getString("Invalid.Order.ID"));
         }
 
         return order.getPayment();

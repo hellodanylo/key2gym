@@ -51,7 +51,7 @@ public class CashService extends BusinessService {
         }
 
         if (!date.equals(DateMidnight.now()) && !SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Access.Denied"));
+            throw new SecurityException(strings.getString("Security.Access.Denied"));
         }
 
         BigDecimal cash = (BigDecimal) entityManager.createNamedQuery("OrderEntity.sumPaymentsForDateRecorded") //NOI18N
@@ -98,7 +98,7 @@ public class CashService extends BusinessService {
         assertTransactionActive();
 
         if (!SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
+            throw new SecurityException(strings.getString("Security.Operation.Denied"));
         }
 
         if (cashAdjustment == null) {
@@ -160,7 +160,7 @@ public class CashService extends BusinessService {
         assertOpenSessionExists();
 
         if (!SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Access.Denied"));
+            throw new SecurityException(strings.getString("Security.Access.Denied"));
         }
 
         if (date == null) {
@@ -201,13 +201,13 @@ public class CashService extends BusinessService {
         }
 
         if (value.scale() > 2) {
-            throw new ValidationException(bundle.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
+            throw new ValidationException(strings.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
         }
         
         value = value.setScale(2);
         
         if (value.precision() > 6) {
-            throw new ValidationException(bundle.getString("Invalid.CashAdjustment.LimitReached"));
+            throw new ValidationException(strings.getString("Invalid.CashAdjustment.LimitReached"));
         }
     }
     

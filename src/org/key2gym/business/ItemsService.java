@@ -61,7 +61,7 @@ public class ItemsService extends BusinessService {
         assertTransactionActive();
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
+            throw new SecurityException(strings.getString("Security.Operation.Denied"));
         }
 
         if (item == null) {
@@ -211,7 +211,7 @@ public class ItemsService extends BusinessService {
         assertTransactionActive();
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
+            throw new SecurityException(strings.getString("Security.Operation.Denied"));
         }
 
         if (item == null) {
@@ -231,7 +231,7 @@ public class ItemsService extends BusinessService {
          * Checks the ID.
          */
         if (entityManager.find(Item.class, item.getId()) == null) {
-            throw new ValidationException(bundle.getString("Invalid.Item.ID"));
+            throw new ValidationException(strings.getString("Invalid.Item.ID"));
         }
 
         Item entityItem = new Item(
@@ -273,7 +273,7 @@ public class ItemsService extends BusinessService {
         assertTransactionActive();
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
+            throw new SecurityException(strings.getString("Security.Operation.Denied"));
         }
 
         if (itemId == null) {
@@ -283,15 +283,15 @@ public class ItemsService extends BusinessService {
         Item item = entityManager.find(Item.class, itemId);
 
         if (item == null) {
-            throw new ValidationException(bundle.getString("Invalid.Item.ID"));
+            throw new ValidationException(strings.getString("Invalid.Item.ID"));
         }
 
         if (item.getItemSubscription() != null) {
-            throw new BusinessException(bundle.getString("BusinessRule.Item.IsSubscription"));
+            throw new BusinessException(strings.getString("BusinessRule.Item.IsSubscription"));
         }
 
         if (!item.getOrderLines().isEmpty()) {
-            throw new BusinessException(MessageFormat.format(bundle.getString("BusinessRule.Item.HasUnarchivedPurchases.withItemTitle"), new Object[]{item.getTitle()}));
+            throw new BusinessException(MessageFormat.format(strings.getString("BusinessRule.Item.HasUnarchivedPurchases.withItemTitle"), new Object[]{item.getTitle()}));
         }
 
         // TODO: note change
@@ -323,8 +323,8 @@ public class ItemsService extends BusinessService {
         }
         if (value < 0) {
             String message = MessageFormat.format(
-                    bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
-                    bundle.getString("Property.Barcode"));
+                    strings.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
+                    strings.getString("Property.Barcode"));
             throw new ValidationException(message);
         }
 
@@ -339,7 +339,7 @@ public class ItemsService extends BusinessService {
             }
 
             String message = MessageFormat.format(
-                    bundle.getString("Invalid.Item.Barcode.AlreadyInUse.withItemTitle"),
+                    strings.getString("Invalid.Item.Barcode.AlreadyInUse.withItemTitle"),
                     item.getTitle());
             throw new ValidationException(message);
 
@@ -355,13 +355,13 @@ public class ItemsService extends BusinessService {
 
         if (value < 0) {
             String message = MessageFormat.format(
-                    bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
-                    bundle.getString("Property.Quantity"));
+                    strings.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
+                    strings.getString("Property.Quantity"));
             throw new ValidationException(message);
         } else if (value > 255) {
             String message = MessageFormat.format(
-                    bundle.getString("Invalid.Property.OverLimit.withPropertyName"),
-                    bundle.getString("Property.Quantity"));
+                    strings.getString("Invalid.Property.OverLimit.withPropertyName"),
+                    strings.getString("Property.Quantity"));
             throw new ValidationException(message);
         }
     }
@@ -372,17 +372,17 @@ public class ItemsService extends BusinessService {
         }
 
         if (value.scale() > 2) {
-            throw new ValidationException(bundle.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
+            throw new ValidationException(strings.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
         }
 
         value = value.setScale(2);
 
         if (value.precision() > 5) {
-            throw new ValidationException(bundle.getString("Invalid.Money.ThreeDigitsBeforeDecimalPointMax"));
+            throw new ValidationException(strings.getString("Invalid.Money.ThreeDigitsBeforeDecimalPointMax"));
         } else if (value.compareTo(new BigDecimal(0)) < 0) {
             String message = MessageFormat.format(
-                    bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
-                    bundle.getString("Property.Price"));
+                    strings.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
+                    strings.getString("Property.Price"));
             throw new ValidationException(message);
         }
     }
@@ -393,7 +393,7 @@ public class ItemsService extends BusinessService {
         }
         value = value.trim();
         if (value.isEmpty()) {
-            throw new ValidationException(bundle.getString("Invalid.Item.Title.CanNotBeEmpty"));
+            throw new ValidationException(strings.getString("Invalid.Item.Title.CanNotBeEmpty"));
         }
     }
     /**

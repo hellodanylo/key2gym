@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "key_key")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Key.findAll", query = "SELECT k FROM Key k"),
+    @NamedQuery(name = "Key.findAll", query = "SELECT k FROM Key k ORDER BY k.id"),
     @NamedQuery(name = "Key.findById", query = "SELECT k FROM Key k WHERE k.id = :id"),
     @NamedQuery(name = "Key.findByTitle", query = "SELECT k FROM Key k WHERE k.title = :title"),
     @NamedQuery(name = "Key.findAvailable", query = "SELECT k From Key k WHERE k.id NOT IN (SELECT a.key.id FROM Attendance a WHERE a.datetimeEnd = '2004-04-04 09:00:01')"),

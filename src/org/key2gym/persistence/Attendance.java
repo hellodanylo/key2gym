@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Attendance.findByDatetimeBegin", query = "SELECT a FROM Attendance a WHERE a.datetimeBegin = :datetimeBegin"),
     @NamedQuery(name = "Attendance.findByDatetimeEnd", query = "SELECT a FROM Attendance a WHERE a.datetimeEnd = :datetimeEnd"),
     @NamedQuery(name = "Attendance.findByDatetimeBeginRangeOrderByDateTimeBeginDesc", query = "SELECT a FROM Attendance a WHERE a.datetimeBegin BETWEEN :low AND :high ORDER BY a.datetimeBegin DESC"),
-    @NamedQuery(name = "Attendance.findOpenByKey", query = "SELECT a FROM Attendance a WHERE a.datetimeEnd = '2004-04-04 09:00:01' AND a.key = :key")})
+    @NamedQuery(name = "Attendance.findOpenByKey", query = "SELECT a FROM Attendance a WHERE a.datetimeEnd = '2004-04-04 09:00:01' AND a.key = :key"),
+    @NamedQuery(name = "Attendance.countWithKey", query = "SELECT COUNT(a) FROM Attendance a WHERE a.key = :key")})
 public class Attendance implements Serializable {
     
     private static final long serialVersionUID = 1L;

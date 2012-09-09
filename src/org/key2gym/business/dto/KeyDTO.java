@@ -22,6 +22,10 @@ import org.key2gym.persistence.Key;
  * @author Danylo Vashchilenko
  */
 public class KeyDTO {
+    
+    public KeyDTO() {
+        
+    }
 
     public KeyDTO(Integer id, String title) {
         this.id = id;

@@ -16,34 +16,6 @@
 package org.key2gym.presentation;
 
 import java.awt.*;
-import org.key2gym.presentation.actions.OpenAttendancesWindowAction;
-import org.key2gym.presentation.actions.OpenOrdersWindowAction;
-import org.key2gym.presentation.actions.ManageCashAction;
-import org.key2gym.presentation.actions.ManageFreezesAction;
-import org.key2gym.presentation.actions.FreezeClientAction;
-import org.key2gym.presentation.actions.OpenItemsWindowAction;
-import org.key2gym.presentation.actions.AboutAction;
-import org.key2gym.presentation.actions.ManageItemsAction;
-import org.key2gym.presentation.actions.ToggleRaisedAdministratorAction;
-import org.key2gym.presentation.actions.EditOrderAction;
-import org.key2gym.presentation.actions.RegisterClientAction;
-import org.key2gym.presentation.actions.CheckOutAction;
-import org.key2gym.presentation.actions.CheckInAction;
-import org.key2gym.presentation.actions.ToggleSessionAction;
-import org.key2gym.presentation.actions.EditClientAction;
-import org.key2gym.presentation.actions.ManageSubscriptionsAction;
-import org.key2gym.business.AdministratorsService;
-import org.key2gym.business.SessionsService;
-import org.key2gym.business.StorageService;
-import org.key2gym.business.api.SecurityException;
-import org.key2gym.business.api.SessionListener;
-import org.key2gym.business.dto.AdministratorDTO;
-import org.key2gym.business.dto.AttendanceDTO;
-import org.key2gym.business.dto.OrderDTO;
-import org.key2gym.presentation.panels.AttendancesPanel;
-import org.key2gym.presentation.panels.CloseableTabPanel;
-import org.key2gym.presentation.panels.ItemsPanel;
-import org.key2gym.presentation.panels.OrdersPanel;
 import java.awt.event.*;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -52,6 +24,19 @@ import java.util.ResourceBundle;
 import javax.swing.*;
 import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
+import org.key2gym.business.AdministratorsService;
+import org.key2gym.business.SessionsService;
+import org.key2gym.business.StorageService;
+import org.key2gym.business.api.SecurityException;
+import org.key2gym.business.api.SessionListener;
+import org.key2gym.business.dto.AdministratorDTO;
+import org.key2gym.business.dto.AttendanceDTO;
+import org.key2gym.business.dto.OrderDTO;
+import org.key2gym.presentation.actions.*;
+import org.key2gym.presentation.panels.AttendancesPanel;
+import org.key2gym.presentation.panels.CloseableTabPanel;
+import org.key2gym.presentation.panels.ItemsPanel;
+import org.key2gym.presentation.panels.OrdersPanel;
 
 /**
  *
@@ -114,6 +99,7 @@ public class MainFrame extends JFrame {
         registerClientAction = new RegisterClientAction();
         manageItemsAction = new ManageItemsAction();
         manageSubscriptionsAction = new ManageSubscriptionsAction();
+        manageKeysAction = new ManageKeysAction();
         toggleSessionAction = new ToggleSessionAction();
         openItemsWindowAction = new OpenItemsWindowAction();
         aboutAction = new AboutAction();
@@ -192,6 +178,7 @@ public class MainFrame extends JFrame {
         JMenu manageMenu = new JMenu();
         JMenuItem manageItemsMenuItem = new JMenuItem();
         JMenuItem manageSubscriptionsMenuItem = new JMenuItem();
+        JMenuItem manageKeysMenuItem = new JMenuItem();
         JPopupMenu.Separator manageSubscriptionsCashSeparator = new JPopupMenu.Separator();
         JMenuItem manageCash = new JMenuItem();
         JPopupMenu.Separator manageCashFreezesSeparator = new JPopupMenu.Separator();
@@ -255,6 +242,10 @@ public class MainFrame extends JFrame {
 
         manageSubscriptionsMenuItem.setAction(manageSubscriptionsAction);
         manageMenu.add(manageSubscriptionsMenuItem);
+        
+        manageKeysMenuItem.setAction(manageKeysAction);
+        manageMenu.add(manageKeysMenuItem);
+        
         manageMenu.add(manageSubscriptionsCashSeparator);
 
         manageCash.setAction(manageCashAction);
@@ -481,6 +472,7 @@ public class MainFrame extends JFrame {
     private ManageFreezesAction manageFreezesAction;
     private ManageItemsAction manageItemsAction;
     private ManageSubscriptionsAction manageSubscriptionsAction;
+    private ManageKeysAction manageKeysAction;
     private CheckInAction openAttendanceAction;
     private OpenAttendancesWindowAction openAttendancesWindowAction;
     private OpenItemsWindowAction openItemsWindowAction;

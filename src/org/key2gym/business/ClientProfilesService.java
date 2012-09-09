@@ -91,7 +91,7 @@ public class ClientProfilesService extends BusinessService {
             entityManager.find(AdSource.class, clientProfile.getAdSourceId());
 
             if (adSource == null) {
-                throw new ValidationException(bundle.getString("Invalid.AdSource.ID"));
+                throw new ValidationException(strings.getString("Invalid.AdSource.ID"));
             }
         }
 
@@ -146,7 +146,7 @@ public class ClientProfilesService extends BusinessService {
         assertTransactionActive();
 
         if (!sessionService.getPermissionsLevel().equals(SessionsService.PL_ALL)) {
-            throw new SecurityException(bundle.getString("Security.Operation.Denied"));
+            throw new SecurityException(strings.getString("Security.Operation.Denied"));
         }
 
         if (id == null) {
@@ -156,11 +156,11 @@ public class ClientProfilesService extends BusinessService {
         Client client = entityManager.find(Client.class, id);
 
         if (client == null) {
-            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
+            throw new ValidationException(strings.getString("Invalid.Client.ID"));
         }
 
         if (client.getClientProfile() == null) {
-            throw new BusinessException(bundle.getString("BusinessRule.Client.HasNoProfile"));
+            throw new BusinessException(strings.getString("BusinessRule.Client.HasNoProfile"));
         }
 
         entityManager.remove(client.getClientProfile());
@@ -185,7 +185,7 @@ public class ClientProfilesService extends BusinessService {
         ClientProfile clientProfile = entityManager.find(ClientProfile.class, id);
 
         if (clientProfile == null) {
-            throw new ValidationException(bundle.getString("Invalid.Client.ID"));
+            throw new ValidationException(strings.getString("Invalid.Client.ID"));
         }
 
         ClientProfileDTO clientProfileDTO = new ClientProfileDTO(
@@ -213,7 +213,7 @@ public class ClientProfilesService extends BusinessService {
             @Override
             public void validate(DateMidnight value) throws ValidationException {
                 if (value != null && value.isAfter(new Instant())) {
-                    throw new ValidationException(bundle.getString("Invalid.ClientProfile.Birthday.MustBeInPast"));
+                    throw new ValidationException(strings.getString("Invalid.ClientProfile.Birthday.MustBeInPast"));
                 }
             }
         };
@@ -230,8 +230,8 @@ public class ClientProfilesService extends BusinessService {
 
                 if (value < 0) {
                     String message = MessageFormat.format(
-                            bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
-                            bundle.getString("Property.Height"));
+                            strings.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
+                            strings.getString("Property.Height"));
 
                     throw new ValidationException(message);
                 }
@@ -250,8 +250,8 @@ public class ClientProfilesService extends BusinessService {
 
                 if (value < 0) {
                     String message = MessageFormat.format(
-                            bundle.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
-                            bundle.getString("Property.Weight"));
+                            strings.getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
+                            strings.getString("Property.Weight"));
 
                     throw new ValidationException(message);
                 }
