@@ -22,6 +22,8 @@ import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.jdesktop.beansbinding.*;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.ValidationException;
@@ -147,6 +149,7 @@ public class CashAdjustmentFormPanel extends FormPanel<CashAdjustmentDTO> {
      *
      * @param cashAdjustment the new cash adjustment
      */
+    @Override
     public void setForm(CashAdjustmentDTO cashAdjustment) {
         this.cashAdjustment = cashAdjustment;
 
@@ -223,7 +226,13 @@ public class CashAdjustmentFormPanel extends FormPanel<CashAdjustmentDTO> {
      * @return true, if the form is valid and has been saved
      */
     @Override
-    public boolean trySave() {
+    public boolean trySave() { 
+        
+        if(!newAdjustmentTextField.getText().isEmpty()) {
+            UserExceptionHandler.getInstance().processException(new ValidationException(getString("Message.FormIsNotFinished")));
+            return false;
+        }
+        
         for (Binding binding : bindingGroup.getBindings()) {
             binding.saveAndNotify();
         }

@@ -17,6 +17,7 @@ package org.key2gym.presentation.dialogs;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Window;
 import java.util.List;
@@ -73,6 +74,7 @@ public class FormDialog extends AbstractDialog {
 
         for (Action action : actions) {
             JButton button = new JButton(action);
+            button.setPreferredSize(new Dimension(115, 28));
             buttonsPanel.add(button);
         }
         
