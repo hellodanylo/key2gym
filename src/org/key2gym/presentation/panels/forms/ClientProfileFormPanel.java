@@ -236,7 +236,11 @@ public class ClientProfileFormPanel extends JPanel {
                 @Override
                 public AdSourceDTO convertForward(Integer value) {
                     for (AdSourceDTO adSource : adSources) {
-                        if (adSource.getId().equals(value)) {
+                        if(adSource == null) {
+                            if(value == null) {
+                                return adSource;
+                            }
+                        } else if(adSource.getId().equals(value)) {
                             return adSource;
                         }
                     }
