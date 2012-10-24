@@ -250,7 +250,7 @@ public class ClientProfileFormPanel extends JPanel {
 
                 @Override
                 public Integer convertReverse(AdSourceDTO value) {
-                    return value.getId();
+                    return value == null ? null : value.getId();
                 }
             });
 

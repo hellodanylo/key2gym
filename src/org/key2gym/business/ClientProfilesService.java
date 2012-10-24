@@ -88,7 +88,7 @@ public class ClientProfilesService extends BusinessService {
         AdSource adSource = null;
 
         if (clientProfile.getAdSourceId() != null) {
-            entityManager.find(AdSource.class, clientProfile.getAdSourceId());
+            adSource = entityManager.find(AdSource.class, clientProfile.getAdSourceId());
 
             if (adSource == null) {
                 throw new ValidationException(strings.getString("Invalid.AdSource.ID"));
