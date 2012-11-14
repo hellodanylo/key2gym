@@ -1,6 +1,6 @@
 # Key2Gym
 
-![Key2Gyn logo](https://raw.github.com/equalsdanny/key2gym/develop/src/org/key2gym/presentation/resources/logo-wide.png)
+![Key2Gyn logo](https://raw.github.com/equalsdanny/key2gym/develop/client/src/org/key2gym/client/resources/logo-wide.png)
 
 ## About
 Key2Gym is a free sofware for running and maintaing gyms and other membership-based clubs or enterprises.
@@ -18,8 +18,8 @@ You need:
 * Ant 1.7.0+
 
 1. Fork or download the repository.
-2. `cd` to the repository's root folder and run `ant release`.
-3. You can now run Key2Gym as `cd dist && java -jar key2gym.jar`.
+2. `cd` to the repository's root folder and run `ant build`.
+3. See the documentation on the information about the additional required environment.
 
 Note that you have to deploy the whole environment to check out all the features.
 
