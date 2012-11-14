@@ -1,6 +1,11 @@
-bin/
-build.number
 .fuse*
 dist/
-log/
+
+private/
 nbproject/private/
+
+*/dist/
+*/bin/
+*/nbprject/private/
+
+test-app/

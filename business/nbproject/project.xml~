@@ -4,8 +4,18 @@
     <configuration>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
             <!-- Do not use Project Properties customizer when editing this file manually. -->
-            <name>Key2Gym</name>
-            <properties/>
+            <name>Key2Gym-Business</name>
+            <properties>
+                <property-file>../private/environment.properties</property-file>
+                <property-file>project.properties</property-file>
+            </properties>
+            <folders>
+                <source-folder>
+                    <label>Source</label>
+                    <type>java</type>
+                    <location>${src.dir}</location>
+                </source-folder>
+            </folders>
             <ide-actions>
                 <action name="build">
                     <target>build</target>
@@ -20,8 +30,15 @@
             </ide-actions>
             <view>
                 <items>
+                    <source-folder style="packages">
+                        <label>Source</label>
+                        <location>${src.dir}</location>
+                    </source-folder>
                     <source-file>
                         <location>build.xml</location>
+                    </source-file>
+                    <source-file>
+                        <location>project.properties</location>
                     </source-file>
                 </items>
                 <context-menu>
@@ -30,7 +47,14 @@
                     <ide-action name="clean"/>
                 </context-menu>
             </view>
+            <subprojects/>
         </general-data>
-        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/1"/>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/1">
+            <compilation-unit>
+                <package-root>${src.dir}/</package-root>
+                <classpath mode="compile">${javac.classpath}</classpath>
+                <source-level>6</source-level>
+            </compilation-unit>
+        </java-data>
     </configuration>
 </project>

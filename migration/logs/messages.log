@@ -1,0 +1,42 @@
+2012-11-05 20:57:13,422 [main] INFO  org.key2gym.migration.Main  - Missing the properties files, therefore expecting all properties to be passed on the command line.
+2012-11-05 20:57:13,662 [main] DEBUG com.googlecode.flyway.core.dbsupport.DbSupportFactory  - Database: PostgreSQL
+2012-11-05 20:57:13,684 [main] DEBUG com.googlecode.flyway.core.Flyway  - Schema: public
+2012-11-05 20:57:13,686 [main] DEBUG com.googlecode.flyway.core.util.FeatureDetector  - Spring Jdbc available: false
+2012-11-05 20:57:13,687 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning for resources at 'db/migration' (Prefix: 'V', Suffix: '.sql')
+2012-11-05 20:57:13,688 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Unable to determine URL for classpath location: db/migration (ClassLoader: sun.misc.Launcher$AppClassLoader@b6a5fb)
+2012-11-05 20:57:13,689 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning for classes at 'db/migration' (Implementing: 'com.googlecode.flyway.core.api.migration.jdbc.JdbcMigration')
+2012-11-05 20:57:13,689 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Unable to determine URL for classpath location: db/migration (ClassLoader: sun.misc.Launcher$AppClassLoader@b6a5fb)
+2012-11-05 20:57:13,689 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning for resources at 'org/key2gym/migration' (Prefix: 'V', Suffix: '.sql')
+2012-11-05 20:57:13,690 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning URL: jar:file:/media/Storages/Intelligence/Projects/Java/Key2Gym/3-2/migration/dist/key2gym-migration.jar!/org/key2gym/migration
+2012-11-05 20:57:13,691 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Filtering out resource: org/key2gym/migration/ (filename: )
+2012-11-05 20:57:13,691 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Filtering out resource: org/key2gym/migration/Main.class (filename: Main.class)
+2012-11-05 20:57:13,691 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Filtering out resource: org/key2gym/migration/V2JDBCMigration.class (filename: V2JDBCMigration.class)
+2012-11-05 20:57:13,691 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Filtering out resource: org/key2gym/migration/V4JDBCMigration.class (filename: V4JDBCMigration.class)
+2012-11-05 20:57:13,691 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning for classes at 'org/key2gym/migration' (Implementing: 'com.googlecode.flyway.core.api.migration.jdbc.JdbcMigration')
+2012-11-05 20:57:13,691 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning URL: jar:file:/media/Storages/Intelligence/Projects/Java/Key2Gym/3-2/migration/dist/key2gym-migration.jar!/org/key2gym/migration
+2012-11-05 20:57:13,691 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Filtering out resource: org/key2gym/migration/ (filename: )
+2012-11-05 20:57:13,692 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Found class: org.key2gym.migration.V2JDBCMigration
+2012-11-05 20:57:13,692 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Found class: org.key2gym.migration.V4JDBCMigration
+2012-11-05 20:57:13,734 [main] INFO  com.googlecode.flyway.core.migration.DbMigrator  - Current schema version: 4
+2012-11-05 20:57:13,744 [main] INFO  com.googlecode.flyway.core.migration.DbMigrator  - Schema is up to date. No migration necessary.
+2012-11-05 20:57:31,428 [main] INFO  org.key2gym.migration.Main  - Missing the properties files, therefore expecting all properties to be passed on the command line.
+2012-11-05 20:57:31,641 [main] DEBUG com.googlecode.flyway.core.dbsupport.DbSupportFactory  - Database: PostgreSQL
+2012-11-05 20:57:31,662 [main] DEBUG com.googlecode.flyway.core.Flyway  - Schema: public
+2012-11-05 20:57:31,665 [main] DEBUG com.googlecode.flyway.core.util.FeatureDetector  - Spring Jdbc available: false
+2012-11-05 20:57:31,666 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning for resources at 'db/migration' (Prefix: 'V', Suffix: '.sql')
+2012-11-05 20:57:31,666 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Unable to determine URL for classpath location: db/migration (ClassLoader: sun.misc.Launcher$AppClassLoader@420e44)
+2012-11-05 20:57:31,667 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning for classes at 'db/migration' (Implementing: 'com.googlecode.flyway.core.api.migration.jdbc.JdbcMigration')
+2012-11-05 20:57:31,668 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Unable to determine URL for classpath location: db/migration (ClassLoader: sun.misc.Launcher$AppClassLoader@420e44)
+2012-11-05 20:57:31,668 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning for resources at 'org/key2gym/migration' (Prefix: 'V', Suffix: '.sql')
+2012-11-05 20:57:31,668 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning URL: jar:file:/media/Storages/Intelligence/Projects/Java/Key2Gym/3-2/migration/dist/key2gym-migration.jar!/org/key2gym/migration
+2012-11-05 20:57:31,669 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Filtering out resource: org/key2gym/migration/ (filename: )
+2012-11-05 20:57:31,669 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Filtering out resource: org/key2gym/migration/Main.class (filename: Main.class)
+2012-11-05 20:57:31,669 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Filtering out resource: org/key2gym/migration/V2JDBCMigration.class (filename: V2JDBCMigration.class)
+2012-11-05 20:57:31,669 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Filtering out resource: org/key2gym/migration/V4JDBCMigration.class (filename: V4JDBCMigration.class)
+2012-11-05 20:57:31,670 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning for classes at 'org/key2gym/migration' (Implementing: 'com.googlecode.flyway.core.api.migration.jdbc.JdbcMigration')
+2012-11-05 20:57:31,670 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Scanning URL: jar:file:/media/Storages/Intelligence/Projects/Java/Key2Gym/3-2/migration/dist/key2gym-migration.jar!/org/key2gym/migration
+2012-11-05 20:57:31,670 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Filtering out resource: org/key2gym/migration/ (filename: )
+2012-11-05 20:57:31,671 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Found class: org.key2gym.migration.V2JDBCMigration
+2012-11-05 20:57:31,671 [main] DEBUG com.googlecode.flyway.core.util.scanner.ClassPathScanner  - Found class: org.key2gym.migration.V4JDBCMigration
+2012-11-05 20:57:31,703 [main] INFO  com.googlecode.flyway.core.migration.DbMigrator  - Current schema version: 4
+2012-11-05 20:57:31,709 [main] INFO  com.googlecode.flyway.core.migration.DbMigrator  - Schema is up to date. No migration necessary.

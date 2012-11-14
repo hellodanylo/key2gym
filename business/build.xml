@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Key2Gym-Business" default="default" basedir=".">
+    <description>Builds and packages the project Key2Gym-Business.</description>
+    
+    <target name="init">
+        <loadproperties srcfile="../private/environment.properties" />
+        <loadproperties srcfile="project.properties" />    
+    </target>
+    
+    <target name="compile" depends="init">
+        <mkdir dir="${bin.dir}" />
+        
+        <!-- Builds the Business API project. -->
+        <ant antfile="../business-api/build.xml" target="build" inheritall="false" />
+        
+        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}" source="6" includeantruntime="false" />
+        
+        <!-- Copies the resources. -->
+        <copy todir="${bin.dir}">
+            <fileset dir="${src.dir}" includes="**/*.properties" />
+        </copy>
+        
+    </target>
+    
+    <target name="clean" depends="init">
+        <delete dir="${bin.dir}" />
+        <delete dir="${dist.dir}" failonerror="false"/>
+    </target>
+    
+    <target name="build" depends="undeploy,compile">
+        
+        <!-- Prepares the binary directory -->
+        <copy todir="${bin.dir}/META-INF">
+            <fileset dir="${src.dir}/META-INF" />
+        </copy>
+        
+        <jar destfile="${dist.dir}/${jar.file}" basedir="${bin.dir}">
+            <fileset dir="${src.dir}" includes="**/.properties" />
+        </jar>
+        
+        <!-- Copies JARs required to run the EJBs. -->
+        <copy todir="${dist.dir}/lib">
+            <fileset file="${lib.key2gym-business-api.jar}" />
+            <fileset file="${lib.joda-time-bin.jar}" />
+            <fileset file="${lib.javaee-api-6.0.jar}" />
+            <fileset file="${lib.log4j-bin.jar}" />
+        </copy>
+
+        <!-- Zips distribution files into a ZIP archive for deployment. -->
+        <!--<zip destfile="${dist.dir}/key2gym-business.ear" basedir="${dist.dir}" excludes="key2gym-business.ear"/>-->
+        
+        <!-- Deletes all distribution files, because they are now in the archive. -->
+        <!--<delete includeemptydirs="true">
+            <fileset dir="${dist.dir}" excludes="key2gym-business.ear" />
+        </delete>-->
+    </target>
+    
+    <target name="deploy" depends="init">
+        <exec executable="${openejb.dir}/bin/openejb">
+            <arg value="deploy" />
+            <arg value="${project.dir}/business/${dist.dir}/${jar.file}" />
+        </exec>
+    </target>
+    
+    <target name="undeploy" depends="init">
+        <exec executable="${openejb.dir}/bin/openejb">
+            <arg value="undeploy" />
+            <arg value="${openejb.dir}/apps/${jar.file}" />
+        </exec>
+    </target>
+    
+    <target name="rebuild-deploy" depends="clean,build,deploy" />
+    
+</project>
