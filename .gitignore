@@ -1,4 +1,8 @@
 .fuse*
+
+*~
+**/*~
+
 dist/
 
 private/
@@ -6,6 +10,6 @@ nbproject/private/
 
 */dist/
 */bin/
-*/nbprject/private/
+*/nbproject/private/
 
 test-app/
