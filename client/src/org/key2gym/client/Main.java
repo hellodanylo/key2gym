@@ -96,18 +96,45 @@ public class Main {
          * Parses command line and fills the registry.
          */
         Options options = new Options();
-        options.addOption(ARGUMENT_DATASOURCE, true, ARGUMENT_DATASOURCE_DESCRIPTION);
+        options.addOption(ARGUMENT_CONNECTION, true, ARGUMENT_CONNECTION_DESCRIPTION);
 
-        CommandLine cmd = null;
+        CommandLine cmd;
         try {
             cmd = new GnuParser().parse(options, args);
         } catch (ParseException ex) {
             logger.fatal("Failed to parse command line:", ex);
-            System.exit(1);
+            return;
         }
 
-        if (cmd.hasOption(ARGUMENT_DATASOURCE)) {
-            properties.put(PROPERTY_DATASOURCE, cmd.getOptionValue(ARGUMENT_DATASOURCE));
+        if (cmd.hasOption(ARGUMENT_CONNECTION)) {
+            properties.put(PROPERTY_CONNECTION, cmd.getOptionValue(ARGUMENT_CONNECTION));
+        }
+        
+        /*
+         * Loads the connection properties file.
+         */
+        if (properties.containsKey(PROPERTY_CONNECTION)) {
+            Properties connectionProperties = new Properties();
+            String fileName = PATH_CONNECTIONS_FOLDER + "/" + properties.getProperty(PROPERTY_CONNECTION) + ".properties";
+            try (FileInputStream input = new FileInputStream(fileName)) {
+                connectionProperties.load(input);
+            } catch (IOException ex) {
+                logger.fatal("Failed to load the application properties file:", ex);
+                return;
+            }
+            
+            /*
+             * Copies the connection.url property.
+             */
+            if(connectionProperties.containsKey(PROPERTY_CONNECTION_URL)) {
+                properties.setProperty(PROPERTY_CONNECTION_URL, connectionProperties.getProperty(PROPERTY_CONNECTION_URL));
+            } else {
+                logger.fatal("The connection properties file ("+properties.getProperty(PROPERTY_CONNECTION) +") does not contain the required property "+connectionProperties.getProperty(PROPERTY_CONNECTION_URL) +"!");
+                return;
+            }
+        } else {
+            logger.fatal("No connection has been specified!");
+            return;
         }
 
         /*
@@ -130,41 +157,11 @@ public class Main {
             logger.error("Failed to change the L&F:", ex);
         }
 
-
-        /*
-         * Creates the context to lookup the EJBs.
-         */
-        Properties properties = new Properties();
-        properties.put("java.naming.factory.initial", "org.apache.openejb.client.RemoteInitialContextFactory");
-        properties.put("java.naming.provider.url", "ejbd://localhost:4201");
-
-        properties.put("openejb.authentication.realmName", "PropertiesLogin");
-        properties.put("java.naming.security.principal", "daniel");
-        properties.put("java.naming.security.credentials", "password");
-
-        InitialContext ctx;
-        try {
-            ctx = new InitialContext(properties);
-        } catch (NamingException ex) {
-            logger.fatal("Failed to create the context: ", ex);
-            return;
-        }
-
         logger.info("Started!");
 
         launchAndWaitMainFrame();
 
         logger.info("Shutting down!");
-
-        /*
-         * Releases all resources. 
-         */
-        try {
-            ctx.close();
-        } catch (NamingException ex) {
-            logger.fatal("Failed to close the context: ", ex);
-            return;
-        }
     }
 
     /**
@@ -197,18 +194,20 @@ public class Main {
      */
     private static final String PATH_APPLICATION_PROPERTIES = "etc/application.properties";
     private static final String PATH_LOGGING_PROPERTIES = "etc/logging.properties";
+    private static final String PATH_CONNECTIONS_FOLDER = "etc/connections";
     /*
      * Command-line arguments.
      */
-    private static final String ARGUMENT_DATASOURCE = "datasource";
-    private static final String ARGUMENT_DATASOURCE_DESCRIPTION = "the jndi name of the datasource to use.";
+    private static final String ARGUMENT_CONNECTION = "connection";
+    private static final String ARGUMENT_CONNECTION_DESCRIPTION = "the name of the connection to use.";
 
     /*
      * Application registry properties.
      */
     public static final String PROPERTY_LOCALE_COUNTRY = "locale.country";
     public static final String PROPERTY_LOCALE_LANGUAGE = "locale.language";
-    public static final String PROPERTY_DATASOURCE = "datasource";
+    public static final String PROPERTY_CONNECTION = "connection";
+    public static final String PROPERTY_CONNECTION_URL = "connection.url";
 
     public static Properties getProperties() {
         return properties;

@@ -57,7 +57,7 @@ public class ContextManager extends Observable {
         Properties properties = new Properties();
 
         properties.put("java.naming.factory.initial", "org.apache.openejb.client.RemoteInitialContextFactory");
-        properties.put("java.naming.provider.url", "ejbd://localhost:4201");
+        properties.put("java.naming.provider.url", Main.getProperties().getProperty(Main.PROPERTY_CONNECTION_URL));
         properties.put("openejb.authentication.realmName", "key2gym");
         properties.put("java.naming.security.principal", username);
         properties.put("java.naming.security.credentials", hashWithSHA256(password));
@@ -163,12 +163,16 @@ public class ContextManager extends Observable {
         return instance;
     }
     private static ContextManager instance;
-    /*
-     * The primary context. This context used for all lookups.
+    /**
+     * The primary context.
+     * 
+     * This context used for all lookups.
      */
     private static InitialContext context;
-    /*
-     * The shadow context. The user can open a second session
+    /**
+     * The shadow context. 
+     * 
+     * The user can open a second session
      * without closing the first one. The primary context becomes the shadow
      * context and the second context becomes the new primary context.
      */

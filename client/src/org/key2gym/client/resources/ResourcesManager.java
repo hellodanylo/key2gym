@@ -29,7 +29,7 @@ public class ResourcesManager {
         if (strings == null) {
             Locale locale = new Locale(Main.getProperties().getProperty(Main.PROPERTY_LOCALE_LANGUAGE),
                     Main.getProperties().getProperty(Main.PROPERTY_LOCALE_COUNTRY));
-            strings = ResourceBundle.getBundle("/org/key2gym/client/resouces/Strings", locale);
+            strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings", locale);
         }
 
         return strings;
