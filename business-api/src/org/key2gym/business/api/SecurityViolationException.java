@@ -19,7 +19,7 @@ package org.key2gym.business.api;
  *
  * @author Danylo Vashchilenko
  */
-public class SecurityViolationException extends Exception {
+public class SecurityViolationException extends UserException {
     public SecurityViolationException(String message) {
         super(message);
     }

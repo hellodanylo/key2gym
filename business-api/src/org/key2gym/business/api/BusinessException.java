@@ -19,7 +19,7 @@ package org.key2gym.business.api;
  *
  * @author Danylo Vashchilenko
  */
-public class BusinessException extends Exception {    
+public class BusinessException extends UserException {    
     public BusinessException(String message) {
         super(message);
     }

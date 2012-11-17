@@ -15,7 +15,6 @@
  */
 package org.key2gym.client.dialogs;
 
-import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.ValidationException;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -35,6 +34,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.business.api.dtos.ClientProfileDTO;
@@ -317,26 +317,8 @@ public class EditClientDialog extends AbstractDialog {
             } else if (clientProfileAttached) {
                 clientProfilesService.detachClientProfile(clientProfile.getClientId());
             }
-        } catch (SecurityException ex) {
-            /*
-             * GUI garantess that restricted operations can not be permored, so
-             * this is probably a bug.
-             */
-            setResult(EditOrderDialog.Result.EXCEPTION);
-            setException(new RuntimeException(ex));
-            dispose();
-            return;
-        } catch (BusinessException | ValidationException | SecurityViolationException ex) {
+        } catch (UserException ex) {
             UserExceptionHandler.getInstance().processException(ex);
-            return;
-        } catch (RuntimeException ex) {
-            /*
-             * The exception is unexpected. We got to shutdown the dialog for
-             * the state of the transaction is now unknown.
-             */
-            setResult(EditOrderDialog.Result.EXCEPTION);
-            setException(ex);
-            dispose();
             return;
         }
 
@@ -371,13 +353,9 @@ public class EditClientDialog extends AbstractDialog {
         this.clientId = clientId;
 
         try {
-            client = clientsService.getById(getClientId());
-        } catch (ValidationException ex) {
-            throw new RuntimeException(ex);
-        } catch (SecurityViolationException ex) {
-            setResult(Result.EXCEPTION);
-            setException(new RuntimeException(ex));
-            setVisible(false);
+            client = clientsService.getById(clientId);
+        } catch (UserException ex) {
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         }
 

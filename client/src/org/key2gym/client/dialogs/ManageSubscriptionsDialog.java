@@ -26,6 +26,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.SubscriptionDTO;
 import org.key2gym.business.api.remote.SubscriptionsServiceRemote;
@@ -182,24 +183,13 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
 
             try {
                 subscriptions = subscriptionsService.getAllSubscriptions();
-            } catch (SecurityViolationException ex) {
-                /*
-                 * Fails if the access to the list of keys is denied.
-                 */
-                setResult(Result.EXCEPTION);
-                setException(new RuntimeException(ex));
-                dispose();
+            } catch (UserException ex) {
+                UserExceptionHandler.getInstance().processException(ex);
                 return;
             }
 
             subscriptionsTableModel.setSubscriptions(subscriptions);
-        } else if (dialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            setResult(Result.EXCEPTION);
-            setException(dialog.getException());
-            dispose();
-            return;
         }
-
         subscriptionsTableModel.setSubscriptions(subscriptions);
     }
 
@@ -207,33 +197,22 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
         if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(this, getString("Message.AreYouSureYouWantToRemoveItems"), getString("Title.Confirmation"), JOptionPane.YES_NO_OPTION)) {
             return;
         }
-        try {
-            for (int index : subscriptionsTable.getSelectedRows()) {
 
-                try {
-                    subscriptionsService.removeSubscription(subscriptions.get(index).getId());
-                } catch (ValidationException | BusinessException | SecurityViolationException ex) {
-                    UserExceptionHandler.getInstance().processException(ex);
-                }
-            }
+        for (int index : subscriptionsTable.getSelectedRows()) {
 
             try {
-                subscriptions = subscriptionsService.getAllSubscriptions();
-            } catch (SecurityViolationException ex) {
-                throw new RuntimeException(ex);
+                subscriptionsService.removeSubscription(subscriptions.get(index).getId());
+            } catch (ValidationException | BusinessException | SecurityViolationException ex) {
+                UserExceptionHandler.getInstance().processException(ex);
             }
-
-        } catch (RuntimeException ex) {
-            /*
-             * The exception is unexpected. We got to shutdown the dialog
-             * for the state of the transaction is now unknown.
-             */
-            setResult(Result.EXCEPTION);
-            setException(ex);
-            dispose();
-            return;
         }
 
+        try {
+            subscriptions = subscriptionsService.getAllSubscriptions();
+        } catch (SecurityViolationException ex) {
+            throw new RuntimeException(ex);
+        }
+        
         subscriptionsTableModel.setSubscriptions(subscriptions);
     }
 

@@ -51,6 +51,7 @@ import org.key2gym.client.panels.AttendancesPanel;
 import org.key2gym.client.panels.CloseableTabPanel;
 import org.key2gym.client.panels.ItemsPanel;
 import org.key2gym.client.panels.OrdersPanel;
+import org.key2gym.client.util.ExceptionCatchingEventQueue;
 
 /**
  *
@@ -62,7 +63,7 @@ public class MainFrame extends JFrame {
      * Creates new MainFrame
      */
     protected MainFrame() {
-        ContextManager.getInstance().addObserver(new ContextManagerObserver());
+        Toolkit.getDefaultToolkit().getSystemEventQueue().push(new ExceptionCatchingEventQueue());
 
         attendancesPanels = new HashMap<>();
         ordersPanels = new HashMap<>();
@@ -70,6 +71,8 @@ public class MainFrame extends JFrame {
         strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
 
         initComponents();
+
+        ContextManager.getInstance().addObserver(new ContextManagerObserver());
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -398,8 +401,8 @@ public class MainFrame extends JFrame {
     private class ContextManagerObserver implements Observer {
 
         @Override
-        public void update(Observable contextManager, Object newContext) {
-            if (newContext != null) {
+        public void update(Observable contextManager, Object obj) {
+            if (ContextManager.getInstance().isContextAvailable()) {
                 try {
                     openAttendancesTabForDate(new DateMidnight());
                     openOrdersTabForDate(new DateMidnight());

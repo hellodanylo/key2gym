@@ -19,7 +19,7 @@ package org.key2gym.business.api;
  *
  * @author Danylo Vashchilenko
  */
-public class ValidationException extends Exception {
+public class ValidationException extends UserException {
     public ValidationException(String message) {
         super(message);
     }

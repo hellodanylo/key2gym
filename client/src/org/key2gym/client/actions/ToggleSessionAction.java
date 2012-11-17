@@ -46,10 +46,6 @@ public class ToggleSessionAction extends BasicAction {
             if (openSessionDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 return;
             }
-
-            if (openSessionDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-                throw openSessionDialog.getException();
-            }
         }
     }
 

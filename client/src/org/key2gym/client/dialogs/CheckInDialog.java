@@ -33,6 +33,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.business.api.dtos.KeyDTO;
@@ -345,12 +346,6 @@ public class CheckInDialog extends AbstractDialog {
             PickClientDialog dialog = new PickClientDialog(CheckInDialog.this);
             dialog.setVisible(true);
 
-            if (dialog.getResult().equals(Result.EXCEPTION)) {
-                setResult(Result.EXCEPTION);
-                dispose();
-                return;
-            }
-
             if (dialog.getResult().equals(Result.CANCEL)) {
                 return;
             }
@@ -361,12 +356,9 @@ public class CheckInDialog extends AbstractDialog {
                 client = clientsService.getById(clientId);
             } catch (ValidationException ex) {
                 /*
-                 * This is a bug, so report it and terminate the dialog.
+                 * This is a bug.
                  */
-                setResult(Result.EXCEPTION);
-                setException(new RuntimeException(ex));
-                dispose();
-                return;
+                throw new RuntimeException(ex);
             } catch (SecurityViolationException ex) {
                 return;
             }
@@ -425,17 +417,8 @@ public class CheckInDialog extends AbstractDialog {
                 attendanceId = attendancesService.checkInRegisteredClient(clientId, selectedKeyId);
             }
 
-        } catch (BusinessException | ValidationException | SecurityViolationException ex) {
+        } catch (UserException ex) {
             UserExceptionHandler.getInstance().processException(ex);
-            return;
-        } catch (RuntimeException ex) {
-            /*
-             * The exception is unexpected. We got to shutdown the dialog for
-             * the state of the transaction is now unknown.
-             */
-            setResult(Result.EXCEPTION);
-            setException(ex);
-            dispose();
             return;
         }
 

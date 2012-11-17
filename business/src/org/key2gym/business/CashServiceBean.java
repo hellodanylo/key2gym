@@ -23,6 +23,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.SecurityViolationException;
@@ -106,7 +107,7 @@ public class CashServiceBean extends BasicBean implements CashServiceRemote {
         }
 
         CashAdjustment entityCashAdjustment = entityManager.find(CashAdjustment.class,
-                cashAdjustment.getDate().toDate());
+                cashAdjustment.getDate().toDate(), LockModeType.OPTIMISTIC);
 
         if (entityCashAdjustment == null) {
             entityCashAdjustment = new CashAdjustment();

@@ -41,11 +41,6 @@ public class ManageCashAction extends BasicAction {
     public void onActionPerformed(ActionEvent e) throws BusinessException, ValidationException, SecurityViolationException {
         PickDateDialog pickDateDialog = new PickDateDialog(getFrame());
         pickDateDialog.setVisible(true);
-
-        if (pickDateDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw pickDateDialog.getException();
-        }
-
         if (pickDateDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }
@@ -53,10 +48,6 @@ public class ManageCashAction extends BasicAction {
         CashAdjustmentDTO cashAdjustment = ContextManager.lookup(CashServiceRemote.class).getAdjustmentByDate(pickDateDialog.getDate());
         FormDialog dialog = FormPanelDialogsFactory.createCashAdjustmentEditor(getFrame(), cashAdjustment);
         dialog.setVisible(true);
-
-        if (dialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw dialog.getException();
-        }
 
         if (dialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;

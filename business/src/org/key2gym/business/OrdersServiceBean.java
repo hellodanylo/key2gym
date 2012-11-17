@@ -22,7 +22,6 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.security.DeclareRoles;
-import javax.ejb.EJBException;
 import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -32,6 +31,7 @@ import javax.persistence.Query;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.OrderDTO;
 import org.key2gym.business.api.dtos.OrderLineDTO;
@@ -105,7 +105,6 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
                 order.setClient(client);
                 order.setDate(date.toDate());
                 order.setPayment(BigDecimal.ZERO);
-                order.setId(getNextId());
 
                 getEntityManager().persist(order);
                 getEntityManager().flush();
@@ -158,7 +157,6 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
                 order.setClient(client);
                 order.setDate(getToday());
                 order.setPayment(BigDecimal.ZERO);
-                order.setId(getNextId());
 
                 getEntityManager().persist(order);
                 getEntityManager().flush();
@@ -231,7 +229,6 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
 
 
                 order = new OrderEntity();
-                order.setId(getNextId());
                 order.setDate(new Date());
                 order.setPayment(BigDecimal.ZERO);
 
@@ -747,21 +744,6 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
         return order.getPayment();
     }
 
-    /**
-     * Gets the next free ID that can be assigned to an order.
-     *
-     * @return the ID
-     */
-    @Override
-    public Integer getNextId() {
-        try {
-            return (Integer) getEntityManager().createNamedQuery("OrderEntity.findAllIdsOrderByIdDesc") //NOI18N
-                    .setMaxResults(1).getSingleResult() + 1;
-        } catch (NoResultException ex) {
-            return 1;
-        }
-    }
-
     public static OrderDTO wrapOrderEntity(OrderEntity order) {
 
         OrderDTO orderDTO = new OrderDTO();
@@ -885,5 +867,6 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
 
         return expirationDate.getTime();
     }
+    
     private static final Integer MONEY_MAX_PRESICION = 6;
 }

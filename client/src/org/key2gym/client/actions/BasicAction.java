@@ -46,8 +46,8 @@ public abstract class BasicAction extends AbstractAction {
 
         ContextManager.getInstance().addObserver(new Observer() {
             @Override
-            public void update(Observable contextManager, Object newContext) {
-                if (newContext != null) {
+            public void update(Observable contextManager, Object obj) {
+                if (ContextManager.getInstance().isContextAvailable()) {
                     onSessionOpened();
                 } else {
                     onSessionClosed();

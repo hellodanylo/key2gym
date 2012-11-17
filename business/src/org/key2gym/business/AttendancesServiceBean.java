@@ -29,6 +29,7 @@ import javax.ejb.Stateless;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import org.joda.time.DateMidnight;
@@ -38,10 +39,8 @@ import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
-import org.key2gym.business.api.local.OrderLocal;
 import org.key2gym.business.api.local.OrdersServiceLocal;
 import org.key2gym.business.api.remote.AttendancesServiceRemote;
-import org.key2gym.business.api.remote.OrdersServiceRemote;
 import org.key2gym.persistence.Attendance;
 import org.key2gym.persistence.Client;
 import org.key2gym.persistence.ItemSubscription;
@@ -82,7 +81,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new NullPointerException("The keyId is null."); //NOI18N
         }
 
-        client = (Client) entityManager.find(Client.class, clientId);
+        client = (Client) entityManager.find(Client.class, clientId, LockModeType.OPTIMISTIC);
         if (client == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
         }
@@ -134,7 +133,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             itemSubscription = itemSubscriptions.get(0);
 
             /*
-             * Calculates the qunatity of penalties to apply.
+             * Calculates the quantity of penalties to apply.
              */
             int penalties = calculatePenalties(itemSubscription.getTimeSplit(), new LocalTime());
 
@@ -144,11 +143,9 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             if (penalties > 0) {
                 
                 OrdersServiceLocal ordersService;
-                OrderLocal orderBean;
                 
                 try {
                     ordersService = InitialContext.doLookup(OrdersServiceLocal.class.getSimpleName());
-                    orderBean = InitialContext.doLookup(OrderLocal.class.getSimpleName());
                 } catch (NamingException ex) {
                     throw new EJBException(ex);
                 }
@@ -205,7 +202,6 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         attendance.setKey(key);
 
         order = new OrderEntity();
-        order.setId(ordersService.getNextId());
         order.setAttendance(attendance);
         order.setDate(attendance.getDatetimeBegin());
         order.setPayment(BigDecimal.ZERO);
@@ -229,7 +225,6 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         entityManager.persist(orderLine);
         entityManager.persist(order);
         entityManager.persist(attendance);
-        entityManager.flush();
 
         return attendance.getId();
     }
@@ -342,7 +337,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         if (attendanceId == null) {
             throw new NullPointerException("The attendanceId is null."); //NOI18N
         }
-        Attendance attendance = entityManager.find(Attendance.class, attendanceId);
+        Attendance attendance = entityManager.find(Attendance.class, attendanceId, LockModeType.OPTIMISTIC);
 
         if (attendance == null) {
             throw new ValidationException(getString("Invalid.Attendance.ID"));
@@ -355,7 +350,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         OrderEntity order = attendance.getOrder();
 
         /*
-         * If there is an order associeated with the attendance, the attendance
+         * If there is an order associated with the attendance, the attendance
          * is anonymous, and, therefore, the order should have a full payment.
          */
         if (order != null) {

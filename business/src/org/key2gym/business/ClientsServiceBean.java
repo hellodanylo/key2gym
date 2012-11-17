@@ -44,7 +44,6 @@ import org.key2gym.persistence.Client;
 @Stateless
 @Remote(ClientsServiceRemote.class)
 @DeclareRoles({SecurityRoles.MANAGER, SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR})
-@RolesAllowed({SecurityRoles.MANAGER, SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR})
 public class ClientsServiceBean extends BasicBean implements ClientsServiceRemote {
 
     @Override

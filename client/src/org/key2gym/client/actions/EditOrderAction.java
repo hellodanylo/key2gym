@@ -17,12 +17,10 @@ package org.key2gym.client.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
-import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.remote.OrderRemote;
 import org.key2gym.business.api.remote.OrdersServiceRemote;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.MainFrame;
@@ -55,10 +53,6 @@ public class EditOrderAction extends BasicAction {
             PickOrderDialog pickOrderDialog = new PickOrderDialog(getFrame());
             pickOrderDialog.setVisible(true);
 
-            if (pickOrderDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-                throw pickOrderDialog.getException();
-            }
-
             if (pickOrderDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 return;
             }
@@ -66,10 +60,6 @@ public class EditOrderAction extends BasicAction {
             if (pickOrderDialog.isClient()) {
                 PickClientDialog pickClientDialog = new PickClientDialog(getFrame());
                 pickClientDialog.setVisible(true);
-
-                if (pickClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-                    throw pickClientDialog.getException();
-                }
 
                 if (pickClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                     return;
@@ -90,9 +80,5 @@ public class EditOrderAction extends BasicAction {
         editOrderDialog.setOrderId(orderId);
         editOrderDialog.setFullPaymentForced(false);
         editOrderDialog.setVisible(true);
-
-        if (editOrderDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw editOrderDialog.getException();
-        }
     }
 }

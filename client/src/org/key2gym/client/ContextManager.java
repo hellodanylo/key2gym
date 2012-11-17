@@ -74,9 +74,6 @@ public class ContextManager extends Observable {
             throw new RuntimeException("Failed to create InitialContext!", ex);
         }
 
-        setChanged();
-        notifyObservers(newContext);
-
         if (context == null) {
             context = newContext;
         } else if (shadowContext == null) {
@@ -85,8 +82,11 @@ public class ContextManager extends Observable {
         } else {
             throw new RuntimeException("There is already a primary and a shadow contexts.");
         }
+
+        setChanged();
+        notifyObservers();
     }
-    
+
     /**
      * Hashes the password with SHA-256.
      * 

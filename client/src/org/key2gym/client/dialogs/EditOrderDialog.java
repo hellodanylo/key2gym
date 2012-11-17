@@ -31,6 +31,7 @@ import java.util.List;
 import javax.swing.*;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.dtos.ClientDTO;
@@ -403,26 +404,8 @@ public class EditOrderDialog extends AbstractDialog {
                 try {
                     ordersService.addPurchase(orderId, orderLine.getItemId(), orderLine.getDiscountId(), 1);
                     updateGUI(true);
-                } catch (BusinessException | SecurityViolationException ex) {
+                } catch (UserException ex) {
                     UserExceptionHandler.getInstance().processException(ex);
-                } catch (ValidationException ex) {
-                    /*
-                     * The exception is unexpected. We got to shutdown the
-                     * dialog for the state of the transaction is now unknown.
-                     */
-                    setResult(Result.EXCEPTION);
-                    setException(new RuntimeException(ex));
-                    dispose();
-                    return;
-                } catch (RuntimeException ex) {
-                    /*
-                     * The exception is unexpected. We got to shutdown the
-                     * dialog for the state of the transaction is now unknown.
-                     */
-                    setResult(Result.EXCEPTION);
-                    setException(ex);
-                    dispose();
-                    return;
                 }
             }
         };
@@ -458,25 +441,8 @@ public class EditOrderDialog extends AbstractDialog {
                 try {
                     ordersService.removePurchase(orderLine.getId(), 1);
                     updateGUI(true);
-                } catch (BusinessException | SecurityViolationException ex) {
+                } catch (UserException ex) {
                     UserExceptionHandler.getInstance().processException(ex);
-                } catch (ValidationException ex) {
-                    /*
-                     * The exception is unexpected. We got to shutdown the
-                     * dialog for the state of the transaction is now unknown.
-                     */
-                    setResult(Result.EXCEPTION);
-                    setException(new RuntimeException(ex));
-                    dispose();
-                    return;
-                } catch (RuntimeException ex) {
-                    /*
-                     * The exception is unexpected. We got to shutdown the
-                     * dialog for the state of the transaction is now unknown.
-                     */
-                    setResult(Result.EXCEPTION);
-                    setException(ex);
-                    dispose();
                     return;
                 }
             }
@@ -513,25 +479,8 @@ public class EditOrderDialog extends AbstractDialog {
                 try {
                     ordersService.addPurchase(orderId, itemId, discount == null ? null : discount.getId(), (Integer) quantitySpinner.getValue());
                     updateGUI(true);
-                } catch (BusinessException | SecurityViolationException ex) {
+                } catch (UserException ex) {
                     UserExceptionHandler.getInstance().processException(ex);
-                } catch (ValidationException ex) {
-                    /*
-                     * The exception is unexpected. We got to shutdown the
-                     * dialog for the state of the transaction is now unknown.
-                     */
-                    setResult(Result.EXCEPTION);
-                    setException(new RuntimeException("Unexpected exception!", ex));
-                    dispose();
-                    return;
-                } catch (RuntimeException ex) {
-                    /*
-                     * The exception is unexpected. We got to shutdown the
-                     * dialog for the state of the transaction is now unknown.
-                     */
-                    setResult(Result.EXCEPTION);
-                    setException(ex);
-                    dispose();
                     return;
                 }
             }
@@ -564,24 +513,16 @@ public class EditOrderDialog extends AbstractDialog {
                     getString("Text.NewPayment"));
             UserExceptionHandler.getInstance().processException(new ValidationException(message));
             return;
-        } catch (BusinessException | ValidationException | SecurityViolationException ex) {
+        } catch (UserException ex) {
             UserExceptionHandler.getInstance().processException(ex);
-            return;
-        } catch (RuntimeException ex) {
-            /*
-             * The exception is unexpected. We got to shutdown the dialog for
-             * the state of the transaction is now unknown.
-             */
-            setResult(Result.EXCEPTION);
-            setException(ex);
-            dispose();
             return;
         }
 
         super.onCancelActionPerformed(evt);
     }
-    
+
     protected class RecordPaymentAndCloseAction extends CloseAction {
+
         public RecordPaymentAndCloseAction() {
             putValue(NAME, getString("Button.RecordPaymentAndClose"));
         }

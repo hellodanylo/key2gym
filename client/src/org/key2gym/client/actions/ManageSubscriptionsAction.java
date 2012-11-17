@@ -38,10 +38,6 @@ public class ManageSubscriptionsAction extends BasicAction {
         ManageSubscriptionsDialog manageSubscriptionsDialog = new ManageSubscriptionsDialog(getFrame());
         manageSubscriptionsDialog.setVisible(true);
 
-        if (manageSubscriptionsDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw manageSubscriptionsDialog.getException();
-        }
-
         if (manageSubscriptionsDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }

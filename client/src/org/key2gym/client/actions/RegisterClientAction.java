@@ -21,7 +21,6 @@ import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.remote.OrderRemote;
 import org.key2gym.business.api.remote.OrdersServiceRemote;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.dialogs.AbstractDialog;
@@ -52,10 +51,6 @@ public class RegisterClientAction extends BasicAction {
         registerClientDialog = new RegisterClientDialog(getFrame());
         registerClientDialog.setVisible(true);
 
-        if (registerClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw registerClientDialog.getException();
-        }
-
         if (registerClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }
@@ -76,10 +71,6 @@ public class RegisterClientAction extends BasicAction {
 
             editOrderDialog.setVisible(true);
 
-            if (editOrderDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-                throw editOrderDialog.getException();
-            }
-
             if (editOrderDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 return;
             }
@@ -93,10 +84,6 @@ public class RegisterClientAction extends BasicAction {
 
             openAttendanceDialog.setClientId(registerClientDialog.getClientId());
             openAttendanceDialog.setVisible(true);
-
-            if (openAttendanceDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-                throw new RuntimeException(openAttendanceDialog.getException());
-            }
 
             if (openAttendanceDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
                 return;

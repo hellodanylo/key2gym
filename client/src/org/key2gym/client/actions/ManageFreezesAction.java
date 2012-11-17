@@ -38,10 +38,6 @@ public class ManageFreezesAction extends BasicAction {
         ManageFreezesDialog manageFreezesDialog = new ManageFreezesDialog(getFrame());
         manageFreezesDialog.setVisible(true);
 
-        if (manageFreezesDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw manageFreezesDialog.getException();
-        }
-
         if (manageFreezesDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }

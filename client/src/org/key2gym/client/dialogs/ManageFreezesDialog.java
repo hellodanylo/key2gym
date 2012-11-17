@@ -29,6 +29,7 @@ import javax.swing.event.ListSelectionListener;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.FreezeDTO;
 import org.key2gym.business.api.remote.FreezesServiceRemote;
@@ -182,12 +183,7 @@ public class ManageFreezesDialog extends AbstractDialog {
     private void removeButtonActionPerformed(ActionEvent evt) {
         try {
             freezesService.remove(freezesTableModel.getFreezeAt(freezesTable.getSelectedRow()).getId());
-        } catch (SecurityException | ValidationException ex) {
-            setResult(Result.EXCEPTION);
-            setException(new RuntimeException(ex));
-            dispose();
-            return;
-        } catch (SecurityViolationException | BusinessException ex) {
+        } catch (UserException ex) {
             UserExceptionHandler.getInstance().processException(ex);
             return;
         }
@@ -228,10 +224,8 @@ public class ManageFreezesDialog extends AbstractDialog {
             } else {
                 freezes = freezesService.findAll();
             }
-        } catch (SecurityViolationException | ValidationException ex) {
-            setResult(Result.EXCEPTION);
-            setException(new RuntimeException(ex));
-            dispose();
+        } catch (UserException ex) {
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         }
 

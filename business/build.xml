@@ -14,7 +14,7 @@
         <!-- Builds the Business API project. -->
         <ant antfile="../business-api/build.xml" target="build" inheritall="false" />
         
-        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}" source="6" includeantruntime="false" />
+        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}" source="7" includeantruntime="false" />
         
         <!-- Copies the resources. -->
         <copy todir="${bin.dir}">
@@ -57,14 +57,14 @@
     </target>
     
     <target name="deploy" depends="init">
-        <exec executable="${openejb.dir}/bin/openejb">
+        <exec dir="${dist.dir}" executable="${openejb.dir}/bin/openejb">
             <arg value="deploy" />
             <arg value="${project.dir}/business/${dist.dir}/${jar.file}" />
         </exec>
     </target>
     
     <target name="undeploy" depends="init">
-        <exec executable="${openejb.dir}/bin/openejb">
+        <exec dir="${dist.dir}" executable="${openejb.dir}/bin/openejb">
             <arg value="undeploy" />
             <arg value="${openejb.dir}/apps/${jar.file}" />
         </exec>

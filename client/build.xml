@@ -56,6 +56,7 @@ lib/${lib.beans-binding-bin.jar.basename}" />
             <manifest>
                 <attribute name="Main-class" value="${jar.mainclass}" />
                 <attribute name="Class-path" value="${jar.classpath}" />
+                <attribute name="Splashscreen-image" value="${jar.splashscreen}" />
             </manifest>
         </jar>
         

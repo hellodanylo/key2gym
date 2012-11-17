@@ -21,7 +21,6 @@ import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.remote.OrderRemote;
 import org.key2gym.business.api.remote.OrdersServiceRemote;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.dialogs.AbstractDialog;
@@ -49,11 +48,7 @@ public final class CheckInAction extends BasicAction {
          */
         CheckInDialog checkInDialog = new CheckInDialog(getFrame());
         checkInDialog.setVisible(true);
-
-        if (checkInDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw checkInDialog.getException();
-        }
-
+        
         if (checkInDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }
@@ -79,10 +74,6 @@ public final class CheckInAction extends BasicAction {
             editOrderDialog.setOrderId(orderId);
             editOrderDialog.setFullPaymentForced(false);
             editOrderDialog.setVisible(true);
-
-            if (editOrderDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-                throw editOrderDialog.getException();
-            }
         }
     }
 }

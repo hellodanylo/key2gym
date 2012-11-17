@@ -42,10 +42,6 @@ public class OpenOrdersWindowAction extends BasicAction {
         PickDateDialog pickDateDialog = new PickDateDialog(getFrame());
         pickDateDialog.setVisible(true);
 
-        if (pickDateDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw pickDateDialog.getException();
-        }
-
         if (pickDateDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }

@@ -17,9 +17,11 @@ package org.key2gym.business.api.interfaces;
 
 import java.math.BigDecimal;
 import java.util.List;
+import javax.ejb.EJBException;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.OrderDTO;
 
@@ -201,15 +203,7 @@ public interface OrdersServiceInterface {
      * @throws SecurityViolationException if the caller does not have either *_ADMINISTRATOR or MANAGER role
      */
     OrderDTO getById(Integer id) throws ValidationException, SecurityViolationException;
-
-    /**
-     * Gets the next free ID that can be assigned to an order.
-     *
-     * @throws SecurityViolationException if the caller does not have either *_ADMINISTRATOR or MANAGER role
-     * @return the ID
-     */
-    Integer getNextId() throws SecurityViolationException;
-
+    
     /**
      * Returns the amount of payment associated with the order.
      *

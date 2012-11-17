@@ -26,6 +26,7 @@ import java.util.List;
 import javax.swing.*;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.dtos.ClientDTO;
@@ -50,7 +51,7 @@ public class PickAttendanceDialog extends AbstractDialog {
      */
     public PickAttendanceDialog(JFrame parent) throws BusinessException, SecurityViolationException {
         super(parent, true);
-        
+
         attendancesService = ContextManager.lookup(AttendancesServiceRemote.class);
         keysService = ContextManager.lookup(KeysServiceRemote.class);
         clientsService = ContextManager.lookup(ClientsServiceRemote.class);
@@ -74,7 +75,7 @@ public class PickAttendanceDialog extends AbstractDialog {
         add(createClientPanel(), CC.xywh(2, 4, 3, 1));
         add(createOptionsPanel(), CC.xywh(2, 6, 3, 1));
         add(createButtonsPanel(), CC.xywh(2, 8, 3, 1));
-        
+
         // Updates the client panel
         onSelectedKeyChanged();
 
@@ -93,7 +94,7 @@ public class PickAttendanceDialog extends AbstractDialog {
          * Gets all keys taken.
          */
         List<KeyDTO> keys = keysService.getKeysTaken();
-        
+
         if (keys.isEmpty()) {
             throw new BusinessException(getString("Message.NoAttendanceIsOpen"));
         }
@@ -101,7 +102,6 @@ public class PickAttendanceDialog extends AbstractDialog {
         keysComboBox.setRenderer(new KeyListCellRenderer());
         keysComboBox.setModel(new DefaultComboBoxModel(keys.toArray()));
         keysComboBox.addItemListener(new ItemListener() {
-
             @Override
             public void itemStateChanged(ItemEvent e) {
                 onSelectedKeyChanged();
@@ -210,13 +210,11 @@ public class PickAttendanceDialog extends AbstractDialog {
             } else {
                 client = null;
             }
-        } catch (ValidationException | BusinessException | SecurityViolationException ex) {
-            setResult(Result.EXCEPTION);
-            setException(new RuntimeException(ex));
-            dispose();
+        } catch (UserException ex) {
+            UserExceptionHandler.getInstance().processException(ex);
             return;
         }
-        
+
         clientPanel.setClient(client);
     }
 
@@ -234,15 +232,6 @@ public class PickAttendanceDialog extends AbstractDialog {
             }
         } catch (BusinessException | SecurityViolationException ex) {
             UserExceptionHandler.getInstance().processException(ex);
-            return;
-        } catch (RuntimeException ex) {
-            /*
-             * The exception is unexpected. We got to shutdown the dialog for
-             * the state of the transaction is now unknown.
-             */
-            setResult(AbstractDialog.Result.EXCEPTION);
-            setException(ex);
-            dispose();
             return;
         }
 
@@ -289,7 +278,6 @@ public class PickAttendanceDialog extends AbstractDialog {
     private KeysServiceRemote keysService;
     private AttendancesServiceRemote attendancesService;
     private ClientsServiceRemote clientsService;
-    
     /*
      * Session variables
      */

@@ -23,7 +23,6 @@ import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.remote.AttendancesServiceRemote;
-import org.key2gym.business.api.remote.OrderRemote;
 import org.key2gym.business.api.remote.OrdersServiceRemote;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.dialogs.AbstractDialog;
@@ -62,10 +61,6 @@ public class CheckOutAction extends BasicAction {
 
         pickAttendanceDialog.setVisible(true);
 
-        if (pickAttendanceDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw pickAttendanceDialog.getException();
-        }
-
         if (pickAttendanceDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }
@@ -94,10 +89,6 @@ public class CheckOutAction extends BasicAction {
                 editOrderDialog.setOrderId(orderId);
                 editOrderDialog.setFullPaymentForced(isCasual);
                 editOrderDialog.setVisible(true);
-
-                if (editOrderDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-                    throw editOrderDialog.getException();
-                }
             }
         }
 

@@ -295,15 +295,6 @@ public class PickClientDialog extends AbstractDialog {
             return;
         } catch (ValidationException ex) {
             clients = new LinkedList<>();
-        } catch (RuntimeException ex) {
-            /*
-             * The exception is unexpected. We got to shutdown the dialog for
-             * the state of the transaction is now unknown.
-             */
-            setResult(Result.EXCEPTION);
-            setException(ex);
-            dispose();
-            return;
         }
 
         clientsTableModel.setClients(clients);

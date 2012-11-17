@@ -15,14 +15,11 @@
  */
 package org.key2gym.client;
 
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.ValidationException;
 import java.awt.Component;
 import java.util.ResourceBundle;
 import javax.swing.FocusManager;
 import javax.swing.JOptionPane;
-import org.key2gym.business.api.SecurityViolationException;
-import org.key2gym.client.util.NotificationException;
+import org.key2gym.business.api.UserException;
 
 /**
  *
@@ -38,18 +35,8 @@ public class UserExceptionHandler {
         return FocusManager.getCurrentManager().getFocusedWindow();
     }
     
-    public void processException(Exception ex) {
-        Integer messageType;
-        if (ex instanceof NotificationException) {
-            messageType = JOptionPane.INFORMATION_MESSAGE;
-        } else if (ex instanceof ValidationException || ex instanceof SecurityViolationException) {
-            messageType = JOptionPane.WARNING_MESSAGE;
-        } else if (ex instanceof BusinessException) {
-            messageType = JOptionPane.ERROR_MESSAGE;
-        } else {
-            throw new RuntimeException("Unexpexted exception type.", ex);
-        }
-        JOptionPane.showMessageDialog(getComponent(), ex.getMessage(), strings.getString("Title.Message"), messageType);
+    public void processException(UserException ex) {
+        JOptionPane.showMessageDialog(getComponent(), ex.getMessage(), strings.getString("Title.Message"), JOptionPane.WARNING_MESSAGE);
     }
     
     private ResourceBundle strings;

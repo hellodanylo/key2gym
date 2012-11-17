@@ -39,10 +39,6 @@ public class FreezeClientAction extends BasicAction {
         PickClientDialog pickClientDialog = new PickClientDialog(getFrame());
         pickClientDialog.setVisible(true);
 
-        if (pickClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw pickClientDialog.getException();
-        }
-
         if (pickClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }
@@ -50,10 +46,6 @@ public class FreezeClientAction extends BasicAction {
         FreezeClientDialog freezeClientDialog = new FreezeClientDialog(getFrame());
         freezeClientDialog.setClientId(pickClientDialog.getClientId());
         freezeClientDialog.setVisible(true);
-
-        if (freezeClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw freezeClientDialog.getException();
-        }
 
         if (freezeClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;

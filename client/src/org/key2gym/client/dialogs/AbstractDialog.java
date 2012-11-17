@@ -108,25 +108,7 @@ public abstract class AbstractDialog extends JDialog {
     public Component getComponent() {
         return this;
     }
-
-    /**
-     * Gets the exception that terminated this dialog.
-     *
-     * @return the runtime exception
-     */
-    public RuntimeException getException() {
-        return exception;
-    }
-
-    /**
-     * Sets the exception that terminated this dialog.
-     *
-     * @param exception the runtime exception
-     */
-    public void setException(RuntimeException exception) {
-        this.exception = exception;
-    }
-
+    
     /**
      * Gets the dialog's result code.
      *
@@ -252,7 +234,6 @@ public abstract class AbstractDialog extends JDialog {
 
         OK,
         CANCEL,
-        EXCEPTION,
         CLOSE
     };
 }

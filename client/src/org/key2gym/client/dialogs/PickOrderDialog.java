@@ -228,15 +228,6 @@ public class PickOrderDialog extends AbstractDialog {
         } catch (ValidationException | SecurityViolationException ex) {
             UserExceptionHandler.getInstance().processException(ex);
             return;
-        } catch (RuntimeException ex) {
-            /*
-             * The exception is unexpected. We got to shutdown the dialog for
-             * the state of the transaction is now unknown.
-             */
-            setResult(Result.EXCEPTION);
-            setException(ex);
-            dispose();
-            return;
         }
 
         setClient(false);

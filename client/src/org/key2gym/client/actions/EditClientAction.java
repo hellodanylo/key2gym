@@ -44,10 +44,6 @@ public class EditClientAction extends BasicAction {
         final PickClientDialog pickClientDialog = new PickClientDialog(getFrame());
         pickClientDialog.setVisible(true);
 
-        if (pickClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw pickClientDialog.getException();
-        }
-
         if (pickClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }
@@ -60,10 +56,6 @@ public class EditClientAction extends BasicAction {
             }
         }.start();
         editClientDialog.setVisible(true);
-
-        if (editClientDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw editClientDialog.getException();
-        }
 
         if (editClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;

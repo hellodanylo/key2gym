@@ -24,6 +24,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.KeyDTO;
 import org.key2gym.business.api.remote.KeysServiceRemote;
@@ -44,7 +45,7 @@ public class ManageKeysDialog extends AbstractDialog {
      */
     public ManageKeysDialog(JFrame parent) throws SecurityViolationException {
         super(parent, true);
-        
+
         keysService = ContextManager.lookup(KeysServiceRemote.class);
         keys = keysService.getAllKeys();
 
@@ -177,25 +178,15 @@ public class ManageKeysDialog extends AbstractDialog {
         dialog.setVisible(true);
 
         if (dialog.getResult().equals(FormDialog.Result.OK)) {
-            
+
             try {
                 keys = keysService.getAllKeys();
-            } catch (SecurityViolationException ex) {
-                /*
-                 * Fails if the access to the list of keys is denied.
-                 */
-                setResult(EditOrderDialog.Result.EXCEPTION);
-                setException(new RuntimeException(ex));
-                dispose();
+            } catch (UserException ex) {
+                UserExceptionHandler.getInstance().processException(ex);
                 return;
             }
-            
+
             keysTableModel.setKeys(keys);
-        } else if (dialog.getResult().equals(FormDialog.Result.EXCEPTION)) {
-            setResult(AbstractDialog.Result.EXCEPTION);
-            setException(dialog.getException());
-            dispose();
-            return;
         }
     }
 
@@ -204,31 +195,18 @@ public class ManageKeysDialog extends AbstractDialog {
             return;
         }
 
-        try {
-
-            for (int index : keysTable.getSelectedRows()) {
-                try {
-                    keysService.removeKey(keys.get(index).getId());
-                } catch (ValidationException | SecurityViolationException ex) {
-                    UserExceptionHandler.getInstance().processException(ex);
-                }
-            }
-
+        for (int index : keysTable.getSelectedRows()) {
             try {
-                keys = keysService.getAllKeys();
-            } catch (SecurityViolationException ex) {
-                throw new RuntimeException(ex);
+                keysService.removeKey(keys.get(index).getId());
+            } catch (ValidationException | SecurityViolationException ex) {
+                UserExceptionHandler.getInstance().processException(ex);
             }
-            
-        } catch (RuntimeException ex) {
-            /*
-             * The exception is unexpected. We got to shutdown the dialog
-             * for the state of the transaction is now unknown.
-             */
-            setResult(EditOrderDialog.Result.EXCEPTION);
-            setException(ex);
-            dispose();
-            return;
+        }
+
+        try {
+            keys = keysService.getAllKeys();
+        } catch (SecurityViolationException ex) {
+            throw new RuntimeException(ex);
         }
 
         keysTableModel.setKeys(keys);

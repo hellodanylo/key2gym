@@ -15,14 +15,14 @@ package org.key2gym.business;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -69,7 +69,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
                 item.getTitle(),
                 item.getQuantity(),
                 item.getPrice());
-        
+
         entityManager.persist(entityItem);
         entityManager.flush();
     }
@@ -142,7 +142,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
         if (!callerHasAnyRole(SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER)) {
             throw new SecurityViolationException(getString("Security.Access.Denied"));
         }
-        
+
         List<ItemDTO> result = new LinkedList<ItemDTO>();
         List<Item> items = entityManager.createNamedQuery("Item.findPureAvailable") //NOI18N
                 .getResultList();
@@ -166,7 +166,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
 
     @Override
     public void updateItem(ItemDTO item) throws ValidationException, SecurityViolationException {
-               
+
         if (!callerHasRole(SecurityRoles.MANAGER)) {
             throw new SecurityViolationException(getString("Security.Operation.Denied"));
         }
@@ -202,6 +202,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
         entityManager.merge(entityItem);
         entityManager.flush();
     }
+
     @Override
     public void removeItem(Integer itemId) throws ValidationException, BusinessException, SecurityViolationException {
 
@@ -325,7 +326,6 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
             throw new ValidationException(getString("Invalid.Item.Title.CanNotBeEmpty"));
         }
     }
-    
     @PersistenceContext(unitName = "PU")
     private EntityManager entityManager;
 }

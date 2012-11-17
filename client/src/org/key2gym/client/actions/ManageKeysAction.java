@@ -38,10 +38,6 @@ public class ManageKeysAction extends BasicAction {
         ManageKeysDialog manageKeysDialog = new ManageKeysDialog(getFrame());
         manageKeysDialog.setVisible(true);
 
-        if (manageKeysDialog.getResult().equals(AbstractDialog.Result.EXCEPTION)) {
-            throw manageKeysDialog.getException();
-        }
-
         if (manageKeysDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
             return;
         }

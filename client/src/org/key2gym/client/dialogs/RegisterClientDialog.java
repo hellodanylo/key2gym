@@ -27,6 +27,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.business.api.dtos.ClientProfileDTO;
@@ -64,17 +65,16 @@ public class RegisterClientDialog extends AbstractDialog {
     private void buildDialog() throws SecurityViolationException {
 
         setLayout(new FormLayout("4dlu, p, 4dlu, d, 4dlu", "4dlu, d, 4dlu, d, 4dlu, d, 4dlu"));
-        
+
         List<ClientFormPanel.Column> columnsList = Arrays.asList(
-                ClientFormPanel.Column.ID, 
+                ClientFormPanel.Column.ID,
                 ClientFormPanel.Column.FULL_NAME,
                 ClientFormPanel.Column.CARD,
                 ClientFormPanel.Column.REGISTRATION_DATE,
                 ClientFormPanel.Column.MONEY_BALANCE,
                 ClientFormPanel.Column.ATTENDANCES_BALANCE,
                 ClientFormPanel.Column.EXPIRATION_DATE,
-                ClientFormPanel.Column.NOTE
-        );
+                ClientFormPanel.Column.NOTE);
         clientPanel = new ClientFormPanel(columnsList);
         clientPanel.setClient(client);
         clientPanel.setBorder(BorderFactory.createTitledBorder(getString("Text.BasicInformation"))); // NOI18N
@@ -104,7 +104,6 @@ public class RegisterClientDialog extends AbstractDialog {
         attachProfileCheckBox = new JCheckBox();
         attachProfileCheckBox.setText(getString("CheckBox.AttackProfileNow")); // NOI18N
         attachProfileCheckBox.addChangeListener(new ChangeListener() {
-
             @Override
             public void stateChanged(ChangeEvent evt) {
                 attachProfileCheckBoxStateChanged(evt);
@@ -115,26 +114,26 @@ public class RegisterClientDialog extends AbstractDialog {
         openOrderCheckBox = new JCheckBox();
         openOrderCheckBox.setText(getString("CheckBox.OpenOrderUponCompletion")); // NOI18N
         panel.add(openOrderCheckBox, CC.xy(1, 3));
-        
+
         openAttendanceCheckBox = new JCheckBox();
         openAttendanceCheckBox.setText(getString("CheckBox.OpenAttendanceUponCompletion")); // NOI18N
         panel.add(openAttendanceCheckBox, CC.xy(1, 5));
-        
+
         attachProfileCheckBoxStateChanged(null);
-        
+
         return panel;
     }
 
     private JPanel createButtonsPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        
+
         okButton = new JButton(getOkAction());
         cancelButton = new JButton(getCancelAction());
         okButton.setPreferredSize(cancelButton.getPreferredSize());
-        
+
         panel.add(okButton);
         panel.add(cancelButton);
-        
+
         return panel;
     }
 
@@ -156,22 +155,8 @@ public class RegisterClientDialog extends AbstractDialog {
                 clientProfile.setClientId(client.getId());
                 clientProfilesService.updateClientProfile(clientProfile);
             }
-        } catch (SecurityViolationException ex) {
-            setResult(Result.EXCEPTION);
-            setException(new RuntimeException(ex));
-            dispose();
-            return;
-        } catch (ValidationException | BusinessException ex) {
+        } catch (UserException ex) {
             UserExceptionHandler.getInstance().processException(ex);
-            return;
-        } catch (RuntimeException ex) {
-            /*
-             * The exception is unexpected. We got to shutdown the dialog for
-             * the state of the transaction is now unknown.
-             */
-            setResult(Result.EXCEPTION);
-            setException(ex);
-            dispose();
             return;
         }
 
@@ -212,7 +197,6 @@ public class RegisterClientDialog extends AbstractDialog {
     public void setEditFinancialActivityDialogRequested(Boolean editFinancialActivityDialogRequested) {
         this.editFinancialActivityDialogRequested = editFinancialActivityDialogRequested;
     }
-    
     /*
      * Session variables
      */
