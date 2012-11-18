@@ -31,7 +31,6 @@ import javax.persistence.Query;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
-import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.OrderDTO;
 import org.key2gym.business.api.dtos.OrderLineDTO;
@@ -564,7 +563,12 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
             /*
              * Give money back to the client.
              */
-            client.setMoneyBalance(client.getMoneyBalance().add(item.getPrice()));
+            BigDecimal price = item.getPrice();
+            if(orderLine.getDiscount() != null) {
+                price = price.multiply(BigDecimal.valueOf(orderLine.getDiscount().getPercent()));
+                price = price.divide(BigDecimal.valueOf(100));
+            }
+            client.setMoneyBalance(client.getMoneyBalance().add(price));
 
             if (item.getItemSubscription() != null) {
                 /*
