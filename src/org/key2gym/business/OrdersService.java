@@ -727,10 +727,15 @@ public class OrdersService extends BusinessService {
             
             Client client = order.getClient();
 
+	    BigDecimal price = item.getPrice();
+	    if(orderLine.getDiscount() != null) {
+		price = price.multiply(BigDecimal.valueOf(orderLine.getDiscount().getPercent()));
+		price = price.divide(BigDecimal.valueOf(100));
+	    }
             /*
              * Give money back to the client.
              */
-            client.setMoneyBalance(client.getMoneyBalance().add(item.getPrice()));
+            client.setMoneyBalance(client.getMoneyBalance().add(price));
 
             if (item.getItemSubscription() != null) {
                 /*
