@@ -22,7 +22,7 @@ import org.key2gym.business.api.dtos.AdministratorDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface AdministratorsServiceInterface {
+public interface AdministratorsServiceInterface extends BasicInterface {
 
     /**
      * Gets an administrator by its ID.

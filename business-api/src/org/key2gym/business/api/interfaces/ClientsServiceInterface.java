@@ -25,7 +25,7 @@ import org.key2gym.business.api.dtos.ClientDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface ClientsServiceInterface {
+public interface ClientsServiceInterface extends BasicInterface {
 
     /**
      * Finds the client by its card.

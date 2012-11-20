@@ -19,6 +19,7 @@ import java.awt.Component;
 import java.util.ResourceBundle;
 import javax.swing.FocusManager;
 import javax.swing.JOptionPane;
+import org.key2gym.client.resources.ResourcesManager;
 import org.key2gym.business.api.UserException;
 
 /**
@@ -28,7 +29,7 @@ import org.key2gym.business.api.UserException;
 public class UserExceptionHandler {
     
     private UserExceptionHandler() {
-        strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
+        strings = ResourcesManager.getStrings();
     }
 
     public Component getComponent() {

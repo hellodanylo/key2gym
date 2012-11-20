@@ -18,17 +18,24 @@ package org.key2gym.business;
 
 
 import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.key2gym.business.api.interfaces.BasicInterface;
+import org.key2gym.business.resources.ResourcesManager;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public class BasicBean {
+public class BasicBean implements BasicInterface {
+    
+    public BasicBean() {
+        strings = ResourcesManager.getStrings();
+    }
      
     protected boolean callerHasRole(String role) {
         return sessionContext.isCallerInRole(role);
@@ -44,7 +51,7 @@ public class BasicBean {
     }
 
     protected String getString(String key, String... arguments) {
-        String result = ResourceBundle.getBundle("org/key2gym/business/resources/Strings").getString(key);
+        String result = strings.getString(key);
 
         result = MessageFormat.format(result, (Object[]) arguments);
 
@@ -57,6 +64,10 @@ public class BasicBean {
 
     protected SessionContext getSessionContext() {
         return sessionContext;
+    }    
+    
+    public void setLocale(Locale locale) {
+        strings = ResourcesManager.getStrings(locale);
     }
     
     @Resource
@@ -64,4 +75,6 @@ public class BasicBean {
     
     @PersistenceContext(name="PU")
     private EntityManager entityManager;
+    
+    private ResourceBundle strings;
 }

@@ -15,12 +15,6 @@
         <ant antfile="../business-api/build.xml" target="build" inheritall="false" />
         
         <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}" includeantruntime="false" />
-    
-        <!-- Copies the resources. -->
-        <copy todir="${bin.dir}">
-            <fileset dir="${src.dir}" includes="**/*.properties" />
-            <fileset dir="${src.dir}" includes="**/*.png" />
-        </copy>
     </target>
     
     <target name="clean" depends="init">
@@ -58,6 +52,9 @@ lib/${lib.beans-binding-bin.jar.basename}" />
                 <attribute name="Class-path" value="${jar.classpath}" />
                 <attribute name="Splashscreen-image" value="${jar.splashscreen}" />
             </manifest>
+            <fileset dir="${src.dir}" includes="META-INF/**" />
+            <fileset dir="${src.dir}" includes="**/*.properties" />
+            <fileset dir="${src.dir}" includes="**/*.png" />
         </jar>
         
         <!-- Copies JARs required to run the client. -->

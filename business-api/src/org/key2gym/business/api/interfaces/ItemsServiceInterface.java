@@ -25,7 +25,7 @@ import org.key2gym.business.api.dtos.ItemDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface ItemsServiceInterface {
+public interface ItemsServiceInterface extends BasicInterface {
 
     /**
      * Adds an item.

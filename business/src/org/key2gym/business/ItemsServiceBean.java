@@ -21,8 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;

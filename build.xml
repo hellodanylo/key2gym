@@ -88,4 +88,18 @@
         </copy>
         
     </target>
+    
+    <target name="start-openejb" depends="init">       
+        <exec dir="${openejb.dir}" executable="${openejb.dir}/bin/openejb">
+            <arg value="start" />
+        </exec>
+    </target>
+    
+    <target name="stop-openejb" depends="init">       
+        <exec dir="${openejb.dir}" executable="${openejb.dir}/bin/openejb">
+            <arg value="stop" />
+        </exec>
+    </target>
+    
+    <target name="restart-openejb" depends="stop-openejb,start-openejb" />
 </project>

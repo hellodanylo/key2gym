@@ -22,7 +22,7 @@ import org.key2gym.business.api.dtos.DiscountDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface DiscountsServiceInterface {
+public interface DiscountsServiceInterface extends BasicInterface {
 
     /**
      * Finds all discounts.

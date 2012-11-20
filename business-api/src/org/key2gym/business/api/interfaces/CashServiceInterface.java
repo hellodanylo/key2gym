@@ -25,7 +25,7 @@ import org.key2gym.business.api.dtos.CashAdjustmentDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface CashServiceInterface {
+public interface CashServiceInterface extends BasicInterface {
 
     /**
      * Gets the cash adjustment by the date. If it does not exists, it will

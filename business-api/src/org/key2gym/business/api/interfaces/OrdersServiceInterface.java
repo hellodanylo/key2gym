@@ -21,7 +21,6 @@ import javax.ejb.EJBException;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
-import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.OrderDTO;
 
@@ -29,7 +28,7 @@ import org.key2gym.business.api.dtos.OrderDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface OrdersServiceInterface {
+public interface OrdersServiceInterface extends BasicInterface {
 
     /**
      * Finds orders by the date.

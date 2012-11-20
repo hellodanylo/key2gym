@@ -24,7 +24,7 @@ import org.key2gym.business.api.dtos.ClientProfileDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface ClientProfilesServiceInterface {
+public interface ClientProfilesServiceInterface extends BasicInterface {
 
     /**
      * Detaches the profile from the client by its ID.

@@ -22,7 +22,7 @@ import org.key2gym.business.api.dtos.TimeSplitDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface TimeSplitsServiceInterface {
+public interface TimeSplitsServiceInterface extends BasicInterface {
 
     /**
      * Gets all time ranges.

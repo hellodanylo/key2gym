@@ -24,8 +24,6 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
@@ -79,8 +77,6 @@ public class Main {
         }
 
         logger.info("Starting...");
-
-        ResourceBundle strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
 
         /*
          * Loads the application properties file and fills the registry.

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="dailyRevenueReport" type="DailyRevenueReport" />
+    <xsd:complexType name="DailyRevenueReport">
+	<xsd:all>
+	    <xsd:element name="title" type="xsd:string"/>
+	    <xsd:element name="periodBegin" type="xsd:date" />
+	    <xsd:element name="periodEnd" type="xsd:date" />
+	    <xsd:element name="day" type="Day" minOccurs="1" maxOccurs="unbounded" />
+	</xsd:all>
+    </xsd:complexType>
+    <xsd:complexType name="Day">
+	<xsd:all>
+	    <xsd:element name="number" type="xsd:int" />
+	    <xsd:element name="date" type="xsd:date" />
+	    <xsd:element name="revenue" type="xsd:decimal" />
+	</xsd:all>
+    </xsd:complexType>
+</xsd:schema>

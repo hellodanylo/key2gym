@@ -13,11 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.client.resources;
+package org.key2gym.business.resources;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
-import org.key2gym.client.Main;
 
 /**
  *
@@ -26,14 +25,10 @@ import org.key2gym.client.Main;
 public class ResourcesManager {
 
     public static ResourceBundle getStrings() {
-        if (strings == null) {
-            Locale locale = new Locale(Main.getProperties().getProperty(Main.PROPERTY_LOCALE_LANGUAGE),
-                    Main.getProperties().getProperty(Main.PROPERTY_LOCALE_COUNTRY));
-            strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings", locale);
-        }
-
-        return strings;
+        return ResourceBundle.getBundle("org/key2gym/business/resources/Strings");
     }
-    
-    private static ResourceBundle strings;
+
+    public static ResourceBundle getStrings(Locale locale) {
+        return ResourceBundle.getBundle("org/key2gym/business/resources/Strings", locale);
+    }
 }

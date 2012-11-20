@@ -26,7 +26,7 @@ import org.key2gym.business.api.dtos.AttendanceDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface AttendancesServiceInterface {
+public interface AttendancesServiceInterface extends BasicInterface {
 
     /**
      * Checks in a casual client. <p>

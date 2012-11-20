@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Key2Gym-Business" default="default" basedir=".">
+<project name="Key2Gym-Business" default="build" basedir=".">
     <description>Builds and packages the project Key2Gym-Business.</description>
     
     <target name="init">
@@ -14,13 +14,7 @@
         <!-- Builds the Business API project. -->
         <ant antfile="../business-api/build.xml" target="build" inheritall="false" />
         
-        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}" source="7" includeantruntime="false" />
-        
-        <!-- Copies the resources. -->
-        <copy todir="${bin.dir}">
-            <fileset dir="${src.dir}" includes="**/*.properties" />
-        </copy>
-        
+        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}" source="7" includeantruntime="false" />        
     </target>
     
     <target name="clean" depends="init">
@@ -28,15 +22,11 @@
         <delete dir="${dist.dir}" failonerror="false"/>
     </target>
     
-    <target name="build" depends="undeploy,compile">
-        
-        <!-- Prepares the binary directory -->
-        <copy todir="${bin.dir}/META-INF">
-            <fileset dir="${src.dir}/META-INF" />
-        </copy>
+    <target name="build" depends="init,undeploy,compile">
         
         <jar destfile="${dist.dir}/${jar.file}" basedir="${bin.dir}">
-            <fileset dir="${src.dir}" includes="**/.properties" />
+            <fileset dir="${src.dir}" includes="**/*.properties" />
+            <fileset dir="${src.dir}" includes="META-INF/**" />
         </jar>
         
         <!-- Copies JARs required to run the EJBs. -->
@@ -63,8 +53,8 @@
         </exec>
     </target>
     
-    <target name="undeploy" depends="init">
-        <exec dir="${dist.dir}" executable="${openejb.dir}/bin/openejb">
+    <target name="undeploy" depends="init">        
+        <exec dir="${openejb.dir}" executable="${openejb.dir}/bin/openejb">
             <arg value="undeploy" />
             <arg value="${openejb.dir}/apps/${jar.file}" />
         </exec>

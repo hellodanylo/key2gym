@@ -46,7 +46,7 @@ import org.joda.time.DateMidnight;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.dtos.OrderDTO;
-import org.key2gym.client.ContextManager;
+import org.key2gym.client.actions.ManageReportsAction;
 import org.key2gym.client.panels.AttendancesPanel;
 import org.key2gym.client.panels.CloseableTabPanel;
 import org.key2gym.client.panels.ItemsPanel;
@@ -109,10 +109,11 @@ public class MainFrame extends JFrame {
         openAttendancesWindowAction = new OpenAttendancesWindowAction();
         openOrdersWindowAction = new OpenOrdersWindowAction();
         editClientAction = new EditClientAction();
-        closeAttendanceAction = new CheckOutAction();
-        openAttendanceAction = new CheckInAction();
+        checkOutAction = new CheckOutAction();
+        checkInAction = new CheckInAction();
         registerClientAction = new RegisterClientAction();
         manageItemsAction = new ManageItemsAction();
+        manageReportsAction = new ManageReportsAction();
         manageSubscriptionsAction = new ManageSubscriptionsAction();
         manageKeysAction = new ManageKeysAction();
         toggleSessionAction = new ToggleSessionAction();
@@ -134,14 +135,14 @@ public class MainFrame extends JFrame {
         actionsToolBar.setFloatable(false);
         actionsToolBar.setRollover(true);
 
-        openAttendanceButton.setAction(openAttendanceAction);
+        openAttendanceButton.setAction(checkInAction);
         openAttendanceButton.setFocusable(false);
         openAttendanceButton.setHorizontalTextPosition(SwingConstants.CENTER);
         openAttendanceButton.setMargin(new java.awt.Insets(0, 10, 0, 10));
         openAttendanceButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         actionsToolBar.add(openAttendanceButton);
 
-        closeAttendanceButton.setAction(closeAttendanceAction);
+        closeAttendanceButton.setAction(checkOutAction);
         closeAttendanceButton.setFocusable(false);
         closeAttendanceButton.setHorizontalTextPosition(SwingConstants.CENTER);
         closeAttendanceButton.setMargin(new java.awt.Insets(0, 10, 0, 10));
@@ -182,8 +183,8 @@ public class MainFrame extends JFrame {
         JMenuItem toggleSessionMenuItem = new JMenuItem();
         JMenuItem toogleRaisedPLSessionMenuItem = new JMenuItem();
         JMenu eventMenu = new JMenu();
-        JMenuItem eventEntryMenuItem = new JMenuItem();
-        JMenuItem eventLeavingMenuItem = new JMenuItem();
+        JMenuItem eventCheckInMenuItem = new JMenuItem();
+        JMenuItem eventCheckOutMenuItem = new JMenuItem();
         JPopupMenu.Separator eventLeavingPurchaseSeparator = new JPopupMenu.Separator();
         JMenuItem eventPurchaseMenuItem = new JMenuItem();
         JMenu clientsMenu = new JMenu();
@@ -194,9 +195,9 @@ public class MainFrame extends JFrame {
         JMenuItem manageItemsMenuItem = new JMenuItem();
         JMenuItem manageSubscriptionsMenuItem = new JMenuItem();
         JMenuItem manageKeysMenuItem = new JMenuItem();
-        JPopupMenu.Separator manageSubscriptionsCashSeparator = new JPopupMenu.Separator();
-        JMenuItem manageCash = new JMenuItem();
-        JPopupMenu.Separator manageCashFreezesSeparator = new JPopupMenu.Separator();
+        JMenuItem manageReportsMenuItem = new JMenuItem();
+        JPopupMenu.Separator manageSubscriptionsReportsSeparator = new JPopupMenu.Separator();
+        JMenuItem manageCashMenuItem = new JMenuItem();
         JMenuItem manageFreezesMenuItem = new JMenuItem();
         JMenu windowMenu = new JMenu();
         JMenuItem attendancesWindowMenuItem = new JMenuItem();
@@ -219,13 +220,13 @@ public class MainFrame extends JFrame {
 
         eventMenu.setText(strings.getString("Menu.Events")); // NOI18N
 
-        eventEntryMenuItem.setAction(openAttendanceAction);
-        eventEntryMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.ALT_MASK));
-        eventMenu.add(eventEntryMenuItem);
+        eventCheckInMenuItem.setAction(checkInAction);
+        eventCheckInMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.ALT_MASK));
+        eventMenu.add(eventCheckInMenuItem);
 
-        eventLeavingMenuItem.setAction(closeAttendanceAction);
-        eventLeavingMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.ALT_MASK));
-        eventMenu.add(eventLeavingMenuItem);
+        eventCheckOutMenuItem.setAction(checkOutAction);
+        eventCheckOutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.ALT_MASK));
+        eventMenu.add(eventCheckOutMenuItem);
         eventMenu.add(eventLeavingPurchaseSeparator);
 
         eventPurchaseMenuItem.setAction(editOrderAction);
@@ -261,11 +262,13 @@ public class MainFrame extends JFrame {
         manageKeysMenuItem.setAction(manageKeysAction);
         manageMenu.add(manageKeysMenuItem);
 
-        manageMenu.add(manageSubscriptionsCashSeparator);
+        manageMenu.add(manageSubscriptionsReportsSeparator);
 
-        manageCash.setAction(manageCashAction);
-        manageMenu.add(manageCash);
-        manageMenu.add(manageCashFreezesSeparator);
+        manageReportsMenuItem.setAction(manageReportsAction);
+        manageMenu.add(manageReportsMenuItem);
+
+        manageCashMenuItem.setAction(manageCashAction);
+        manageMenu.add(manageCashMenuItem);
 
         manageFreezesMenuItem.setAction(manageFreezesAction);
         manageMenu.add(manageFreezesMenuItem);
@@ -377,6 +380,22 @@ public class MainFrame extends JFrame {
         workspacesTabbedPane.setSelectedComponent(itemsPanel);
     }
 
+    public void createTab(final Component component, String title) {
+        workspacesTabbedPane.addTab(title, component);
+
+        CloseableTabPanel tabComponent = new CloseableTabPanel(title);
+        tabComponent.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                workspacesTabbedPane.remove(component);
+            }
+        });
+        
+        int index = workspacesTabbedPane.indexOfComponent(component);
+        workspacesTabbedPane.setTabComponentAt(index, tabComponent);
+        workspacesTabbedPane.setSelectedIndex(index);
+    }
+
     public AttendanceDTO getSelectedAttendance() {
 
         Component component = workspacesTabbedPane.getSelectedComponent();
@@ -463,7 +482,7 @@ public class MainFrame extends JFrame {
      */
     private AboutAction aboutAction;
     private JLabel bannerLabel;
-    private CheckOutAction closeAttendanceAction;
+    private CheckOutAction checkOutAction;
     private EditClientAction editClientAction;
     private EditOrderAction editOrderAction;
     private FreezeClientAction freezeClientAction;
@@ -472,7 +491,8 @@ public class MainFrame extends JFrame {
     private ManageItemsAction manageItemsAction;
     private ManageSubscriptionsAction manageSubscriptionsAction;
     private ManageKeysAction manageKeysAction;
-    private CheckInAction openAttendanceAction;
+    private ManageReportsAction manageReportsAction;
+    private CheckInAction checkInAction;
     private OpenAttendancesWindowAction openAttendancesWindowAction;
     private OpenItemsWindowAction openItemsWindowAction;
     private OpenOrdersWindowAction openOrdersWindowAction;

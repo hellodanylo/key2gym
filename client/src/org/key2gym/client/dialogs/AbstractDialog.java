@@ -24,14 +24,13 @@ import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import javax.swing.*;
+import org.key2gym.client.resources.ResourcesManager;
 
 /**
  * A dialog with support of i18n, common actions and results.
  * <p/>
  * Results tell the dialog's called what action the users chose. There are several
- * self-explanatory results: OK, CANCEL, CLOSE. There is also a special result:
- * EXCEPTION, which is used the dialog encountered a runtime exception and chose
- * to terminate.
+ * self-explanatory results: OK, CANCEL, CLOSE.
  * <p/>
  * The dialog sets the result to Result.CANCEL, when the close button (on the frame) is pressed.
  *
@@ -47,10 +46,9 @@ public abstract class AbstractDialog extends JDialog {
      */
     public AbstractDialog(Window parent, boolean modal) {
         super(parent, modal ? DEFAULT_MODALITY_TYPE : ModalityType.MODELESS);
-        strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
+        strings = ResourcesManager.getStrings();
 
         this.addWindowListener(new WindowAdapter() {
-
             @Override
             public void windowClosing(WindowEvent evt) {
                 formWindowClosing(evt);
@@ -67,7 +65,6 @@ public abstract class AbstractDialog extends JDialog {
         addHotKey(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelAction);
 
         result = null;
-        exception = null;
     }
 
     /**
@@ -97,16 +94,6 @@ public abstract class AbstractDialog extends JDialog {
      */
     protected ResourceBundle getStrings() {
         return strings;
-    }
-
-    /**
-     * Returns this component. Useful for inner classes that need the reference
-     * to the owning component.
-     *
-     * @return this component
-     */
-    public Component getComponent() {
-        return this;
     }
     
     /**
@@ -185,49 +172,67 @@ public abstract class AbstractDialog extends JDialog {
         dispose();
     }
 
-    protected class CancelAction extends AbstractAction {
+    public class CancelAction extends AbstractAction {
 
-        public CancelAction() {
+        public CancelAction(AbstractDialog dialog) {
             putValue(NAME, getString("Button.Cancel"));
             putValue(LARGE_ICON_KEY, new ImageIcon(getClass().getResource("/org/key2gym/client/resources/cancel16.png")));
+            this.dialog = dialog;
+        }
+
+        public CancelAction() {
+            this(AbstractDialog.this);
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            onCancelActionPerformed(e);
+            dialog.onCancelActionPerformed(e);
         }
+        private AbstractDialog dialog;
     }
 
-    protected class OkAction extends AbstractAction {
+    public class OkAction extends AbstractAction {
 
-        public OkAction() {
+        public OkAction(AbstractDialog dialog) {
             putValue(NAME, getString("Button.Ok"));
             putValue(LARGE_ICON_KEY, new ImageIcon(getClass().getResource("/org/key2gym/client/resources/ok16.png")));
+            this.dialog = dialog;
+        }
+
+        public OkAction() {
+            this(AbstractDialog.this);
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            onOkActionPerformed(e);
+            dialog.onOkActionPerformed(e);
         }
+        private AbstractDialog dialog;
     }
 
-    protected class CloseAction extends AbstractAction {
+    public class CloseAction extends AbstractAction {
 
-        public CloseAction() {
+        public CloseAction(AbstractDialog dialog) {
             putValue(NAME, getString("Button.Close"));
             putValue(LARGE_ICON_KEY, new ImageIcon(getClass().getResource("/org/key2gym/client/resources/ok16.png")));
+            this.dialog = dialog;
+        }
+
+        public CloseAction() {
+            this(AbstractDialog.this);
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            onCloseActionPerformed(e);
+            dialog.onCloseActionPerformed(e);
         }
+        private AbstractDialog dialog;
     }
+    
     private Action cancelAction;
     private Action okAction;
     private Action closeAction;
     private Result result;
-    private RuntimeException exception;
     private ResourceBundle strings;
 
     public enum Result {

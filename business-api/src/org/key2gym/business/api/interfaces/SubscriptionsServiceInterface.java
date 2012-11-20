@@ -25,7 +25,7 @@ import org.key2gym.business.api.dtos.SubscriptionDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface SubscriptionsServiceInterface {
+public interface SubscriptionsServiceInterface extends BasicInterface {
 
     /**
      * Adds a subscription.

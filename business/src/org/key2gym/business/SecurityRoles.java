@@ -1,5 +1,3 @@
-package org.key2gym.business;
-
 /*
  * Copyright 2012 Danylo Vashchilenko
  *
@@ -16,6 +14,7 @@ package org.key2gym.business;
  * the License.
  */
 
+package org.key2gym.business;
 
 /**
  *
@@ -25,4 +24,5 @@ public interface SecurityRoles {
     public static String MANAGER = "manager";
     public static String SENIOR_ADMINISTRATOR = "senior_administrator";
     public static String JUNIOR_ADMINISTRATOR = "junior_administrator";
+    public static String REPORTS_MANAGER = "reports_manager";
 }

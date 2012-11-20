@@ -24,7 +24,7 @@ import org.key2gym.business.api.dtos.KeyDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface KeysServiceInterface {
+public interface KeysServiceInterface extends BasicInterface {
 
     /**
      * Adds a new key.

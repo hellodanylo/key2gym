@@ -26,7 +26,7 @@ import org.key2gym.business.api.dtos.FreezeDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface FreezesServiceInterface {
+public interface FreezesServiceInterface extends BasicInterface {
 
     /**
      * Records a freeze for the client.

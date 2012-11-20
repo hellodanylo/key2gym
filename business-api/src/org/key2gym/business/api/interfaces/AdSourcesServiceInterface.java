@@ -24,7 +24,7 @@ import org.key2gym.business.api.dtos.AdSourceDTO;
  *
  * @author Danylo Vashchilenko
  */
-public interface AdSourcesServiceInterface {
+public interface AdSourcesServiceInterface extends BasicInterface {
 
     /**
      * Finds the ad source by its ID.

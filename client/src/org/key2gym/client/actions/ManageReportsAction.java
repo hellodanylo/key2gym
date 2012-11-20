@@ -19,26 +19,21 @@ import java.awt.event.ActionEvent;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
-import org.key2gym.client.dialogs.AbstractDialog;
-import org.key2gym.client.dialogs.ManageItemsDialog;
+import org.key2gym.client.dialogs.ManageReportsDialog;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-public class ManageItemsAction extends BasicAction {
+public class ManageReportsAction extends BasicAction {
 
-    public ManageItemsAction() {
-        setText(getString("Text.Items"));
+    public ManageReportsAction() {
+        setText(getString("Text.Reports"));
     }
 
     @Override
     public void onActionPerformed(ActionEvent e) throws BusinessException, ValidationException, SecurityViolationException {
-        ManageItemsDialog manageItemsDialog = new ManageItemsDialog(getFrame());
-        manageItemsDialog.setVisible(true);
-
-        if (manageItemsDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
-            return;
-        }
+        ManageReportsDialog manageReportsDialog = new ManageReportsDialog(getFrame());
+        manageReportsDialog.setVisible(true);
     }
 }

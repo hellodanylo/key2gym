@@ -18,6 +18,7 @@ package org.key2gym.client;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Properties;
 import javax.naming.AuthenticationException;
@@ -25,6 +26,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.apache.log4j.Logger;
 import org.key2gym.business.api.ValidationException;
+import org.key2gym.business.api.interfaces.BasicInterface;
 import org.key2gym.client.resources.ResourcesManager;
 
 /**
@@ -68,7 +70,7 @@ public class ContextManager extends Observable {
         try {
             newContext = new InitialContext(properties);
         } catch (AuthenticationException ex) {
-            Logger.getLogger(ContextManager.class).info("Authentication failed for the user: " + username);
+            Logger.getLogger(ContextManager.class).info("Authentication failed for the user: " + username, ex);
             throw new ValidationException(ResourcesManager.getStrings().getString("Message.LoggingInFailed"));
         } catch (NamingException ex) {
             throw new RuntimeException("Failed to create InitialContext!", ex);
@@ -122,13 +124,15 @@ public class ContextManager extends Observable {
     public void logout() {
         try {
             context.close();
-
-            if (shadowContext != null) {
-                context = shadowContext;
-                shadowContext = null;
-            }
         } catch (NamingException ex) {
             Logger.getLogger(ContextManager.class).error("Failed to close the context!", ex);
+        }
+
+        if (shadowContext != null) {
+            context = shadowContext;
+            shadowContext = null;
+        } else {
+            context = null;
         }
 
         setChanged();

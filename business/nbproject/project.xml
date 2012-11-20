@@ -36,8 +36,12 @@
             <view>
                 <items>
                     <source-folder style="packages">
-                        <label>Source</label>
-                        <location>${src.dir}</location>
+                        <label>Source Java</label>
+                        <location>${src.java.dir}</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>Source Scala</label>
+                        <location>${src.scala.dir}</location>
                     </source-folder>
                     <source-file>
                         <location>build.xml</location>
@@ -57,7 +61,8 @@
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/1">
             <compilation-unit>
-                <package-root>${src.dir}/</package-root>
+                <package-root>${src.java.dir}/</package-root>
+                <package-root>${src.scala.dir}/</package-root>
                 <classpath mode="compile">${javac.classpath}</classpath>
                 <source-level>1.5</source-level>
             </compilation-unit>
