@@ -1,0 +1,43 @@
+<h1>3. Business</h1>
+<h2>3.2. Configuration</h2>
+
+<section>This page describes how to setup the OpenEJB server to be
+used with Key2Gym.</section>
+
+<section>
+  <ol>
+    <li>Create a datasource in <code>conf/openejb.xml</code>:
+      <pre><code>&lt;Resource id="key2gym" type="javax.sql.DataSource"&gt;
+	  JdbcDriver org.postgresql.Driver
+	  JdbcUrl jdbc:postgresql://localhost:5432/mydb
+	  UserName myuser
+	  Password mypassword
+	  JtaManaged true
+&lt;/Resource&gt; </code></pre></li>
+    <li>Change the rest of the <code>conf/openejb.xml</code> as you need.</li>
+    <li>Create an authentication realm in <code>conf/login.config</code>:
+      <pre><code>key2gym {
+    org.apache.openejb.core.security.jaas.SQLLoginModule required
+	dataSourceName="key2gym"
+    	userSelect="SELECT username, password FROM administrator_adm WHERE username = ?"
+    	groupSelect="SELECT adm.username, grp.name FROM administrator_adm adm, administrator_group_agr agr, group_grp grp WHERE adm.username = ? AND adm.id_adm = agr.idadm_agr AND agr.idgrp_agr = grp.id_grp";
+        digest="SHA";
+        encoding="hex";
+};</code></pre>
+      It's also recommended to remove all other authentication realms.
+    </li>
+    <li>
+      Append the following lines to <code>conf/system.properties</code>:
+<pre><code># Conventional JNDI format for Key2Gym beans
+openejb.jndiname.format={interfaceClass.simpleName}
+
+# The log4j properties file
+log4j.configuration=conf/log4j.properties
+
+# Locale
+locale.language=en
+locale.country=US</code></pre>
+Note that you can change the locale of messages sent by the business tier here.
+    </li>
+  </ol>
+</section>

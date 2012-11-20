@@ -1,7 +1,14 @@
 .fuse*
 
+# Autosave and backup files
 *~
 **/*~
+
+#*#
+**/#*#
+
+.#*
+**/.#*
 
 dist/
 
