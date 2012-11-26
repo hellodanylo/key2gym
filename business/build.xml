@@ -6,6 +6,19 @@
     <target name="init">
         <loadproperties srcfile="../private/environment.properties" />
         <loadproperties srcfile="project.properties" />    
+        
+        <property name="SCALA_HOME">${scala.dir}</property>
+
+        <!--<path id="build.classpath">
+            <pathelement location="${scala.dir}/lib/scala-library.jar"   />
+            <pathelement location="${bin.dir}"   />
+        </path>-->
+        <taskdef resource="scala/tools/ant/antlib.xml">
+            <classpath>
+                <pathelement location="${scala.dir}/lib/scala-compiler.jar"   />
+                <pathelement location="${scala.dir}/lib/scala-library.jar"   />
+            </classpath>
+        </taskdef>
     </target>
     
     <target name="compile" depends="init">
@@ -14,7 +27,11 @@
         <!-- Builds the Business API project. -->
         <ant antfile="../business-api/build.xml" target="build" inheritall="false" />
         
-        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}" source="7" includeantruntime="false" />        
+        <scalac failonerror="true" destdir="${bin.dir}" classpath="${javac.classpath}" >
+            <src path="${src.java.dir}:${src.scala.dir}"/>
+	</scalac>
+        
+        <javac srcdir="${src.java.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}:${bin.dir}" source="7" includeantruntime="false" />        
     </target>
     
     <target name="clean" depends="init">
@@ -25,8 +42,8 @@
     <target name="build" depends="init,undeploy,compile">
         
         <jar destfile="${dist.dir}/${jar.file}" basedir="${bin.dir}">
-            <fileset dir="${src.dir}" includes="**/*.properties" />
-            <fileset dir="${src.dir}" includes="META-INF/**" />
+            <fileset dir="${src.java.dir}" includes="**/*.properties" />
+            <fileset dir="${src.java.dir}" includes="META-INF/**" />
         </jar>
         
         <!-- Copies JARs required to run the EJBs. -->

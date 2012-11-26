@@ -32,6 +32,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
@@ -43,6 +44,7 @@ import org.key2gym.business.api.local.OrdersServiceLocal;
 import org.key2gym.business.api.remote.AttendancesServiceRemote;
 import org.key2gym.persistence.Attendance;
 import org.key2gym.persistence.Client;
+import org.key2gym.persistence.Item;
 import org.key2gym.persistence.ItemSubscription;
 import org.key2gym.persistence.Key;
 import org.key2gym.persistence.OrderEntity;
@@ -114,11 +116,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         /*
          * Builds an attendance record.
          */
-        Attendance attendance = new Attendance();
-        attendance.setClient(client);
-        attendance.setKey(key);
-        attendance.setDatetimeBegin(new Date());
-        attendance.setDatetimeEnd(Attendance.DATETIME_END_UNKNOWN);
+        Attendance attendance = Attendance.apply(key, client);
 
         /*
          * Finds the client's current subscription.
@@ -135,7 +133,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             /*
              * Calculates the quantity of penalties to apply.
              */
-            int penalties = calculatePenalties(itemSubscription.getTimeSplit(), new LocalTime());
+            int penalties = calculatePenalties(itemSubscription.getTimeSplit(), LocalTime.parse("10:00:00"));
 
             /*
              * If there are penalties to apply, does it.
@@ -196,10 +194,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         /*
          * Build an attendance record.
          */
-        attendance = new Attendance();
-        attendance.setDatetimeBegin(new Date());
-        attendance.setDatetimeEnd(Attendance.DATETIME_END_UNKNOWN);
-        attendance.setKey(key);
+        attendance = Attendance.apply(key);
 
         order = new OrderEntity();
         order.setAttendance(attendance);
@@ -225,6 +220,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         entityManager.persist(orderLine);
         entityManager.persist(order);
         entityManager.persist(attendance);
+        entityManager.flush();
 
         return attendance.getId();
     }
@@ -253,7 +249,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
     @Override
     public List<AttendanceDTO> findAttendancesByDate(DateMidnight date)
             throws SecurityViolationException {
-
+        
         /*
          * Arguments validation.
          */
@@ -343,7 +339,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new ValidationException(getString("Invalid.Attendance.ID"));
         }
 
-        if (!attendance.getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN)) {
+        if (!attendance.isOpen()) {
             throw new BusinessException(getString("BusinessRule.Attendance.AlreadyClosed"));
         }
 
@@ -358,10 +354,69 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                 throw new BusinessException(getString("BusinessRule.Attendance.Casual.ExactPaymentRequiredToClose"));
             }
         }
+        
+        /*
+         * Registered clients-specific logic
+         */
+        if(attendance.getClient() != null) {
+            
+            /*
+             * Finds the client's current subscription.
+             */
+            ItemSubscription itemSubscription;
 
-        attendance.setDatetimeEnd(new Date());
+            List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>) entityManager.createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
+                    .setParameter("client", attendance.getClient()) //NOI18N
+                    .getResultList();
 
-        entityManager.flush();
+            if (!itemSubscriptions.isEmpty()) {
+                itemSubscription = itemSubscriptions.get(0);
+
+                /*
+                 * Calculates the quantity of penalties to apply.
+                 */
+                int penalties = calculatePenalties(itemSubscription.getTimeSplit(), new LocalTime());
+
+                /*
+                 * If there are penalties to apply, does it.
+                 */
+                if (penalties > 0) {
+
+                    Integer orderId = ordersService.findByClientIdAndDate(attendance.getClient().getId(), new DateMidnight(), true);
+                    Integer itemId = entityManager.find(Property.class, "time_range_mismatch_penalty_item_id").getInteger();
+
+                    order = entityManager.find(OrderEntity.class, orderId, LockModeType.OPTIMISTIC);
+                    OrderLine targetOrderLine = null;
+                    
+                    /*
+                     * Attemps to find the right order line first.
+                     */
+                    for(OrderLine orderLine : order.getOrderLines()) {
+                        if(orderLine.getItem().getId().equals(itemId)) {
+                            targetOrderLine = orderLine;
+                        }
+                    }
+                    
+                    /*
+                     * Creates an order line, if it does not exists, and applies
+                     * the penlaties.
+                     */
+                    if(targetOrderLine == null) {
+                        targetOrderLine = new OrderLine();
+                        targetOrderLine.setDiscount(null);
+                        targetOrderLine.setItem(entityManager.find(Item.class, itemId));
+                        targetOrderLine.setOrder(order);
+                        targetOrderLine.setQuantity(penalties);
+                        entityManager.persist(targetOrderLine);
+                        order.getOrderLines().add(targetOrderLine);
+                    } else {
+                        targetOrderLine.setQuantity(penalties);
+                    }                    
+                }
+            }
+        }
+
+        attendance.close();
     }
 
     @Override
@@ -410,7 +465,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         attendanceDTO.setClientFullName(attendance.getClient() == null ? null : attendance.getClient().getFullName());
         attendanceDTO.setKeyId(attendance.getKey().getId());
         attendanceDTO.setKeyTitle(attendance.getKey().getTitle());
-        attendanceDTO.setDateTimeEnd(attendance.getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN)
+        attendanceDTO.setDateTimeEnd(attendance.isOpen()
                 ? null
                 : new DateTime(attendance.getDatetimeEnd()));
 

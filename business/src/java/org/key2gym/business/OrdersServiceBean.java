@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.security.DeclareRoles;
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -344,7 +346,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
          * Performs additional roles checks.
          */
         Boolean managerRoleRequired = (order.getAttendance() != null
-                && !order.getAttendance().getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN))
+				       && !order.getAttendance().isOpen())
                 || !isToday(order.getDate());
 
         if (managerRoleRequired && !callerHasRole(SecurityRoles.MANAGER)) {
@@ -537,7 +539,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
         item = orderLine.getItem();
 
         Boolean managerRoleRequired = (order.getAttendance() != null
-                && !order.getAttendance().getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN))
+				       && !order.getAttendance().isOpen())
                 || !isToday(order.getDate());
 
         if (managerRoleRequired && !callerHasRole(SecurityRoles.MANAGER)) {
@@ -633,7 +635,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
         }
 
         Boolean managerRoleRequired = (order.getAttendance() != null
-                && !order.getAttendance().getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN))
+				       && !order.getAttendance().isOpen())
                 || !isToday(order.getDate());
 
         if (managerRoleRequired && !callerHasRole(SecurityRoles.MANAGER)) {
@@ -869,6 +871,8 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
         expirationDate.roll(Calendar.MONTH, forward ? itemSubscription.getTermMonths() : -itemSubscription.getTermMonths());
         expirationDate.roll(Calendar.DATE, forward ? itemSubscription.getTermDays() : -itemSubscription.getTermDays());
 
+        //getLogger().trace("rollExpirationDate " + itemSubscription.getItem().getTitle() + date + ", " + forward + " = " + expirationDate.getTime());
+        
         return expirationDate.getTime();
     }
     
