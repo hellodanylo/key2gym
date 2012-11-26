@@ -1,0 +1,123 @@
+<h1>2. Configuration</h1>
+
+<section>
+    This page explains how to configure Key2Gym. 
+</section>
+
+<h2>2.1. Client</h2>
+<section>
+    The client's configuration is located in <code>etc/application.properties</code>.
+    The following is the table of supported properties:
+</section>
+
+<table>
+    <thead>
+        <tr>
+            <td>Key</td>
+            <td>Description</td>
+            <td>Required</td>
+        </tr>
+    </thead>
+    <tbody> 
+        <tr>
+            <td>locale.language</td>
+            <td>The application locale's language.</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>locale.country</td>
+            <td>The application locale's country</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>ui</td>
+            <td>The Java L&amp;F to use in the application. It's recommended to use <code>Nimbus</code> as the application's L&amp;F.</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>connection</td>
+            <td></td>
+            <td>No, but must be specified either in the properties file or as a command-line argument.</td>
+        </tr>
+    </tbody>
+</table>
+
+<section>
+    The following is the table of supported locales:
+</section>
+
+<table>
+    <thead>
+        <tr>
+            <td>Language</td>
+            <td>Country</td>
+            <td>Description</td>
+        </tr>
+    </thead>
+    <tbody> 
+        <tr>
+            <td>en</td>
+            <td>US</td>
+            <td>English (United States)</td>
+        </tr>
+
+        <tr>
+            <td>ru</td>
+            <td>RU</td>
+            <td>Russian (Russia)</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>2.2. Connections</h2>
+
+<section>
+    Connections describe how the application should connect to the OpenEJB server. 
+    Connections are stored as files in <code>etc/connections/</code>. 
+    A connection file's name has the following format: <code>&lt;name&gt;.properties.</code> 
+    A connection file itself is a <a href="http://en.wikipedia.org/wiki/.properties">Java-style properties file</a>.
+    <p/>
+
+    The following is the table of supported properties:
+</section>
+
+<table>
+
+    <thead>
+
+        <tr>
+            <td>Key</td>
+            <td>Description</td>
+            <td>Required</td>
+        </tr>
+
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>connection.title</td>
+            <td class="description">The string that is going to displayed in the application as the description of this connection. The value can by any string. Note that you have to escape the Unicode characters. See the <a href="http://en.wikipedia.org/wiki/.properties">properties format description</a> for details. </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>connection.url</td>
+            <td class="description">The URL of the OpenEJB server to connect to.</td>
+            <td>Yes</td>
+        </tr>
+
+    </tbody>
+
+</table>
+
+<section>
+    The connection to use has to be specified either in the application.properties file or as the command-line argument.
+</section>
+
+<h2>2.3. Logging</h2>
+<section>
+    Key2Gym uses Log4J as its logging provider. The logging configuration
+    file is located in <code>etc/logging.properties</code> and is a Log4J logging properties file.
+    You can find the documentation on this file <a href="http://logging.apache.org/log4j/1.2/manual.html">here</a>.
+</section>
+
+

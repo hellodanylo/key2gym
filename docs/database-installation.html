@@ -1,0 +1,27 @@
+<h1>1. Database</h1>
+<h2>1.1. Installation</h2>
+
+<section>
+    Go to <a href="http://www.postgresql.org/">PostgreSQL website</a> to obtain 
+    a distribution of PostgreSQL server. The program has been intensively
+    tested with PostgreSQL 9.1, however the later version should work as well. 
+    If you are running Linux/Unix/BSD, we suggest you to install the PostgreSQL 
+    server from the official repository. 
+    See the <a href="http://www.postgresql.org/docs/9.1/static/index.html">PostgreSQL documentation</a>, 
+    if you need help with installing or configuring the server.
+
+    <p/>
+    The following is a typical setup of a user and a database:
+
+    <pre><code>postgres=# CREATE USER myuser PASSWORD 'mypassword';<br/>
+postgres=# CREATE DATABASE mydatabase OWNER myuser;<br/>
+postgres=# \c mydatabase<br/>
+postgres=# ALTER SCHEMA public OWNER TO myuser;</code></pre>
+
+    Note that you also need to modify <code>pg_hba.conf</code> to accept TCP/IP connections from
+    the hosts, where the business tier is going to be run. For example, if the
+    business tier is going to be located on the same host as the database server, 
+    you need to have the following configuration file:
+
+    <pre><code>host     mydatabase     myuser     127.0.0.1/32    password</code></pre>
+</section>

@@ -83,6 +83,7 @@ pre {
 
 pre code {
     line-height: 1.6em;
+    display: block;
 }
 
 code {
@@ -90,12 +91,11 @@ code {
     padding: 0px 1px 0px 1px;
     border: 1px solid #EAEAEA;
     background-color: #F8F8F8;
-    display: inline;
     font-family: monospace;
     color: gray;
     word-wrap: break-word;
     display: inline-block;
-    white-space: normal;
+    white-space: pre;
 }
 
 ul, ol {

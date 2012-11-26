@@ -77,20 +77,22 @@
         
     <target name="doc" depends="init" description="Generates the end-user documentation.">
         <build-html path="index.html" />
+        <build-html path="upgrading.html" />
         
         <build-html path="database-index.html" />
         <build-html path="database-installation.html" />
         <build-html path="database-schema.html" />
-        
+             
         <build-html path="client-index.html" />
         <build-html path="client-installation.html" />
         <build-html path="client-configuration.html" />
+        <build-html path="client-running.html" />
 
         <build-html path="business-index.html" />
         <build-html path="business-installation.html" />
         <build-html path="business-configuration.html" />
         <build-html path="business-running.html" />
-        
+                
         <!-- Copies stylesheet files. -->
         <copy todir="${dist.dir}/${doc.dir}">
             <fileset dir="${doc.dir}" includes="*.css" />
