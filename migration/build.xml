@@ -19,49 +19,15 @@
         <!-- Creates the distribution folder. -->
         <mkdir dir="${dist.dir}" />
         
-        <!-- To build the jar.classpath property, we take the basename of each of the libraries. -->
-        <basename file="${lib.flyway-core.jar}" property="lib.flyway-core.jar.basename" />
-        <basename file="${lib.postgresql-connector-jdbc4.jar}" property="lib.postgresql-connector-jdbc4.jar.basename" />
-        <basename file="${lib.openejb-client.jar}" property="lib.openejb-client.jar.basename" />
-        <basename file="${lib.commons-cli-bin.jar}" property="lib.commons-cli-bin.jar.basename" />
-        <basename file="${lib.commons-logging-bin.jar}" property="lib.commons-logging-bin.jar.basename" />
-        <basename file="${lib.log4j-bin.jar}" property="lib.log4j-bin.jar.basename" />
-        <basename file="${lib.javaee-api.jar}" property="lib.javaee-api.jar.basename" />
-        
-        <!-- Then concatenate it all in to the jar.classpath. -->
-        <property name="jar.classpath" value="lib/${lib.flyway-core.jar.basename}
-lib/${lib.postgresql-connector-jdbc4.jar.basename}
-lib/${lib.openejb-client.jar.basename}
-lib/${lib.commons-cli-bin.jar.basename}
-lib/${lib.commons-logging-bin.jar.basename}
-lib/${lib.log4j-bin.jar.basename}
-lib/${lib.javaee-api.jar.basename}" />
-        
         <!-- Creates the JAR archive. -->
-        <jar basedir="${bin.dir}" destfile="${dist.dir}/${jar.file}">
-            <manifest>
-                <attribute name="Main-class" value="${jar.mainclass}" />
-                <attribute name="Class-path" value="${jar.classpath}" />
-            </manifest>
-        </jar>
-        
-        <!-- Copies the dependencies. -->
-        <copy todir="${dist.dir}/lib">
-            <fileset file="${lib.postgresql-connector-jdbc4.jar}" />
-            <fileset file="${lib.flyway-core.jar}" />
-            <fileset file="${lib.flyway-commandline-bin.jar}" />
-            <fileset file="${lib.log4j-bin.jar}" />
-            <fileset file="${lib.commons-logging-bin.jar}" />
-            <fileset file="${lib.commons-cli-bin.jar}" />
-            <fileset file="${lib.openejb-client.jar}" />
-            <fileset file="${lib.javaee-api.jar}" />
-        </copy>
-        
-        <!-- Copies the executables. -->
-        <copy todir="${dist.dir}" >
-            <fileset file="flyway.*" />
-        </copy>
-        
+        <jar basedir="${bin.dir}" destfile="${dist.dir}/${jar.file}" />
+
+	<!-- Copies the runtime dependencies list. -->
+	<copy todir="${dist.dir}/lib" file="${runtime-deps.txt}" />
+
+	<!-- Copies the startup script. -->
+	<copy todir="${dist.dir}" file="key2gym-migration.sh" />
+
         <!--Copies the configuration directory. -->
         <copy todir="${dist.dir}/etc" >
             <fileset dir="etc" />

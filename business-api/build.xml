@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Key2Gym-Business-API" default="default" basedir=".">
+<project name="Key2Gym-Business-API" default="build" basedir=".">
     <description>Builds and packages the project Key2Gym-Business-API.</description>
     
     <target name="init">
@@ -13,16 +13,11 @@
     </target>
     
     <target name="clean" depends="init">
-        <delete dir="${binary.dir}" />
-        <delete dir="${dist.dir}" />
+        <delete failonerror="false" dir="${binary.dir}" />
+        <delete failonerror="false" dir="${dist.dir}" />
     </target>
     
     <target name="build" depends="compile">
         <jar destfile="${dist.dir}/${jar.file}" basedir="${binary.dir}" />
-        
-        <copy todir="${dist.dir}/lib">
-            <fileset file="${lib.joda-time-bin.jar}" />
-            <fileset file="${lib.javaee-api-6.0-4.jar}" />
-        </copy>
     </target>    
 </project>

@@ -26,6 +26,10 @@ h2 {
     font: bold 1em Arial;
 }
 
+h3 {
+    font: bold 0.9em Arial;
+}
+
 p {
     margin-top: 10px;
 }

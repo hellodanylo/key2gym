@@ -24,60 +24,34 @@
     
     <target name="build" depends="compile">
         
-        <!-- To build the jar.classpath property, we take the basename of each of the libraries. -->
-        <basename file="${lib.joda-time-bin.jar}" property="lib.joda-time-bin.jar.basename" />
-        <basename file="${lib.javaee-api.jar}" property="lib.javaee-api.jar.basename" />
-        <basename file="${lib.key2gym-business-api.jar}" property="lib.key2gym-business-api.jar.basename" />
-        <basename file="${lib.openejb-client.jar}" property="lib.openejb-client.jar.basename" />
-        <basename file="${lib.commons-cli.jar}" property="lib.commons-cli.jar.basename" />
-        <basename file="${lib.log4j-bin.jar}" property="lib.log4j-bin.jar.basename" />
-        <basename file="${lib.jgoodies-common-bin.jar}" property="lib.jgoodies-common-bin.jar.basename" />
-        <basename file="${lib.jgoodies-forms-bin.jar}" property="lib.jgoodies-forms-bin.jar.basename" />
-        <basename file="${lib.beans-binding-bin.jar}" property="lib.beans-binding-bin.jar.basename" />
-        
-        <!-- Then concatenate it all in to the jar.classpath. -->
-        <property name="jar.classpath" value="lib/${lib.joda-time-bin.jar.basename}
-lib/${lib.javaee-api.jar.basename}
-lib/${lib.key2gym-business-api.jar.basename}
-lib/${lib.openejb-client.jar.basename}
-lib/${lib.commons-cli.jar.basename}
-lib/${lib.log4j-bin.jar.basename}
-lib/${lib.jgoodies-common-bin.jar.basename}
-lib/${lib.jgoodies-forms-bin.jar.basename}
-lib/${lib.beans-binding-bin.jar.basename}" />
-                
-        <jar destfile="${dist.dir}/${jar.file}" basedir="${bin.dir}">
-            <manifest>
-                <attribute name="Main-class" value="${jar.mainclass}" />
-                <attribute name="Class-path" value="${jar.classpath}" />
-                <attribute name="Splashscreen-image" value="${jar.splashscreen}" />
-            </manifest>
+       <jar destfile="${dist.dir}/${jar.file}" basedir="${bin.dir}">
             <fileset dir="${src.dir}" includes="META-INF/**" />
             <fileset dir="${src.dir}" includes="**/*.properties" />
             <fileset dir="${src.dir}" includes="**/*.png" />
         </jar>
-        
-        <!-- Copies JARs required to run the client. -->
+
+	<!-- Copies the startup script. -->
+	<copy todir="${dist.dir}">
+	  <fileset dir="." includes="key2gym-client.sh" />
+        </copy>
+
+	<!-- Copies the default configuration. -->
+	<copy todir="${dist.dir}/${etc.dir}">
+	  <fileset dir="${etc.dir}" />
+	</copy>
+
+	<!-- Copies the splash image. -->
+	<copy file="splash.png" todir="${dist.dir}" />
+
+        <!-- Copies the list of JARs required to run the client. -->
         <copy todir="${dist.dir}/lib">
-            <fileset file="${lib.key2gym-business-api.jar}" />
-            <fileset file="${lib.joda-time-bin.jar}" />
-            <fileset file="${lib.javaee-api.jar}" />
-            <fileset file="${lib.openejb-client.jar}" />
-            <fileset file="${lib.commons-cli.jar}" />
-            <fileset file="${lib.log4j-bin.jar}" />
-            <fileset file="${lib.jgoodies-common-bin.jar}" />
-            <fileset file="${lib.jgoodies-forms-bin.jar}" />
-            <fileset file="${lib.beans-binding-bin.jar}" />
+	  <fileset file="${runtime-deps.txt}" />
         </copy>
-        
-        <!-- Copies the etc dir. -->
-        <copy todir="${dist.dir}/etc">
-            <fileset dir="${etc.dir}" />
-        </copy>
+	
     </target>
     
     <target name="run" depends="init">
-        <java dir="${dist.dir}" jar="${dist.dir}/${jar.file}" />
+        <java dir="${dist.dir}" classpath="${javac.classpath}" fork="true" jar="${dist.dir}/${jar.file}" />
     </target>
     
 </project>
