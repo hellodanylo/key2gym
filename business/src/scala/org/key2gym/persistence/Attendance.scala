@@ -49,13 +49,13 @@ class Attendance extends Serializable {
   @Basic(optional = false)
   @Column(name = "datetime_begin")
   @Temporal(TemporalType.TIMESTAMP)
-  private var datetimeBegin: Date = _
+  protected var datetimeBegin: Date = null
     
   @Basic(optional = false)
   @Column(name = "datetime_end")
   @Temporal(TemporalType.TIMESTAMP)
-  private var datetimeEnd: Date = _
-    
+  protected var datetimeEnd: Date = null
+
   @Version
   @Column(name="version")
   private var version: Int = _
