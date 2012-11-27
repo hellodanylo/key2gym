@@ -20,47 +20,43 @@
             </classpath>
         </taskdef>
     </target>
-    
-    <target name="compile" depends="init">
-        <mkdir dir="${bin.dir}" />
+
+    <macrodef name="compile">
+      <attribute name="unit" />
+      <sequential>
+        <mkdir dir="${bin.dir}/@{unit}" />
         
         <!-- Builds the Business API project. -->
         <ant antfile="../business-api/build.xml" target="build" inheritall="false" />
         
-        <scalac failonerror="true" destdir="${bin.dir}" classpath="${javac.classpath}" >
-            <src path="${src.java.dir}:${src.scala.dir}"/>
+        <scalac failonerror="true" destdir="${bin.dir}/@{unit}" classpath="${@{unit}.classpath}" deprecation="true">
+	  <src path="${src.@{unit}.java.dir}:${src.@{unit}.scala.dir}"/>
 	</scalac>
         
-        <javac srcdir="${src.java.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}:${bin.dir}" source="7" includeantruntime="false" />        
+        <javac srcdir="${src.@{unit}.java.dir}" destdir="${bin.dir}/@{unit}" debug="true" classpath="${@{unit}.classpath}:${bin.dir}/@{unit}" source="7" includeantruntime="false" />        
+      </sequential>
+    </macrodef>
+
+    <target name="compile-main" depends="init">
+      <compile unit="main" />
     </target>
-    
+
+    <target name="compile-test" depends="init">
+      <compile unit="test" />
+    </target>
+        
     <target name="clean" depends="init">
-        <delete dir="${bin.dir}" />
+        <delete dir="${bin.dir}" failonerror="false" />
         <delete dir="${dist.dir}" failonerror="false"/>
     </target>
     
-    <target name="build" depends="init,undeploy,compile">
+    <target name="build" depends="init,undeploy,compile-main">
         
-        <jar destfile="${dist.dir}/${jar.file}" basedir="${bin.dir}">
-            <fileset dir="${src.java.dir}" includes="**/*.properties" />
-            <fileset dir="${src.java.dir}" includes="META-INF/**" />
+        <jar destfile="${dist.dir}/${jar.file}" basedir="${bin.dir}/main">
+            <fileset dir="${src.main.java.dir}" includes="**/*.properties" />
+            <fileset dir="${src.main.java.dir}" includes="META-INF/**" />
         </jar>
         
-        <!-- Copies JARs required to run the EJBs. -->
-        <copy todir="${dist.dir}/lib">
-            <fileset file="${lib.key2gym-business-api.jar}" />
-            <fileset file="${lib.joda-time-bin.jar}" />
-            <fileset file="${lib.javaee-api-6.0.jar}" />
-            <fileset file="${lib.log4j-bin.jar}" />
-        </copy>
-
-        <!-- Zips distribution files into a ZIP archive for deployment. -->
-        <!--<zip destfile="${dist.dir}/key2gym-business.ear" basedir="${dist.dir}" excludes="key2gym-business.ear"/>-->
-        
-        <!-- Deletes all distribution files, because they are now in the archive. -->
-        <!--<delete includeemptydirs="true">
-            <fileset dir="${dist.dir}" excludes="key2gym-business.ear" />
-        </delete>-->
     </target>
     
     <target name="deploy" depends="init">
@@ -79,4 +75,12 @@
     
     <target name="rebuild-deploy" depends="clean,build,deploy" />
     
+
+    <target name="test" depends="init,clean,compile-main,compile-test" description="Runs unit tests">
+      <taskdef name="scalatest" classpath="${test.classpath}" classname="org.scalatest.tools.ScalaTestAntTask" />
+
+      <scalatest runpath="bin/main:bin/test/" >
+	<suite classname="org.key2gym.business.model.ClientSuite.ClientSuite" />
+      </scalatest>
+    </target>
 </project>

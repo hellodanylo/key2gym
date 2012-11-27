@@ -38,12 +38,12 @@ import org.key2gym.business.api.dtos.OrderDTO;
 import org.key2gym.business.api.dtos.OrderLineDTO;
 import org.key2gym.business.api.local.OrdersServiceLocal;
 import org.key2gym.business.api.remote.OrdersServiceRemote;
-import org.key2gym.persistence.Attendance;
-import org.key2gym.persistence.Client;
+import org.key2gym.business.entities.Attendance;
+import org.key2gym.business.entities.Client;
 import org.key2gym.persistence.Discount;
 import org.key2gym.persistence.Item;
 import org.key2gym.persistence.ItemSubscription;
-import org.key2gym.persistence.OrderEntity;
+import org.key2gym.business.entities.OrderEntity;
 import org.key2gym.persistence.OrderLine;
 import org.key2gym.persistence.Property;
 
@@ -101,11 +101,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
              */
             if (createIfDoesNotExist) {
 
-
-                order = new OrderEntity();
-                order.setClient(client);
-                order.setDate(date.toDate());
-                order.setPayment(BigDecimal.ZERO);
+                order = OrderEntity.apply(client);
 
                 getEntityManager().persist(order);
                 getEntityManager().flush();
@@ -153,11 +149,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
              */
             if (createIfDoesNotExist) {
 
-
-                order = new OrderEntity();
-                order.setClient(client);
-                order.setDate(getToday());
-                order.setPayment(BigDecimal.ZERO);
+                order = OrderEntity.apply(client);
 
                 getEntityManager().persist(order);
                 getEntityManager().flush();

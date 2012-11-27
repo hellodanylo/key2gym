@@ -35,7 +35,7 @@ import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.Validator;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.business.api.remote.ClientsServiceRemote;
-import org.key2gym.persistence.Client;
+import org.key2gym.business.entities.Client;
 
 /**
  *
@@ -111,9 +111,6 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             newClient.setRegistrationDate(new Date());
             newClient.setExpirationDate(client.getRegistrationDate().toDate());
         }
-
-        newClient.setAttendances(null);
-        newClient.setFinancialAcitivities(null);
 
         entityManager.persist(newClient);
         entityManager.flush();

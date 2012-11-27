@@ -42,12 +42,12 @@ import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.local.OrdersServiceLocal;
 import org.key2gym.business.api.remote.AttendancesServiceRemote;
-import org.key2gym.persistence.Attendance;
-import org.key2gym.persistence.Client;
+import org.key2gym.business.entities.Attendance;
+import org.key2gym.business.entities.Client;
 import org.key2gym.persistence.Item;
 import org.key2gym.persistence.ItemSubscription;
-import org.key2gym.persistence.Key;
-import org.key2gym.persistence.OrderEntity;
+import org.key2gym.business.entities.Key;
+import org.key2gym.business.entities.OrderEntity;
 import org.key2gym.persistence.OrderLine;
 import org.key2gym.persistence.Property;
 import org.key2gym.persistence.TimeSplit;
@@ -196,10 +196,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
          */
         attendance = Attendance.apply(key);
 
-        order = new OrderEntity();
-        order.setAttendance(attendance);
-        order.setDate(attendance.getDatetimeBegin());
-        order.setPayment(BigDecimal.ZERO);
+        order = OrderEntity.apply(attendance);
 
         ItemSubscription itemSubscription = findValidCasualSubscription(new LocalTime());
         if (itemSubscription == null) {

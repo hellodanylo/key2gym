@@ -21,7 +21,7 @@ import java.text.MessageFormat;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.persistence.Administrator;
-import org.key2gym.persistence.Client;
+import org.key2gym.business.entities.Client;
 import org.key2gym.persistence.ClientFreeze;
 import java.util.Date;
 import java.util.LinkedList;

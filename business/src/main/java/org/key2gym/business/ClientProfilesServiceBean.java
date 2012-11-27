@@ -28,7 +28,7 @@ import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.Validator;
 import org.key2gym.persistence.AdSource;
-import org.key2gym.persistence.Client;
+import org.key2gym.business.entities.Client;
 import org.key2gym.persistence.ClientProfile;
 import org.joda.time.DateMidnight;
 import org.joda.time.Instant;

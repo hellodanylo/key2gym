@@ -25,7 +25,7 @@ import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.KeyDTO;
 import org.key2gym.business.api.remote.KeysServiceRemote;
-import org.key2gym.persistence.Key;
+import org.key2gym.business.entities.Key;
 
 /**
  *

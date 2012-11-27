@@ -18,6 +18,7 @@ package org.key2gym.persistence;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.key2gym.business.entities.Client;
 
 /**
  *
