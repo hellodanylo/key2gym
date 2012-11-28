@@ -220,11 +220,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
              */
             if (createIfDoesNotExist) {
 
-
-                order = new OrderEntity();
-                order.setDate(new Date());
-                order.setPayment(BigDecimal.ZERO);
-
+                order = OrderEntity.apply();
 
                 getEntityManager().persist(order);
                 getEntityManager().flush();
@@ -388,49 +384,10 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
          */
         if (order.getClient() != null) {
             Client client = order.getClient();
-
-            /*
-             * Charges the client's account. Checks whether the new value will
-             * overreach the precision limit.
-             */
-            BigDecimal amount = item.getPrice();
-            if (discount != null) {
-                amount = amount.divide(new BigDecimal(100));
-                amount = amount.multiply(new BigDecimal(100 - discount.getPercent()));
-            }
-            BigDecimal newMoneyBalance = client.getMoneyBalance().subtract(amount);
-            if (newMoneyBalance.precision() > MONEY_MAX_PRESICION) {
-                throw new ValidationException(getString("Invalid.Client.MoneyBalance.LimitReached"));
-            }
-            client.setMoneyBalance(newMoneyBalance);
+	    client.charge(item, quantity, discount);
 
             if (item.getItemSubscription() != null) {
-                /*
-                 * After the client has expired, it's attendances balance is
-                 * kept until the client buys another subscription. The
-                 * attendance's balance is not zeroed, if he buys another
-                 * subscription before the expiration date.
-                 */
-                Integer attendancesBalance = client.getAttendancesBalance();
-                /*
-                 * Expiration base is the date from which we count the
-                 * expiration date by adding the ItemSubscription's term. It's
-                 * either today or the client's current expiration date,
-                 * whatever is later.
-                 */
-                Date expirationBase = client.getExpirationDate();
-
-                if (hasExpired(client.getExpirationDate())) {
-                    attendancesBalance = 0;
-                    expirationBase = new Date();
-                }
-
-                attendancesBalance += item.getItemSubscription().getUnits();
-                client.setAttendancesBalance(attendancesBalance);
-
-                client.setExpirationDate(rollExpirationDate(item.getItemSubscription(),
-                        expirationBase, true));
-
+		client.activate(item.getItemSubscription());
             }
         }
 
@@ -543,7 +500,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
         }
 
         Property timeRangeMismatch = getEntityManager().find(Property.class, "time_range_mismatch_penalty_item_id");
-        if (orderLine.getItem().getId().equals(timeRangeMismatch.getInteger())) {
+        if (orderLine.getItem().getId() == timeRangeMismatch.getInteger()) {
             throw new BusinessException(getString("BusinessRule.Order.OrderLineForceAndCanNotBeRemoved"));
         }
 
@@ -551,37 +508,12 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
          * Business logic specific to orders associated with clients.
          */
         if (order.getClient() != null) {
-
             Client client = order.getClient();
+	    client.uncharge(item, quantity, orderLine.getDiscount());
 
-            /*
-             * Give money back to the client.
-             */
-            BigDecimal price = item.getPrice();
-            if(orderLine.getDiscount() != null) {
-                price = price.multiply(BigDecimal.valueOf(orderLine.getDiscount().getPercent()));
-                price = price.divide(BigDecimal.valueOf(100));
-            }
-            client.setMoneyBalance(client.getMoneyBalance().add(price));
-
-            if (item.getItemSubscription() != null) {
-                /*
-                 * After the client has expired, it's attendances balance is
-                 * kept until the client buys another subscription. The
-                 * attendance's balance is not zeroed, if he buys another
-                 * subscription before the expiration date.
-                 */
-                Integer attendancesBalance = client.getAttendancesBalance() - item.getItemSubscription().getUnits();
-                client.setAttendancesBalance(attendancesBalance);
-
-                /*
-                 * We count the expiration date by substracting the item
-                 * subscription's term.
-                 */
-                client.setExpirationDate(rollExpirationDate(item.getItemSubscription(),
-                        client.getExpirationDate(), false));
-
-            }
+	    if(item.getItemSubscription() != null) {
+		client.deactivate(item.getItemSubscription());
+	    }
         }
 
         /*
@@ -634,47 +566,17 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
             throw new SecurityViolationException(getString("Security.Operation.Denied"));
         }
 
-        /*
-         * Normalizes the scale, and throws an exception, if the scale is to
-         * big.
-         */
-        if (amount.scale() > 2) {
-            throw new ValidationException(getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
-        }
-        amount = amount.setScale(2);
-
-
-        BigDecimal newTotalPaymentMaid = order.getPayment().add(amount);
-
-        if (newTotalPaymentMaid.precision() > 5) {
-            throw new ValidationException(getString("Invalid.Order.Total.LimitReached"));
-        }
+	order.recordPayment(amount);
 
         /*
-         * If the order is associted with a client, does some
-         * checks and alters the client's money balance.
+         * If the order is associted with a client, 
+	 * transfers the money to or from the client's
+	 * account.
          */
         if (order.getClient() != null) {
             Client client = order.getClient();
-            BigDecimal newMoneyBalance = client.getMoneyBalance().add(amount);
-
-            if (newMoneyBalance.precision() > MONEY_MAX_PRESICION) {
-                throw new ValidationException(getString("Invalid.Client.MoneyBalance.LimitReached"));
-            }
-
-            if (newTotalPaymentMaid.compareTo(BigDecimal.ZERO) < 0) {
-                if (newMoneyBalance.compareTo(BigDecimal.ZERO) < 0) {
-                    throw new BusinessException(getString("Invalid.Order.NotEnoughMoneyToWithdraw"));
-                }
-            }
-
-            /*
-             * Changes the client's money balance.
-             */
-            client.setMoneyBalance(newMoneyBalance);
+	    client.transfer(new scala.math.BigDecimal(amount));
         }
-
-        order.setPayment(newTotalPaymentMaid);
     }
 
     @Override
@@ -811,7 +713,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersServiceRemote,
          * Money balance
          */
         if (order.getClient() != null) {
-            orderDTO.setMoneyBalance(order.getClient().getMoneyBalance().setScale(2));
+            orderDTO.setMoneyBalance(order.getClient().getMoneyBalance().setScale(2).underlying());
         }
         return orderDTO;
     }

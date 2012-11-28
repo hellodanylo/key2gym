@@ -17,6 +17,7 @@ package org.key2gym.business.resources;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.text.MessageFormat;
 
 /**
  *
@@ -24,11 +25,28 @@ import java.util.ResourceBundle;
  */
 public class ResourcesManager {
 
-    public static ResourceBundle getStrings() {
-        return ResourceBundle.getBundle("org/key2gym/business/resources/Strings");
+    static {
+	String language = System.getProperty("locale.language");
+	String country = System.getProperty("locale.country");
+
+	if(language != null && country != null) {
+	    strings = ResourceBundle.getBundle("org/key2gym/business/resources/Strings", new Locale(language, country));
+	} else {
+	    strings = ResourceBundle.getBundle("org/key2gym/business/resources/Strings");
+	}
     }
 
-    public static ResourceBundle getStrings(Locale locale) {
-        return ResourceBundle.getBundle("org/key2gym/business/resources/Strings", locale);
+    public static ResourceBundle getStrings() {
+	return strings;
     }
+
+    public static String getString(String key, String... arguments) {
+        String result = strings.getString(key);
+
+        result = MessageFormat.format(result, (Object[]) arguments);
+
+        return result;
+    }
+
+    private static ResourceBundle strings;
 }

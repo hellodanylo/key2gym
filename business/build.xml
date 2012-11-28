@@ -53,8 +53,7 @@
     <target name="build" depends="init,undeploy,compile-main">
         
         <jar destfile="${dist.dir}/${jar.file}" basedir="${bin.dir}/main">
-            <fileset dir="${src.main.java.dir}" includes="**/*.properties" />
-            <fileset dir="${src.main.java.dir}" includes="META-INF/**" />
+            <fileset dir="${src.res.dir}" />
         </jar>
         
     </target>
@@ -67,6 +66,7 @@
     </target>
     
     <target name="undeploy" depends="init">        
+      <echo message="Undeploying the appication.." />
         <exec dir="${openejb.dir}" executable="${openejb.dir}/bin/openejb">
             <arg value="undeploy" />
             <arg value="${openejb.dir}/apps/${jar.file}" />
@@ -76,11 +76,14 @@
     <target name="rebuild-deploy" depends="clean,build,deploy" />
     
 
-    <target name="test" depends="init,clean,compile-main,compile-test" description="Runs unit tests">
-      <taskdef name="scalatest" classpath="${test.classpath}" classname="org.scalatest.tools.ScalaTestAntTask" />
+    <target name="test" depends="init,compile-main,compile-test" description="Runs unit tests">
+      
+      <!-- Loads the ScalaTest ant task. -->
+      <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestAntTask">
+	<classpath path="${lib.scalatest-bin.jar}:${scala.dir}/lib/scala-library.jar" />
+      </taskdef>
 
-      <scalatest runpath="bin/main:bin/test/" >
-	<suite classname="org.key2gym.business.model.ClientSuite.ClientSuite" />
-      </scalatest>
+      <!-- Runs the tests. -->      
+      <scalatest runpath="${test.runtime.classpath}" wildcard="org.key2gym.business" />
     </target>
 </project>

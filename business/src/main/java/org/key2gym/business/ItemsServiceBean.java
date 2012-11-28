@@ -1,5 +1,3 @@
-package org.key2gym.business;
-
 /*
  * Copyright 2012 Danylo Vashchilenko
  *
@@ -15,6 +13,9 @@ package org.key2gym.business;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
+package org.key2gym.business;
+
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.LinkedList;
@@ -56,17 +57,11 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
         validatePrice(item.getPrice());
         validateBarcode(item.getBarcode(), null);
 
-        /*
-         * The persistence layer will generate an ID.
-         */
-        item.setId(null);
-
-        Item entityItem = new Item(
-                item.getId(),
-                item.getBarcode(),
-                item.getTitle(),
-                item.getQuantity(),
-                item.getPrice());
+        Item entityItem = new Item();
+	entityItem.setBarcode(item.getBarcode());
+	entityItem.setTitle(item.getTitle());
+	entityItem.setQuantity(item.getQuantity());
+	entityItem.setPrice(item.getPrice());
 
         entityManager.persist(entityItem);
         entityManager.flush();
@@ -90,7 +85,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
             /*
              * Skips the time range mismatch penalty item.
              */
-            if (item.getId().equals(penaltyItemId)) {
+            if (item.getId() == penaltyItemId) {
                 continue;
             }
 
@@ -152,7 +147,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
             /*
              * Skips the time range mismatch penalty item.
              */
-            if (item.getId().equals(penaltyItemId)) {
+            if (item.getId() == penaltyItemId) {
                 continue;
             }
 
@@ -189,12 +184,11 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
             throw new ValidationException(getString("Invalid.Item.ID"));
         }
 
-        Item entityItem = new Item(
-                item.getId(),
-                item.getBarcode(),
-                item.getTitle(),
-                item.getQuantity(),
-                item.getPrice());
+        Item entityItem = new Item();
+	entityItem.setBarcode(item.getBarcode());
+	entityItem.setTitle(item.getTitle());
+	entityItem.setQuantity(item.getQuantity());
+	entityItem.setPrice(item.getPrice());
 
         // note change
         entityManager.merge(entityItem);
@@ -246,15 +240,9 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
     }
 
     public void validateBarcode(Long value, Integer id) throws ValidationException {
-        if (value == null) {
-            return;
-        }
-        if (value < 0) {
-            String message = MessageFormat.format(
-                    getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
-                    getString("Property.Barcode"));
-            throw new ValidationException(message);
-        }
+	if(value == null) {
+	    return;
+	}
 
         try {
 
@@ -262,7 +250,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
                     .setParameter("barcode", value) //NOI18N
                     .getSingleResult();
 
-            if (id != null && item.getId().equals(id)) {
+            if (id != null && item.getId() == id) {
                 return;
             }
 
@@ -281,17 +269,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
             return;
         }
 
-        if (value < 0) {
-            String message = MessageFormat.format(
-                    getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
-                    getString("Property.Quantity"));
-            throw new ValidationException(message);
-        } else if (value > 255) {
-            String message = MessageFormat.format(
-                    getString("Invalid.Property.OverLimit.withPropertyName"),
-                    getString("Property.Quantity"));
-            throw new ValidationException(message);
-        }
+
     }
 
     public void validatePrice(BigDecimal value) throws ValidationException {

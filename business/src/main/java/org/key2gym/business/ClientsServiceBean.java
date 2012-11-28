@@ -16,8 +16,6 @@ package org.key2gym.business;
  * the License.
  */
 
-
-import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -36,6 +34,8 @@ import org.key2gym.business.api.Validator;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.business.api.remote.ClientsServiceRemote;
 import org.key2gym.business.entities.Client;
+import scala.math.BigDecimal;
+import scala.math.BigDecimal$;
 
 /**
  *
@@ -53,7 +53,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
         client.setId(getNextId());
         client.setAttendancesBalance(0);
         client.setExpirationDate(new DateMidnight());
-        client.setMoneyBalance(BigDecimal.ZERO.setScale(2));
+        client.setMoneyBalance(BigDecimal$.MODULE$.apply(0).setScale(2).underlying());
         client.setRegistrationDate(new DateMidnight());
 
         return client;
@@ -96,7 +96,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             if (client.getMoneyBalance() == null) {
                 throw new NullPointerException("The client.getMoneyBalance() is null."); //NOI18N
             }
-            newClient.setMoneyBalance(BigDecimal.ZERO);
+            newClient.setMoneyBalance(BigDecimal$.MODULE$.apply(0));
             if (client.getRegistrationDate() == null) {
                 throw new NullPointerException("The client.getRegistrationDate() is null."); //NOI18N
             }
@@ -107,7 +107,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             newClient.setExpirationDate(client.getExpirationDate().toDate());
         } else {
             newClient.setAttendancesBalance(0);
-            newClient.setMoneyBalance(BigDecimal.ZERO);
+            newClient.setMoneyBalance(BigDecimal$.MODULE$.apply(0));
             newClient.setRegistrationDate(new Date());
             newClient.setExpirationDate(client.getRegistrationDate().toDate());
         }
@@ -136,7 +136,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
         clientDTO.setId(clientId);
         clientDTO.setFullName(client.getFullName());
         clientDTO.setAttendancesBalance(client.getAttendancesBalance());
-        clientDTO.setMoneyBalance(client.getMoneyBalance());
+        clientDTO.setMoneyBalance(client.getMoneyBalance().underlying());
         clientDTO.setRegistrationDate(new DateMidnight(client.getRegistrationDate()));
         clientDTO.setExpirationDate(new DateMidnight(client.getExpirationDate()));
         clientDTO.setNote(client.getNote());
@@ -195,7 +195,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             clientDTO.setId(client.getId());
             clientDTO.setFullName(client.getFullName());
             clientDTO.setAttendancesBalance(client.getAttendancesBalance());
-            clientDTO.setMoneyBalance(client.getMoneyBalance());
+            clientDTO.setMoneyBalance(client.getMoneyBalance().underlying());
             clientDTO.setRegistrationDate(new DateMidnight(client.getRegistrationDate()));
             clientDTO.setExpirationDate(new DateMidnight(client.getExpirationDate()));
             clientDTO.setNote(client.getNote());
@@ -276,7 +276,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
         if (client.getMoneyBalance().precision() > 5) {
             throw new ValidationException(getString("Invalid.Client.MoneyBalance.LimitReached"));
         }
-        originalClient.setMoneyBalance(client.getMoneyBalance());
+        originalClient.setMoneyBalance(new BigDecimal(client.getMoneyBalance()));
 
         if (originalClient.getRegistrationDate() == null) {
             throw new NullPointerException("The client.getRegistrationDate() is null."); //NOI18N
@@ -294,7 +294,6 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
     @Override
     public Boolean hasDebt(Integer clientId) throws ValidationException {
 
-
         if (clientId == null) {
             throw new NullPointerException("The clientId is null."); //NOI18N
         }
@@ -304,12 +303,11 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             throw new ValidationException(getString("Invalid.Client.ID"));
         }
 
-        return client.getMoneyBalance().compareTo(BigDecimal.ZERO) < 0;
+        return client.getMoneyBalance().compare(BigDecimal$.MODULE$.apply(0)) < 0;
     }
 
     @Override
     public Integer getNextId() {
-
 
         try {
             return 1 + (Integer) entityManager

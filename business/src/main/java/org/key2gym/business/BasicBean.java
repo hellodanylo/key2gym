@@ -33,10 +33,6 @@ import org.key2gym.business.resources.ResourcesManager;
  */
 public class BasicBean implements BasicInterface {
     
-    public BasicBean() {
-        strings = ResourcesManager.getStrings();
-    }
-     
     protected boolean callerHasRole(String role) {
         return sessionContext.isCallerInRole(role);
     }
@@ -50,12 +46,9 @@ public class BasicBean implements BasicInterface {
         return false;
     }
 
+    @Deprecated
     protected String getString(String key, String... arguments) {
-        String result = strings.getString(key);
-
-        result = MessageFormat.format(result, (Object[]) arguments);
-
-        return result;
+        return ResourcesManager.getString(key, arguments);
     }
 
     protected EntityManager getEntityManager() {
@@ -65,16 +58,10 @@ public class BasicBean implements BasicInterface {
     protected SessionContext getSessionContext() {
         return sessionContext;
     }    
-    
-    public void setLocale(Locale locale) {
-        strings = ResourcesManager.getStrings(locale);
-    }
-    
+        
     @Resource
     private SessionContext sessionContext;
     
     @PersistenceContext(name="PU")
     private EntityManager entityManager;
-    
-    private ResourceBundle strings;
 }

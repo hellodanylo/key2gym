@@ -21,8 +21,8 @@ package org.key2gym.business;
  * @author Danylo Vashchilenko
  */
 public interface SecurityRoles {
-    public static String MANAGER = "manager";
-    public static String SENIOR_ADMINISTRATOR = "senior_administrator";
-    public static String JUNIOR_ADMINISTRATOR = "junior_administrator";
-    public static String REPORTS_MANAGER = "reports_manager";
+    public final static String MANAGER = "manager";
+    public final static String SENIOR_ADMINISTRATOR = "senior_administrator";
+    public final static String JUNIOR_ADMINISTRATOR = "junior_administrator";
+    public final static String REPORTS_MANAGER = "reports_manager";
 }

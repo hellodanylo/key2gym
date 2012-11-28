@@ -389,7 +389,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                      * Attemps to find the right order line first.
                      */
                     for(OrderLine orderLine : order.getOrderLines()) {
-                        if(orderLine.getItem().getId().equals(itemId)) {
+                        if(orderLine.getItem().getId() == itemId) {
                             targetOrderLine = orderLine;
                         }
                     }

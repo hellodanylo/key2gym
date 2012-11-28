@@ -62,12 +62,11 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
         itemsService.validateQuantity(subscription.getQuantity());
         itemsService.validatePrice(subscription.getPrice());
 
-        Item entityItem = new Item(
-                null,
-                subscription.getBarcode(),
-                subscription.getTitle(),
-                subscription.getQuantity(),
-                subscription.getPrice());
+	Item entityItem = new Item();
+	entityItem.setBarcode(subscription.getBarcode());
+	entityItem.setTitle(subscription.getTitle());
+	entityItem.setQuantity(subscription.getQuantity());
+	entityItem.setPrice(subscription.getPrice());
 
         validateTerm(subscription.getTermDays());
         validateTerm(subscription.getTermMonths());
@@ -159,12 +158,11 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
             throw new ValidationException("The subscription's ID is invalid.");
         }
 
-        Item entityItem = new Item(
-                subscription.getId(),
-                subscription.getBarcode(),
-                subscription.getTitle(),
-                subscription.getQuantity(),
-                subscription.getPrice());
+        Item entityItem = new Item();
+	entityItem.setBarcode(subscription.getBarcode());
+	entityItem.setTitle(subscription.getTitle());
+	entityItem.setQuantity(subscription.getQuantity());
+	entityItem.setPrice(subscription.getPrice());
 
         validateTerm(subscription.getTermDays());
         validateTerm(subscription.getTermMonths());

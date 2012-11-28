@@ -15,12 +15,14 @@
  */
 package org.key2gym.business.entities
 
-import java.io.Serializable;
-import java.util.List;
-import javax.persistence._;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import scala.reflect._;
+import java.io.Serializable
+import java.util.List
+import javax.persistence._
+import javax.xml.bind.annotation.XmlRootElement
+import javax.xml.bind.annotation.XmlTransient
+import scala.reflect._
+import org.key2gym.business.api.ValidationException
+import org.key2gym.business.resources.ResourcesManager
 
 /**
  *
@@ -53,7 +55,21 @@ class Key {
   def getId = id
 
   def getTitle = title
-  def setTitle(title: String) = this.title = title;
+
+  /** Sets the title
+   *
+   * @peram title the new title
+   * @throws ValidationException if the title is invalid
+   */
+  def setTitle(title: String) {
+    // Checks the title is not empty
+    val trimmedTitle = title.trim()
+    if (trimmedTitle.isEmpty()) {
+      throw new ValidationException(ResourcesManager.getString("Invalid.Property.CanNotBeEmpty.withPropertyName", ResourcesManager.getString("Property.Title")))
+    }
+
+    this.title = trimmedTitle
+  }
 
   def getAttendances = attendances
 }

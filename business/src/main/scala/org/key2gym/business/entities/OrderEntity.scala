@@ -21,6 +21,8 @@ import java.util.Date
 import java.util.List
 import javax.persistence._
 import org.key2gym.persistence._
+import org.key2gym.business.api.ValidationException
+import org.key2gym.business.resources.ResourcesManager
 import scala.collection.JavaConversions._
 
 /**
@@ -78,10 +80,32 @@ class OrderEntity extends Serializable {
   def setDate(date: Date) = this.dateRecorded = date
 
   def getPayment() = payment
-  def setPayment(payment: BigDecimal) = this.payment = payment
+  @throws(classOf[ValidationException])
+  def recordPayment(amount: BigDecimal) {
+    /*
+     * Normalizes the scale, and throws an exception, if the scale is to
+     * big.
+     */
+    if (amount.scale() > 2) {
+      throw new ValidationException(ResourcesManager.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"))
+    }
+    val scaledAmount = amount.setScale(2)
+    
+    val newPayment = payment.add(scaledAmount)
+  
+    if (newPayment.precision() > OrderEntity.moneyMaxPrecision) {
+      throw new ValidationException(ResourcesManager.getString("Invalid.Order.Total.LimitReached"))
+    }
+    
+    payment = newPayment
+  }
 
   def getOrderLines() = this.orderLines
   def setOrderLines(orderLines: List[OrderLine]) = this.orderLines = orderLines
+
+  def addPurchase(item: Item, discount: Discount) {
+    
+  }
    
   def getClient() = client
 
@@ -104,7 +128,7 @@ object OrderEntity {
 
     order.setDate(new Date())
     order.client = client
-    order.setPayment(BigDecimal.ZERO)
+    order.payment = BigDecimal.ZERO
     
     order
   }
@@ -114,8 +138,19 @@ object OrderEntity {
 
     order.setDate(new Date())
     order.attendance = attendance
-    order.setPayment(BigDecimal.ZERO)
+    order.payment = BigDecimal.ZERO
     
     order  
   }
+
+  def apply() = {
+    val order = new OrderEntity
+
+    order.setDate(new Date())
+    order.payment = BigDecimal.ZERO
+    
+    order    
+  }
+
+  val moneyMaxPrecision = 6
 }
