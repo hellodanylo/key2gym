@@ -46,10 +46,11 @@ public class ManageItemsDialog extends AbstractDialog {
      */
     public ManageItemsDialog(JFrame parent) throws SecurityViolationException {
         super(parent, true);
-        items = ContextManager.lookup(ItemsServiceRemote.class).getPureItems();
 
         initComponents();
         buildDialog();
+
+	refreshTable();
     }
 
     private void initComponents() {
@@ -167,16 +168,9 @@ public class ManageItemsDialog extends AbstractDialog {
         dialog.setVisible(true);
 
         if (dialog.getResult().equals(FormDialog.Result.OK)) {
-
-            try {
-                items = ContextManager.lookup(ItemsServiceRemote.class).getPureItems();
-            } catch (UserException ex) {
-                UserExceptionHandler.getInstance().processException(ex);
-                return;
-            }
-
-            itemsTableModel.setItems(items);
+	    refreshTable();
         }
+	
     }
 
     private void removeButtonActionPerformed(ActionEvent evt) {
@@ -194,7 +188,7 @@ public class ManageItemsDialog extends AbstractDialog {
             }
         }
 
-        itemsTableModel.setItems(items);
+	refreshTable();
     }
 
     private void onItemsTableSelectionChanged() {
@@ -208,6 +202,16 @@ public class ManageItemsDialog extends AbstractDialog {
             removeButton.setEnabled(true);
             editButton.setEnabled(false);
         }
+    }
+
+    private void refreshTable() {
+	try { 
+	    items = ContextManager.lookup(ItemsServiceRemote.class).getPureItems(); 
+	} catch (SecurityViolationException ex) {
+	    UserExceptionHandler.getInstance().processException(ex);
+	    getCloseAction().actionPerformed(null);
+	}
+        itemsTableModel.setItems(items);
     }
 
     /*
