@@ -1,15 +1,20 @@
 # Key2Gym
 
-![Key2Gyn logo](https://raw.github.com/equalsdanny/key2gym/develop/client/src/org/key2gym/client/resources/logo-wide.png)
+![Key2Gym logo](https://raw.github.com/equalsdanny/key2gym/develop/client/src/org/key2gym/client/resources/logo-wide.png)
 
 ## About
 Key2Gym is a free sofware for running and maintaing gyms and other membership-based clubs or enterprises.
 
 It helps you to:
-* Keep track of clients and their memberships
-* Record attendances
-* Record purchases, payments
-* Keep track of clients' debts and their collection.
+* Register new clients (with detailed profile)
+* Check in registered and casual clients
+* Record purchases and payments
+* Look up information about clients (profile, money balance, history of attendances, etc)
+* Check out clients
+* See detailed information about the clients
+* See attendances, purchases and payments by date
+* See clients that are in the gym right now
+* Generate and analyze financial and other business reports
 
 ## Building
 
