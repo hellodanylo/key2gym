@@ -15,7 +15,9 @@
  */
 package org.key2gym.client.actions;
 
+import java.awt.event.ActionEvent;
 import org.key2gym.client.ContextManager;
+import org.key2gym.client.dialogs.OpenSessionDialog;
 
 /**
  *
@@ -25,6 +27,17 @@ public class ToggleShadowSessionAction extends ToggleSessionAction {
 
     public ToggleShadowSessionAction() {
         setText(getString("Text.Raise"));
+	setEnabled(true);
+    }
+
+    @Override
+    public void onActionPerformed(ActionEvent e) {
+	if(ContextManager.getInstance().hasShadowContext()) {
+	    ContextManager.getInstance().logout();
+	} else {
+	    OpenSessionDialog openSessionDialog = new OpenSessionDialog(getFrame());
+            openSessionDialog.setVisible(true);
+	}
     }
 
 
