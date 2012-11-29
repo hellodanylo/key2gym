@@ -74,7 +74,7 @@ class Client extends Serializable {
   
   @Basic(optional = false)
   @Column(name = "attendances_balance")
-  private var attendancesBalance: Int = _
+  protected var attendancesBalance: Int = _
   
   @Basic(optional = false)
   @Column(name = "expiration_date")
@@ -93,6 +93,9 @@ class Client extends Serializable {
   
   @OneToMany(cascade = Array(CascadeType.ALL), mappedBy = "client")
   protected var attendances: List[Attendance] = _
+
+  @Version
+  protected var version: Int = _
        
   /** Returns the ID */
   def getId(): Int = id
