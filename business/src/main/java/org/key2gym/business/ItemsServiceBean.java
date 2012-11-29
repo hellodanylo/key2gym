@@ -30,8 +30,8 @@ import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.ItemDTO;
 import org.key2gym.business.api.remote.ItemsServiceRemote;
-import org.key2gym.persistence.Item;
-import org.key2gym.persistence.Property;
+import org.key2gym.persistence.*;
+import org.key2gym.business.entities.*;
 
 /**
  *
@@ -177,22 +177,16 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
         validateQuantity(item.getQuantity());
         validatePrice(item.getPrice());
 
-        /*
-         * Checks the ID.
-         */
-        if (entityManager.find(Item.class, item.getId()) == null) {
+        Item entityItem = entityManager.find(Item.class, item.getId());
+
+        if (entityItem == null) {
             throw new ValidationException(getString("Invalid.Item.ID"));
         }
 
-        Item entityItem = new Item();
 	entityItem.setBarcode(item.getBarcode());
 	entityItem.setTitle(item.getTitle());
 	entityItem.setQuantity(item.getQuantity());
 	entityItem.setPrice(item.getPrice());
-
-        // note change
-        entityManager.merge(entityItem);
-        entityManager.flush();
     }
 
     @Override

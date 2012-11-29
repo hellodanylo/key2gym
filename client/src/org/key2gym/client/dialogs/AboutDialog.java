@@ -44,7 +44,7 @@ public class AboutDialog extends AbstractDialog {
         setLayout(new FormLayout("4dlu, f:d, 4dlu", "4dlu, d, 4dlu, d, 4dlu, d, 4dlu"));
         
         JLabel logoLabel = new JLabel();
-        logoLabel.setIcon(new ImageIcon(getClass().getResource("/org/key2gym/client/resources/splash.png"))); // NOI18N
+        logoLabel.setIcon(new ImageIcon(getClass().getResource("/org/key2gym/client/resources/logo.png"))); // NOI18N
         add(logoLabel, CC.xy(2, 2));
        
         JEditorPane informationEditorPane = new JEditorPane();

@@ -30,9 +30,8 @@ import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.SubscriptionDTO;
 import org.key2gym.business.api.remote.SubscriptionsServiceRemote;
-import org.key2gym.persistence.Item;
-import org.key2gym.persistence.ItemSubscription;
-import org.key2gym.persistence.TimeSplit;
+import org.key2gym.persistence.*;
+import org.key2gym.business.entities.*;
 
 /**
  *

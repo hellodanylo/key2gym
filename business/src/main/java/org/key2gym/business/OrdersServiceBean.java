@@ -38,14 +38,8 @@ import org.key2gym.business.api.dtos.OrderDTO;
 import org.key2gym.business.api.dtos.OrderLineDTO;
 import org.key2gym.business.api.local.OrdersServiceLocal;
 import org.key2gym.business.api.remote.OrdersServiceRemote;
-import org.key2gym.business.entities.Attendance;
-import org.key2gym.business.entities.Client;
-import org.key2gym.persistence.Discount;
-import org.key2gym.persistence.Item;
-import org.key2gym.persistence.ItemSubscription;
-import org.key2gym.business.entities.OrderEntity;
-import org.key2gym.persistence.OrderLine;
-import org.key2gym.persistence.Property;
+import org.key2gym.persistence.*;
+import org.key2gym.business.entities.*;
 
 /**
  * 
