@@ -1,9 +1,0 @@
-joda-time-bin.jar
-javaee-api.jar
-key2gym-business-api.jar
-openejb-client.jar
-commons-cli-bin.jar
-log4j-bin.jar
-jgoodies-common-bin.jar
-jgoodies-forms-bin.jar
-beans-binding-bin.jar
