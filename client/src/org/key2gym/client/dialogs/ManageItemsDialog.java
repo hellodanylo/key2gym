@@ -66,7 +66,6 @@ public class ManageItemsDialog extends AbstractDialog {
             Column.PRICE,
             Column.BARCODE};
         itemsTableModel = new ItemsTableModel(columns);
-        itemsTableModel.setItems(items);
         itemsTable.setModel(itemsTableModel);
         itemsScrollPane.setViewportView(itemsTable);
 
@@ -210,6 +209,7 @@ public class ManageItemsDialog extends AbstractDialog {
 	} catch (SecurityViolationException ex) {
 	    UserExceptionHandler.getInstance().processException(ex);
 	    getCloseAction().actionPerformed(null);
+	    return;
 	}
         itemsTableModel.setItems(items);
     }
