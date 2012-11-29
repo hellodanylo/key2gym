@@ -2,7 +2,9 @@
 <h2>3.2. Configuration</h2>
 
 <section>This page describes how to setup the OpenEJB server to be
-used with Key2Gym.</section>
+used with Key2Gym. Before you begin you need start the OpenEJB server
+at least once for it to generate default configuration files, which would
+ease the process configuring a lot.</section>
 
 <section>
   <ol>
@@ -21,8 +23,6 @@ used with Key2Gym.</section>
 	dataSourceName="key2gym"
     	userSelect="SELECT username, password FROM administrator_adm WHERE username = ?"
     	groupSelect="SELECT adm.username, grp.name FROM administrator_adm adm, administrator_group_agr agr, group_grp grp WHERE adm.username = ? AND adm.id_adm = agr.idadm_agr AND agr.idgrp_agr = grp.id_grp";
-        digest="SHA";
-        encoding="hex";
 };</code></pre>
       It's also recommended to remove all other authentication realms.
     </li>
@@ -38,6 +38,23 @@ log4j.configuration=conf/log4j.properties
 locale.language=en
 locale.country=US</code></pre>
 Note that you can change the locale of messages sent by the business tier here.
+    </li>
+    <li>Create <code>conf/log4j.properties</code> with the following content:
+      <pre><code># The root logger defines default properties for all other loggers
+log4j.rootLogger=DefaultConsole, DailyLogFile
+
+# DefaultConsole is a default appender that prints everything to the console.
+log4j.appender.DefaultConsole=org.apache.log4j.ConsoleAppender
+log4j.appender.DefaultConsole.layout=org.apache.log4j.PatternLayout
+log4j.appender.DefaultConsole.layout.ConversionPattern=%d [%t] %-5p %c %x - %m%n
+
+# DailyLogFile is an appender that keeps a separet log file for each date.
+log4j.appender.DailyLogFile=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.DailyLogFile.file=log/messages.log
+log4j.appender.DailyLogFile.datePattern='.'dd-MM-yyyy
+log4j.appender.DailyLogFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.DailyLogFile.layout.ConversionPattern=%d [%t] %-5p %c %x - %m%n
+	</code></pre>
     </li>
   </ol>
 </section>
