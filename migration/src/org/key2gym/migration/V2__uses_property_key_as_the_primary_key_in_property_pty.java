@@ -15,8 +15,6 @@
  */
 package org.key2gym.migration;
 
-import com.googlecode.flyway.core.api.Version;
-import com.googlecode.flyway.core.api.migration.MigrationInfoProvider;
 import com.googlecode.flyway.core.api.migration.jdbc.JdbcMigration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,7 +27,7 @@ import java.util.List;
  *
  * @author Danylo Vashchilenko
  */
-public class V2JDBCMigration implements JdbcMigration, MigrationInfoProvider {
+public class V2__uses_property_key_as_the_primary_key_in_property_pty implements JdbcMigration {
 
     @Override
     public void migrate(Connection connection) throws Exception {
@@ -133,15 +131,5 @@ public class V2JDBCMigration implements JdbcMigration, MigrationInfoProvider {
             }
         }
 
-    }
-
-    @Override
-    public Version getVersion() {
-        return new Version("2");
-    }
-
-    @Override
-    public String getDescription() {
-        return "uses property key as the primary key in property_pty";
     }
 }

@@ -5,18 +5,14 @@
     The database has got to have an appropriate schema for the business tier
     to work with it. The schema defines the format of the data to be kept and
     processed within the database. In the Key2Gym application the schema management
-    is done using a Flyway-based schema migration tool shipped with the application.
+    is done using Flyway migration tool shipped with the application.
 
-    The schema is also a subject to change from one version of the application to another. 
-    Therefore, additional step called <i>schema migration</i> is required during 
-    the update of the application.
+    The schema is a subject to change from one version of the application to another. Therefore, the release notes migth tell you to migrate the schema after you updated the business tier.
 </section>
 <section>
     <b>IMPORTANT:</b> You should not run the business tier with an old schema, because it might result in data loss or inconsistency.
 </section>
 <section>
-    The schema migration is also performed using the schema migration tool. 
-
     The schema migration tool is located under the <code>migration</code>
     folder. The rest of this page will describe the usage of the schema migration
     tool.
@@ -25,79 +21,14 @@
 <section>
     Before launching the schema migration tool you need to configure it.
 
-    The configuration file is <code>etc/migration.properties</code>.
-    The following is the table of properties supported in the configuration file:
+    The configuration file is <code>conf/flyway.properties</code>. It's
+    well-documented, therefore it should be easy to figure it out.
+
+    You need to specify the driver, the url, the username, the password and the database.
 </section>
-
-<table>
-    <thead>
-        <tr>
-            <td>Key</td>
-            <td>Description</td>
-            <td>Required</td>
-        </tr>
-    </thead>
-
-    <tbody>
-        <tr>
-            <td>version</td>
-            <td class="description">The schema version to migrate to.</td>
-            <td>Yes</td>
-        </tr>
-        <tr>
-            <td>mode</td>
-            <td class="description">
-                The mode of connection to the database. 
-                Can be either <code>direct</code>, if you want to establish
-                a direct connection to the database, or <code>datasource</code>,
-                if you want to connect using a shared connection from the OpenEJB
-                server.
-            </td>
-            <td>Yes</td>
-        </tr>
-        <tr>
-            <td>hostname</td>
-            <td class="description">The database server's hostname.</td>
-            <td>Yes, if the mode is direct</td>
-        </tr>
-        <tr>
-            <td>port</td>
-            <td class="description">The database server's port.</td>
-            <td>Yes, if the mode is direct</td>
-        </tr>
-        <tr>
-            <td>username</td>
-            <td class="description">The user to connect as.</td>
-            <td>Yes, if the mode is direct</td>
-        </tr>
-        <tr>
-            <td>password</td>
-            <td class="description">The user's password.</td>
-            <td>Yes, if the mode is direct</td>
-        </tr>
-        <tr>
-            <td>database</td>
-            <td class="description">The database to use.</td>
-            <td>Yes, if the mode is direct</td>
-        </tr>
-        <tr>
-            <td>openejb</td>
-            <td class="description">The OpenEJB server's URL.</td>
-            <td>Yes, if the mode is datasource</td>
-        </tr>
-        <tr>
-            <td>jndi</td>
-            <td class="description">The JNDI name of the datasource to use.</td>
-            <td>Yes, if the mode is datasource</td>
-        </tr>
-    </tbody>
-</table>
 
 <section>
     Once the tool is configured, you can run it as following:
-    <code>java -jar key2gym-migration.jar</code>
-    
-    Note that you can overwrite any of the tool's properties using command-line
-    arguments:  
-    <code>java -jar key2gym-migration.jar --jndi=mydatasource</code>
+    <code>./flyway.sh -target=1 migrate</code>
+    This command will migrate the schema to version 1.
 </section>

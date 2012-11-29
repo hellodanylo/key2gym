@@ -1,7 +1,0 @@
-flyway-core.jar
-postgresql-connector-jdbc4.jar
-commons-cli-bin.jar
-commons-logging-bin.jar
-log4j-bin.jar
-javaee-api.jar
-openejb-client.jar

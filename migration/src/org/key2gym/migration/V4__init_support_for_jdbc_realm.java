@@ -15,8 +15,6 @@
  */
 package org.key2gym.migration;
 
-import com.googlecode.flyway.core.api.Version;
-import com.googlecode.flyway.core.api.migration.MigrationInfoProvider;
 import com.googlecode.flyway.core.api.migration.jdbc.JdbcMigration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,7 +27,7 @@ import java.util.List;
  *
  * @author Danylo Vashchilenko
  */
-public class V4JDBCMigration implements JdbcMigration, MigrationInfoProvider {
+public class V4__init_support_for_jdbc_realm implements JdbcMigration {
 
     @Override
     public void migrate(Connection connection) throws Exception {
@@ -143,15 +141,5 @@ public class V4JDBCMigration implements JdbcMigration, MigrationInfoProvider {
             }
         }
 
-    }
-
-    @Override
-    public Version getVersion() {
-        return new Version("4");
-    }
-
-    @Override
-    public String getDescription() {
-        return "init support for jdbc realm";
     }
 }

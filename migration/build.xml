@@ -8,7 +8,7 @@
         <loadproperties srcfile="project.properties" />
     </target>
     
-    <target name="compile" depends="init" description="Compiles the JDBC migration files." >       
+    <target name="compile" depends="init" description="Compiles the migration classes." >       
         <mkdir dir="${bin.dir}" />
         
         <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}" includeantruntime="false" />
@@ -18,25 +18,24 @@
         
         <!-- Creates the distribution folder. -->
         <mkdir dir="${dist.dir}" />
+
+	<!-- Copies the Flyway command tool. -->
+	<copy todir="${dist.dir}">
+	  <fileset dir="flyway" />
+	</copy>
         
         <!-- Creates the JAR archive. -->
-        <jar basedir="${bin.dir}" destfile="${dist.dir}/${jar.file}" />
+        <jar basedir="${bin.dir}" destfile="${dist.dir}/jars/${jar.file}">
+	  <fileset dir="${src.dir}" includes="**/*.sql" />
+	</jar>
 
-	<!-- Copies the runtime dependencies list. -->
-	<copy todir="${dist.dir}/lib" file="${runtime-deps.txt}" />
-
-	<!-- Copies the startup script. -->
-	<copy todir="${dist.dir}" file="key2gym-migration.sh" />
-
-        <!--Copies the configuration directory. -->
-        <copy todir="${dist.dir}/etc" >
-            <fileset dir="etc" />
-        </copy>
-        
+	<!-- Copies the runtime dependencies. -->
+	<copy todir="${dist.dir}/jars" file="${lib.postgresql-connector-jdbc4.jar}" />        
     </target>
     
     <target name="clean" depends="init" description="Removes the distribution directory.">
         <delete dir="${dist.dir}" />
+	<delete dir="${bin.dir}" />
     </target>
     
     <target name="default" depends="clean,build" description="Cleans and builds the project."/>
