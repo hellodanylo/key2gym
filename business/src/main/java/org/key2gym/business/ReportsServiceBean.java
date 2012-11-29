@@ -35,6 +35,7 @@ import org.key2gym.business.api.dtos.ReportGeneratorDTO;
 import org.key2gym.business.api.remote.ReportsServiceRemote;
 import org.key2gym.business.api.spi.report.ReportGenerator;
 import org.key2gym.persistence.Report;
+import org.key2gym.persistence.ReportBody;
 
 /**
  *
@@ -49,6 +50,10 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
     @Override
     public Integer generateReport(String reportGeneratorId, final Object input) throws ValidationException, SecurityViolationException {
 
+	if(!callerHasRole(SecurityRoles.REPORTS_MANAGER)) {
+	    throw new SecurityViolationException(getString("Security.Operation.Denied"));
+	}
+
         final ReportGenerator generator;
 
         try {
@@ -58,7 +63,7 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
             throw new RuntimeException("Failed to instantiate the generator", ex);
         }
 
-        final Report report = new Report();
+	Report report = new Report();
         report.setPrimaryFormat(generator.getPrimaryFormat());
         report.setTimestampGenerated(new Date());
         report.setTitle(generator.formatTitle(input, getEntityManager()));
@@ -85,7 +90,7 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
         try {
             transaction.commit();
         } catch (Exception ex) {
-            throw new RuntimeException("Failed to commit a transaction", ex);
+            throw new RuntimeException("Failed to commit the transaction", ex);
         }
 
         final Integer reportId = report.getId();
@@ -99,16 +104,17 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
                     throw new RuntimeException("Failed to begin a transaction", ex);
                 }
                 
-                byte[] body;
+                ReportBody reportBody = new ReportBody();
+		reportBody.setReportId(reportId);
+		reportBody.setFormat(generator.getPrimaryFormat());
                 
                 try {
-                    body = generator.generate(input, getEntityManager());
+                    reportBody.setBody(generator.generate(input, getEntityManager()));
                 } catch (ValidationException ex) {
                     throw new RuntimeException("Failed  to generate a report", ex);
                 }
                 
-                report.setPrimaryBody(body);
-                getEntityManager().merge(report);
+                getEntityManager().persist(reportBody);
 
                 try {
                     transaction.commit();
@@ -122,11 +128,20 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
     }
 
     public void convertReport(Integer intgr, String string) throws ValidationException, SecurityViolationException {
+	if(!callerHasRole(SecurityRoles.REPORTS_MANAGER)) {
+	    throw new SecurityViolationException(getString("Security.Operation.Denied"));
+	}
+
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public List<ReportDTO> getAll() throws SecurityViolationException {
-        List<ReportDTO> result = new LinkedList<ReportDTO>();
+        
+	if(!callerHasRole(SecurityRoles.REPORTS_MANAGER)) {
+	    throw new SecurityViolationException(getString("Security.Access.Denied"));
+	}
+
+	List<ReportDTO> result = new LinkedList<ReportDTO>();
         
         List<Report> reports = getEntityManager().createNamedQuery("Report.findAll")
                 .getResultList();
@@ -135,7 +150,13 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
             ReportDTO reportDTO = new ReportDTO();
             
             reportDTO.setDateTimeGenerated(new DateTime(report.getTimestampGenerated()));
-            reportDTO.setFormats(null);
+
+	    List<String> formats = (List<String>)getEntityManager()
+		.createNamedQuery("ReportBody.findFormatsByReportId")
+		.setParameter("reportId", report.getId())
+		.getResultList();
+            reportDTO.setFormats((String[])formats.toArray());
+
             reportDTO.setId(report.getId());
             reportDTO.setNote(report.getNote());
             reportDTO.setTitle(report.getTitle());
@@ -147,8 +168,32 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
         return result;
     }
 
-    public byte[] getReportBody(Integer intgr, String string) throws ValidationException, SecurityViolationException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public byte[] getReportBody(Integer reportId, String format) throws ValidationException, SecurityViolationException {
+	if(!callerHasRole(SecurityRoles.REPORTS_MANAGER)) {
+	    throw new SecurityViolationException(getString("Security.Access.Denied"));
+	}
+	
+	if(reportId == null) {
+	    throw new NullPointerException("The reportId is null");
+	}
+
+	if(format == null) {
+	    throw new NullPointerException("The format is null");
+	}
+
+	ReportBody reportBody;
+	
+	try {
+	    reportBody = (ReportBody) getEntityManager()
+		.createNamedQuery("ReportBody.findByReportIdAndFormat")
+		.setParameter("reportId", reportId)
+		.setParameter("format", format)
+		.getSingleResult();
+	} catch(Exception ex) {
+	    throw new RuntimeException("Failed to get the report body for: " + reportId + ", " + format);
+	}
+
+	return reportBody.getBody();	
     }
 
     public void removeReport(Integer intgr, String string) throws ValidationException, SecurityViolationException {

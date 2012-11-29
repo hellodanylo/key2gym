@@ -52,11 +52,6 @@ public class Report implements Serializable {
     @Column(name="primary_format", nullable = false)
     private String primaryFormat;
  
-    @Basic(fetch= FetchType.LAZY)
-    @Column(name="primary_body", nullable = true)
-    @Lob
-    private byte[] primaryBody;
-        
     @Column(name="note", nullable = false)
     private String note;
     
@@ -84,14 +79,6 @@ public class Report implements Serializable {
 
     public void setPrimaryFormat(String primaryFormat) {
         this.primaryFormat = primaryFormat;
-    }
-
-    public byte[] getPrimaryBody() {
-        return primaryBody;
-    }
-
-    public void setPrimaryBody(byte[] primaryBody) {
-        this.primaryBody = primaryBody;
     }
 
     public String getNote() {

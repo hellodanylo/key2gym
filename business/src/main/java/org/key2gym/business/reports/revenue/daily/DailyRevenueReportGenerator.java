@@ -17,10 +17,13 @@ package org.key2gym.business.reports.revenue.daily;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.io.*;
 import javax.persistence.EntityManager;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.transform.*;
+import javax.xml.transform.stream.*;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.spi.report.ReportGenerator;
@@ -118,7 +121,26 @@ public class DailyRevenueReportGenerator implements ReportGenerator {
     }
 
     public byte[] convertToSecondaryFormat(byte[] bytes, String string) {
-        throw new UnsupportedOperationException("Not supported yet.");
+	TransformerFactory factory = TransformerFactory.newInstance();
+
+        Source xslt = new StreamSource(Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getClass().getPackage().getName() + "xml2html.xslt"));
+        Transformer transformer;
+	try {
+	    transformer = factory.newTransformer(xslt);
+	} catch(TransformerConfigurationException ex) {
+	    throw new RuntimeException("Can not create a transformer", ex);
+	}
+
+        Source xml = new StreamSource(new ByteArrayInputStream(bytes));
+	ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+	try {
+	    transformer.transform(xml, new StreamResult(output));
+	} catch(TransformerException ex) {
+	    throw new RuntimeException("Failed to transform the report", ex);
+	}
+
+	return output.toByteArray();
     }
 
     public String getTitle() {
@@ -126,10 +148,10 @@ public class DailyRevenueReportGenerator implements ReportGenerator {
     }
 
     public String getPrimaryFormat() {
-        return "XML";
+        return "xml";
     }
 
     public String[] getSecondaryFormats() {
-        return new String[0];
+        return new String[]{"html"};
     }
 }
