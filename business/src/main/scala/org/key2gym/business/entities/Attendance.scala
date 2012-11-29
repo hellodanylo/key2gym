@@ -44,7 +44,7 @@ class Attendance extends Serializable {
   @Basic(optional = false)
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   @Column(name = "id_atd")
-  private var id: Int = _
+  protected var id: Int = _
     
   @Basic(optional = false)
   @Column(name = "datetime_begin")
@@ -58,18 +58,18 @@ class Attendance extends Serializable {
 
   @Version
   @Column(name="version")
-  private var version: Int = _
+  protected var version: Int = _
     
   @JoinColumn(name = "idkey_atd")
   @ManyToOne(optional = false)
-  private var key: Key = _
+  protected var key: Key = _
 
   @JoinColumn(name = "idcln_atd")
   @ManyToOne(optional = true)
-  private var client: Client = _
+  protected var client: Client = _
 
   @OneToOne(mappedBy = "attendance")
-  private var order: OrderEntity = _
+  protected var order: OrderEntity = _
 
   def getId = id
   
