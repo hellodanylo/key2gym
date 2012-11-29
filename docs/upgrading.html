@@ -28,7 +28,7 @@ DELETE FROM `session_ssn`;</code></pre></li>
 		  for details.
 		</li>
                 <li>Import the generated dump: <code>psql -f mysql_dump.sql</code></li>
-                <li>Migrate to version 5.</li>
+                <li>Migrate to version 6.</li>
                 <li>
                   You now have to update sequences to match just imported data. We provide you this handy script to help with that:
                   <pre><code>CREATE OR REPLACE FUNCTION reset_sequence(tablename text, columnname text, sequence_name text)
