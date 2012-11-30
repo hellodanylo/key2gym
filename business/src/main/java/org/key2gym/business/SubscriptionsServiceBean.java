@@ -138,16 +138,20 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
         }
 
         if (subscription.getId() == null) {
-            throw new ValidationException(MessageFormat.format(
-                    getString("IDInvalid.withName"),
-                    getString("ID.Subscription")));
+	    throw new NullPointerException("The subcription.getId() is null.");
         }
 
         if (em.find(ItemSubscription.class, subscription.getId()) == null) {
             throw new ValidationException("The subscription's ID is invalid.");
         }
 
-        Item entityItem = new Item();
+        Item entityItem = em.find(Item.class, subscription.getId());
+	if(entityItem == null) {
+            throw new ValidationException(MessageFormat.format(
+                    getString("IDInvalid.withName"),
+                    getString("ID.Subscription")));
+	}
+
 	entityItem.setBarcode(subscription.getBarcode(),
 			      em.createNamedQuery("Item.getAllBarcodes").getResultList());
 	entityItem.setTitle(subscription.getTitle());
@@ -169,19 +173,12 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
                     getString("ID.TimeSplit")));
         }
 
-	ItemSubscription entityItemSubscription = new ItemSubscription();
+	ItemSubscription entityItemSubscription = em.find(ItemSubscription.class, subscription.getId());
         entityItemSubscription.setUnits(subscription.getUnits());
         entityItemSubscription.setTermDays(subscription.getTermDays());
 	entityItemSubscription.setTermMonths(subscription.getTermMonths());
 	entityItemSubscription.setTermYears(subscription.getTermYears());
         entityItemSubscription.setTimeSplit(timeSplit);
-        entityItemSubscription.setItem(entityItem);
-
-        entityItem.setItemSubscription(entityItemSubscription);
-
-        em.merge(entityItem);
-        em.merge(entityItemSubscription);
-        em.flush();
     }
 
     @Override
@@ -210,7 +207,6 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
         }
 
         em.remove(itemSubscription);
-        em.flush();
     }
 
     private void validateUnits(Integer units) throws ValidationException {

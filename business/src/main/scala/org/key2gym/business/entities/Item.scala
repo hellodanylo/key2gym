@@ -43,6 +43,7 @@ import java.text.MessageFormat
     new NamedQuery(name = "Item.getAllBarcodes", query = "SELECT DISTINCT i.barcode FROM Item i")))
 @SequenceGenerator(name="id_itm_seq", allocationSize = 1)
 class Item extends Serializable {
+  
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="id_itm_seq")
   @Basic(optional = false)
@@ -95,16 +96,21 @@ class Item extends Serializable {
       throw new NullPointerException("The price is null.")
     }
 
-    if (price.scale() > 2) {
+    // Should not have scale larger than 2
+    if (price.scale > 2) {
       throw new ValidationException(ResourcesManager.getString("Invalid.Money.ScaleOverLimit"));
     }
 
     val scaledPrice = price.setScale(2)
 
-    if (scaledPrice.precision() > OrderEntity.moneyMaxPrecision) {
-      val message = ResourcesManager.getString("Invalid.Money.OverLimit.withLimit", "9" * (OrderEntity.moneyMaxPrecision - 2))
+    // Should not have precision larger than maxPrecision
+    if (scaledPrice.precision > OrderEntity.moneyMaxPrecision) {
+      val message = ResourcesManager.getString("Invalid.Money.ValueOverLimit.withLimit", "9" * (OrderEntity.moneyMaxPrecision - 2))
       throw new ValidationException(message)
-    } else if (scaledPrice.compareTo(new BigDecimal(0)) < 0) {
+    }
+
+    // Should not be negative
+    if (scaledPrice.compareTo(new BigDecimal(0)) < 0) {
       val message = ResourcesManager
 	.getString("Invalid.Property.CanNotBeNegative.withPropertyName",
 		   ResourcesManager.getString("Property.Price"))
