@@ -31,7 +31,7 @@ public class TimeSplitListCellRenderer extends DefaultListCellRenderer {
         if(value instanceof TimeSplitDTO) {
             TimeSplitDTO timeSplit = (TimeSplitDTO)value;
             value = timeSplit.getTitle();
-        }
+	}
         return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     }
 }

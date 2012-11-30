@@ -46,6 +46,11 @@ LANGUAGE plpgsql;
        
 select column_name || '_seq', reset_sequence(table_name, column_name, column_name || '_seq') from information_schema.columns where column_default like 'nextval%';</code></pre>
                 </li>
+		<li>
+		  Time splits now have titles that are displayed in 
+		  appropriate places. You need to set them manually
+		  in the <code>time_split_tsp</code> table.
+		</li>
             </ul>
 	<li>A brand new piece of software is now required: OpenEJB server. 
 	  See <a href="business-index.html">Business</a> section for details.
