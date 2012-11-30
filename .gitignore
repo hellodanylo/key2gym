@@ -1,22 +1,17 @@
 .fuse*
 
-# Autosave and backup files
+# Emacs backup files
 *~
-**/*~
 
-#*#
-**/#*#
+# Emacs autosave files
+\#*\#
 
-.#*
-**/.#*
+# Emacs lock files
+.\#*
 
+bin/
 dist/
 
 private/
-nbproject/private/
-
-*/dist/
-*/bin/
-*/nbproject/private/
 
 test-app/
