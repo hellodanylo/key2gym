@@ -94,6 +94,8 @@
       </taskdef>
 
       <!-- Runs the tests. -->      
-      <scalatest runpath="${test.runtime.classpath}" wildcard="org.key2gym.business" />
+      <scalatest runpath="${test.runtime.classpath}" wildcard="org.key2gym.business">
+	<reporter type="stdout" config="F" />
+      </scalatest>
     </target>
 </project>

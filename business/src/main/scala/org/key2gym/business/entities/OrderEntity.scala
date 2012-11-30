@@ -87,7 +87,7 @@ class OrderEntity extends Serializable {
      * big.
      */
     if (amount.scale() > 2) {
-      throw new ValidationException(ResourcesManager.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"))
+      throw new ValidationException(ResourcesManager.getString("Invalid.Money.ScaleOverLimit"))
     }
     val scaledAmount = amount.setScale(2)
     
