@@ -52,7 +52,7 @@ public class BasicBean implements BasicInterface {
     }
 
     protected EntityManager getEntityManager() {
-        return entityManager;
+        return em;
     }
 
     protected SessionContext getSessionContext() {
@@ -63,5 +63,5 @@ public class BasicBean implements BasicInterface {
     private SessionContext sessionContext;
     
     @PersistenceContext(name="PU")
-    private EntityManager entityManager;
+    protected EntityManager em;
 }

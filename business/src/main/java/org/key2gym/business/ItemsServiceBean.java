@@ -52,19 +52,15 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
             throw new NullPointerException("The item is null."); //NOI18N
         }
 
-        validateTitle(item.getTitle());
-        validateQuantity(item.getQuantity());
-        validatePrice(item.getPrice());
-        validateBarcode(item.getBarcode(), null);
-
         Item entityItem = new Item();
-	entityItem.setBarcode(item.getBarcode());
+	entityItem.setBarcode(item.getBarcode(),
+			      em.createNamedQuery("Item.getAllBarcodes").getResultList());
 	entityItem.setTitle(item.getTitle());
 	entityItem.setQuantity(item.getQuantity());
 	entityItem.setPrice(item.getPrice());
 
-        entityManager.persist(entityItem);
-        entityManager.flush();
+        em.persist(entityItem);
+        em.flush();
     }
 
     @Override
@@ -75,10 +71,10 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
         }
 
         List<ItemDTO> result = new LinkedList<ItemDTO>();
-        List<Item> items = entityManager.createNamedQuery("Item.findAvailable") //NOI18N
+        List<Item> items = em.createNamedQuery("Item.findAvailable") //NOI18N
                 .getResultList();
 
-        Property property = entityManager.find(Property.class, "time_range_mismatch_penalty_item_id");
+        Property property = em.find(Property.class, "time_range_mismatch_penalty_item_id");
         Integer penaltyItemId = Integer.valueOf(property.getString());
 
         for (Item item : items) {
@@ -102,7 +98,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
         }
 
         List<ItemDTO> result = new LinkedList<ItemDTO>();
-        List<Item> items = entityManager.createNamedQuery("Item.findAll").getResultList();  //NOI18N
+        List<Item> items = em.createNamedQuery("Item.findAll").getResultList();  //NOI18N
 
         for (Item item : items) {
             result.add(wrapItem(item));
@@ -119,7 +115,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
         }
 
         List<ItemDTO> result = new LinkedList<ItemDTO>();
-        List<Item> items = entityManager.createNamedQuery("Item.findPure") //NOI18N
+        List<Item> items = em.createNamedQuery("Item.findPure") //NOI18N
                 .getResultList();
 
         for (Item item : items) {
@@ -137,10 +133,10 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
         }
 
         List<ItemDTO> result = new LinkedList<ItemDTO>();
-        List<Item> items = entityManager.createNamedQuery("Item.findPureAvailable") //NOI18N
+        List<Item> items = em.createNamedQuery("Item.findPureAvailable") //NOI18N
                 .getResultList();
 
-        Property property = entityManager.find(Property.class, "time_range_mismatch_penalty_item_id");
+        Property property = em.find(Property.class, "time_range_mismatch_penalty_item_id");
         Integer penaltyItemId = Integer.valueOf(property.getString());
 
         for (Item item : items) {
@@ -172,18 +168,14 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
             throw new NullPointerException("The item's ID is null."); //NOI18N
         }
 
-        validateBarcode(item.getBarcode(), item.getId());
-        validateTitle(item.getTitle());
-        validateQuantity(item.getQuantity());
-        validatePrice(item.getPrice());
-
-        Item entityItem = entityManager.find(Item.class, item.getId());
+        Item entityItem = em.find(Item.class, item.getId());
 
         if (entityItem == null) {
             throw new ValidationException(getString("Invalid.Item.ID"));
         }
 
-	entityItem.setBarcode(item.getBarcode());
+	entityItem.setBarcode(item.getBarcode(),
+			      em.createNamedQuery("Item.getAllBarcodes").getResultList());
 	entityItem.setTitle(item.getTitle());
 	entityItem.setQuantity(item.getQuantity());
 	entityItem.setPrice(item.getPrice());
@@ -196,7 +188,7 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
             throw new NullPointerException("The itemId is null."); //NOI18N
         }
 
-        Item item = entityManager.find(Item.class, itemId);
+        Item item = em.find(Item.class, itemId);
 
         if (item == null) {
             throw new ValidationException(getString("Invalid.Item.ID"));
@@ -211,8 +203,8 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
         }
 
         // TODO: note change
-        entityManager.remove(item);
-        entityManager.flush();
+        em.remove(item);
+        em.flush();
     }
 
     /**
@@ -232,70 +224,4 @@ public class ItemsServiceBean extends BasicBean implements ItemsServiceRemote {
 
         return result;
     }
-
-    public void validateBarcode(Long value, Integer id) throws ValidationException {
-	if(value == null) {
-	    return;
-	}
-
-        try {
-
-            Item item = (Item) entityManager.createNamedQuery("Item.findByBarcode") //NOI18N
-                    .setParameter("barcode", value) //NOI18N
-                    .getSingleResult();
-
-            if (id != null && item.getId() == id) {
-                return;
-            }
-
-            String message = MessageFormat.format(
-                    getString("Invalid.Item.Barcode.AlreadyInUse.withItemTitle"),
-                    item.getTitle());
-            throw new ValidationException(message);
-
-        } catch (NoResultException ex) {
-            return;
-        }
-    }
-
-    public void validateQuantity(Integer value) throws ValidationException {
-        if (value == null) {
-            return;
-        }
-
-
-    }
-
-    public void validatePrice(BigDecimal value) throws ValidationException {
-        if (value == null) {
-            throw new NullPointerException("The price is null."); //NOI18N
-        }
-
-        if (value.scale() > 2) {
-            throw new ValidationException(getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
-        }
-
-        value = value.setScale(2);
-
-        if (value.precision() > 5) {
-            throw new ValidationException(getString("Invalid.Money.ThreeDigitsBeforeDecimalPointMax"));
-        } else if (value.compareTo(new BigDecimal(0)) < 0) {
-            String message = MessageFormat.format(
-                    getString("Invalid.Property.CanNotBeNegative.withPropertyName"),
-                    getString("Property.Price"));
-            throw new ValidationException(message);
-        }
-    }
-
-    public void validateTitle(String value) throws ValidationException {
-        if (value == null) {
-            throw new NullPointerException("The title is null."); //NOI18N
-        }
-        value = value.trim();
-        if (value.isEmpty()) {
-            throw new ValidationException(getString("Invalid.Item.Title.CanNotBeEmpty"));
-        }
-    }
-    @PersistenceContext(unitName = "PU")
-    private EntityManager entityManager;
 }

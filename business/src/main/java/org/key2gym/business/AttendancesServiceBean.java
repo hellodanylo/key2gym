@@ -1,5 +1,3 @@
-package org.key2gym.business;
-
 /*
  * Copyright 2012 Danylo Vashchilenko
  *
@@ -15,12 +13,13 @@ package org.key2gym.business;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
+package org.key2gym.business;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.sql.Time;
 import javax.annotation.security.DeclareRoles;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
@@ -53,10 +52,10 @@ import org.key2gym.persistence.*;
 @Remote(AttendancesServiceRemote.class)
 @DeclareRoles({SecurityRoles.MANAGER, SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR})
 public class AttendancesServiceBean extends BasicBean implements AttendancesServiceRemote {
-
+    
     @Override
     public Integer checkInRegisteredClient(Integer clientId, Integer keyId)
-            throws BusinessException, ValidationException, SecurityViolationException {
+	throws BusinessException, ValidationException, SecurityViolationException {
 
         if (!callerHasAnyRole(SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER)) {
             throw new SecurityViolationException(getString("Security.Operation.Denied"));
@@ -76,17 +75,17 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new NullPointerException("The keyId is null."); //NOI18N
         }
 
-        client = (Client) entityManager.find(Client.class, clientId, LockModeType.OPTIMISTIC);
+        client = (Client) getEntityManager().find(Client.class, clientId, LockModeType.OPTIMISTIC);
         if (client == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
         }
 
-        key = entityManager.find(Key.class, keyId);
+        key = getEntityManager().find(Key.class, keyId);
         if (key == null) {
             throw new ValidationException(getString("Invalid.Key.ID"));
         }
 
-        if (!entityManager.createNamedQuery("Key.findAvailable").getResultList().contains(key)) { //NOI18N
+        if (!getEntityManager().createNamedQuery("Key.findAvailable").getResultList().contains(key)) { //NOI18N
             throw new BusinessException(getString("BusinessRule.Key.NotAvailable"));
         }
 
@@ -116,41 +115,38 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
          */
         ItemSubscription itemSubscription;
 
-        List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>) entityManager.createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
-                .setParameter("client", client) //NOI18N
-                .getResultList();
+        List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>) 
+	    getEntityManager()
+	    .createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
+	    .setParameter("client", client) //NOI18N
+	    .getResultList();
 
         if (!itemSubscriptions.isEmpty()) {
             itemSubscription = itemSubscriptions.get(0);
 
+	    List<TimeSplit> splits = (List<TimeSplit>)getEntityManager()
+		.createNamedQuery("TimeSplit.findAll")
+		.getResultList();
             /*
              * Calculates the quantity of penalties to apply.
              */
-            int penalties = calculatePenalties(itemSubscription.getTimeSplit(), LocalTime.parse("10:00:00"));
+            int penalties = itemSubscription.getTimeSplit().calculatePenalties(splits, new Time(new Date().getTime()));
 
             /*
              * If there are penalties to apply, does it.
              */
             if (penalties > 0) {
                 
-                OrdersServiceLocal ordersService;
-                
-                try {
-                    ordersService = InitialContext.doLookup(OrdersServiceLocal.class.getSimpleName());
-                } catch (NamingException ex) {
-                    throw new EJBException(ex);
-                }
-                
                 Integer orderId = ordersService.findByClientIdAndDate(clientId, new DateMidnight(), true);
-                Integer itemId = entityManager.find(Property.class, "time_range_mismatch_penalty_item_id").getInteger();
+                Integer itemId = getEntityManager().find(Property.class, "time_range_mismatch_penalty_item_id").getInteger();
 
                 ordersService.addPurchase(orderId, itemId, null, penalties);
             }
         }
 
-        entityManager.persist(attendance);
+        getEntityManager().persist(attendance);
         client.getAttendances().add(attendance);
-        entityManager.flush();
+        getEntityManager().flush();
 
         return attendance.getId();
     }
@@ -174,25 +170,36 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new NullPointerException("The keyId is null."); //NOI18N
         }
 
-        key = entityManager.find(Key.class, keyId);
+        key = getEntityManager().find(Key.class, keyId);
 
         if (key == null) {
             throw new ValidationException(getString("Invalid.Key.ID"));
         }
 
-        if (!entityManager.createNamedQuery("Key.findAvailable").getResultList().contains(key)) { //NOI18N
+        if (!getEntityManager().createNamedQuery("Key.findAvailable").getResultList().contains(key)) {
             throw new BusinessException(getString("BusinessRule.Key.NotAvailable"));
         }
 
-        /*
-         * Build an attendance record.
-         */
         attendance = Attendance.apply(key);
-
         order = OrderEntity.apply(attendance);
 
-        ItemSubscription itemSubscription = findValidCasualSubscription(new LocalTime());
-        if (itemSubscription == null) {
+        ItemSubscription itemSubscription;
+
+	List<TimeSplit> timeSplits = getEntityManager()
+	    .createNamedQuery("TimeSplit.findAll") //NOI18N
+	    .getResultList();
+	
+	TimeSplit currentTimeSplit = TimeSplit.selectTimeSplitForTime(timeSplits, new Time(new Date().getTime()));
+
+        if (currentTimeSplit == null) {
+            throw new BusinessException(getString("BusinessRule.Attendance.Casual.SubscriptionNotAvailable"));
+        }
+
+        try {
+            itemSubscription = (ItemSubscription) getEntityManager().createNamedQuery("ItemSubscription.findCasualByTimeSplit") //NOI18N
+                    .setParameter("timeSplit", currentTimeSplit) //NOI18N
+                    .getSingleResult();
+        } catch (NoResultException ex) {
             throw new BusinessException(getString("BusinessRule.Attendance.Casual.SubscriptionNotAvailable"));
         }
 
@@ -207,10 +214,10 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
 
         attendance.setOrder(order);
 
-        entityManager.persist(orderLine);
-        entityManager.persist(order);
-        entityManager.persist(attendance);
-        entityManager.flush();
+        getEntityManager().persist(orderLine);
+        getEntityManager().persist(order);
+        getEntityManager().persist(attendance);
+        getEntityManager().flush();
 
         return attendance.getId();
     }
@@ -226,7 +233,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new NullPointerException("The attendanceId is null."); //NOI18N
         }
 
-        Attendance attendance = entityManager.find(Attendance.class, attendanceId);
+        Attendance attendance = getEntityManager().find(Attendance.class, attendanceId);
 
         if (attendance == null) {
             return null;
@@ -251,7 +258,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new SecurityException(getString("Security.Access.Denied"));
         }
 
-        List<Attendance> attendances = entityManager.createNamedQuery("Attendance.findByDatetimeBeginRangeOrderByDateTimeBeginDesc") //NOI18N
+        List<Attendance> attendances = getEntityManager().createNamedQuery("Attendance.findByDatetimeBeginRangeOrderByDateTimeBeginDesc") //NOI18N
                 .setParameter("low", date.toDate()) //NOI18N
                 .setParameter("high", date.plusDays(1).toDate()) //NOI18N
                 .getResultList();
@@ -276,13 +283,13 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new NullPointerException("The id is null."); //NOI18N
         }
 
-        Client client = entityManager.find(Client.class, id);
+        Client client = getEntityManager().find(Client.class, id);
 
         if (client == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
         }
 
-        List<Attendance> attendances = entityManager.createNamedQuery("Attendance.findByClientOrderByDateTimeBeginDesc").setParameter("client", client).getResultList();
+        List<Attendance> attendances = getEntityManager().createNamedQuery("Attendance.findByClientOrderByDateTimeBeginDesc").setParameter("client", client).getResultList();
 
         List<AttendanceDTO> result = new LinkedList<AttendanceDTO>();
 
@@ -304,7 +311,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new NullPointerException("The attendanceId is null."); //NOI18N
         }
 
-        Attendance attendance = entityManager.find(Attendance.class, attendanceId);
+        Attendance attendance = getEntityManager().find(Attendance.class, attendanceId);
 
         if (attendance == null) {
             throw new ValidationException(getString("Invalid.Attendance.ID"));
@@ -323,7 +330,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         if (attendanceId == null) {
             throw new NullPointerException("The attendanceId is null."); //NOI18N
         }
-        Attendance attendance = entityManager.find(Attendance.class, attendanceId, LockModeType.OPTIMISTIC);
+        Attendance attendance = getEntityManager().find(Attendance.class, attendanceId, LockModeType.OPTIMISTIC);
 
         if (attendance == null) {
             throw new ValidationException(getString("Invalid.Attendance.ID"));
@@ -355,17 +362,24 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
              */
             ItemSubscription itemSubscription;
 
-            List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>) entityManager.createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
+            List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>)
+		getEntityManager()
+		.createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
                     .setParameter("client", attendance.getClient()) //NOI18N
                     .getResultList();
 
             if (!itemSubscriptions.isEmpty()) {
                 itemSubscription = itemSubscriptions.get(0);
 
+		List<TimeSplit> timeSplits = getEntityManager().createNamedQuery("TimeSplit.findAll") //NOI18N
+		    .getResultList();
+
                 /*
                  * Calculates the quantity of penalties to apply.
                  */
-                int penalties = calculatePenalties(itemSubscription.getTimeSplit(), new LocalTime());
+                int penalties = itemSubscription
+		    .getTimeSplit()
+		    .calculatePenalties(timeSplits, new Time(new Date().getTime()));
 
                 /*
                  * If there are penalties to apply, does it.
@@ -373,9 +387,9 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                 if (penalties > 0) {
 
                     Integer orderId = ordersService.findByClientIdAndDate(attendance.getClient().getId(), new DateMidnight(), true);
-                    Integer itemId = entityManager.find(Property.class, "time_range_mismatch_penalty_item_id").getInteger();
+                    Integer itemId = getEntityManager().find(Property.class, "time_range_mismatch_penalty_item_id").getInteger();
 
-                    order = entityManager.find(OrderEntity.class, orderId, LockModeType.OPTIMISTIC);
+                    order = getEntityManager().find(OrderEntity.class, orderId, LockModeType.OPTIMISTIC);
                     OrderLine targetOrderLine = null;
                     
                     /*
@@ -394,10 +408,10 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                     if(targetOrderLine == null) {
                         targetOrderLine = new OrderLine();
                         targetOrderLine.setDiscount(null);
-                        targetOrderLine.setItem(entityManager.find(Item.class, itemId));
+                        targetOrderLine.setItem(getEntityManager().find(Item.class, itemId));
                         targetOrderLine.setOrder(order);
                         targetOrderLine.setQuantity(penalties);
-                        entityManager.persist(targetOrderLine);
+                        getEntityManager().persist(targetOrderLine);
                         order.getOrderLines().add(targetOrderLine);
                     } else {
                         targetOrderLine.setQuantity(penalties);
@@ -423,7 +437,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new NullPointerException("The keyId is null."); // NOI18N
         }
 
-        Key key = entityManager.find(Key.class, keyId);
+        Key key = getEntityManager().find(Key.class, keyId);
 
         if (key == null) {
             throw new ValidationException(getString("Invalid.Key.ID"));
@@ -431,7 +445,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
 
         Attendance attendance;
         try {
-            attendance = (Attendance) entityManager.createNamedQuery("Attendance.findOpenByKey") //NOI18N
+            attendance = (Attendance) getEntityManager().createNamedQuery("Attendance.findOpenByKey") //NOI18N
                     .setParameter("key", key) //NOI18N
                     .getSingleResult();
         } catch (NoResultException ex) {
@@ -461,96 +475,6 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
 
         return attendanceDTO;
     }
-
-    /**
-     * Finds the current time split.
-     *
-     * @return the current time split or null, if none is found
-     */
-    public TimeSplit findTimeSplitForTime(LocalTime time) {
-        List<TimeSplit> timeSplits = entityManager.createNamedQuery("TimeSplit.findAll") //NOI18N
-                .getResultList();
-
-        LocalTime now = time;
-        LocalTime begin = now;
-
-        for (TimeSplit timeSplit : timeSplits) {
-            LocalTime end = new LocalTime(timeSplit.getTime());
-
-            if (now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
-                return timeSplit;
-            }
-
-            begin = end;
-        }
-
-        return null;
-    }
-
-    /**
-     * Calculates the quantity of penalties for a client with give time split and
-     * the time.
-     * 
-     * @param timeSplit the client's time split
-     * @param time the time to use when calculating
-     * @return the quantity of penalties
-     */
-    public int calculatePenalties(TimeSplit timeSplit, LocalTime time) {
-
-        List<TimeSplit> timeSplits = entityManager.createNamedQuery("TimeSplit.findAll") //NOI18N
-                .getResultList();
-
-        int penalties = -1;
-        LocalTime now = time;
-        LocalTime begin = now;
-
-        for (TimeSplit aTimeSplit : timeSplits) {
-            LocalTime end = new LocalTime(aTimeSplit.getTime());
-
-            if (aTimeSplit.equals(timeSplit)) {
-                penalties = 0;
-            } else if (penalties != -1) {
-                penalties++;
-            }
-
-            if (now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
-                break;
-            }
-
-            begin = end;
-        }
-
-        return penalties == -1 ? 0 : penalties;
-    }
-
-    /**
-     * Finds an anonymous subscription appropriate for the time.
-     *
-     * @return the subscription, or null if none is found
-     */
-    public ItemSubscription findValidCasualSubscription(LocalTime time) {
-        TimeSplit currentTimeSplit = findTimeSplitForTime(time);
-
-        /*
-         * No subscription can be valid now, if the current time split is null.
-         */
-        if (currentTimeSplit == null) {
-            return null;
-        }
-
-        ItemSubscription itemSubscription;
-        try {
-            itemSubscription = (ItemSubscription) entityManager.createNamedQuery("ItemSubscription.findCasualByTimeSplit") //NOI18N
-                    .setParameter("timeSplit", currentTimeSplit) //NOI18N
-                    .getSingleResult();
-        } catch (NoResultException ex) {
-            itemSubscription = null;
-        }
-        return itemSubscription;
-    }
-    
-    @PersistenceContext(unitName = "PU")
-    private EntityManager entityManager;
 
     @EJB
     private OrdersServiceLocal ordersService;

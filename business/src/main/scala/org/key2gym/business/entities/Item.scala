@@ -23,6 +23,7 @@ import scala.collection.JavaConversions._
 import org.key2gym.business.api.ValidationException
 import org.key2gym.business.resources.ResourcesManager
 import org.key2gym.persistence._
+import java.text.MessageFormat
 
 /**
  *
@@ -38,7 +39,8 @@ import org.key2gym.persistence._
     new NamedQuery(name = "Item.findById", query = "SELECT i FROM Item i WHERE i.id = :id"),
     new NamedQuery(name = "Item.findByBarcode", query = "SELECT i FROM Item i WHERE i.barcode = :barcode"),
     new NamedQuery(name = "Item.findByQuantity", query = "SELECT i FROM Item i WHERE i.quantity = :quantity"),
-    new NamedQuery(name = "Item.findByPrice", query = "SELECT i FROM Item i WHERE i.price = :price")))
+    new NamedQuery(name = "Item.findByPrice", query = "SELECT i FROM Item i WHERE i.price = :price"),
+    new NamedQuery(name = "Item.getAllBarcodes", query = "SELECT DISTINCT i.barcode FROM Item i")))
 @SequenceGenerator(name="id_itm_seq", allocationSize = 1)
 class Item extends Serializable {
   @Id
@@ -74,10 +76,43 @@ class Item extends Serializable {
   def getId(): Int = this.id
   
   def getTitle(): String = this.title
-  def setTitle(title: String) = this.title = title
+  def setTitle(title: String) { 
+    if (title == null) {
+      throw new NullPointerException("The title is null."); //NOI18N
+    }
+    
+    val trimmedTitle  = title.trim();
+    if (trimmedTitle.isEmpty()) {
+      throw new ValidationException(ResourcesManager.getString("Invalid.Item.Title.CanNotBeEmpty"));
+    }
+    this.title = trimmedTitle
+  }
   
   def getPrice(): BigDecimal = this.price
-  def setPrice(price: BigDecimal) = this.price = price
+  def setPrice(price: BigDecimal) {
+
+    if (price == null) {
+      throw new NullPointerException("The price is null.")
+    }
+
+    if (price.scale() > 2) {
+      throw new ValidationException(ResourcesManager.getString("Invalid.Money.ScaleOverLimit"));
+    }
+
+    val scaledPrice = price.setScale(2)
+
+    if (scaledPrice.precision() > OrderEntity.moneyMaxPrecision) {
+      val message = ResourcesManager.getString("Invalid.Money.OverLimit.withLimit", "9" * (OrderEntity.moneyMaxPrecision - 2))
+      throw new ValidationException(message)
+    } else if (scaledPrice.compareTo(new BigDecimal(0)) < 0) {
+      val message = ResourcesManager
+	.getString("Invalid.Property.CanNotBeNegative.withPropertyName",
+		   ResourcesManager.getString("Property.Price"))
+      throw new ValidationException(message)
+    }
+
+    this.price = scaledPrice
+  }
   
   def getItemSubscription(): ItemSubscription = this.itemSubscription
   def setItemSubscription(itemSubscription: ItemSubscription) = this.itemSubscription = itemSubscription
@@ -89,12 +124,34 @@ class Item extends Serializable {
     * @param quantity the new barocode
     * @throws ValidationException if the barcode is not valid
     */  
-  def setBarcode(barcode: java.lang.Long) {
-    // Barcode can not be negative
-    if (barcode != null && barcode < 0) {
-      val message = ResourcesManager.getString("Invalid.Property.CanNotBeNegative.withPropertyName", ResourcesManager.getString("Property.Barcode"));
+  def setBarcode(barcode: java.lang.Long, barcodes: List[java.lang.Long]) {
+    
+    // No effect if the barcode is the same
+    if(barcode == this.barcode) {
+      return
+    }
+
+    // Null is fine
+    if(barcode == null) {
+      this.barcode = barcode
+      return
+    }
+
+    // Can not be negative
+    if (barcode < 0) {
+      val message = ResourcesManager.getString("Invalid.Property.CanNotBeNegative.withPropertyName", 
+					       ResourcesManager.getString("Property.Barcode"));
       throw new ValidationException(message);
     }
+
+    // Has to be unique
+    if(barcodes.contains(barcode)) {
+      val message = ResourcesManager.
+	getString("Invalid.Item.Barcode.AlreadyInUse")
+      
+      throw new ValidationException(message)
+    }
+     
     
     this.barcode = barcode
   }

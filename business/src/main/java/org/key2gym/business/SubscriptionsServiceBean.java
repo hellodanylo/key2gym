@@ -29,7 +29,7 @@ import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.SubscriptionDTO;
-import org.key2gym.business.api.remote.SubscriptionsServiceRemote;
+import org.key2gym.business.api.remote.*;
 import org.key2gym.persistence.*;
 import org.key2gym.business.entities.*;
 
@@ -56,13 +56,9 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
             throw new NullPointerException("The subscription is null.");
         }
 
-        itemsService.validateBarcode(subscription.getBarcode(), null);
-        itemsService.validateTitle(subscription.getTitle());
-        itemsService.validateQuantity(subscription.getQuantity());
-        itemsService.validatePrice(subscription.getPrice());
-
 	Item entityItem = new Item();
-	entityItem.setBarcode(subscription.getBarcode());
+	entityItem.setBarcode(subscription.getBarcode(),
+			      em.createNamedQuery("Item.getAllBarcodes").getResultList());
 	entityItem.setTitle(subscription.getTitle());
 	entityItem.setQuantity(subscription.getQuantity());
 	entityItem.setPrice(subscription.getPrice());
@@ -73,41 +69,40 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
         validateUnits(subscription.getUnits());
 
         if (subscription.getTimeSplitId() == null) {
-            throw new NullPointerException("The subscription.getTimeRangeId() is null.");
+            throw new NullPointerException("The subscription.getTimeSplitId() is null.");
         }
-        TimeSplit timeRange = getEntityManager().find(TimeSplit.class, subscription.getTimeSplitId());
+        TimeSplit timeSplit = em.find(TimeSplit.class, subscription.getTimeSplitId());
 
-        if (timeRange == null) {
+        if (timeSplit == null) {
             throw new ValidationException(MessageFormat.format(
                     getString("IDInvalid.withName"),
                     getString("ID.TimeSplit")));
         }
 
-        ItemSubscription entityItemSubscription = new ItemSubscription(
-                null,
-                subscription.getUnits(),
-                subscription.getTermDays(),
-                subscription.getTermMonths(),
-                subscription.getTermYears());
-        entityItemSubscription.setTimeSplit(timeRange);
+        ItemSubscription entityItemSubscription = new ItemSubscription();
+        entityItemSubscription.setUnits(subscription.getUnits());
+        entityItemSubscription.setTermDays(subscription.getTermDays());
+	entityItemSubscription.setTermMonths(subscription.getTermMonths());
+	entityItemSubscription.setTermYears(subscription.getTermYears());
+        entityItemSubscription.setTimeSplit(timeSplit);
+	entityItemSubscription.setItem(entityItem);
 
-        getEntityManager().persist(entityItem);
-        getEntityManager().flush();
+        em.persist(entityItem);
+        em.flush();
 
         entityItemSubscription.setId(entityItem.getId());
-
         entityItemSubscription.setItem(entityItem);
         entityItem.setItemSubscription(entityItemSubscription);
 
-        getEntityManager().persist(entityItemSubscription);
-        getEntityManager().flush();
+        em.persist(entityItemSubscription);
+        em.flush();
     }
 
     @Override
     public List<SubscriptionDTO> getAllSubscriptions() {
 
         List<SubscriptionDTO> result = new LinkedList<SubscriptionDTO>();
-        List<ItemSubscription> itemSubscriptions = getEntityManager().createNamedQuery("ItemSubscription.findAll") //NOI18N
+        List<ItemSubscription> itemSubscriptions = em.createNamedQuery("ItemSubscription.findAll") //NOI18N
                 .getResultList();
 
         for (ItemSubscription itemSubscription : itemSubscriptions) {
@@ -142,23 +137,19 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
             throw new NullPointerException("The subscription is null.");
         }
 
-        itemsService.validateBarcode(subscription.getBarcode(), subscription.getId());
-        itemsService.validateTitle(subscription.getTitle());
-        itemsService.validateQuantity(subscription.getQuantity());
-        itemsService.validatePrice(subscription.getPrice());
-
         if (subscription.getId() == null) {
             throw new ValidationException(MessageFormat.format(
                     getString("IDInvalid.withName"),
                     getString("ID.Subscription")));
         }
 
-        if (getEntityManager().find(ItemSubscription.class, subscription.getId()) == null) {
+        if (em.find(ItemSubscription.class, subscription.getId()) == null) {
             throw new ValidationException("The subscription's ID is invalid.");
         }
 
         Item entityItem = new Item();
-	entityItem.setBarcode(subscription.getBarcode());
+	entityItem.setBarcode(subscription.getBarcode(),
+			      em.createNamedQuery("Item.getAllBarcodes").getResultList());
 	entityItem.setTitle(subscription.getTitle());
 	entityItem.setQuantity(subscription.getQuantity());
 	entityItem.setPrice(subscription.getPrice());
@@ -169,29 +160,28 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
         validateUnits(subscription.getUnits());
 
         if (subscription.getTimeSplitId() == null) {
-            throw new NullPointerException("The subscription.getTimeRangeId() is null.");
+            throw new NullPointerException("The subscription.getTimeSplitId() is null.");
         }
-        TimeSplit timeSplit = getEntityManager().find(TimeSplit.class, subscription.getTimeSplitId());
+        TimeSplit timeSplit = em.find(TimeSplit.class, subscription.getTimeSplitId());
         if (timeSplit == null) {
             throw new ValidationException(MessageFormat.format(
                     getString("IDInvalid.withName"),
                     getString("ID.TimeSplit")));
         }
 
-        ItemSubscription entityItemSubscription = new ItemSubscription(
-                subscription.getId(),
-                subscription.getUnits(),
-                subscription.getTermDays(),
-                subscription.getTermMonths(),
-                subscription.getTermYears());
+	ItemSubscription entityItemSubscription = new ItemSubscription();
+        entityItemSubscription.setUnits(subscription.getUnits());
+        entityItemSubscription.setTermDays(subscription.getTermDays());
+	entityItemSubscription.setTermMonths(subscription.getTermMonths());
+	entityItemSubscription.setTermYears(subscription.getTermYears());
         entityItemSubscription.setTimeSplit(timeSplit);
         entityItemSubscription.setItem(entityItem);
 
         entityItem.setItemSubscription(entityItemSubscription);
 
-        getEntityManager().merge(entityItem);
-        getEntityManager().merge(entityItemSubscription);
-        getEntityManager().flush();
+        em.merge(entityItem);
+        em.merge(entityItemSubscription);
+        em.flush();
     }
 
     @Override
@@ -207,7 +197,7 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
             throw new NullPointerException("The id is null.");
         }
 
-        ItemSubscription itemSubscription = getEntityManager().find(ItemSubscription.class, id);
+        ItemSubscription itemSubscription = em.find(ItemSubscription.class, id);
 
         if (itemSubscription == null) {
             throw new ValidationException("The subscription's ID is invalid.");
@@ -219,8 +209,8 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
                     itemSubscription.getItem().getTitle()));
         }
 
-        getEntityManager().remove(itemSubscription);
-        getEntityManager().flush();
+        em.remove(itemSubscription);
+        em.flush();
     }
 
     private void validateUnits(Integer units) throws ValidationException {
@@ -248,6 +238,6 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
     }
     
     @EJB
-    private ItemsServiceBean itemsService;
+    private ItemsServiceRemote itemsService;
 
 }

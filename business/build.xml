@@ -51,11 +51,21 @@
     </target>
     
     <target name="build" depends="init,undeploy,compile-main">
-        
-        <jar destfile="${dist.dir}/${jar.file}" basedir="${bin.dir}/main">
-            <fileset dir="${src.res.dir}" />
-        </jar>
-        
+
+      <!-- Converts the strings files to ascii. -->
+      <native2ascii src="${src.res.dir}" dest="${bin.dir}/res" includes="**/*.properties" />
+
+      <!-- Copies the rest of the resources. -->
+      <copy todir="${bin.dir}/res">
+	<fileset dir="${src.res.dir}" excludes="**/*.properties" />
+      </copy>
+
+      <!-- Builds a JAR file from the binary. -->
+      <jar destfile="${dist.dir}/${jar.file}">
+	<fileset dir="${bin.dir}/res" />
+	<fileset dir="${bin.dir}/main" />
+      </jar>
+      
     </target>
     
     <target name="deploy" depends="init">
