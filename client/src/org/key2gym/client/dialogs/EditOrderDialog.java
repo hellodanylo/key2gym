@@ -495,28 +495,30 @@ public class EditOrderDialog extends AbstractDialog {
     @Override
     protected void onCloseActionPerformed(ActionEvent evt) {
 
-        try {
-            BigDecimal newPayment = new BigDecimal(paymentTextField.getText().trim());
-
-            /*
-             * The business method is called only if the New Paymeny field is not 0.
-             * 1. According to the API a call with newPayment == 0 does not change any data.
-             * 2. The close action is the only way to close the dialog. If for some reason
-             * the addPayment method does not proceed normally, the user will get trapped
-             * into this dialog.
-             */
-            if (newPayment.compareTo(BigDecimal.ZERO) != 0) {
-                ordersService.addPayment(orderId, newPayment);
-            }
-        } catch (NumberFormatException ex) {
-            String message = MessageFormat.format(getString("Message.FieldIsNotFilledInCorrectly.withFieldName"),
-                    getString("Text.NewPayment"));
-            UserExceptionHandler.getInstance().processException(new ValidationException(message));
-            return;
-        } catch (UserException ex) {
-            UserExceptionHandler.getInstance().processException(ex);
-            return;
-        }
+	/*
+	 * The business method is called only if the New Paymeny field is not 0.
+	 * 1. According to the API a call with newPayment == 0 does not change any data.
+	 * 2. The close action is the only way to close the dialog. If for some reason
+	 * the addPayment method does not proceed normally, the user will get trapped
+	 * into this dialog.
+	 */
+	String newPaymentString = paymentTextField.getText().trim();
+	if(!newPaymentString.isEmpty()) {
+	    try {
+		BigDecimal newPayment = new BigDecimal(newPaymentString);
+		if (newPayment.compareTo(BigDecimal.ZERO) != 0) {
+		    ordersService.addPayment(orderId, newPayment);
+		}
+	    } catch (NumberFormatException ex) {
+		String message = MessageFormat.format(getString("Message.FieldIsNotFilledInCorrectly.withFieldName"),
+						      getString("Text.NewPayment"));
+		UserExceptionHandler.getInstance().processException(new ValidationException(message));
+		return;
+	    } catch (UserException ex) {
+		UserExceptionHandler.getInstance().processException(ex);
+		return;
+	    }
+	}
 
         super.onCancelActionPerformed(evt);
     }
