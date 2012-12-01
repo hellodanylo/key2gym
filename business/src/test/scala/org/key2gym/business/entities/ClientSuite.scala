@@ -128,7 +128,7 @@ class ClientSuite extends FunSuite with BeforeAndAfter {
     assert(true === client.isExpired)
   }
 
-  test("charge, ($100), 3 x ($100), (50%)") {
+  test("charge, $100, 3 x $100, 50%") {
  
     val client = new Client
     client.setMoneyBalance(BigDecimal(100))
@@ -139,7 +139,7 @@ class ClientSuite extends FunSuite with BeforeAndAfter {
     assert(BigDecimal(100 - 100 * 0.5 * 3) === client.getMoneyBalance)
   }
 
-  test("uncharge, (-$50), 2 x ($100), (50%)") {
+  test("uncharge, -$50, 2 x $100, 50%") {
  
     val client = new Client
     client.setMoneyBalance(BigDecimal(-50))
@@ -148,6 +148,26 @@ class ClientSuite extends FunSuite with BeforeAndAfter {
 
     // Checks the client's balance
     assert(BigDecimal(-50 + 100 * 0.5 * 2) === client.getMoneyBalance)
+  }
+
+  test("transfer, $100, -$100") {
+    
+    val client = new Client
+    client.setMoneyBalance(BigDecimal(100))
+    
+    client.transfer(BigDecimal(-100))
+
+    assert(BigDecimal(0) === client.getMoneyBalance())
+  }
+
+  test("transfer, -$100, $100") {
+    
+    val client = new Client
+    client.setMoneyBalance(BigDecimal(-100))
+      
+      client.transfer(BigDecimal(100))
+      
+    assert(BigDecimal(0) === client.getMoneyBalance())
   }
 
 }

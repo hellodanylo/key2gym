@@ -28,9 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import org.joda.time.DateMidnight;
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.Validator;
+import org.key2gym.business.api.*;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.business.api.remote.ClientsServiceRemote;
 import org.key2gym.business.entities.Client;
@@ -60,7 +58,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
     }
 
     @Override
-    public Integer registerClient(ClientDTO client, Boolean useSecuredProperties) throws BusinessException, ValidationException, SecurityException {
+    public Integer registerClient(ClientDTO client, Boolean useSecuredProperties) throws BusinessException, ValidationException, SecurityViolationException {
         
         if (client == null) {
             throw new NullPointerException("The client is null."); //NOI18N
@@ -75,17 +73,15 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
         /*
          * Validation
          */
-        getFullNameValidator().validate(client.getFullName());
         newClient.setFullName(client.getFullName());
 
         getCardValidator().validate(client.getCard());
         newClient.setCard(client.getCard());
 
-        getNoteValidator().validate(client.getNote());
         newClient.setNote(client.getNote());
 
         if (useSecuredProperties && !callerHasRole(SecurityRoles.MANAGER)) {
-            throw new SecurityException(getString("Security.Client.UpdateSecuredProperties.Denied"));
+            throw new SecurityViolationException(getString("Security.Client.UpdateSecuredProperties.Denied"));
         }
 
         if (useSecuredProperties) {
@@ -112,8 +108,8 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             newClient.setExpirationDate(client.getRegistrationDate().toDate());
         }
 
-        entityManager.persist(newClient);
-        entityManager.flush();
+        em.persist(newClient);
+        em.flush();
 
         return newClient.getId();
     }
@@ -126,7 +122,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             throw new NullPointerException("The clientId is null."); //NOI18N
         }
 
-        Client client = entityManager.find(Client.class, clientId);
+        Client client = em.find(Client.class, clientId);
 
         if (client == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
@@ -154,7 +150,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
         }
 
         try {
-            Client client = (Client) entityManager.createNamedQuery("Client.findByCard") //NOI18N
+            Client client = (Client) em.createNamedQuery("Client.findByCard") //NOI18N
                     .setParameter("card", card) //NOI18N
                     .setMaxResults(1)
                     .getSingleResult();
@@ -179,11 +175,11 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
         List<Client> clients;
 
         if (exactMatch == true) {
-            clients = entityManager.createNamedQuery("Client.findByFullNameExact") //NOI18N
+            clients = em.createNamedQuery("Client.findByFullNameExact") //NOI18N
                     .setParameter("fullName", fullName) //NOI18N
                     .getResultList();
         } else {
-            clients = entityManager.createNamedQuery("Client.findByFullNameNotExact") //NOI18N
+            clients = em.createNamedQuery("Client.findByFullNameNotExact") //NOI18N
                     .setParameter("fullName", fullName) //NOI18N
                     .getResultList(); //NOI18N
         }
@@ -207,7 +203,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
     }
 
     @Override
-    public void updateClient(ClientDTO client, Boolean useSecuredProperties) throws SecurityException, ValidationException {
+    public void updateClient(ClientDTO client, Boolean useSecuredProperties) throws SecurityViolationException, ValidationException {
         
 
 
@@ -223,20 +219,17 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             throw new NullPointerException("The useSecuredProperties is null."); //NOI18N
         }
 
-        Client originalClient = entityManager.find(Client.class, client.getId());
+        Client originalClient = em.find(Client.class, client.getId());
 
         if (originalClient == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
         }
 
         if (useSecuredProperties && !callerHasRole(SecurityRoles.MANAGER)) {
-            throw new SecurityException(getString("Security.Client.UpdateSecuredProperties.Denied"));
+            throw new SecurityViolationException(getString("Security.Client.UpdateSecuredProperties.Denied"));
         }
 
-        if (!originalClient.getFullName().equals(client.getFullName())) {
-            getFullNameValidator().validate(client.getFullName());
-            originalClient.setFullName(client.getFullName());
-        }
+        originalClient.setFullName(client.getFullName());
 
         /*
          * Validates the card, only if it was changed. Otherwise, the validator
@@ -249,46 +242,11 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             originalClient.setCard(client.getCard());
         }
 
-        /*
-         * It's faster just to revalidate the note and merge it.
-         */
-        getNoteValidator().validate(client.getNote());
         originalClient.setNote(client.getNote());
-
-        if (client.getAttendancesBalance() == null) {
-            throw new NullPointerException("The client.getAttendancesBalance() is null"); //NOI18N
-        }
         originalClient.setAttendancesBalance(client.getAttendancesBalance());
-
-        if (client.getMoneyBalance() == null) {
-            throw new NullPointerException("The client.getMoneyBalance() is null."); //NOI18N
-        }
-
-        /*
-         * Normalizes the scale, and throws an exception, if the scale is 
-         * to big.
-         */
-        if (client.getMoneyBalance().scale() > 2) {
-            throw new ValidationException(getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"));
-        }
-        client.setMoneyBalance(client.getMoneyBalance().setScale(2));
-
-        if (client.getMoneyBalance().precision() > 5) {
-            throw new ValidationException(getString("Invalid.Client.MoneyBalance.LimitReached"));
-        }
         originalClient.setMoneyBalance(new BigDecimal(client.getMoneyBalance()));
-
-        if (originalClient.getRegistrationDate() == null) {
-            throw new NullPointerException("The client.getRegistrationDate() is null."); //NOI18N
-        }
         originalClient.setRegistrationDate(client.getRegistrationDate().toDate());
-
-        if (originalClient.getExpirationDate() == null) {
-            throw new NullPointerException("The client.getExpirationDate() is null."); //NOI18N
-        }
         originalClient.setExpirationDate(client.getExpirationDate().toDate());
-
-        entityManager.flush();
     }
 
     @Override
@@ -298,7 +256,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             throw new NullPointerException("The clientId is null."); //NOI18N
         }
 
-        Client client = entityManager.find(Client.class, clientId);
+        Client client = em.find(Client.class, clientId);
         if (client == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
         }
@@ -310,7 +268,7 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
     public Integer getNextId() {
 
         try {
-            return 1 + (Integer) entityManager
+            return 1 + (Integer) em
                     .createNamedQuery("Client.findAllIdsOrderByIdDesc") //NOI18N
                     .setMaxResults(1)
                     .getSingleResult();
@@ -319,32 +277,14 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
         }
     }
 
-    public Validator getFullNameValidator() {
-        return new Validator<String>() {
-            @Override
-            public void validate(String value) throws ValidationException {
-                if (value == null) {
-                    throw new NullPointerException("The full name is null."); //NOI18N
-                }
-                if (value.trim().isEmpty()) {
-                    throw new ValidationException(getString("Invalid.Client.FullName.CanNotBeEmpty"));
-                }
-            }
-        };
-    }
-
     public Validator getCardValidator() {
         return new Validator<Integer>() {
             @Override
             public void validate(Integer value) throws ValidationException {
-                if (value != null && (value > 99999999 || value < 10000000)) {
-                    throw new ValidationException(getString("Invalid.Client.Card")); //NOI18N
-                }
-
                 // If a card is to be assigned,
                 // let's make sure no one else uses it.
                 if (value != null) {
-                    List<Client> clients = entityManager
+                    List<Client> clients = em
                             .createNamedQuery("Client.findByCard") //NOI18N
                             .setParameter("card", value) //NOI18N
                             .getResultList();
@@ -356,23 +296,9 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
                                     clients.get(0).getFullName(),
                                     clients.get(0).getId()});
                         throw new ValidationException(message);
-                    }
+		    }
                 }
             }
         };
     }
-
-    public Validator getNoteValidator() {
-        return new Validator<String>() {
-            @Override
-            public void validate(String value) throws ValidationException, IllegalArgumentException {
-                if (value == null) {
-                    throw new NullPointerException("The note is null."); //NOI18N
-                }
-            }
-        };
-    }
-    
-    @PersistenceContext(unitName = "PU")
-    private EntityManager entityManager;
 }

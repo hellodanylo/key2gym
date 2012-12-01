@@ -23,7 +23,7 @@ import java.util._
 import org.joda.time.DateMidnight
 import org.key2gym.persistence._
 import org.key2gym.business.api.ValidationException
-import org.key2gym.business.resources.ResourcesManager
+import org.key2gym.business.resources.ResourcesManager.getString
 
 /**
  *
@@ -51,7 +51,7 @@ class Client extends Serializable {
   protected var id: Int = _
   
   @Column(name = "card")
-  protected var card: Integer = null
+  protected var card: java.lang.Integer = _
   
   @Basic(optional = false)
   @Column(name = "money_balance")
@@ -102,18 +102,42 @@ class Client extends Serializable {
 
   /** Returns the full name */
   def getFullName(): String = fullName
-  /** Sets the full name */
-  def setFullName(fullName: String) = this.fullName = fullName
+  /** Sets the full name
+    *
+    * @param fullName the new full name
+    * @throws ValidationException if the full name is invalid
+    */
+  @throws(classOf[ValidationException])
+  def setFullName(fullName: String) {
+
+    if (fullName == null) throw new NullPointerException
+
+    val trimmedFullName = fullName.trim()
+
+    if (trimmedFullName.isEmpty) 
+      throw new ValidationException(getString("Invalid.Client.FullName.CanNotBeEmpty"))
     
+    this.fullName = trimmedFullName
+  }
+  
   /** Returns the note */
   def getNote(): String = note
   /** Sets the note */
-  def setNote(note: String) = this.note = note
+  def setNote(note: String) {
+    
+    if(note == null) throw new NullPointerException
+
+    this.note = note
+  }
 
   /** Returns the registration date */
   def getRegistrationDate() = registrationDate
   /** Sets the registration date */
-  def setRegistrationDate(registrationDate: Date) = this.registrationDate = registrationDate
+  def setRegistrationDate(registrationDate: Date) {
+    if(registrationDate == null) throw new NullPointerException
+
+    this.registrationDate = registrationDate
+  }
 
   /** Returns the attendancse balance */
   def getAttendancesBalance(): Int = attendancesBalance
@@ -123,7 +147,11 @@ class Client extends Serializable {
   /** Returns the expiration date */
   def getExpirationDate(): Date = expirationDate
   /** Sets the expiration date */
-  def setExpirationDate(expirationDate: Date) = this.expirationDate = expirationDate
+  def setExpirationDate(expirationDate: Date) {
+    if(expirationDate == null) throw new NullPointerException
+
+    this.expirationDate = expirationDate
+  }
 
   /** Returns true if the client is expired.
     *
@@ -137,11 +165,35 @@ class Client extends Serializable {
   
   /** Returns the money balance */
   def getMoneyBalance(): BigDecimal = moneyBalance
+  
   /** Sets the money balance
     *
-    * TODO: validate the amount
+    * @param moneyBalance the new money balance
+    * @throws ValidationException if the amount is invalid
     */
-  def setMoneyBalance(moneyBalance: BigDecimal) = this.moneyBalance = moneyBalance.underlying
+  @throws(classOf[ValidationException])
+  def setMoneyBalance(moneyBalance: BigDecimal) {
+
+    if(moneyBalance == null) throw new NullPointerException
+
+    var newMoneyBalance = moneyBalance.underlying
+    
+    if (newMoneyBalance.scale() > 2) {
+      throw new ValidationException(
+	getString("Invalid.Money.ScaleOverLimit")
+      )
+    }
+
+    newMoneyBalance = newMoneyBalance.setScale(2)
+
+    if (newMoneyBalance.precision() > OrderEntity.moneyMaxPrecision) {
+      throw new ValidationException(
+	getString("Invalid.Client.MoneyBalance.LimitReached")
+      )
+    }
+
+    this.moneyBalance = newMoneyBalance
+  }
 
   /** Charges the client.
     *
@@ -158,20 +210,14 @@ class Client extends Serializable {
   @throws(classOf[ValidationException])
   def charge(item: Item, quantity: Int, discount: Discount) {
 
-    // Calcualates the total amount
+    // Calculates the total amount
     var amount: BigDecimal = item.getPrice()
     if (discount != null) {
       amount = amount / 100 * (100 - discount.getPercent())
     }
     amount = amount * quantity
     
-    // Checks that the new money balance is within the limit
-    var newMoneyBalance = BigDecimal(moneyBalance) - amount
-    if (newMoneyBalance.precision > OrderEntity.moneyMaxPrecision) {
-      throw new ValidationException(ResourcesManager.getString("Invalid.Client.MoneyBalance.LimitReached"))
-    }
-    
-    moneyBalance = newMoneyBalance.underlying
+    setMoneyBalance(getMoneyBalance - amount)
   }
 
   /** Uncharges the client.
@@ -186,22 +232,26 @@ class Client extends Serializable {
   @throws(classOf[ValidationException])
   def uncharge(item: Item, quantity: Int, discount: Discount) {
 
-    // Calcualates the total amount
+    // Calculates the total amount
     var amount: BigDecimal = item.getPrice()
     if (discount != null) {
       amount = amount / 100 * (100 - discount.getPercent())
     }
     amount = amount * quantity
     
-    // Checks that the new money balance is within range
-    var newMoneyBalance = amount + moneyBalance
-    if (newMoneyBalance.precision > OrderEntity.moneyMaxPrecision) {
-      throw new ValidationException(ResourcesManager.getString("Invalid.Client.MoneyBalance.LimitReached"))
-    }
-    
-    moneyBalance = newMoneyBalance.underlying
+    setMoneyBalance(getMoneyBalance + amount)    
   }
 
+  /** Transfers the money to or from the client's account.
+    *
+    * If the amount is positive, the money are deposited
+    * at the client's account. If the amount is negative,
+    * the money are withdrawn from the client's account.
+    *
+    * @param amount the amount to transder
+    * @throws ValidationException if the amount is invalid
+    */
+  @throws(classOf[ValidationException])
   def transfer(amount: BigDecimal) {
 
     /*
@@ -209,25 +259,20 @@ class Client extends Serializable {
      * the scale is too big.
      */
     if (amount.scale > 2) {
-      throw new ValidationException(ResourcesManager.getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"))
+      throw new ValidationException(getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"))
     }
     val scaledAmount = amount.setScale(2)
 
-    // Checks that the new money balance is within range
-    var newMoneyBalance = scaledAmount + moneyBalance
-    if (newMoneyBalance.precision > OrderEntity.moneyMaxPrecision) 
-      throw new ValidationException(ResourcesManager.getString("Invalid.Client.MoneyBalance.LimitReached"))
-    
-    moneyBalance = newMoneyBalance.underlying
+    setMoneyBalance(scaledAmount + moneyBalance)
   }
 
   /** Returns the list of attendances. */
   def getAttendances(): List[Attendance] = attendances
 
   /** Returns the card number. */
-  def getCard(): Integer = card
+  def getCard(): java.lang.Integer = card
   /** Sets the card. */
-  def setCard(card: Integer) = card
+  def setCard(card: java.lang.Integer) = this.card = card
 
   /** Returns the list of orders. */
   def getOrders(): List[OrderEntity] = orders
