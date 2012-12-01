@@ -31,7 +31,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
@@ -130,7 +130,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             /*
              * Calculates the quantity of penalties to apply.
              */
-            int penalties = itemSubscription.getTimeSplit().calculatePenalties(splits, new Time(new Date().getTime()));
+            int penalties = itemSubscription.getTimeSplit().calculatePenalties(splits, new LocalTime());
 
             /*
              * If there are penalties to apply, does it.
@@ -189,14 +189,15 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
 	    .createNamedQuery("TimeSplit.findAll") //NOI18N
 	    .getResultList();
 	
-	TimeSplit currentTimeSplit = TimeSplit.selectTimeSplitForTime(timeSplits, new Time(new Date().getTime()));
+	TimeSplit currentTimeSplit = TimeSplit.selectTimeSplitForTime(timeSplits, new LocalTime());
 
         if (currentTimeSplit == null) {
             throw new BusinessException(getString("BusinessRule.Attendance.Casual.SubscriptionNotAvailable"));
         }
 
         try {
-            itemSubscription = (ItemSubscription) getEntityManager().createNamedQuery("ItemSubscription.findCasualByTimeSplit") //NOI18N
+            itemSubscription = (ItemSubscription) getEntityManager()
+		.createNamedQuery("ItemSubscription.findCasualByTimeSplit") //NOI18N
                     .setParameter("timeSplit", currentTimeSplit) //NOI18N
                     .getSingleResult();
         } catch (NoResultException ex) {
@@ -379,7 +380,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                  */
                 int penalties = itemSubscription
 		    .getTimeSplit()
-		    .calculatePenalties(timeSplits, new Time(new Date().getTime()));
+		    .calculatePenalties(timeSplits, new LocalTime());
 
                 /*
                  * If there are penalties to apply, does it.

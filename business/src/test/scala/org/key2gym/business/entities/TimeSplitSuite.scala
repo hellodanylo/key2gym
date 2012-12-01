@@ -1,6 +1,7 @@
 package org.key2gym.business.entities
 
 import java.sql.Time
+import org.joda.time.LocalTime
 import org.scalatest._
 
 class TimeSplitSuite extends FunSuite with BeforeAndAfter {
@@ -11,31 +12,31 @@ class TimeSplitSuite extends FunSuite with BeforeAndAfter {
   var afternoonSplit: TimeSplit = _
   var eveningSplit: TimeSplit = _
 
-  var morning: Time = _
-  var afternoon: Time = _
-  var evening: Time = _
-  var lateEvening: Time = _
+  var morning: LocalTime = _
+  var afternoon: LocalTime = _
+  var evening: LocalTime = _
+  var lateEvening: LocalTime = _
 
   before {
 
     splits = new java.util.LinkedList[TimeSplit]
 
-    morningSplit = new TimeSplit
-    morningSplit.setTime(new Time(12 * 60 * 60 * 1000)) // 12:00
-    splits.add(morningSplit)
-
     afternoonSplit = new TimeSplit
-    afternoonSplit.setTime(new Time(17 * 60 * 60 * 1000)) // 17:00
+    afternoonSplit.setTime(new LocalTime(17, 0, 00)) // 17:00
     splits.add(afternoonSplit)
 
     eveningSplit = new TimeSplit
-    eveningSplit.setTime(new Time(22 * 60 * 60 * 1000)) // 22:00
+    eveningSplit.setTime(new LocalTime(22, 0, 0)) // 22:00
     splits.add(eveningSplit)
 
-    morning = new Time(11 * 60 * 60 * 1000) // 11:00
-    afternoon = new Time(15 * 60 * 60 * 1000) // 15:00
-    evening = new Time(19 * 60 * 60 * 1000) // 19:00
-    lateEvening = new Time(23 * 60 * 60 * 1000) // 23:00
+    morningSplit = new TimeSplit
+    morningSplit.setTime(new LocalTime(12, 0, 0)) // 12:00
+    splits.add(morningSplit)
+
+    morning = new LocalTime(11, 0, 0) // 11:00
+    afternoon = new LocalTime(15, 0, 0) // 15:00
+    evening = new LocalTime(19, 0, 0) // 19:00
+    lateEvening = new LocalTime(23, 0, 0) // 23:00
   }
 
   test("calculatePenalties, morning, morning") {

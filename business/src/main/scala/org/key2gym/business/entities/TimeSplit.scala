@@ -17,10 +17,11 @@
 package org.key2gym.business.entities
 
 import java.io.Serializable
-import java.sql.Time
+import java.util.Date
 import java.util.List
 import javax.persistence._
 import scala.collection.JavaConversions._
+import org.joda.time._
 
 /**
  *
@@ -42,7 +43,8 @@ class TimeSplit extends Serializable {
   
   @Basic(optional = false)
   @Column(name = "end_time")
-  protected var endTime: Time = _
+  @Temporal(value = TemporalType.TIME)
+  protected var endTime: Date = _
   
   @Basic(optional = false)
   @Column(name = "title")
@@ -53,8 +55,8 @@ class TimeSplit extends Serializable {
   
   def getId(): java.lang.Integer = this.id
 
-  def getTime(): Time = this.endTime
-  def setTime(endTime: Time) = this.endTime = endTime
+  def getTime(): LocalTime = new LocalTime(this.endTime)
+  def setTime(endTime: LocalTime) = this.endTime = endTime.toDateTime(new DateMidnight(1970, 1, 1)).toDate
     
   def getTitle(): String = this.title
   def setTitle(title: String) = this.title = title
@@ -71,15 +73,18 @@ class TimeSplit extends Serializable {
     * to be ordered.
     * 
     * @param timeSplits the splits within this time system
-    * @param time the time attendance takes place
+    * @param time the time when attendance takes place
     * @return the quantity of penalties
     */
-  def calculatePenalties(timeSplits: List[TimeSplit], time: Time): Int = {
+  def calculatePenalties(timeSplits: List[TimeSplit], time: LocalTime): Int = {
     
     var penalties = 0
+    val thisTime = getTime
 
     for (that <- timeSplits) {
-      if(that.endTime.compareTo(this.endTime) >= 0 && that.endTime.compareTo(time) < 0) {
+      val thatTime = that.getTime
+
+      if(thatTime.compareTo(thisTime) >= 0 && thatTime.isBefore(time)) {
 	penalties += 1
       }
     }
@@ -98,11 +103,13 @@ object TimeSplit {
     * @param the time instant
     * @return the time split corresponding to the time
     */
-  def selectTimeSplitForTime(timeSplits: List[TimeSplit], time: Time): TimeSplit = {
+  def selectTimeSplitForTime(timeSplits: List[TimeSplit], time: LocalTime): TimeSplit = {
     var result: TimeSplit = null
 
     for(timeSplit <- timeSplits) {
-      if(timeSplit.getTime.compareTo(time) > 0 && (result == null || result.getTime.compareTo(timeSplit.getTime()) > 0)) {
+      val thisTime = timeSplit.getTime()
+
+      if(thisTime.isAfter(time) && (result == null || result.getTime.isAfter(thisTime))) {
 	result = timeSplit
       }
     }
