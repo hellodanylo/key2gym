@@ -176,18 +176,15 @@ public class ManageKeysDialog extends AbstractDialog {
         FormDialog dialog = FormPanelDialogsFactory.createKeyEditor(this, key);
 
         dialog.setVisible(true);
-
-        if (dialog.getResult().equals(FormDialog.Result.OK)) {
-
-            try {
-                keys = keysService.getAllKeys();
-            } catch (UserException ex) {
-                UserExceptionHandler.getInstance().processException(ex);
-                return;
-            }
-
-            keysTableModel.setKeys(keys);
-        }
+	
+	try {
+	    keys = keysService.getAllKeys();
+	} catch (UserException ex) {
+	    UserExceptionHandler.getInstance().processException(ex);
+	    return;
+	}
+	
+	keysTableModel.setKeys(keys);
     }
 
     private void removeButtonActionPerformed(ActionEvent evt) {

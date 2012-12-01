@@ -165,11 +165,8 @@ public class ManageItemsDialog extends AbstractDialog {
         FormDialog dialog = FormPanelDialogsFactory.createItemEditor(this, item);
 
         dialog.setVisible(true);
-
-        if (dialog.getResult().equals(FormDialog.Result.OK)) {
-	    refreshTable();
-        }
 	
+	refreshTable();	
     }
 
     private void removeButtonActionPerformed(ActionEvent evt) {

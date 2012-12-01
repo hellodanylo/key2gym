@@ -169,28 +169,26 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
 
     private void addOrEditButtonActionPerformed(ActionEvent evt) {
 
-        AbstractDialog dialog;
+	SubscriptionDTO subscription;
 
         if (evt.getSource().equals(addButton)) {
-            dialog = FormPanelDialogsFactory.createSubscriptionEditor(this, new SubscriptionDTO());
-        } else {
-            dialog = FormPanelDialogsFactory.createSubscriptionEditor(this, subscriptions.get(subscriptionsTable.getSelectedRow()));
+	    subscription = new SubscriptionDTO();
+	} else {
+	    subscription = subscriptions.get(subscriptionsTable.getSelectedRow());
         }
+
+	AbstractDialog dialog = FormPanelDialogsFactory.createSubscriptionEditor(this, subscription);
 
         dialog.setVisible(true);
 
-        if (dialog.getResult().equals(AbstractDialog.Result.OK)) {
-
-            try {
-                subscriptions = subscriptionsService.getAllSubscriptions();
-            } catch (UserException ex) {
-                UserExceptionHandler.getInstance().processException(ex);
-                return;
-            }
-
-            subscriptionsTableModel.setSubscriptions(subscriptions);
-        }
-        subscriptionsTableModel.setSubscriptions(subscriptions);
+	try {
+	    subscriptions = subscriptionsService.getAllSubscriptions();
+	} catch (UserException ex) {
+	    UserExceptionHandler.getInstance().processException(ex);
+	    return;
+	}
+	
+	subscriptionsTableModel.setSubscriptions(subscriptions);
     }
 
     private void removeButtonActionPerformed(ActionEvent evt) {
