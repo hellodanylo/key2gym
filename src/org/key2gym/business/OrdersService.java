@@ -1038,14 +1038,20 @@ public class OrdersService extends BusinessService {
      * @return the shifted date
      */
     private Date rollExpirationDate(ItemSubscription itemSubscription, Date date, Boolean forward) {
-        Calendar expirationDate = new GregorianCalendar();
-        expirationDate.setTime(date);
+	
+	DateMidnight result = new DateMidnight(date);
 
-        expirationDate.roll(Calendar.YEAR, forward ? itemSubscription.getTermYears() : -itemSubscription.getTermYears());
-        expirationDate.roll(Calendar.MONTH, forward ? itemSubscription.getTermMonths() : -itemSubscription.getTermMonths());
-        expirationDate.roll(Calendar.DATE, forward ? itemSubscription.getTermDays() : -itemSubscription.getTermDays());
-
-        return expirationDate.getTime();
+	if(forward) {
+	    result = result.plusYears(itemSubscription.getTermYears());
+	    result = result.plusMonths(itemSubscription.getTermMonths());
+	    result = result.plusDays(itemSubscription.getTermDays());
+	} else {
+	    result = result.minusYears(itemSubscription.getTermYears());
+	    result = result.minusMonths(itemSubscription.getTermMonths());
+	    result = result.minusDays(itemSubscription.getTermDays());
+	}
+	
+        return result.toDate();
     }
     
     /**
