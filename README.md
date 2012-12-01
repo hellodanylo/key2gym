@@ -3,7 +3,7 @@
 ![Key2Gym logo](https://raw.github.com/equalsdanny/key2gym/develop/client/src/org/key2gym/client/resources/logo-wide.png)
 
 ## About
-Key2Gym is a free software for running and maintaing gyms and other membership-based clubs or enterprises.
+Key2Gym is a free software for running and maintaining gyms and other membership-based clubs or enterprises.
 
 It helps you to:
 * Register new clients (with detailed profile)
