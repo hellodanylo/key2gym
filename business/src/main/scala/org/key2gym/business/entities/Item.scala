@@ -21,7 +21,7 @@ import java.util.List
 import javax.persistence._
 import scala.collection.JavaConversions._
 import org.key2gym.business.api.ValidationException
-import org.key2gym.business.resources.ResourcesManager
+import org.key2gym.business.resources.ResourcesManager.getString
 import org.key2gym.persistence._
 import java.text.MessageFormat
 
@@ -32,15 +32,24 @@ import java.text.MessageFormat
 @Entity
 @Table(name = "item_itm")
 @NamedQueries(Array(
-    new NamedQuery(name = "Item.findAll", query = "SELECT i FROM Item i"),
-    new NamedQuery(name = "Item.findPure", query = "SELECT i FROM Item i WHERE i.id NOT IN (SELECT s.item.id FROM ItemSubscription s)"),
-    new NamedQuery(name = "Item.findAvailable", query = "SELECT i FROM Item i WHERE i.quantity IS NULL OR i.quantity > 0"),
-    new NamedQuery(name = "Item.findPureAvailable", query = "SELECT i FROM Item i WHERE (i.quantity is NULL OR i.quantity > 0) AND i.id NOT IN (SELECT s.item.id FROM ItemSubscription s)"),
-    new NamedQuery(name = "Item.findById", query = "SELECT i FROM Item i WHERE i.id = :id"),
-    new NamedQuery(name = "Item.findByBarcode", query = "SELECT i FROM Item i WHERE i.barcode = :barcode"),
-    new NamedQuery(name = "Item.findByQuantity", query = "SELECT i FROM Item i WHERE i.quantity = :quantity"),
-    new NamedQuery(name = "Item.findByPrice", query = "SELECT i FROM Item i WHERE i.price = :price"),
-    new NamedQuery(name = "Item.getAllBarcodes", query = "SELECT DISTINCT i.barcode FROM Item i")))
+    new NamedQuery(name = "Item.findAll", 
+		   query = "SELECT i FROM Item i"),
+    new NamedQuery(name = "Item.findPure", 
+		   query = "SELECT i FROM Item i WHERE i.id NOT IN (SELECT s.item.id FROM ItemSubscription s)"),
+    new NamedQuery(name = "Item.findAvailable", 
+		   query = "SELECT i FROM Item i WHERE i.quantity IS NULL OR i.quantity > 0"),
+    new NamedQuery(name = "Item.findPureAvailable", 
+		   query = "SELECT i FROM Item i WHERE (i.quantity is NULL OR i.quantity > 0) AND i.id NOT IN (SELECT s.item.id FROM ItemSubscription s)"),
+    new NamedQuery(name = "Item.findById", 
+		   query = "SELECT i FROM Item i WHERE i.id = :id"),
+    new NamedQuery(name = "Item.findByBarcode", 
+		   query = "SELECT i FROM Item i WHERE i.barcode = :barcode"),
+    new NamedQuery(name = "Item.findByQuantity", 
+		   query = "SELECT i FROM Item i WHERE i.quantity = :quantity"),
+    new NamedQuery(name = "Item.findByPrice", 
+		   query = "SELECT i FROM Item i WHERE i.price = :price"),
+    new NamedQuery(name = "Item.getAllBarcodes", 
+		   query = "SELECT DISTINCT i.barcode FROM Item i")))
 @SequenceGenerator(name="id_itm_seq", allocationSize = 1)
 class Item extends Serializable {
   
@@ -74,9 +83,20 @@ class Item extends Serializable {
   @OneToOne(mappedBy="item", cascade=Array(CascadeType.REMOVE))
   protected var itemSubscription: ItemSubscription = _
   
+  /** Returns the ID */
   def getId(): Int = this.id
   
+  /** Returns the title */
   def getTitle(): String = this.title
+
+  /** Sets the title.
+   *
+   * The title should contains at least
+   * one printable character.
+   *
+   * @param title the new title
+   * @throws NullPointerException if the title is null
+   * @throws ValidationException if the title is invalid*/
   def setTitle(title: String) { 
     if (title == null) {
       throw new NullPointerException("The title is null."); //NOI18N
@@ -84,12 +104,25 @@ class Item extends Serializable {
     
     val trimmedTitle  = title.trim();
     if (trimmedTitle.isEmpty()) {
-      throw new ValidationException(ResourcesManager.getString("Invalid.Item.Title.CanNotBeEmpty"));
+      throw new ValidationException(
+	getString("Invalid.Item.Title.CanNotBeEmpty")
+      )
     }
+
     this.title = trimmedTitle
   }
   
+  /** Returns the price */
   def getPrice(): BigDecimal = this.price
+  /** Sets the price
+   *
+   * The price should at most have scale of 2,
+   * and the precision of OrderEntity.moneyMaxPrecision
+   *
+   * @param price the new price
+   * @throws NullPointerException if the price is null
+   * @throws ValidationException if the price is invalid
+   */
   def setPrice(price: BigDecimal) {
 
     if (price == null) {
@@ -98,39 +131,51 @@ class Item extends Serializable {
 
     // Should not have scale larger than 2
     if (price.scale > 2) {
-      throw new ValidationException(ResourcesManager.getString("Invalid.Money.ScaleOverLimit"));
+      throw new ValidationException(
+	getString("Invalid.Money.ScaleOverLimit")
+      )
     }
 
     val scaledPrice = price.setScale(2)
 
     // Should not have precision larger than maxPrecision
     if (scaledPrice.precision > OrderEntity.moneyMaxPrecision) {
-      val message = ResourcesManager.getString("Invalid.Money.ValueOverLimit.withLimit", "9" * (OrderEntity.moneyMaxPrecision - 2))
-      throw new ValidationException(message)
+      throw new ValidationException(
+	getString("Invalid.Money.ValueOverLimit.withLimit", 
+		  "9" * (OrderEntity.moneyMaxPrecision - 2))
+      )
     }
 
     // Should not be negative
     if (scaledPrice.compareTo(new BigDecimal(0)) < 0) {
-      val message = ResourcesManager
-	.getString("Invalid.Property.CanNotBeNegative.withPropertyName",
-		   ResourcesManager.getString("Property.Price"))
-      throw new ValidationException(message)
+      throw new ValidationException(
+	getString("Invalid.Property.CanNotBeNegative.withPropertyName",
+		  getString("Property.Price"))
+      )
     }
 
     this.price = scaledPrice
   }
   
+  /** Returns the subscription.
+   *
+   * @return subscription, if this item is a subscription; null, otherwise
+   */
   def getItemSubscription(): ItemSubscription = this.itemSubscription
+  /** Sets the subscription */
   def setItemSubscription(itemSubscription: ItemSubscription) = this.itemSubscription = itemSubscription
   
+  /** Returns the barcode */
   def getBarcode(): java.lang.Long = this.barcode
 
   /** Sets the barcode.
-    *
-    * @param quantity the new barocode
-    * @throws ValidationException if the barcode is not valid
-    */  
-  def setBarcode(barcode: java.lang.Long, barcodes: List[java.lang.Long]) {
+   *
+   * The barcode should not be negative.
+   *
+   * @param quantity the new barocode
+   * @throws ValidationException if the barcode is not valid
+   */  
+  def setBarcode(barcode: java.lang.Long) {
     
     // No effect if the barcode is the same
     if(barcode == this.barcode) {
@@ -145,23 +190,16 @@ class Item extends Serializable {
 
     // Can not be negative
     if (barcode < 0) {
-      val message = ResourcesManager.getString("Invalid.Property.CanNotBeNegative.withPropertyName", 
-					       ResourcesManager.getString("Property.Barcode"));
-      throw new ValidationException(message);
+      throw new ValidationException(
+	getString("Invalid.Property.CanNotBeNegative.withPropertyName", 
+		  getString("Property.Barcode"))
+      )
     }
 
-    // Has to be unique
-    if(barcodes.contains(barcode)) {
-      val message = ResourcesManager.
-	getString("Invalid.Item.Barcode.AlreadyInUse")
-      
-      throw new ValidationException(message)
-    }
-     
-    
     this.barcode = barcode
   }
-  
+
+  /** Returns the quantity */
   def getQuantity(): java.lang.Integer = this.quantity
   
   /** Sets the quantity.
@@ -173,11 +211,15 @@ class Item extends Serializable {
     // Quantity has to be within range [0; 255]
     if(quantity != null) {
       if (quantity < 0) {
-	val message = ResourcesManager.getString("Invalid.Property.CanNotBeNegative.withPropertyName", ResourcesManager.getString("Property.Quantity"));
-	throw new ValidationException(message);
+	throw new ValidationException(
+	  getString("Invalid.Property.CanNotBeNegative.withPropertyName", 
+		    getString("Property.Quantity"))
+	)
       } else if (quantity > 255) {
-	val message = ResourcesManager.getString("Invalid.Property.OverLimit.withPropertyName", ResourcesManager.getString("Property.Quantity"));
-	  throw new ValidationException(message);
+	throw new ValidationException(
+	  getString("Invalid.Property.OverLimit.withPropertyName", 
+		    getString("Property.Quantity"))
+	)
       }
     }
     

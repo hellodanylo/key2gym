@@ -32,15 +32,24 @@ import org.key2gym.business.resources.ResourcesManager.getString
 @Entity
 @Table(name = "client_cln")
 @NamedQueries(Array(
-    new NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c"),
-    new NamedQuery(name = "Client.findById", query = "SELECT c FROM Client c WHERE c.id = :id"),
-    new NamedQuery(name = "Client.findAllIdsOrderByIdDesc", query = "SELECT c.id FROM Client c ORDER BY c.id DESC"),
-    new NamedQuery(name = "Client.findByCard", query = "SELECT c FROM Client c WHERE c.card = :card"),
-    new NamedQuery(name = "Client.findByFullNameExact", query = "SELECT c FROM Client c WHERE c.fullName = :fullName"),
-    new NamedQuery(name = "Client.findByFullNameNotExact", query = "SELECT c FROM Client c WHERE LOCATE(:fullName, c.fullName) != 0"),
-    new NamedQuery(name = "Client.findByRegistrationDate", query = "SELECT c FROM Client c WHERE c.registrationDate = :registrationDate"),
-    new NamedQuery(name = "Client.findByAttendancesBalance", query = "SELECT c FROM Client c WHERE c.attendancesBalance = :attendancesBalance"),
-    new NamedQuery(name = "Client.findByExpirationDate", query = "SELECT c FROM Client c WHERE c.expirationDate = :expirationDate")))
+    new NamedQuery(name = "Client.findAll", 
+		   query = "SELECT c FROM Client c"),
+    new NamedQuery(name = "Client.findById", 
+		   query = "SELECT c FROM Client c WHERE c.id = :id"),
+    new NamedQuery(name = "Client.findAllIdsOrderByIdDesc", 
+		   query = "SELECT c.id FROM Client c ORDER BY c.id DESC"),
+    new NamedQuery(name = "Client.findByCard", 
+		   query = "SELECT c FROM Client c WHERE c.card = :card"),
+    new NamedQuery(name = "Client.findByFullNameExact", 
+		   query = "SELECT c FROM Client c WHERE c.fullName = :fullName"),
+    new NamedQuery(name = "Client.findByFullNameNotExact", 
+		 query = "SELECT c FROM Client c WHERE LOCATE(:fullName, c.fullName) != 0"),
+    new NamedQuery(name = "Client.findByRegistrationDate", 
+		   query = "SELECT c FROM Client c WHERE c.registrationDate = :registrationDate"),
+    new NamedQuery(name = "Client.findByAttendancesBalance", 
+		   query = "SELECT c FROM Client c WHERE c.attendancesBalance = :attendancesBalance"),
+    new NamedQuery(name = "Client.findByExpirationDate", 
+		   query = "SELECT c FROM Client c WHERE c.expirationDate = :expirationDate")))
 @SequenceGenerator(name="id_cln_seq", allocationSize = 1)
 class Client extends Serializable {
   
@@ -183,6 +192,7 @@ class Client extends Serializable {
 	getString("Invalid.Money.ScaleOverLimit")
       )
     }
+    
 
     newMoneyBalance = newMoneyBalance.setScale(2)
 
@@ -217,7 +227,7 @@ class Client extends Serializable {
     }
     amount = amount * quantity
     
-    setMoneyBalance(getMoneyBalance - amount)
+    setMoneyBalance(getMoneyBalance() - amount)
   }
 
   /** Uncharges the client.
@@ -259,7 +269,9 @@ class Client extends Serializable {
      * the scale is too big.
      */
     if (amount.scale > 2) {
-      throw new ValidationException(getString("Invalid.Money.TwoDigitsAfterDecimalPointMax"))
+      throw new ValidationException(
+	getString("Invalid.Money.TwoDigitsAfterDecimalPointMax")
+      )
     }
     val scaledAmount = amount.setScale(2)
 
