@@ -18,6 +18,7 @@ package org.key2gym.persistence;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.*;
+import org.key2gym.business.entities.*;
 
 /**
  *
@@ -38,22 +39,22 @@ public class Administrator implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional=false)
-    @Column(name = "id_adm", columnDefinition="TINYINT UNSIGNED NOT NULL")
+    @Column(name = "id_adm")
     private Integer id;
     
     @Basic(optional=false)
     @Lob
-    @Column(name = "username", columnDefinition="TINYTEXT NOT NULL")
+    @Column(name = "username")
     private String username;
     
     @Basic(optional=false)
     @Lob
-    @Column(name = "full_name", columnDefinition="TINYTEXT NOT NULL")
+    @Column(name = "full_name")
     private String fullName;
     
     @Basic(optional=false)
     @Lob
-    @Column(name = "password", columnDefinition="TINYTEXT NOT NULL")
+    @Column(name = "password")
     private String password;
     
     @Basic(optional=false)
@@ -63,16 +64,24 @@ public class Administrator implements Serializable {
     
     @Basic(optional=false)
     @Lob
-    @Column(name = "telephone", columnDefinition="TINYTEXT NOT NULL")
+    @Column(name = "telephone")
     private String telephone;
     
     @Basic(optional=false)
     @Lob
-    @Column(name = "note", columnDefinition="TEXT NOT NULL")
+    @Column(name = "note")
     private String note;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "administrator")
     private List<Session> sessionsList;
+
+    @ManyToMany
+    @JoinTable(
+	       name = "administrator_group_agr", 
+	       joinColumns = @JoinColumn(name = "idadm_agr", referencedColumnName="id_adm"), 
+	       inverseJoinColumns = @JoinColumn(name = "idgrp_agr", referencedColumnName="id_grp")
+    )
+    private List<Group> groups;
 
     public Administrator() {
     }
@@ -153,6 +162,14 @@ public class Administrator implements Serializable {
 
     public void setSessions(List<Session> sessionList) {
         this.sessionsList = sessionList;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
     @Override

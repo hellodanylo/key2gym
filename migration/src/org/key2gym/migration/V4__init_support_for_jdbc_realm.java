@@ -48,7 +48,7 @@ public class V4__init_support_for_jdbc_realm implements JdbcMigration {
             /*
              * Creates the groups table.
              */
-            stmt.executeUpdate("CREATE TABLE group_grp (id_grp INTEGER NOT NULL DEFAULT(nextval('id_grp_seq')) PRIMARY KEY, name TEXT NOT NULL)");
+            stmt.executeUpdate("CREATE TABLE group_grp (id_grp INTEGER NOT NULL DEFAULT(nextval('id_grp_seq')) PRIMARY KEY, name TEXT NOT NULL UNIQUE, title TEXT NOT NULL)");
 
             /*
              * Assignes the sequence to the column.
@@ -58,19 +58,14 @@ public class V4__init_support_for_jdbc_realm implements JdbcMigration {
             /*
              * Populates the groups table.
              */
-            stmt.executeUpdate("INSERT INTO group_grp (name) VALUES ('manager')");
-            stmt.executeUpdate("INSERT INTO group_grp (name) VALUES ('senior_administrator')");
-            stmt.executeUpdate("INSERT INTO group_grp (name) VALUES ('junior_administrator')");
+            stmt.executeUpdate("INSERT INTO group_grp (name, title) VALUES ('manager', 'manager')");
+            stmt.executeUpdate("INSERT INTO group_grp (name, title) VALUES ('senior_administrator', 'senior_administrator')");
+            stmt.executeUpdate("INSERT INTO group_grp (name, title) VALUES ('junior_administrator', 'junior_administrator')");
 
             /*
              * Creates the administrator-group table.
              */
             stmt.executeUpdate("CREATE TABLE administrator_group_agr (idadm_agr INTEGER NOT NULL, idgrp_agr INTEGER NOT NULL, PRIMARY KEY (idadm_agr, idgrp_agr))");
-
-            /*
-             * Creates the view to be used by the application server.
-             */
-            stmt.executeUpdate("CREATE VIEW v_administrator_group AS SELECT adm.username, adm.password, grp.name FROM administrator_group_agr agr INNER JOIN administrator_adm adm ON adm.id_adm = agr.idadm_agr INNER JOIN group_grp grp ON grp.id_grp =  agr.idgrp_agr");
 
             /*
              * Fetches all administrators.

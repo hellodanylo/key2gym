@@ -24,6 +24,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import org.joda.time.LocalTime;
+import org.key2gym.business.api.*;
 import org.key2gym.business.api.dtos.TimeSplitDTO;
 import org.key2gym.business.api.remote.TimeSplitsServiceRemote;
 import org.key2gym.business.entities.TimeSplit;

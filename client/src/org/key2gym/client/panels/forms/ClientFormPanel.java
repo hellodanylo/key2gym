@@ -30,6 +30,9 @@ import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import org.jdesktop.beansbinding.*;
+import org.key2gym.client.ContextManager;
+import org.key2gym.business.api.*;
+import org.key2gym.business.api.remote.*;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.client.highlighters.AttendancesBalanceHighlighter;
 import org.key2gym.client.highlighters.ExpirationDateHighlighter;
@@ -42,7 +45,8 @@ import org.key2gym.client.highlighters.MoneyBalanceHighlighter;
 public class ClientFormPanel extends JPanel {
 
     public ClientFormPanel(List<Column> columnsList) {
-        //isPriviliged = SessionsService.getInstance().getPermissionsLevel().equals(SessionsService.PL_ALL);
+        isPriviliged = ContextManager.lookup(AdministratorsServiceRemote.class)
+	    .getCurrent().getRoles().contains(SecurityRoles.MANAGER);
         this.columnsList = columnsList;
 
         buildForm();
@@ -111,7 +115,7 @@ public class ClientFormPanel extends JPanel {
                  * Expiration date
                  */
                 expirationDateTextField = new JTextField();
-                //expirationDateTextField.setEditable(isPriviliged);
+                expirationDateTextField.setEditable(isPriviliged);
                 new ExpirationDateHighlighter(expirationDateTextField);
                 builder.appendI15d("Label.ExpirationDate", expirationDateTextField);
                 builder.nextLine();
@@ -132,7 +136,7 @@ public class ClientFormPanel extends JPanel {
 
                 binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE, client,
                         BeanProperty.create("attendancesBalance"), attendancesBalanceTextField, BeanProperty.create("text"), "attendancesBalance");
-                //binding.setConverter(new IntegerToStringConverter(strings.getString("Text.AttendancesBalance"), false));
+                binding.setConverter(new IntegerToStringConverter(strings.getString("Text.AttendancesBalance"), false));
                 bindingGroup.addBinding(binding);
 
             } else if (column.equals(Column.MONEY_BALANCE)) {
@@ -140,7 +144,7 @@ public class ClientFormPanel extends JPanel {
                  * Money balance
                  */
                 moneyBalanceTextField = new JTextField();
-                //moneyBalanceTextField.setEditable(isPriviliged);
+                moneyBalanceTextField.setEditable(isPriviliged);
                 new MoneyBalanceHighlighter(moneyBalanceTextField);
                 builder.appendI15d("Label.MoneyBalance", moneyBalanceTextField);
                 builder.nextLine();
@@ -154,7 +158,7 @@ public class ClientFormPanel extends JPanel {
                  * Registration date
                  */
                 registrationDateTextField = new JTextField();
-                //registrationDateTextField.setEditable(isPriviliged);
+                registrationDateTextField.setEditable(isPriviliged);
                 builder.appendI15d("Label.RegistrationDate", registrationDateTextField);
                 builder.nextLine();
 
@@ -285,7 +289,7 @@ public class ClientFormPanel extends JPanel {
     /*
      * Business
      */
-    //private Boolean isPriviliged;
+    private Boolean isPriviliged;
     private ClientDTO client;
     /*
      * Form

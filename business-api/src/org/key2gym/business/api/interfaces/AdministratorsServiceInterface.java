@@ -43,5 +43,11 @@ public interface AdministratorsServiceInterface extends BasicInterface {
      * @return the administrator
      */
     AdministratorDTO getByUsername(String username) throws ValidationException;
-    
+
+    /**
+     * Gets the current administrator.
+     *
+     * @return the currently logged in adminstrator
+     */
+    AdministratorDTO getCurrent();    
 }

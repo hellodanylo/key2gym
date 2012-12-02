@@ -25,6 +25,7 @@ import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import org.key2gym.business.api.*;
 import org.key2gym.business.api.dtos.DiscountDTO;
 import org.key2gym.business.api.remote.DiscountsServiceRemote;
 

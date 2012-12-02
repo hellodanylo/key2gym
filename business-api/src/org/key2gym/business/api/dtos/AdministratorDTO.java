@@ -17,6 +17,7 @@
 package org.key2gym.business.api.dtos;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -55,9 +56,18 @@ public class AdministratorDTO implements Serializable {
     public void setUserName(String userName) {
         this.userName = userName;
     }    
+    
+    public List<String> getRoles() {
+	return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+	this.roles = roles;
+    }
 
     private Integer id;
     private String userName;
     private String fullName;
     private String note;    
+    private List<String> roles;
 }

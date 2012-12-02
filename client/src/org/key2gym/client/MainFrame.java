@@ -43,9 +43,9 @@ import java.util.ResourceBundle;
 import javax.swing.*;
 import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
-import org.key2gym.business.api.SecurityViolationException;
-import org.key2gym.business.api.dtos.AttendanceDTO;
-import org.key2gym.business.api.dtos.OrderDTO;
+import org.key2gym.business.api.*;
+import org.key2gym.business.api.remote.*;
+import org.key2gym.business.api.dtos.*;
 import org.key2gym.client.actions.ManageReportsAction;
 import org.key2gym.client.panels.AttendancesPanel;
 import org.key2gym.client.panels.CloseableTabPanel;
@@ -432,8 +432,9 @@ public class MainFrame extends JFrame {
 
                 workspacesTabbedPane.setSelectedComponent(attendancesPanels.get(new DateMidnight()));
 
-                //AdministratorDTO administrator = AdministratorsService.getInstance().getById(sessionsService.getTopmostAdministratorId());
-                //setTitle(MessageFormat.format(strings.getString("Title.Key2Gym.withAdministrator"), new Object[]{administrator.getFullName()}));
+                AdministratorDTO administrator = ContextManager.lookup(AdministratorsServiceRemote.class)
+		    .getCurrent();
+                setTitle(MessageFormat.format(strings.getString("Title.Key2Gym.withAdministrator"), new Object[]{administrator.getFullName()}));
 
             } else {
                 workspacesTabbedPane.removeAll();
@@ -441,7 +442,7 @@ public class MainFrame extends JFrame {
                 ordersPanels.clear();
                 itemsPanel = null;
 
-                //setTitle(strings.getString("Title.Key2Gym"));
+                setTitle(strings.getString("Title.Key2Gym"));
             }
         }
     }

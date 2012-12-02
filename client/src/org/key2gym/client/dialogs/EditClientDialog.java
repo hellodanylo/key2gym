@@ -33,18 +33,13 @@ import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.joda.time.DateMidnight;
-import org.key2gym.business.api.SecurityViolationException;
-import org.key2gym.business.api.UserException;
+import org.key2gym.business.api.*;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.business.api.dtos.ClientProfileDTO;
 import org.key2gym.business.api.dtos.OrderDTO;
 import org.key2gym.business.api.dtos.OrderLineDTO;
-import org.key2gym.business.api.remote.AttendancesServiceRemote;
-import org.key2gym.business.api.remote.ClientProfilesServiceRemote;
-import org.key2gym.business.api.remote.ClientsServiceRemote;
-import org.key2gym.business.api.remote.FreezesServiceRemote;
-import org.key2gym.business.api.remote.OrdersServiceRemote;
+import org.key2gym.business.api.remote.*;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.panels.forms.ClientFormPanel;
@@ -301,7 +296,7 @@ public class EditClientDialog extends AbstractDialog {
             /*
              * Updates the client
              */
-            clientsService.updateClient(client, true);
+            clientsService.updateClient(client, ContextManager.lookup(AdministratorsServiceRemote.class).getCurrent().getRoles().contains(SecurityRoles.MANAGER));
 
             /*
              * Updates the profile, it the check box was selected.

@@ -68,6 +68,8 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             throw new NullPointerException("The useSecuredPropeties is null."); //NOI18N
         }
 
+	java.util.logging.Logger.getGlobal().info("Register: " + useSecuredProperties);
+
         Client newClient = new Client();
 
         /*
@@ -80,33 +82,22 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
 
         newClient.setNote(client.getNote());
 
+        newClient.setRegistrationDate(new Date());
+
         if (useSecuredProperties && !callerHasRole(SecurityRoles.MANAGER)) {
             throw new SecurityViolationException(getString("Security.Client.UpdateSecuredProperties.Denied"));
         }
 
         if (useSecuredProperties) {
-            if (client.getAttendancesBalance() == null) {
-                throw new NullPointerException("The client.getAttendancesBalance() is null."); //NOI18N
-            }
             newClient.setAttendancesBalance(client.getAttendancesBalance());
-            if (client.getMoneyBalance() == null) {
-                throw new NullPointerException("The client.getMoneyBalance() is null."); //NOI18N
-            }
-            newClient.setMoneyBalance(BigDecimal$.MODULE$.apply(0));
-            if (client.getRegistrationDate() == null) {
-                throw new NullPointerException("The client.getRegistrationDate() is null."); //NOI18N
-            }
-            newClient.setRegistrationDate(new Date());
-            if (client.getExpirationDate() == null) {
-                throw new NullPointerException("The client.getExpirationDate() is null."); //NOI18N
-            }
+            newClient.setMoneyBalance(new BigDecimal(client.getMoneyBalance()));
             newClient.setExpirationDate(client.getExpirationDate().toDate());
         } else {
             newClient.setAttendancesBalance(0);
             newClient.setMoneyBalance(BigDecimal$.MODULE$.apply(0));
-            newClient.setRegistrationDate(new Date());
             newClient.setExpirationDate(client.getRegistrationDate().toDate());
         }
+
 
         em.persist(newClient);
         em.flush();
@@ -243,10 +234,14 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
         }
 
         originalClient.setNote(client.getNote());
-        originalClient.setAttendancesBalance(client.getAttendancesBalance());
-        originalClient.setMoneyBalance(new BigDecimal(client.getMoneyBalance()));
         originalClient.setRegistrationDate(client.getRegistrationDate().toDate());
-        originalClient.setExpirationDate(client.getExpirationDate().toDate());
+
+	if(useSecuredProperties) {
+	    originalClient.setAttendancesBalance(client.getAttendancesBalance());
+	    originalClient.setMoneyBalance(new BigDecimal(client.getMoneyBalance()));
+	    originalClient.setExpirationDate(client.getExpirationDate().toDate());
+	}
+
     }
 
     @Override

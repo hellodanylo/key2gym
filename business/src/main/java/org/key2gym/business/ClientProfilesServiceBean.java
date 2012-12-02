@@ -24,15 +24,12 @@ import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.Validator;
+import org.key2gym.business.api.*;
 import org.key2gym.persistence.AdSource;
 import org.key2gym.business.entities.Client;
 import org.key2gym.persistence.ClientProfile;
 import org.joda.time.DateMidnight;
 import org.joda.time.Instant;
-import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.dtos.ClientProfileDTO;
 import org.key2gym.business.api.remote.ClientProfilesServiceRemote;
 

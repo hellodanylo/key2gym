@@ -25,14 +25,9 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.SecurityViolationException;
-import org.key2gym.business.api.UserException;
-import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.dtos.ClientDTO;
-import org.key2gym.business.api.dtos.ClientProfileDTO;
-import org.key2gym.business.api.remote.ClientProfilesServiceRemote;
-import org.key2gym.business.api.remote.ClientsServiceRemote;
+import org.key2gym.business.api.*;
+import org.key2gym.business.api.dtos.*;
+import org.key2gym.business.api.remote.*;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.panels.forms.ClientFormPanel;
@@ -146,8 +141,9 @@ public class RegisterClientDialog extends AbstractDialog {
 
         try {
             if (!isClientRegistered) {
-                // TODO: FIX THIS!!!
-                Integer clientId = clientsService.registerClient(client, false);
+                Integer clientId = clientsService.registerClient(client, 
+								 ContextManager.lookup(AdministratorsServiceRemote.class)
+								 .getCurrent().getRoles().contains(SecurityRoles.MANAGER));
                 client.setId(clientId);
                 isClientRegistered = true;
             }

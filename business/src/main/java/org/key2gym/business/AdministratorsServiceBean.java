@@ -17,16 +17,17 @@ package org.key2gym.business;
  */
 
 
-
+import java.util.*;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
-import org.key2gym.business.api.ValidationException;
+import org.key2gym.business.api.*;
 import org.key2gym.business.api.dtos.AdministratorDTO;
 import org.key2gym.business.api.remote.AdministratorsServiceRemote;
-import org.key2gym.persistence.Administrator;
+import org.key2gym.persistence.*;
+import org.key2gym.business.entities.*;
 
 /**
  *
@@ -45,15 +46,11 @@ public class AdministratorsServiceBean extends BasicBean implements Administrato
             throw new NullPointerException("The id is null."); //NOI18N
         }
         
-        Administrator entityAdministrator = getEntityManager().find(Administrator.class, id);
-        
-        AdministratorDTO administrator = new AdministratorDTO();
-        administrator.setFullName(entityAdministrator.getFullName());
-        administrator.setId(entityAdministrator.getId());
-        administrator.setNote(entityAdministrator.getNote());
-        administrator.setUserName(entityAdministrator.getUsername());
-        
-        return administrator;
+        Administrator administrator = getEntityManager().find(Administrator.class, id);
+
+	// TODO: null check here
+                
+        return convertToDTO(administrator);
     }
 
     @Override
@@ -63,10 +60,10 @@ public class AdministratorsServiceBean extends BasicBean implements Administrato
             throw new NullPointerException("The username is null."); //NOI18N
         }
         
-        Administrator entityAdministrator;
+        Administrator administrator;
         
         try {
-            entityAdministrator = (Administrator)getEntityManager()
+            administrator = (Administrator)getEntityManager()
                 .createNamedQuery("Administrator.findByUsername")
                 .setParameter("username", username)
                 .getSingleResult();
@@ -74,12 +71,31 @@ public class AdministratorsServiceBean extends BasicBean implements Administrato
             throw new ValidationException(getString("Invalid.Administrator.Username"));
         }
         
+        
+        return convertToDTO(administrator);
+    }
+
+    @Override
+    public AdministratorDTO getCurrent() {
+	try {
+	    return getByUsername(getSessionContext().getCallerPrincipal().getName());
+	} catch(ValidationException ex) {
+	    throw new RuntimeException("The session's principal is not a valud administrator's username", ex);
+	}
+    }
+
+    protected AdministratorDTO convertToDTO(Administrator entityAdministrator) {
         AdministratorDTO administrator = new AdministratorDTO();
         administrator.setFullName(entityAdministrator.getFullName());
         administrator.setId(entityAdministrator.getId());
         administrator.setNote(entityAdministrator.getNote());
-        administrator.setUserName(entityAdministrator.getUsername());
-        
-        return administrator;
+        administrator.setUserName(entityAdministrator.getUsername());    
+
+	List<String> roles = new ArrayList(entityAdministrator.getGroups().size());
+	for(Group group : entityAdministrator.getGroups()) {
+	    roles.add(group.getName());
+	}
+	administrator.setRoles(roles);
+	return administrator;
     }
 }

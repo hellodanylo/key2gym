@@ -68,7 +68,7 @@
       
     </target>
     
-    <target name="deploy" depends="init">
+    <target name="deploy" depends="init,undeploy">
         <exec dir="${dist.dir}" executable="${openejb.dir}/bin/openejb">
             <arg value="deploy" />
             <arg value="${project.dir}/business/${dist.dir}/${jar.file}" />
@@ -76,16 +76,12 @@
     </target>
     
     <target name="undeploy" depends="init">        
-      <echo message="Undeploying the appication.." />
         <exec dir="${openejb.dir}" executable="${openejb.dir}/bin/openejb">
             <arg value="undeploy" />
             <arg value="${openejb.dir}/apps/${jar.file}" />
         </exec>
     </target>
     
-    <target name="rebuild-deploy" depends="clean,build,deploy" />
-    
-
     <target name="test" depends="init,compile-main,compile-test" description="Runs unit tests">
       
       <!-- Loads the ScalaTest ant task. -->
