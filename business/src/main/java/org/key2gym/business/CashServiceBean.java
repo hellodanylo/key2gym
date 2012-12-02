@@ -106,7 +106,7 @@ public class CashServiceBean extends BasicBean implements CashServiceRemote {
         }
 
         CashAdjustment entityCashAdjustment = entityManager.find(CashAdjustment.class,
-                cashAdjustment.getDate().toDate(), LockModeType.OPTIMISTIC);
+								 cashAdjustment.getDate().toDate(), LockModeType.OPTIMISTIC);
 
         if (entityCashAdjustment == null) {
             entityCashAdjustment = new CashAdjustment();

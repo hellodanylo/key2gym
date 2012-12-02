@@ -68,8 +68,6 @@ public class ClientsServiceBean extends BasicBean implements ClientsServiceRemot
             throw new NullPointerException("The useSecuredPropeties is null."); //NOI18N
         }
 
-	java.util.logging.Logger.getGlobal().info("Register: " + useSecuredProperties);
-
         Client newClient = new Client();
 
         /*

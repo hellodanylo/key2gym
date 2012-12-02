@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
+import javax.persistence.*;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -55,8 +56,20 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
         }
 
 	Item entityItem = new Item();
-	entityItem.setBarcode(subscription.getBarcode(),
-			      em.createNamedQuery("Item.getAllBarcodes").getResultList());
+	entityItem.setBarcode(subscription.getBarcode());
+	
+	if(subscription.getBarcode() != null) {
+	    try {
+		em.createNamedQuery("Item.findByBarcode")
+		    .setParameter("barcode", subscription.getBarcode())
+		    .getSingleResult();
+		    
+		throw new ValidationException(getString("Invalid.Item.Barcode.AlreadyInUse"));
+	    } catch(NoResultException ex) {
+		// the barcode is unique - fine!  
+	    }
+	}
+	
 	entityItem.setTitle(subscription.getTitle());
 	entityItem.setQuantity(subscription.getQuantity());
 	entityItem.setPrice(subscription.getPrice());
@@ -150,8 +163,19 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
                     getString("ID.Subscription")));
 	}
 
-	entityItem.setBarcode(subscription.getBarcode(),
-			      em.createNamedQuery("Item.getAllBarcodes").getResultList());
+	if(subscription.getBarcode() != null && !subscription.getBarcode().equals(entityItem.getBarcode())) {
+	    try {
+		em.createNamedQuery("Item.findByBarcode")
+		    .setParameter("barcode", subscription.getBarcode())
+		    .getSingleResult();
+		
+		throw new ValidationException(getString("Invalid.Item.Barcode.AlreadyInUse"));
+	    } catch(NoResultException ex) {
+		// the barcode is unique - fine!  
+	    }
+	}
+
+	entityItem.setBarcode(subscription.getBarcode());
 	entityItem.setTitle(subscription.getTitle());
 	entityItem.setQuantity(subscription.getQuantity());
 	entityItem.setPrice(subscription.getPrice());

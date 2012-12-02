@@ -97,12 +97,7 @@ class KeysServiceBean extends BasicBean with KeysServiceRemote {
     }
 
     val keyEntity = new Key()
-    
-    val title = key.getTitle().trim()
-    if (title.isEmpty()) {
-      throw new ValidationException(getString("Invalid.Property.CanNotBeEmpty.withPropertyName", "Property.Title"))
-    }
-    keyEntity.setTitle(title)
+    keyEntity.setTitle(key.getTitle())
     
     getEntityManager().persist(keyEntity)
   }

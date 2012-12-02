@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement
 import javax.xml.bind.annotation.XmlTransient
 import scala.reflect._
 import org.key2gym.business.api.ValidationException
-import org.key2gym.business.resources.ResourcesManager
+import org.key2gym.business.resources.ResourcesManager.getString
 
 /**
  *
@@ -65,7 +65,10 @@ class Key {
     // Checks the title is not empty
     val trimmedTitle = title.trim()
     if (trimmedTitle.isEmpty()) {
-      throw new ValidationException(ResourcesManager.getString("Invalid.Property.CanNotBeEmpty.withPropertyName", ResourcesManager.getString("Property.Title")))
+      throw new ValidationException(
+	getString("Invalid.Property.CanNotBeEmpty.withPropertyName",
+		  getString("Property.Title"))
+      )
     }
 
     this.title = trimmedTitle

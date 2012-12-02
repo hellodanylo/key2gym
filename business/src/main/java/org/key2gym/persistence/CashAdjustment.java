@@ -46,6 +46,10 @@ public class CashAdjustment implements Serializable {
     
     @Column(name = "note", columnDefinition = "TEXT NOT NULL")
     private String note;
+   
+    @Column(name = "version")
+    @Version
+    private Integer version;
 
     public CashAdjustment() {
     }

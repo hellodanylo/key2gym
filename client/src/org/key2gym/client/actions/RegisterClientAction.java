@@ -70,10 +70,6 @@ public class RegisterClientAction extends BasicAction {
             }
 
             editOrderDialog.setVisible(true);
-
-            if (editOrderDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
-                return;
-            }
         }
 
         /*
@@ -84,10 +80,6 @@ public class RegisterClientAction extends BasicAction {
 
             openAttendanceDialog.setClientId(registerClientDialog.getClientId());
             openAttendanceDialog.setVisible(true);
-
-            if (openAttendanceDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
-                return;
-            }
         }
 
     }
