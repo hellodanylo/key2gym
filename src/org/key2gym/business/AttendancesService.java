@@ -435,7 +435,7 @@ public class AttendancesService extends BusinessService {
 
         assertOpenSessionExists();
         assertTransactionActive();
-
+	
         if (attendanceId == null) {
             throw new NullPointerException("The attendanceId is null."); //NOI18N
         }
@@ -448,8 +448,8 @@ public class AttendancesService extends BusinessService {
         if (!attendance.getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN)) {
             throw new BusinessException(bundle.getString("AttendanceAlreadyClosed"));
         }
-
-        OrderEntity order = attendance.getOrder();
+	    
+	OrderEntity order = attendance.getOrder();
 
         /*
          * If there is an order associeated with the attendance, the attendance
@@ -464,6 +464,103 @@ public class AttendancesService extends BusinessService {
         attendance.setDatetimeEnd(new Date());
         
         entityManager.flush();
+    }
+
+    public void recalculatePenalties(Short attendanceId) throws BusinessException, ValidationException{
+
+        assertOpenSessionExists();
+        assertTransactionActive();
+	
+        if (attendanceId == null) {
+            throw new NullPointerException("The attendanceId is null."); //NOI18N
+        }
+        Attendance attendance = entityManager.find(Attendance.class, attendanceId);
+
+        if (attendance == null) {
+            throw new ValidationException(bundle.getString("AttendanceIDInvalid"));
+        }
+
+        if (!attendance.getDatetimeEnd().equals(Attendance.DATETIME_END_UNKNOWN)) {
+            throw new BusinessException(bundle.getString("AttendanceAlreadyClosed"));
+        }
+
+    	Client client = attendance.getClient();
+	if(client != null) {
+	    /*
+	     * Finds the client's current subscription.
+	     */
+	    ItemSubscription itemSubscription;
+	    
+	    List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>)entityManager
+                .createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
+                .setParameter("client", client) //NOI18N
+                .getResultList();
+	    
+	    if(!itemSubscriptions.isEmpty()) {
+		itemSubscription = itemSubscriptions.get(0);
+		
+		List<TimeSplit> timeSplits = entityManager
+                    .createNamedQuery("TimeSplit.findAll") //NOI18N
+                    .getResultList();
+		
+		/*
+		 * Calculates the qunatity of penalties to apply.
+		 */
+		short penalties = -1;
+		LocalTime now = new LocalTime();
+		LocalTime begin = now;
+		
+		for (TimeSplit timeSplit : timeSplits) {
+		    LocalTime end = new LocalTime(timeSplit.getTime());
+		    
+		    if(timeSplit.equals(itemSubscription.getTimeSplit())) {
+			penalties = 0;
+		    } else if(penalties != -1) {
+			penalties++;
+		    } 
+		    
+		    if(now.compareTo(begin) >= 0 && now.compareTo(end) < 0) {
+			break;
+		    }
+		    
+		    begin = end;
+		}
+		
+		/*
+		 * If there are penalties to apply, does it.
+		 */
+		if(penalties > 0) {
+		    Short itemId = ((Property)entityManager
+				    .createNamedQuery("Property.findByName") //NOI18N
+				    .setParameter("name", "time_range_mismatch_penalty_item_id") //NOI18N
+				    .getSingleResult())
+                        .getShort();
+
+		    OrderEntity order = entityManager.find(OrderEntity.class, OrdersService.getInstance().findCurrentForClientByCard(client.getCard(), true));
+		    
+		    boolean found = false;
+		    for(OrderLine ol : order.getOrderLines()) {
+			if(ol.getItem().getId().equals(itemId)) {
+			    ol.setQuantity(penalties);
+			    found = true;
+			}
+		    }
+
+		    if(found == false) {
+			try {
+			    for(int i = 0; i < penalties;i++) {
+				OrdersService.getInstance().addPurchase(order.getId(), itemId, null);
+			    }
+			} catch (SecurityException ex) {
+			    throw new RuntimeException("Unexpected SecurityException.");
+			}
+		    }
+		}
+		
+	    }
+	}
+
+	entityManager.flush();
     }
 
     /**

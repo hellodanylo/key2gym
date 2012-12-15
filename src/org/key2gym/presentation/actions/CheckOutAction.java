@@ -80,6 +80,12 @@ public class CheckOutAction extends BasicAction {
             }
             
             Short attendanceId = pickAttendanceDialog.getAttendanceId();
+	    
+	    try {
+	    AttendancesService.getInstance().recalculatePenalties(attendanceId);
+	    } catch(ValidationException ex) {
+		throw new RuntimeException(ex);
+	    }
             
             if(pickAttendanceDialog.isEditOrderDialogRequested()) {
                 Short financialActivityId;
