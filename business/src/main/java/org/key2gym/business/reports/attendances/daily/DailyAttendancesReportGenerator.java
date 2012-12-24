@@ -35,9 +35,7 @@ public class DailyAttendancesReportGenerator implements ReportGenerator {
         return new String[0];
     }
 
-    public byte[] convertToSecondaryFormat(byte[] bytes, String string) {
+    public byte[] convert(byte[] bytes, String string) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-    //private ResourceBundle strings = ResourcesManager.getStrings();
 }

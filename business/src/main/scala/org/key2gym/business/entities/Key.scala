@@ -30,7 +30,7 @@ import org.key2gym.business.resources.ResourcesManager.getString
  */
 @Entity
 @Table(name = "key_key")
-@NamedQueries(value = Array(
+@NamedQueries(Array(
     new NamedQuery(name = "Key.findAll", query = "SELECT k FROM Key k ORDER BY k.id"),
     new NamedQuery(name = "Key.findById", query = "SELECT k FROM Key k WHERE k.id = :id"),
     new NamedQuery(name = "Key.findByTitle", query = "SELECT k FROM Key k WHERE k.title = :title"),

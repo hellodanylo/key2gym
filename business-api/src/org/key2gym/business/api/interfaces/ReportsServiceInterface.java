@@ -81,7 +81,7 @@ public interface ReportsServiceInterface extends BasicInterface {
      * @throws ValidationException if the ID is invalid
      * @throws SecurityViolationException if the caller does not have REPORTS_MANAGER role
      */
-    public void removeReport(Integer id, String format) throws ValidationException, SecurityViolationException;
+    public void removeReport(Integer id) throws ValidationException, SecurityViolationException;
     
     /**
      * Returns all the report generator available.

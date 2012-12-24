@@ -43,7 +43,7 @@ class TimeSplit extends Serializable {
   
   @Basic(optional = false)
   @Column(name = "end_time")
-  @Temporal(value = TemporalType.TIME)
+  @Temporal(TemporalType.TIME)
   protected var endTime: Date = _
   
   @Basic(optional = false)

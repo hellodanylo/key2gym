@@ -1,0 +1,53 @@
+body {
+    /* Gray background */
+    background-color: #d6d9df;
+    font: 13px Arial, Freesans, sans-serif;
+}
+
+table {
+    margin-left:auto;
+    margin-right:auto;
+
+    margin-top: 30px;
+    margin-bottom: 30px;
+
+    width:1000px;
+}
+
+#graph {
+    background-color: white;
+
+    margin-left:auto;
+    margin-right:auto;
+
+    width: 1000px;
+    height: 200px;
+}
+
+table {
+    background-color: white;
+    display: block;
+}
+
+td.header {
+    background-color: #316594;
+    color: white;
+    border: 1px solid gray;	
+}
+
+/* Border for all cells */
+tr, td {
+    border: 1px solid gray;
+}
+
+/* Text style for all cells */
+td {
+    padding: 10px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Text style for long cells */
+td.description {
+    text-align: left;
+}

@@ -16,6 +16,7 @@
 package org.key2gym.business.api.dtos;
 
 import java.io.Serializable;
+import java.util.List;
 import org.joda.time.DateTime;
 
 /**
@@ -40,12 +41,12 @@ public class ReportDTO implements Serializable {
         this.title = title;
     }
 
-    public String getGeneratorId() {
-        return generatorId;
+    public ReportGeneratorDTO getReportGenerator() {
+        return reportGenerator;
     }
 
-    public void setGeneratorId(String generatorId) {
-        this.generatorId = generatorId;
+    public void setReportGenerator(ReportGeneratorDTO reportGenerator) {
+        this.reportGenerator = reportGenerator;
     }
 
     public DateTime getDateTimeGenerated() {
@@ -64,18 +65,18 @@ public class ReportDTO implements Serializable {
         this.note = note;
     }
 
-    public String[] getFormats() {
+    public List<String> getFormats() {
         return formats;
     }
 
-    public void setFormats(String[] formats) {
+    public void setFormats(List<String> formats) {
         this.formats = formats;
     }
     
     private Integer id;
     private String title;
-    private String generatorId;
     private DateTime dateTimeGenerated;
     private String note;
-    private String[] formats;
+    private List<String> formats;
+    private ReportGeneratorDTO reportGenerator;
 }

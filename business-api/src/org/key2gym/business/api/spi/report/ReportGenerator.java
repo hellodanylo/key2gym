@@ -85,5 +85,5 @@ public interface ReportGenerator {
      * @param secondaryFormat the name of the secondary format
      * @return the report in the secondary format
      */
-    public byte[] convertToSecondaryFormat(byte[] report, String secondaryFormat);
+    public byte[] convert(byte[] report, String secondaryFormat);
 }

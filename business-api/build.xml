@@ -2,22 +2,36 @@
 <project name="Key2Gym-Business-API" default="build" basedir=".">
     <description>Builds and packages the project Key2Gym-Business-API.</description>
     
-    <target name="init">
-        <loadproperties srcfile="../private/environment.properties" />
-        <loadproperties srcfile="project.properties" />
+    <loadproperties srcfile="../private/environment.properties" />
+    <loadproperties srcfile="project.properties" />
+    
+    <target name="compile" description="Complies the source files.">
+      <mkdir dir="${binary.dir}" />
+      
+      <javac srcdir="${source.dir}" destdir="${binary.dir}" classpath="${javac.classpath}" includeantruntime="false"/>
     </target>
     
-    <target name="compile" depends="init">
-        <mkdir dir="${binary.dir}" />
-        <javac srcdir="${source.dir}" destdir="${binary.dir}" classpath="${javac.classpath}" includeantruntime="false"/>
+    <target name="clean" description="Cleans the project.">
+      <delete failonerror="false" dir="${binary.dir}" />
+      <delete failonerror="false" dir="${dist.dir}" />
     </target>
     
-    <target name="clean" depends="init">
-        <delete failonerror="false" dir="${binary.dir}" />
-        <delete failonerror="false" dir="${dist.dir}" />
+    <target name="build" depends="compile" description="Packages the compiled files.">
+      <jar destfile="${dist.dir}/${jar.file}" basedir="${binary.dir}" />
     </target>
+
+    <target name="test-reports" description="Validates the reports' schemas.">
+      <test-report name="revenue/daily" />
+    </target>
+
+    <macrodef name="test-report" description="Validates the report's schema.">
+      <attribute name="name" />
+      <sequential>
+        
+	<schemavalidate file="src/org/key2gym/business/api/reports/@{name}/schema.xml">
+	  <schema namespace="http://www.w3.org/2001/XMLSchema" file="../misc/xml/XMLSchema.xsd"/> <!-- url="http://www.w3.org/2001/XMLSchema.xsd" /> -->
+	</schemavalidate>
+      </sequential>
+    </macrodef>
     
-    <target name="build" depends="compile">
-        <jar destfile="${dist.dir}/${jar.file}" basedir="${binary.dir}" />
-    </target>    
 </project>

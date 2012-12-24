@@ -15,53 +15,48 @@
  */
 package org.key2gym.business.reports.revenue.daily;
 
+import org.key2gym.business.entities.DailyRevenue;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = {"title", "periodBegin", "periodEnd", "generated", "days"})
 public class DailyRevenueReport {
-
-    public String getTitle() {
-        return title;
-    }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<Day> getDays() {
-        if (days == null) {
-            days = new LinkedList<Day>();
-        }
-        return days;
-    }
-
-    public Date getPeriodBegin() {
-        return periodBegin;
     }
 
     public void setPeriodBegin(Date periodBegin) {
         this.periodBegin = periodBegin;
     }
 
-    public Date getPeriodEnd() {
-        return periodEnd;
-    }
-
     public void setPeriodEnd(Date periodEnd) {
         this.periodEnd = periodEnd;
     }
+
+    public void setGenerated(Date generated) {
+	this.generated = generated;
+    }
+    
+    public void setDays(List<DailyRevenue> days) {
+        this.days = days;
+    }
     
     private String title;
+    @XmlSchemaType(name="date")
     private Date periodBegin;
+    @XmlSchemaType(name="date")
     private Date periodEnd;
+    private Date generated;
     @XmlElement(name="day", defaultValue="0.0")
-    private List<Day> days;
+    private List<DailyRevenue> days;
 }

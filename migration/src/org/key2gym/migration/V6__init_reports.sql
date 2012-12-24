@@ -10,3 +10,12 @@ ALTER TABLE report_body_rpb ADD CONSTRAINT idrpt_rpb FOREIGN KEY (idrpt_rpb) REF
 
 -- Assigns the sequence to its owner
 ALTER SEQUENCE id_rpt_seq OWNED BY report_rpt.id_rpt;
+
+-- View for the Daily Revenue reports
+CREATE VIEW v_daily_revenue_dre AS SELECT COALESCE(SUM(payment), 0) AS revenue, 
+       generate_series::date AS date_recorded
+FROM order_ord
+	RIGHT JOIN generate_series((SELECT MIN(date_recorded) FROM order_ord), 
+	      	   		current_date, interval '1 day') 
+		ON generate_series = date_recorded
+GROUP BY generate_series;

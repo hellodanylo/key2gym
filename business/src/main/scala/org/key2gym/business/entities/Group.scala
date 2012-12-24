@@ -30,7 +30,7 @@ import org.key2gym.business.resources.ResourcesManager
  */
 @Entity
 @Table(name = "group_grp")
-@NamedQueries(value = Array(
+@NamedQueries(Array(
     new NamedQuery(name = "Group.findAll", query = "SELECT g FROM Group g")
 ))
 class Group {

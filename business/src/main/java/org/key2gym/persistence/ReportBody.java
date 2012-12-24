@@ -16,6 +16,7 @@
 package org.key2gym.persistence;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -26,7 +27,8 @@ import javax.persistence.*;
 @Table(name = "report_body_rpb")
 @NamedQueries({
 	@NamedQuery(name = "ReportBody.findByReportIdAndFormat", query = "SELECT b FROM ReportBody b WHERE b.reportId = :reportId AND b.format = :format"),
-	    @NamedQuery(name = "ReportBody.findFormatsByReportId", query = "SELECT b.format FROM ReportBody b WHERE b.reportId = :reportId")
+	    @NamedQuery(name = "ReportBody.findFormatsByReportId", query = "SELECT b.format FROM ReportBody b WHERE b.reportId = :reportId"),
+	    @NamedQuery(name = "ReportBody.removeByReportId", query = "DELETE FROM ReportBody b WHERE b.reportId = :reportId")
 })
 public class ReportBody implements Serializable {
     
@@ -42,6 +44,10 @@ public class ReportBody implements Serializable {
     @Column(name="body")
     @Lob
     private byte[] body;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "idrpt_rpb", referencedColumnName = "id_rpt", insertable=false, updatable=false)
+    private Report report;
 
     public Integer getReportId() {
         return reportId;
@@ -65,5 +71,9 @@ public class ReportBody implements Serializable {
 
     public void setBody(byte[] body) {
         this.body = body;
+    }
+
+    public Report getReport() {
+	return report;
     }
 }
