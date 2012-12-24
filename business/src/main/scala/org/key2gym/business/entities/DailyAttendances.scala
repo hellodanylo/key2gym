@@ -25,12 +25,12 @@ import javax.xml.bind.annotation._
  * @author Danylo Vashchilenko
  */
 @Entity
-@Table(name = "v_daily_revenue")
+@Table(name = "v_daily_attendances")
 @NamedQueries(Array(
-    new NamedQuery(name = "DailyRevenue.findByDateRange", query = "SELECT r FROM DailyRevenue r WHERE r.date BETWEEN :rangeBegin AND :rangeEnd")
+    new NamedQuery(name = "DailyAttendances.findByDateRange", query = "SELECT a FROM DailyAttendances a WHERE a.date BETWEEN :rangeBegin AND :rangeEnd")
 ))
 @XmlAccessorType(XmlAccessType.FIELD)
-class DailyRevenue extends Serializable {
+class DailyAttendances extends Serializable {
   
   @Transient
   protected var number: Int = _
@@ -41,8 +41,8 @@ class DailyRevenue extends Serializable {
   @XmlSchemaType(name="date")
   protected var date: Date = _
 
-  @Column(name = "revenue")
-  protected var revenue: BigDecimal = _
+  @Column(name = "attendances")
+  protected var attendances: Int = _
 
   def getNumber: Int = this.number
   def setNumber(number: Int) = this.number = number
@@ -50,6 +50,6 @@ class DailyRevenue extends Serializable {
   def getDate = this.date
   def setDate(date: Date) = this.date = date
 
-  def getRevenue = this.revenue
-  def setRevenue(revenue: BigDecimal) = this.revenue = revenue
+  def getAttendances = this.attendances
+  def setAttendances(attendances: Int) = this.attendances = attendances
 }

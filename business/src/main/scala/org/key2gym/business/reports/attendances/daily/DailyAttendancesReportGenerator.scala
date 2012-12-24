@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.business.reports.revenue.daily
+package org.key2gym.business.reports.attendances.daily
 
 import java.io.ByteArrayOutputStream
 import java.math.BigDecimal
@@ -30,7 +30,7 @@ import org.key2gym.business.api.ValidationException
 import org.key2gym.business.reports.XMLReportGenerator
 import org.key2gym.business.resources.ResourcesManager
 import org.key2gym.business.api.reports._
-import org.key2gym.business.entities.DailyRevenue
+import org.key2gym.business.entities.DailyAttendances
 import org.apache.log4j.Logger
 import scala.collection.JavaConversions._
 
@@ -38,7 +38,7 @@ import scala.collection.JavaConversions._
  *
  * @author Danylo Vashchilenko
  */
-class DailyRevenueReportGenerator extends XMLReportGenerator[DateIntervalDTO] {
+class DailyAttendancesReportGenerator extends XMLReportGenerator[DateIntervalDTO] {
 
     /**
      * Actually generates the report.
@@ -69,14 +69,14 @@ class DailyRevenueReportGenerator extends XMLReportGenerator[DateIntervalDTO] {
       /*
        * The resulting report entity.
        */
-      val report = new DailyRevenueReport()
+      val report = new DailyAttendancesReport()
       
       report.setTitle(formatTitle(input, em))
       report.setPeriodBegin(interval.getBegin.toDate)
       report.setPeriodEnd(interval.getEnd.toDate)
       report.setGenerated(new java.util.Date)
 
-      val days = em.createNamedQuery("DailyRevenue.findByDateRange", classOf[DailyRevenue])
+      val days = em.createNamedQuery("DailyAttendances.findByDateRange", classOf[DailyAttendances])
         .setParameter("rangeBegin", interval.getBegin.toDate)
         .setParameter("rangeEnd", interval.getEnd.toDate)
         .getResultList()
@@ -93,7 +93,6 @@ class DailyRevenueReportGenerator extends XMLReportGenerator[DateIntervalDTO] {
     }
   
   def formatTitle(input: Object, em: EntityManager): String = {
-
     /*
      * Casts the input object.
      */
@@ -106,15 +105,13 @@ class DailyRevenueReportGenerator extends XMLReportGenerator[DateIntervalDTO] {
       throw new ValidationException(ResourcesManager.getStrings().getString("Invalid.DateRange.BeginningAfterEnding"))
     }
     
-    ResourcesManager.getString("Report.DailyRevenue.Title.withDateBeginAndDateEnd", 
+    ResourcesManager.getString("Report.DailyAttendances.Title.withDateBeginAndDateEnd", 
 			       interval.getBegin.toDate, interval.getEnd.toDate)
   }
   
   def getTitle: String = {
-    ResourcesManager.getStrings().getString("Report.DailyRevenue.Title")
+    ResourcesManager.getStrings().getString("Report.DailyAttendances.Title")
   }
 
-  def getSecondaryFormats: Array[String] =  {
-    Array("html")
-  }
+  def getSecondaryFormats: Array[String] = Array("html")
 }

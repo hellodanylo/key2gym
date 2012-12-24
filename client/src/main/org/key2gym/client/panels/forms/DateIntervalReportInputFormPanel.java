@@ -35,13 +35,13 @@ import org.joda.time.DateMidnight;
  *
  * @author Danylo Vashchilenko
  */
-@ReportInputSource(supports = {"org.key2gym.business.reports.revenue.daily.DailyRevenueReportGenerator"})
-public class DailyRevenueReportInputFormPanel extends ReportInputFormPanel<DateIntervalDTO> {
+@ReportInputSource(supports = {"org.key2gym.business.reports.revenue.daily.DailyRevenueReportGenerator", "org.key2gym.business.reports.attendances.daily.DailyAttendancesReportGenerator"})
+public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<DateIntervalDTO> {
 
     /**
-     * Creates new DailyRevenueReportInputFormPanel
+     * Creates new DateIntervalReportInputFormPanel
      */
-    public DailyRevenueReportInputFormPanel() {
+    public DateIntervalReportInputFormPanel() {
         strings = ResourcesManager.getStrings();
 
         initComponents();
