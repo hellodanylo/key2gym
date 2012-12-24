@@ -30,20 +30,26 @@ public class ResourcesManager {
 	String country = System.getProperty("locale.country");
 
 	if(language != null && country != null) {
-	    strings = ResourceBundle.getBundle("org/key2gym/business/resources/Strings", new Locale(language, country));
+	    /* If the locale was specified, uses it. */
+	    Locale locale = new Locale(language, country);
+
+	    strings = ResourceBundle.getBundle("org/key2gym/business/resources/Strings", locale);
+
+	    Locale.setDefault(locale);
 	} else {
 	    strings = ResourceBundle.getBundle("org/key2gym/business/resources/Strings");
 	}
+
     }
 
     public static ResourceBundle getStrings() {
 	return strings;
     }
 
-    public static String getString(String key, String... arguments) {
+    public static String getString(String key, Object... arguments) {
         String result = strings.getString(key);
 
-        result = MessageFormat.format(result, (Object[]) arguments);
+        result = MessageFormat.format(result, arguments);
 
         return result;
     }
