@@ -17,10 +17,7 @@ package org.key2gym.client.panels;
 
 import org.key2gym.client.util.ItemsTableModel;
 import java.awt.BorderLayout;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -29,6 +26,7 @@ import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.dtos.ItemDTO;
 import org.key2gym.business.api.remote.ItemsServiceRemote;
 import org.key2gym.client.ContextManager;
+import org.key2gym.client.DataRefreshPulse;
 
 /**
  *
@@ -44,6 +42,8 @@ public class ItemsPanel extends javax.swing.JPanel {
 
         initComponents();
         buildPanel();
+
+	DataRefreshPulse.getInstance().addObserver(new DataRefreshObserver());
     }
 
     /**
@@ -86,15 +86,7 @@ public class ItemsPanel extends javax.swing.JPanel {
     public void setItems(ItemsGroup items) throws SecurityViolationException {
         this.itemsGroup = items;
 
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-
         refresh();
-
-        timer = new Timer("ItemsPanel-Timer", true);
-        timer.scheduleAtFixedRate(new RefreshItemsTimerTask(), new Date(), 3000);
     }
 
     private void refresh() throws SecurityViolationException {
@@ -123,15 +115,18 @@ public class ItemsPanel extends javax.swing.JPanel {
         itemsTableModel.setItems(items);
     }
 
+
     /**
-     * Used to refresh the attendances with timer.
+     * Used to refresh the attendances at the data refresh rate.
      */
-    private class RefreshItemsTimerTask extends TimerTask {
+    private class DataRefreshObserver implements Observer {
 
         @Override
-        public void run() {
+	public void update(Observable observable, Object arg) {
 
-            Logger.getLogger(AttendancesPanel.class).trace("Refreshing the items.");
+	    if(itemsGroup == null) {
+		return;
+	    }
 
             /*
              * Loads the data synchronously on the timer's thread.
@@ -168,10 +163,6 @@ public class ItemsPanel extends javax.swing.JPanel {
      * Data
      */
     private List<ItemDTO> items;
-    /*
-     * Misc
-     */
-    private Timer timer;
 
     public enum ItemsGroup {
 

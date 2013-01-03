@@ -22,11 +22,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -45,6 +41,7 @@ import org.key2gym.client.actions.EditOrderAction;
 import org.key2gym.client.renderers.OrdersTableCellRenderer;
 import org.key2gym.client.util.OrdersTableModel;
 import org.key2gym.client.util.OrdersTableModel.Column;
+import org.key2gym.client.DataRefreshPulse;
 
 /**
  *
@@ -62,6 +59,8 @@ public class OrdersPanel extends javax.swing.JPanel {
 
         initComponents();
         buildPanel();
+
+	DataRefreshPulse.getInstance().addObserver(new DataRefreshObserver());
     }
 
     private void initComponents() {
@@ -167,15 +166,7 @@ public class OrdersPanel extends javax.swing.JPanel {
     public void setDate(DateMidnight date) throws SecurityViolationException {
         this.date = date;
 
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-
         refresh();
-
-        timer = new Timer("OrdersPanel-Timer", true);
-        timer.scheduleAtFixedRate(new RefreshOrdersTimerTask(), new Date(), 3000);
     }
 
     public DateMidnight getDate() {
@@ -205,14 +196,16 @@ public class OrdersPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Used to refresh the attendances with timer.
+     * Used to refresh the attendances at the data refresh rate.
      */
-    private class RefreshOrdersTimerTask extends TimerTask {
+    private class DataRefreshObserver implements Observer {
 
         @Override
-        public void run() {
+	public void update(Observable observable, Object arg) {
 
-            Logger.getLogger(AttendancesPanel.class).trace("Refreshing the orders.");
+	    if(date == null) {
+		return;
+	    }
 
             /*
              * Loads the data synchronously on the timer's thread.
@@ -257,8 +250,4 @@ public class OrdersPanel extends javax.swing.JPanel {
     private List<OrderDTO> orders;
     private BigDecimal total;
     private BigDecimal cash;
-    /*
-     * Misc
-     */
-    private Timer timer;
 }

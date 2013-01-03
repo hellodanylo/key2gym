@@ -21,11 +21,7 @@ import org.key2gym.client.util.AttendancesTableModel.Column;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.FocusEvent;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,6 +34,7 @@ import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.remote.AttendancesServiceRemote;
 import org.key2gym.client.ContextManager;
+import org.key2gym.client.DataRefreshPulse;
 
 /**
  *
@@ -54,6 +51,8 @@ public class AttendancesPanel extends JPanel {
 
         initComponents();
         buildPanel();
+
+	DataRefreshPulse.getInstance().addObserver(new DataRefreshObserver());
     }
 
     /**
@@ -152,15 +151,7 @@ public class AttendancesPanel extends JPanel {
     public void setDate(DateMidnight date) throws SecurityViolationException {
         this.date = date;
 
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-
         refresh();
-
-        timer = new Timer("AttendancesPanel-Timer", true);
-        timer.scheduleAtFixedRate(new RefreshAttendancesTimerTask(), new Date(), 3000);
     }
 
     private void refresh() throws SecurityViolationException {
@@ -183,14 +174,16 @@ public class AttendancesPanel extends JPanel {
     }
 
     /**
-     * Used to refresh the attendances with timer.
+     * Used to refresh the attendances at the data refresh rate.
      */
-    private class RefreshAttendancesTimerTask extends TimerTask {
+    private class DataRefreshObserver implements Observer {
 
         @Override
-        public void run() {
+	public void update(Observable observable, Object arg) {
 
-            Logger.getLogger(AttendancesPanel.class).trace("Refreshing the attendances.");
+	    if(date == null) {
+		return;
+	    }
 
             /*
              * Loads the attendances synchronously on the timer's thread.
@@ -226,9 +219,4 @@ public class AttendancesPanel extends JPanel {
      * Business
      */
     private AttendancesServiceRemote attendancesService;
-
-    /*
-     * Misc
-     */
-    private Timer timer;
 }

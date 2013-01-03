@@ -203,6 +203,7 @@ public class Main {
     public static final String PROPERTY_LOCALE_COUNTRY = "locale.country";
     public static final String PROPERTY_LOCALE_LANGUAGE = "locale.language";
     public static final String PROPERTY_CONNECTION = "connection";
+    public static final String PROPERTY_REFRESH_PERIOD = "refreshPeriod";
     public static final String PROPERTY_CONNECTION_URL = "connection.url";
 
     public static Properties getProperties() {
