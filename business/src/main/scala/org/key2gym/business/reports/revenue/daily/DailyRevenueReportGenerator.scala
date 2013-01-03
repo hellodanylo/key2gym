@@ -15,70 +15,40 @@
  */
 package org.key2gym.business.reports.revenue.daily
 
-import java.io.ByteArrayOutputStream
-import java.math.BigDecimal
-import java.io._
-import java.util.List
+
 import javax.persistence.EntityManager
-import javax.xml.bind.JAXBContext
-import javax.xml.bind.JAXBException
-import javax.xml.bind.Marshaller
-import javax.xml.transform._
-import javax.xml.transform.stream._
-import org.joda.time.DateMidnight
+import org.joda.time.ReadableInterval
 import org.key2gym.business.api.ValidationException
 import org.key2gym.business.reports.XMLReportGenerator
-import org.key2gym.business.resources.ResourcesManager
-import org.key2gym.business.api.reports._
+import org.key2gym.business.resources.ResourcesManager._
 import org.key2gym.business.entities.DailyRevenue
-import org.apache.log4j.Logger
 import scala.collection.JavaConversions._
 
 /**
- *
+ * Reports the daily revenue for a given interval.
+ * 
  * @author Danylo Vashchilenko
  */
-class DailyRevenueReportGenerator extends XMLReportGenerator[DateIntervalDTO] {
+class DailyRevenueReportGenerator extends XMLReportGenerator[ReadableInterval] {
 
     /**
      * Actually generates the report.
      * 
-     * The input for this generator is an array of two DateMidnight instances.
-     * They represent the range of dates to generate the revenue for.
-     * The first date has to be before or equal to the second date.
+     * The interval's instants must be truncated to day parts.
      * 
-     * @param input the array of two dates
+     * @param interval the interval to report
      * @param em the entity manager with full access to the database
-     * @throws ValidationException if the input is invalid
-     * @return the report object 
+     * @throws ValidationException if the interval is not truncated
+     * @return the report object
      */
-    def doGenerate(input: DateIntervalDTO, em: EntityManager): AnyRef  = {
+    override def doGenerate(interval: ReadableInterval, em: EntityManager): AnyRef  = {
       
-      /*
-       * Casts the input object.
-       */
-      val interval = input.asInstanceOf[DateIntervalDTO]
-      
-      /*
-       * Validates the input.
-       */
-      if (interval.getBegin.compareTo(interval.getEnd) > 1) {
-        throw new ValidationException(ResourcesManager.getStrings().getString("Invalid.DateRange.BeginningAfterEnding"))
-      }
-      
-      /*
-       * The resulting report entity.
-       */
-      val report = new DailyRevenueReport()
-      
-      report.setTitle(formatTitle(input, em))
-      report.setPeriodBegin(interval.getBegin.toDate)
-      report.setPeriodEnd(interval.getEnd.toDate)
-      report.setGenerated(new java.util.Date)
+      validateInput(interval, em)
 
-      val days = em.createNamedQuery("DailyRevenue.findByDateRange", classOf[DailyRevenue])
-        .setParameter("rangeBegin", interval.getBegin.toDate)
-        .setParameter("rangeEnd", interval.getEnd.toDate)
+      val days = em.createNamedQuery("DailyRevenue.findByDateInterval", 
+				     classOf[DailyRevenue])
+        .setParameter("intervalStart", interval.getStart.toDate)
+        .setParameter("intervalEnd", interval.getEnd.toDate)
         .getResultList()
       
       var number = 1
@@ -87,34 +57,33 @@ class DailyRevenueReportGenerator extends XMLReportGenerator[DateIntervalDTO] {
 	number += 1
       }
       
-      report.setDays(days)
-      
-      return report
+      new DailyRevenueReport(
+	formatTitle(interval, em),
+	interval.getStart.toDate,
+	interval.getEnd.toDate,
+	new java.util.Date,
+	days
+      )
     }
   
-  def formatTitle(input: Object, em: EntityManager): String = {
+  override def formatTitle(interval: ReadableInterval, em: EntityManager): String = {
 
-    /*
-     * Casts the input object.
-     */
-    val interval = input.asInstanceOf[DateIntervalDTO]
+    validateInput(interval, em)
     
-    /*
-     * Validates the input.
-     */
-    if (interval.getBegin.compareTo(interval.getEnd) > 1) {
-      throw new ValidationException(ResourcesManager.getStrings().getString("Invalid.DateRange.BeginningAfterEnding"))
-    }
-    
-    ResourcesManager.getString("Report.DailyRevenue.Title.withDateBeginAndDateEnd", 
-			       interval.getBegin.toDate, interval.getEnd.toDate)
+    getString("Report.DailyRevenue.Title.withDateIntervalStartAndEnd", 
+	      interval.getStart.toDate, interval.getEnd.toDate)
   }
   
-  def getTitle: String = {
-    ResourcesManager.getStrings().getString("Report.DailyRevenue.Title")
-  }
+  override def getTitle: String = getString("Report.DailyRevenue.Title")
 
-  def getSecondaryFormats: Array[String] =  {
-    Array("html")
+  override def getSecondaryFormats: Array[String] = Array("html")
+
+  override def validateInput(interval: ReadableInterval, em: EntityManager) {
+    
+    if(interval.getStart.getMillisOfDay != 0 
+       || interval.getEnd.getMillisOfDay != 0) {
+      throw new ValidationException(getString("Invalid.Interval.NotTruncatedToDate"))
+    }
+
   }
 }

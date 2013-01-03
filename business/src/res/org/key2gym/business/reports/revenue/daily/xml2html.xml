@@ -2,11 +2,11 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   
   <xsl:output method="html" encoding="utf-8" indent="yes"/>
-
+ 
   <!-- I18n strings. -->
   <xsl:param name="Label.Title" />
-  <xsl:param name="Label.RangeBegin" />
-  <xsl:param name="Label.RangeEnd" />
+  <xsl:param name="Label.IntervalStart" />
+  <xsl:param name="Label.IntervalEnd" />
   <xsl:param name="Label.Generated" />
   <xsl:param name="Text.DayNumber" />
   <xsl:param name="Text.Date" />
@@ -37,11 +37,11 @@
 	<td><xsl:value-of select="title" /></td>
       </tr>
       <tr>
-	<td class="header"><xsl:value-of select="$Label.RangeBegin" /></td>
+	<td class="header"><xsl:value-of select="$Label.IntervalStart" /></td>
 	<td><xsl:value-of select="format-date(periodBegin, '[Y0001]-[M01]-[D01]')" /></td>
       </tr>
       <tr>
-	<td class="header"><xsl:value-of select="$Label.RangeEnd" /></td>
+	<td class="header"><xsl:value-of select="$Label.IntervalEnd" /></td>
 	<td><xsl:value-of select="format-date(periodEnd, '[Y0001]-[M01]-[D01]')" /></td>
       </tr>
       <tr>

@@ -264,8 +264,12 @@ public class ManageReportsDialog extends AbstractDialog {
         while (true) {
             formDialog.setVisible(true);
 
-            if (formDialog.getResult().equals(Result.CANCEL) || !formDialog.getFormPanel().trySave()) {
-                return;
+	    if (formDialog.getResult().equals(Result.CANCEL)) {
+		return;
+	    }
+
+            if (!formDialog.getFormPanel().trySave()) {
+                continue;
             }
 
             try {

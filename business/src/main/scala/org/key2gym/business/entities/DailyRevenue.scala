@@ -27,7 +27,7 @@ import javax.xml.bind.annotation._
 @Entity
 @Table(name = "v_daily_revenue")
 @NamedQueries(Array(
-    new NamedQuery(name = "DailyRevenue.findByDateRange", query = "SELECT r FROM DailyRevenue r WHERE r.date BETWEEN :rangeBegin AND :rangeEnd")
+    new NamedQuery(name = "DailyRevenue.findByDateInterval", query = "SELECT r FROM DailyRevenue r WHERE r.date BETWEEN :intervalStart AND :intervalEnd")
 ))
 @XmlAccessorType(XmlAccessType.FIELD)
 class DailyRevenue extends Serializable {

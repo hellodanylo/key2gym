@@ -24,19 +24,25 @@ import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.Binding;
 import org.jdesktop.beansbinding.BindingGroup;
 import org.jdesktop.beansbinding.Bindings;
-import org.key2gym.business.api.reports.DateIntervalDTO;
 import org.key2gym.client.report.spi.ReportInputSource;
 import org.key2gym.client.resources.ResourcesManager;
-import org.key2gym.client.util.DateMidnightToStringConverter;
+import org.key2gym.client.util.DateTimeToStringConverter;
 import org.key2gym.client.util.FormBindingListener;
+import org.joda.time.MutableInterval;
+import org.joda.time.ReadableInterval;
 import org.joda.time.DateMidnight;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-@ReportInputSource(supports = {"org.key2gym.business.reports.revenue.daily.DailyRevenueReportGenerator", "org.key2gym.business.reports.attendances.daily.DailyAttendancesReportGenerator"})
-public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<DateIntervalDTO> {
+@ReportInputSource(supports = {
+	"org.key2gym.business.reports.revenue.daily.DailyRevenueReportGenerator",
+	"org.key2gym.business.reports.attendances.daily.DailyAttendancesReportGenerator",
+	"org.key2gym.business.reports.revenue.monthly.MonthlyRevenueReportGenerator",
+	"org.key2gym.business.reports.attendances.monthly.MonthlyAttendancesReportGenerator"
+})
+public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<ReadableInterval> {
 
     /**
      * Creates new DateIntervalReportInputFormPanel
@@ -47,32 +53,26 @@ public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<DateI
         initComponents();
         buildForm();
         
-        interval = new DateIntervalDTO();
-        interval.setBegin(new DateMidnight());
-        interval.setEnd(new DateMidnight());
+        interval = new MutableInterval(new DateMidnight(), new DateMidnight());
 
         formBindingListener = new FormBindingListener();
         bindingGroup = new BindingGroup();
         bindingGroup.addBindingListener(formBindingListener);
 
         /**
-         * Beginning date
+         * Interval start
          */
         Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE,
-                interval, BeanProperty.create("begin"), beginRangeTextField, BeanProperty.create("text"), "begin");
-        binding.setSourceUnreadableValue("");
-        binding.setSourceNullValue("");
-        binding.setConverter(new DateMidnightToStringConverter(getString("Text.Beginning"), "dd-MM-yyyy"));
+                interval, BeanProperty.create("start"), intervalStartTextField, BeanProperty.create("text"), "start");
+        binding.setConverter(new DateTimeToStringConverter(getString("Text.Beginning"), "dd-MM-yyyy"));
         bindingGroup.addBinding(binding);
 
         /**
-         * Ending date
+         * Interval end
          */
         binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE,
-                interval, BeanProperty.create("end"), endRangeTextField, BeanProperty.create("text"), "end");
-        binding.setSourceUnreadableValue("");
-        binding.setSourceNullValue("");
-        binding.setConverter(new DateMidnightToStringConverter(getString("Text.Ending"), "dd-MM-yyyy"));
+                interval, BeanProperty.create("end"), intervalEndTextField, BeanProperty.create("text"), "end");
+        binding.setConverter(new DateTimeToStringConverter(getString("Text.Ending"), "dd-MM-yyyy"));
         bindingGroup.addBinding(binding);
 
         bindingGroup.bind();
@@ -82,29 +82,29 @@ public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<DateI
      * Initializes the components on this form.
      */
     private void initComponents() {
-        beginRangeTextField = new JTextField(30);
-        endRangeTextField = new JTextField(30);
+        intervalStartTextField = new JTextField(30);
+        intervalEndTextField = new JTextField(30);
     }
 
     /**
-     * Builds this from by placing the components on it.
+     * Builds this form by placing the components on it.
      */
     private void buildForm() {
         FormLayout layout = new FormLayout("right:default, 3dlu, default:grow", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, strings, this);
 
-        builder.appendI15d("Label.BeginningDate", beginRangeTextField);
+        builder.appendI15d("Label.BeginningDate", intervalStartTextField);
         builder.nextLine();
-        builder.appendI15d("Label.EndingDate", endRangeTextField);
+        builder.appendI15d("Label.EndingDate", intervalEndTextField);
     }
 
     /**
-     * Sets the form's beginning and ending range.
+     * Sets the form's interval.
      *
-     * @param range the beginning and ending dates that can not be null
+     * @param range the interval, can not be null
      */
     @Override
-    public void setForm(DateIntervalDTO interval) {
+    public void setForm(ReadableInterval interval) {
         this.interval = interval;
 
         for (Binding binding : bindingGroup.getBindings()) {
@@ -115,7 +115,7 @@ public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<DateI
     }
 
     @Override
-    public DateIntervalDTO getForm() {
+    public ReadableInterval getForm() {
         return interval;
     }
 
@@ -126,21 +126,23 @@ public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<DateI
      */
     @Override
     public boolean trySave() {
+	
         for (Binding binding : bindingGroup.getBindings()) {
             binding.saveAndNotify();
         }
+
         return formBindingListener.getInvalidTargets().isEmpty();
     }
     /*
      * Business
      */
-    private DateIntervalDTO interval;
+    private ReadableInterval interval;
     /*
      * Presentation
      */
     private ResourceBundle strings;
     private BindingGroup bindingGroup;
     private FormBindingListener formBindingListener;
-    private JTextField beginRangeTextField;
-    private JTextField endRangeTextField;
+    private JTextField intervalStartTextField;
+    private JTextField intervalEndTextField;
 }

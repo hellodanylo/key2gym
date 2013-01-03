@@ -15,6 +15,7 @@
  */
 package org.key2gym.business.reports.revenue.daily
 
+import annotation.target.field
 import org.key2gym.business.entities.DailyRevenue
 import java.util.Date
 import java.util.LinkedList
@@ -27,25 +28,29 @@ import javax.xml.bind.annotation._
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = Array("title", "periodBegin", "periodEnd", "generated", "days"))
-class DailyRevenueReport {
+@XmlType(propOrder = Array("title", "intervalStart", "intervalEnd", 
+			   "generated", "days"))
+class DailyRevenueReport (
 
-  private var title: String = _
-  @XmlSchemaType(name="date")
-  private var periodBegin: Date = _
-  @XmlSchemaType(name="date")
-  private var periodEnd: Date = _
-  private var generated: Date = _
-  @XmlElement(name="day", defaultValue="0.0")
-  private var days: List[DailyRevenue] = _
+  private var title: String = null,
+
+  @(XmlSchemaType @field)(name="date") 
+  private var intervalStart: Date = null,
+
+  @(XmlSchemaType @field)(name="date") 
+  private var intervalEnd: Date = null,
+
+  private var generated: Date = null,
+
+  @(XmlElement @field)(name="day") 
+  private var days: List[DailyRevenue] = null,
   
-  def setTitle(title: String) = this.title = title
-  
-  def setPeriodBegin(periodBegin: Date) = this.periodBegin = periodBegin
-  
-  def setPeriodEnd(periodEnd: Date) = this.periodEnd = periodEnd
-  
-  def setGenerated(generated: Date) = this.generated = generated
-  
-  def setDays(days: List[DailyRevenue]) = this.days = days
+  /* Required for a no-arg constructor. */
+  u: Unit = ()
+
+) {
+
+  /* No-arg constructor. */
+  def this() { this(u = ()) }
+
 }

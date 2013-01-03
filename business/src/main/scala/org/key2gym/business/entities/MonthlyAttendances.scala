@@ -25,21 +25,21 @@ import javax.xml.bind.annotation._
  * @author Danylo Vashchilenko
  */
 @Entity
-@Table(name = "v_daily_attendances")
+@Table(name = "v_monthly_attendances")
 @NamedQueries(Array(
-    new NamedQuery(name = "DailyAttendances.findByDateInterval", query = "SELECT a FROM DailyAttendances a WHERE a.date BETWEEN :intervalStart AND :intervalEnd")
+    new NamedQuery(name = "MonthlyAttendances.findByDateInterval", query = "SELECT a FROM MonthlyAttendances a WHERE a.month BETWEEN :intervalStart AND :intervalEnd")
 ))
 @XmlAccessorType(XmlAccessType.FIELD)
-class DailyAttendances extends Serializable {
+class MonthlyAttendances extends Serializable {
   
   @Transient
   protected var number: Int = _
   
   @Id
   @Temporal(TemporalType.DATE)
-  @Column(name = "date_recorded")
+  @Column(name = "month_recorded")
   @XmlSchemaType(name="date")
-  protected var date: Date = _
+  protected var month: Date  = _
 
   @Column(name = "attendances")
   protected var attendances: Int = _
@@ -47,8 +47,8 @@ class DailyAttendances extends Serializable {
   def getNumber: Int = this.number
   def setNumber(number: Int) = this.number = number
 
-  def getDate = this.date
-  def setDate(date: Date) = this.date = date
+  def getMonth = this.month
+  def setMonth(month: Date) = this.month = month
 
   def getAttendances = this.attendances
   def setAttendances(attendances: Int) = this.attendances = attendances

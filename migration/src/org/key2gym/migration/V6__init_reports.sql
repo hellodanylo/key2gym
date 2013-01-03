@@ -11,7 +11,7 @@ ALTER TABLE report_body_rpb ADD CONSTRAINT idrpt_rpb FOREIGN KEY (idrpt_rpb) REF
 -- Assigns the sequence to its owner
 ALTER SEQUENCE id_rpt_seq OWNED BY report_rpt.id_rpt;
 
--- View for the Daily Revenue reports
+-- View for the daily revenue reports
 CREATE VIEW v_daily_revenue AS SELECT COALESCE(SUM(payment), 0) AS revenue, 
        generate_series::date AS date_recorded
 FROM order_ord
@@ -20,10 +20,27 @@ FROM order_ord
 		ON generate_series = date_recorded
 GROUP BY generate_series;
 
--- View for the Daily Attendances reports
+-- View for the monthly revenue reports
+CREATE VIEW v_monthly_revenue AS SELECT COALESCE(SUM(payment), 0) AS revenue, 
+       generate_series::date AS month_recorded
+FROM order_ord
+	RIGHT JOIN generate_series((SELECT MIN(date_trunc('month', date_recorded)) FROM order_ord), 
+	      	   		date_trunc('month', current_date), interval '1 month') 
+		ON generate_series = date_trunc('month', date_recorded)
+GROUP BY generate_series;
+
+-- View for the daily attendances reports
 CREATE VIEW v_daily_attendances AS SELECT generate_series::date AS date_recorded,
        COALESCE(COUNT(datetime_begin), 0) AS attendances
 FROM attendance_atd
 	RIGHT JOIN generate_series((SELECT MIN(datetime_begin::date) FROM attendance_atd), current_date, interval '1 day')
 		ON generate_series = datetime_begin::date
+GROUP BY generate_series;
+
+-- View for the monthly attendances reports
+CREATE VIEW v_monthly_attendances AS SELECT generate_series::date AS month_recorded,
+       COALESCE(COUNT(datetime_begin), 0) AS attendances
+FROM attendance_atd
+	RIGHT JOIN generate_series((SELECT MIN(date_trunc('month', datetime_begin::date)) FROM attendance_atd), date_trunc('month', current_date), interval '1 month')
+		ON generate_series = date_trunc('month', datetime_begin::date)
 GROUP BY generate_series;

@@ -8,8 +8,8 @@
   <xsl:param name="Label.IntervalStart" />
   <xsl:param name="Label.IntervalEnd" />
   <xsl:param name="Label.Generated" />
-  <xsl:param name="Text.DayNumber" />
-  <xsl:param name="Text.Date" />
+  <xsl:param name="Text.MonthNumber" />
+  <xsl:param name="Text.Month" />
   <xsl:param name="Text.Attendances" />
 
   <xsl:template match="/">    
@@ -25,12 +25,12 @@
 	</script>
       </head>
       <body>
-	<xsl:apply-templates select="dailyAttendancesReport"/>
+	<xsl:apply-templates select="monthlyAttendancesReport"/>
       </body>
     </html>x
   </xsl:template>
 
-  <xsl:template match="dailyAttendancesReport">
+  <xsl:template match="monthlyAttendancesReport">
     <table>
       <tr>
 	<td class="header"><xsl:value-of select="$Label.Title" /></td>
@@ -38,11 +38,11 @@
       </tr>
       <tr>
 	<td class="header"><xsl:value-of select="$Label.IntervalStart" /></td>
-	<td><xsl:value-of select="format-date(intervalStart, '[Y0001]-[M01]-[D01]')" /></td>
+	<td><xsl:value-of select="format-date(intervalStart, '[Y0001]-[M01]')" /></td>
       </tr>
       <tr>
 	<td class="header"><xsl:value-of select="$Label.IntervalEnd" /></td>
-	<td><xsl:value-of select="format-date(intervalEnd, '[Y0001]-[M01]-[D01]')" /></td>
+	<td><xsl:value-of select="format-date(intervalEnd, '[Y0001]-[M01]')" /></td>
       </tr>
       <tr>
 	<td class="header"><xsl:value-of select="$Label.Generated" /></td>
@@ -54,7 +54,7 @@
       (function basic(container) {
       
       var data = [
-      <xsl:for-each select="day">
+      <xsl:for-each select="month">
 	[<xsl:value-of select="number"/>, <xsl:value-of select="attendances" />],
       </xsl:for-each>
       ]
@@ -76,7 +76,7 @@
 	  xaxis: {
 	    autoscale: true,
 	    min: 1,
-	    noTicks: <xsl:value-of select="count(day)" />,
+	    noTicks: <xsl:value-of select="count(month)" />,
 	    tickDecimals: 0
           },
 	  mouse: {
@@ -90,17 +90,17 @@
     </script>
     <table>
       <tr>
-	<td class="header"><xsl:value-of select="$Text.DayNumber" /></td>
-	<td class="header"><xsl:value-of select="$Text.Date" /></td>
+	<td class="header"><xsl:value-of select="$Text.MonthNumber" /></td>
+	<td class="header"><xsl:value-of select="$Text.Month" /></td>
 	<td class="header"><xsl:value-of select="$Text.Attendances" /></td>
       </tr>
-      <xsl:apply-templates select="day" />
+      <xsl:apply-templates select="month" />
     </table>
   </xsl:template>
-  <xsl:template match="day">
+  <xsl:template match="month">
     <tr>
       <td><xsl:value-of select="number" /></td>
-      <td><xsl:value-of select="format-date(date, '[Y0001]-[M01]-[D01], [FNn]')" /></td>
+      <td><xsl:value-of select="format-date(month, '[Y0001]-[M01]')" /></td>
       <td><xsl:value-of select="attendances" /></td>
     </tr>
   </xsl:template>

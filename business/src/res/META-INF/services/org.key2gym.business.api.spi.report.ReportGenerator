@@ -1,2 +1,4 @@
 org.key2gym.business.reports.revenue.daily.DailyRevenueReportGenerator
+org.key2gym.business.reports.revenue.monthly.MonthlyRevenueReportGenerator
 org.key2gym.business.reports.attendances.daily.DailyAttendancesReportGenerator
+org.key2gym.business.reports.attendances.monthly.MonthlyAttendancesReportGenerator

@@ -13,36 +13,43 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.business.reports.attendances.daily
+package org.key2gym.business.reports.revenue.monthly
 
+import java.math.BigDecimal
 import java.util.List
 import javax.persistence.EntityManager
 import org.joda.time.ReadableInterval
 import org.key2gym.business.api.ValidationException
 import org.key2gym.business.reports.XMLReportGenerator
 import org.key2gym.business.resources.ResourcesManager._
-import org.key2gym.business.entities.DailyAttendances
+import org.key2gym.business.entities.MonthlyRevenue
+import org.apache.log4j._
 import scala.collection.JavaConversions._
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-class DailyAttendancesReportGenerator extends XMLReportGenerator[ReadableInterval] {
+class MonthlyRevenueReportGenerator extends XMLReportGenerator[ReadableInterval] {
 
   /**
    * Actually generates the report.
    * 
-   * @param interval the interval to report
+   * The generator will report the two months in the interval and all
+   * months between them. The dates must be truncated to the month part.
+   * The first date has to be before or equal to the second date.
+   * 
+   * @param input the input interval to report
    * @param em the entity manager with full access to the database
    * @throws ValidationException if the interval is invalid
-   * @return the report object 
+   * @return the report object
    */
   override def doGenerate(interval: ReadableInterval, em: EntityManager): AnyRef  = {
-            
+    
     validateInput(interval, em)
-
-    val days = em.createNamedQuery("DailyAttendances.findByDateInterval", classOf[DailyAttendances])
+    
+    val days = em.createNamedQuery("MonthlyRevenue.findByDateInterval", 
+				   classOf[MonthlyRevenue])
       .setParameter("intervalStart", interval.getStart.toDate)
       .setParameter("intervalEnd", interval.getEnd.toDate)
       .getResultList()
@@ -52,8 +59,8 @@ class DailyAttendancesReportGenerator extends XMLReportGenerator[ReadableInterva
       day.setNumber(number)
       number += 1
     }
-         
-    new DailyAttendancesReport(
+    
+    new MonthlyRevenueReport(
       formatTitle(interval, em),
       interval.getStart.toDate,
       interval.getEnd.toDate,
@@ -63,30 +70,40 @@ class DailyAttendancesReportGenerator extends XMLReportGenerator[ReadableInterva
   }
   
   override def formatTitle(interval: ReadableInterval, em: EntityManager): String = {
-
+    
     validateInput(interval, em)
     
-    getString("Report.DailyAttendances.Title.withDateIntervalStartAndEnd", 
-	      interval.getStart.toDate, interval.getEnd.toDate)
+    getString("Report.MonthlyRevenue.Title.withDateIntervalStartAndEnd",
+      interval.getStart.toDate, interval.getEnd.toDate)
   }
   
-  override def getTitle: String = getString("Report.DailyAttendances.Title")
-  
+  override def getTitle: String = getString("Report.MonthlyRevenue.Title")
+
   override def getSecondaryFormats: Array[String] = Array("html")
- 
+
   /**
-   * Validates the interval.
+   * Validates the input interval.
    *
-   * The interval's instants  must be truncated to day parts.
+   * The interval must be truncated to month part.
    *
    * @param interval the interval to validate
    * @throws ValidationException if the interval is invalid
    */
-  override def validateInput(interval: ReadableInterval, em: EntityManager) {
-    
-    if(interval.getStart.getMillisOfDay != 0 
-       || interval.getEnd.getMillisOfDay != 0) {
-      throw new ValidationException(getString("Invalid.Interval.NotTruncatedToDate"))
+  override def validateInput(interval: ReadableInterval, em: EntityManager) {   
+
+    val start = interval.getStart
+    val end = interval.getEnd
+
+    if(start.getMillisOfDay != 0
+       || end.getMillisOfDay != 0
+       || start.getDayOfMonth != 1 
+       || end.getDayOfMonth != 1) {
+      
+      Logger.getLogger(this.getClass).debug("Invalid input: " + start + ", " + end)
+
+      throw new ValidationException(
+	getString("Invalid.Interval.NotTruncatedToMonth")
+      )
     }
   }
 }

@@ -17,20 +17,20 @@
 -->
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="dailyAttendancesReport" type="DailyAttendancesReport" />
-    <xs:complexType name="DailyAttendancesReport">
+    <xs:element name="monthlyAttendancesReport" type="MonthlyAttendancesReport" />
+    <xs:complexType name="MonthlyAttendancesReport">
 	<xs:sequence>
 	    <xs:element name="title" type="xs:string"/>
-	    <xs:element name="intervalBegin" type="xs:date" />
-	    <xs:element name="intervalEnd" type="xs:date" />
+	    <xs:element name="intervalBegin" type="xs:gYearMonth" />
+	    <xs:element name="intervalEnd" type="xs:gYearMonth" />
 	    <xs:element name="generated" type="xs:dateTime" />
-	    <xs:element name="day" type="Day" minOccurs="1" maxOccurs="unbounded" />
+	    <xs:element name="month" type="Month" minOccurs="1" maxOccurs="unbounded" />
 	</xs:sequence>
     </xs:complexType>
-    <xs:complexType name="Day">
+    <xs:complexType name="Month">
 	<xs:sequence>
 	    <xs:element name="number" type="xs:nonNegativeInteger" />
-	    <xs:element name="date" type="xs:date" />
+	    <xs:element name="month" type="xs:gYearMonth" />
 	    <xs:element name="attendances" type="xs:nonNegativeInteger" />
 	</xs:sequence>
     </xs:complexType>

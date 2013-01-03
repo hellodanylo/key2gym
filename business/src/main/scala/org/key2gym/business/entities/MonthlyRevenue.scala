@@ -25,31 +25,31 @@ import javax.xml.bind.annotation._
  * @author Danylo Vashchilenko
  */
 @Entity
-@Table(name = "v_daily_attendances")
+@Table(name = "v_monthly_revenue")
 @NamedQueries(Array(
-    new NamedQuery(name = "DailyAttendances.findByDateInterval", query = "SELECT a FROM DailyAttendances a WHERE a.date BETWEEN :intervalStart AND :intervalEnd")
+    new NamedQuery(name = "MonthlyRevenue.findByDateInterval", query = "SELECT r FROM MonthlyRevenue r WHERE r.month BETWEEN :intervalStart AND :intervalEnd")
 ))
 @XmlAccessorType(XmlAccessType.FIELD)
-class DailyAttendances extends Serializable {
+class MonthlyRevenue extends Serializable {
   
   @Transient
   protected var number: Int = _
   
   @Id
   @Temporal(TemporalType.DATE)
-  @Column(name = "date_recorded")
+  @Column(name = "month_recorded")
   @XmlSchemaType(name="date")
-  protected var date: Date = _
+  protected var month: Date = _
 
-  @Column(name = "attendances")
-  protected var attendances: Int = _
+  @Column(name = "revenue")
+  protected var revenue: BigDecimal = _
 
   def getNumber: Int = this.number
   def setNumber(number: Int) = this.number = number
 
-  def getDate = this.date
-  def setDate(date: Date) = this.date = date
+  def getMonth = this.month
+  def setMonth(month: Date) = this.month = month
 
-  def getAttendances = this.attendances
-  def setAttendances(attendances: Int) = this.attendances = attendances
+  def getRevenue = this.revenue
+  def setRevenue(revenue: BigDecimal) = this.revenue = revenue
 }
