@@ -70,7 +70,7 @@ class MonthlyAttendancesReportGenerator extends XMLReportGenerator[ReadableInter
 
     validateInput(interval, em)
     
-    getString("Report.MonthlyAttendances.Title.withDateBeginAndDateEnd", 
+    getString("Report.MonthlyAttendances.Title.withDateIntervalStartAndEnd", 
 	      interval.getStart.toDate, interval.getEnd.toDate)
   }
   

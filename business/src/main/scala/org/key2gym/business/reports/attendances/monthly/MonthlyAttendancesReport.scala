@@ -28,16 +28,16 @@ import javax.xml.bind.annotation._
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = Array("title", "intervalBegin", "intervalEnd", 
-			   "generated", "days"))
+@XmlType(propOrder = Array("title", "intervalStart", "intervalEnd", 
+			   "generated", "months"))
 class MonthlyAttendancesReport (
 
   val title: String = null,
  
-  @(XmlSchemaType @field)(name="gYearMonth") 
-  val intervalBegin: Date = null,
+  @(XmlSchemaType @field)(name="date") 
+  val intervalStart: Date = null,
  
-  @(XmlSchemaType @field)(name="gYearMonth") 
+  @(XmlSchemaType @field)(name="date") 
   val intervalEnd: Date = null,
   
   val generated: Date = null,

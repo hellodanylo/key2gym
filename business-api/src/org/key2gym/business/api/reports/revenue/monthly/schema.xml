@@ -21,7 +21,7 @@
     <xs:complexType name="MonthlyRevenueReport">
 	<xs:sequence>
 	    <xs:element name="title" type="xs:string"/>
-	    <xs:element name="intervalBegin" type="xs:gYearMonth" />
+	    <xs:element name="intervalStart" type="xs:gYearMonth" />
 	    <xs:element name="intervalEnd" type="xs:gYearMonth" />
 	    <xs:element name="generated" type="xs:dateTime" />
 	    <xs:element name="month" type="Month" minOccurs="1" maxOccurs="unbounded" />

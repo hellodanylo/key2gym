@@ -27,7 +27,10 @@ import javax.xml.bind.annotation._
 @Entity
 @Table(name = "v_monthly_attendances")
 @NamedQueries(Array(
-    new NamedQuery(name = "MonthlyAttendances.findByDateInterval", query = "SELECT a FROM MonthlyAttendances a WHERE a.month BETWEEN :intervalStart AND :intervalEnd")
+    new NamedQuery(name = "MonthlyAttendances.findByDateInterval", 
+		   query = """SELECT a FROM MonthlyAttendances a 
+		     WHERE a.month BETWEEN :intervalStart AND :intervalEnd
+		     ORDER BY a.month""")
 ))
 @XmlAccessorType(XmlAccessType.FIELD)
 class MonthlyAttendances extends Serializable {
