@@ -19,10 +19,10 @@ import org.key2gym.business.api.ValidationException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ResourceBundle;
 import org.jdesktop.beansbinding.Converter;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
+import static org.key2gym.client.resources.ResourcesManager.*;
 
 /**
  *
@@ -33,8 +33,6 @@ public class DateTimeToStringConverter extends Converter<ReadableDateTime, Strin
     private String format;
     private String fieldName;
     
-    private ResourceBundle strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
-
     public DateTimeToStringConverter(String fieldName, String format) {
         this.format = format;
         this.fieldName = fieldName;
@@ -54,7 +52,12 @@ public class DateTimeToStringConverter extends Converter<ReadableDateTime, Strin
         try {
             return new DateTime(new SimpleDateFormat(format).parse(value));
         } catch (ParseException ex) {
-            throw new IllegalArgumentException(new ValidationException(MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"), new Object[] {fieldName})));
+            throw new IllegalArgumentException(
+	        new ValidationException(
+		    getString("Message.FieldIsNotFilledInCorrectly.withFieldName",
+			      fieldName)
+		)
+	    );
         }
     }
 }

@@ -15,8 +15,8 @@
  */
 package org.key2gym.client.resources;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.text.*;
 import org.key2gym.client.Main;
 
 /**
@@ -25,14 +25,20 @@ import org.key2gym.client.Main;
  */
 public class ResourcesManager {
 
-    public static ResourceBundle getStrings() {
-        if (strings == null) {
-            Locale locale = new Locale(Main.getProperties().getProperty(Main.PROPERTY_LOCALE_LANGUAGE),
-                    Main.getProperties().getProperty(Main.PROPERTY_LOCALE_COUNTRY));
-            strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings", locale);
-        }
+    static {
+	strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
+    }
 
+    public static ResourceBundle getStrings() {
         return strings;
+    }
+
+    public static String getString(String key, Object... arguments) {
+        String result = strings.getString(key);
+
+        result = MessageFormat.format(result, arguments);
+
+        return result;
     }
     
     private static ResourceBundle strings;

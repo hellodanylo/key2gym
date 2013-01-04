@@ -28,9 +28,8 @@ import org.key2gym.client.report.spi.ReportInputSource;
 import org.key2gym.client.resources.ResourcesManager;
 import org.key2gym.client.util.DateTimeToStringConverter;
 import org.key2gym.client.util.FormBindingListener;
-import org.joda.time.MutableInterval;
-import org.joda.time.ReadableInterval;
-import org.joda.time.DateMidnight;
+import org.key2gym.client.util.BindableMutableInterval;
+import org.joda.time.*;
 
 /**
  *
@@ -53,7 +52,7 @@ public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<Reada
         initComponents();
         buildForm();
         
-        interval = new MutableInterval(new DateMidnight(), new DateMidnight());
+        interval = new BindableMutableInterval(new DateMidnight(), new DateMidnight());
 
         formBindingListener = new FormBindingListener();
         bindingGroup = new BindingGroup();
@@ -105,7 +104,7 @@ public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<Reada
      */
     @Override
     public void setForm(ReadableInterval interval) {
-        this.interval = interval;
+        this.interval = new BindableMutableInterval(interval);
 
         for (Binding binding : bindingGroup.getBindings()) {
             binding.unbind();
@@ -116,7 +115,7 @@ public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<Reada
 
     @Override
     public ReadableInterval getForm() {
-        return interval;
+        return new Interval(interval);
     }
 
     /**
@@ -136,7 +135,7 @@ public class DateIntervalReportInputFormPanel extends ReportInputFormPanel<Reada
     /*
      * Business
      */
-    private ReadableInterval interval;
+    private BindableMutableInterval interval;
     /*
      * Presentation
      */

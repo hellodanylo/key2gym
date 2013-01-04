@@ -25,6 +25,8 @@ import org.jdesktop.beansbinding.BindingListener;
 import org.jdesktop.beansbinding.PropertyStateEvent;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.client.UserExceptionHandler;
+import static org.key2gym.client.resources.ResourcesManager.*;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -33,10 +35,11 @@ import org.key2gym.client.UserExceptionHandler;
 public class FormBindingListener implements BindingListener {
 
     private Set<Object> invalidTargets;
-    private ResourceBundle strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
+    private Logger logger;
 
     public FormBindingListener() {
         this.invalidTargets = new HashSet<>();
+	this.logger = Logger.getLogger(FormBindingListener.class);
     }
 
     public Set<Object> getInvalidTargets() {
@@ -53,18 +56,34 @@ public class FormBindingListener implements BindingListener {
 
     @Override
     public void syncFailed(Binding binding, SyncFailure failure) {
+
+	logger.debug("Synchronization of the binding named "
+		     +binding.getName()+" failed: "+failure.getType());
+
         if (failure.getType().equals(Binding.SyncFailureType.CONVERSION_FAILED)) {
-            if (failure.getConversionException() instanceof UnsupportedOperationException) {
+            if (failure.getConversionException() 
+		instanceof UnsupportedOperationException) {
                 return;
             }
+
+	    /*
+	     * Convertors pass the validation exception as the conversion 
+	     * exception's cause.
+	     */
             invalidTargets.add(binding.getTargetObject());
             UserExceptionHandler.getInstance().processException((ValidationException) failure.getConversionException().getCause());
-        } else if (failure.getType().equals(Binding.SyncFailureType.VALIDATION_FAILED)) {
+        } else if (failure.getType()
+		   .equals(Binding.SyncFailureType.VALIDATION_FAILED)) {
             invalidTargets.add(binding.getTargetObject());
             
-            String message = MessageFormat.format(strings.getString("Message.FieldIsNotFilledInCorrectly.withFieldName"),
-                    binding.getName());
-            UserExceptionHandler.getInstance().processException(new ValidationException(message));
+	    /*
+	     * Validators can not pass any specific message. Therefore their
+	     * use is deprecated.
+	     */
+            String message = getString("Message.FieldIsNotFilledInCorrectly.withFieldName", binding.getName());
+
+            UserExceptionHandler.getInstance()
+		.processException(new ValidationException(message));
         }
     }
 

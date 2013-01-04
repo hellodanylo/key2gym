@@ -19,7 +19,7 @@ import java.awt.Component;
 import java.util.ResourceBundle;
 import javax.swing.FocusManager;
 import javax.swing.JOptionPane;
-import org.key2gym.client.resources.ResourcesManager;
+import static org.key2gym.client.resources.ResourcesManager.*;
 import org.key2gym.business.api.UserException;
 
 /**
@@ -28,20 +28,20 @@ import org.key2gym.business.api.UserException;
  */
 public class UserExceptionHandler {
     
-    private UserExceptionHandler() {
-        strings = ResourcesManager.getStrings();
+    protected UserExceptionHandler() {
     }
 
-    public Component getComponent() {
+    protected Component getComponent() {
         return FocusManager.getCurrentManager().getFocusedWindow();
     }
     
     public void processException(UserException ex) {
-        JOptionPane.showMessageDialog(getComponent(), ex.getMessage(), strings.getString("Title.Message"), JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(getComponent(), 
+				      ex.getMessage(), 
+				      getString("Title.Message"), 
+				      JOptionPane.WARNING_MESSAGE);
     }
-    
-    private ResourceBundle strings;
-    
+        
     /**
      * Singleton instance.
      */
