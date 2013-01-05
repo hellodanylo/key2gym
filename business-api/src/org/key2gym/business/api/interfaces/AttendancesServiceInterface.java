@@ -39,7 +39,7 @@ public interface AttendancesServiceInterface extends BasicInterface {
      * @param keyId the key's ID.
      * @return the new attendance's ID.
      * @throws NullPointerException if keyId is null
-     * @throws ValidationExceltion if the key's ID is invalid
+     * @throws ValidationException if the key's ID is invalid
      * @throws BusinessException if current business rules restrict this
      * operation
      * @throws SecurityViolationException if the caller does not have either *_ADMINISTRATOR or MANAGER role

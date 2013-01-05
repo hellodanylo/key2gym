@@ -16,21 +16,8 @@
 package org.key2gym.persistence;
 
 import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import java.util.*;
+import javax.persistence.*;
 
 /**
  *
@@ -39,7 +26,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "report_rpt")
 @NamedQueries({
-    @NamedQuery(name="Report.findAll", query = "SELECT r FROM Report r")
+	@NamedQuery(name="Report.findAll", query = "SELECT r FROM Report r"),
+	    @NamedQuery(name="Report.removeById", query = "DELETE FROM Report r WHERE r.id = :id")
 })
 @SequenceGenerator(name="id_rpt_seq", allocationSize = 1)
 public class Report implements Serializable {
@@ -64,6 +52,9 @@ public class Report implements Serializable {
     
     @Column(name="report_generator_class")
     private String reportGeneratorClass;
+
+    @OneToMany(mappedBy = "report")
+    private List<ReportBody> reportBodies;
 
     public Integer getId() {
         return id;
@@ -111,5 +102,9 @@ public class Report implements Serializable {
 
     public void setReportGeneratorClass(String reportGeneratorClass) {
         this.reportGeneratorClass = reportGeneratorClass;
+    }
+
+    public List<ReportBody> getReportBodies() {
+	return reportBodies;
     }
 }

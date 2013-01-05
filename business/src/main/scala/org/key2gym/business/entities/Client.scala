@@ -75,7 +75,6 @@ class Client extends Serializable {
   @Lob
   @Column(name = "note")
   protected var note: String = _
-  
   @Basic(optional = false)
   @Column(name = "registration_date")
   @Temporal(TemporalType.DATE)

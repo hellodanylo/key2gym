@@ -29,7 +29,7 @@ import org.key2gym.business.api.ValidationException;
  * 
  * @author Danylo Vashchilenko
  */
-public interface ReportGenerator {
+public interface ReportGenerator<I> {
     
     /**
      * Returns the report's title.
@@ -48,6 +48,15 @@ public interface ReportGenerator {
     public String getPrimaryFormat();
 
     /**
+     * Validates the input object.
+     *
+     * @param input the input object to validate
+     * @param em the entity manager to use
+     * @throws ValidationException if the input is invalid
+     */
+    public void validateInput(I input, EntityManager em) throws ValidationException;
+
+    /**
      * Generates a report.
      * 
      * @param input an input object
@@ -57,7 +66,7 @@ public interface ReportGenerator {
      * of an unexpected class
      * @return the report
      */
-    public byte[] generate(Object input, EntityManager em) throws ValidationException;
+    public byte[] generate(I input, EntityManager em) throws ValidationException;
 
     /**
      * Formats a title for a specific report from the input.
@@ -69,7 +78,7 @@ public interface ReportGenerator {
      * of an unexpected class
      * @return the title
      */
-    public String formatTitle(Object input, EntityManager em) throws ValidationException;
+    public String formatTitle(I input, EntityManager em) throws ValidationException;
 
     /**
      * Returns the array of the report's secondary format.
@@ -85,5 +94,5 @@ public interface ReportGenerator {
      * @param secondaryFormat the name of the secondary format
      * @return the report in the secondary format
      */
-    public byte[] convertToSecondaryFormat(byte[] report, String secondaryFormat);
+    public byte[] convert(byte[] report, String secondaryFormat);
 }

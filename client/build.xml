@@ -6,27 +6,44 @@
   <loadproperties srcfile="../private/environment.properties" />
   <loadproperties srcfile="project.properties" />    
   
+  <macrodef name="compile">
+    <attribute name="unit" />
+    <sequential>
+      <mkdir dir="bin/@{unit}" />
+      
+      <javac srcdir="src/@{unit}" destdir="bin/@{unit}" debug="true" classpath="${@{unit}.classpath}" source="7" includeantruntime="false" />        
+    </sequential>
+  </macrodef>
+  
+  
   <target name="compile">
     <mkdir dir="${bin.dir}" />
     
     <!-- Builds the Business API project. -->
     <ant antfile="../business-api/build.xml" target="build" inheritall="false" />
     
-    <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="true" classpath="${javac.classpath}" includeantruntime="false" />
+    <compile unit="main" />
   </target>
   
   <target name="clean">
-    <delete dir="${bin.dir}" />
-    <delete dir="${dist.dir}" />
+    <delete dir="bin" />
+    <delete dir="dist" />
   </target>
   
   <target name="build" depends="compile">
     
+    <!-- Converts the strings files to ascii. -->
+    <native2ascii src="src/res" dest="bin/res" includes="**/*.properties" />
+
+    <!-- Copies the rest of the resources. -->
+    <copy todir="bin/res">
+      <fileset dir="src/res" excludes="**/*.properties" />
+    </copy>
+
     <!-- Builds the JAR file. -->
-    <jar destfile="${dist.dir}/${jar.file}" basedir="${bin.dir}">
-      <fileset dir="${src.dir}" includes="META-INF/**" />
-      <fileset dir="${src.dir}" includes="**/*.properties" />
-      <fileset dir="${src.dir}" includes="**/*.png" />
+    <jar destfile="${dist.dir}/${jar.file}">
+      <fileset dir="bin/main" />
+      <fileset dir="bin/res" />
     </jar>
     
     <!-- Copies distrubtion files. -->

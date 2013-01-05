@@ -15,11 +15,10 @@
  */
 package org.key2gym.business.entities
 
-import java.io.Serializable;
-import java.util.Date;
-import javax.persistence._;
-import javax.xml.bind.annotation.XmlRootElement;
-import scala.reflect._;
+import java.io.Serializable
+import java.util.Date
+import javax.persistence._
+import javax.xml.bind.annotation.XmlRootElement
 
 /**
  *
@@ -28,7 +27,7 @@ import scala.reflect._;
 @Entity
 @Table(name = "attendance_atd")
 @XmlRootElement
-@NamedQueries(value = Array(
+@NamedQueries(Array(
     new NamedQuery(name = "Attendance.findAll", query = "SELECT a FROM Attendance a"),
     new NamedQuery(name = "Attendance.findById", query = "SELECT a FROM Attendance a WHERE a.id = :id"),
     new NamedQuery(name = "Attendance.findAllIdsOrderByIdDesc", query = "SELECT a.id FROM Attendance a ORDER BY a.id DESC"),

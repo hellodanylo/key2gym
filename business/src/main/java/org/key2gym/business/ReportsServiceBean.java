@@ -15,18 +15,14 @@
  */
 package org.key2gym.business;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ServiceLoader;
+import java.util.*;
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.transaction.UserTransaction;
+import javax.persistence.*;
 import org.joda.time.DateTime;
 import org.key2gym.business.api.*;
 import org.key2gym.business.api.dtos.ReportDTO;
@@ -43,17 +39,16 @@ import org.key2gym.persistence.ReportBody;
 @Stateless
 @Remote(ReportsServiceRemote.class)
 @DeclareRoles({SecurityRoles.REPORTS_MANAGER})
-@TransactionManagement(TransactionManagementType.BEAN)
 public class ReportsServiceBean extends BasicBean implements ReportsServiceRemote {
 
     @Override
-    public Integer generateReport(String reportGeneratorId, final Object input) throws ValidationException, SecurityViolationException {
+    public Integer generateReport(String reportGeneratorId, Object input) throws ValidationException, SecurityViolationException {
 
 	if(!callerHasRole(SecurityRoles.REPORTS_MANAGER)) {
 	    throw new SecurityViolationException(getString("Security.Operation.Denied"));
 	}
 
-        final ReportGenerator generator;
+        ReportGenerator generator;
 
         try {
             Class<ReportGenerator> generatorClass = (Class<ReportGenerator>) Thread.currentThread().getContextClassLoader().loadClass(reportGeneratorId);
@@ -65,73 +60,80 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
 	Report report = new Report();
         report.setPrimaryFormat(generator.getPrimaryFormat());
         report.setTimestampGenerated(new Date());
-        report.setTitle(generator.formatTitle(input, getEntityManager()));
+        report.setTitle(generator.formatTitle(input, em));
         report.setNote("");
         report.setReportGeneratorClass(generator.getClass().getName());
 
-        try {
-            transaction.begin();
-        } catch (Exception ex) {
-            throw new RuntimeException("Failed to begin a transaction", ex);
-        }
+	em.persist(report);
+	em.flush();
 
-        try {
-            getEntityManager().persist(report);
-        } catch(Exception ex) {      
-            try {
-                transaction.rollback();
-            } catch (Exception anotherException) {
-                throw new RuntimeException("Failed to rollback the transaction", anotherException);
-            }
-            throw new RuntimeException("Failed to create a report", ex);
-        }
-
-        try {
-            transaction.commit();
-        } catch (Exception ex) {
-            throw new RuntimeException("Failed to commit the transaction", ex);
-        }
-
-        final Integer reportId = report.getId();
-
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    transaction.begin();
-                } catch (Exception ex) {
-                    throw new RuntimeException("Failed to begin a transaction", ex);
-                }
-                
-                ReportBody reportBody = new ReportBody();
-		reportBody.setReportId(reportId);
-		reportBody.setFormat(generator.getPrimaryFormat());
-                
-                try {
-                    reportBody.setBody(generator.generate(input, getEntityManager()));
-                } catch (ValidationException ex) {
-                    throw new RuntimeException("Failed  to generate a report", ex);
-                }
-                
-                getEntityManager().persist(reportBody);
-
-                try {
-                    transaction.commit();
-                } catch (Exception ex) {
-                    throw new RuntimeException("Failed to commit a transaction", ex);
-                }
-            }
-        }.start();
-
-        return reportId;
+	ReportBody reportBody = new ReportBody();
+	reportBody.setReportId(report.getId());
+	reportBody.setFormat(generator.getPrimaryFormat());
+        
+	try {
+	    reportBody.setBody(generator.generate(input, em));
+	} catch (ValidationException ex) {
+	    throw new RuntimeException("Failed to generate a report", ex);
+	}
+        
+	em.persist(reportBody);
+		
+        return report.getId();
     }
 
-    public void convertReport(Integer intgr, String string) throws ValidationException, SecurityViolationException {
+    public void convertReport(Integer reportId, String format) throws ValidationException, SecurityViolationException {
 	if(!callerHasRole(SecurityRoles.REPORTS_MANAGER)) {
 	    throw new SecurityViolationException(getString("Security.Operation.Denied"));
 	}
 
-        throw new UnsupportedOperationException("Not supported yet.");
+	Report report = em.find(Report.class, reportId);
+	ReportBody primaryBody = null;
+
+	if(report == null) {
+	    throw new ValidationException(getString("Invalid.ID"));
+	}
+
+	boolean exists = false;
+
+	try {
+	    em.createNamedQuery("ReportBody.findByReportIdAndFormat", ReportBody.class)
+		.setParameter("reportId", report.getId())
+		.setParameter("format", format)
+		.getSingleResult();
+	    
+	    exists = true;
+	} catch(NoResultException ex) {
+	}
+
+	if(exists) {
+	    throw new ValidationException(getString("Invalid.Report.Format.AlreadyConverted"));
+	}
+
+	primaryBody = em.createNamedQuery("ReportBody.findByReportIdAndFormat", ReportBody.class)
+	    .setParameter("reportId", reportId)
+	    .setParameter("format", report.getPrimaryFormat())
+	    .getSingleResult();
+
+	if(primaryBody == null) {
+	    throw new RuntimeException("The report does not have a primary body!");
+	}
+
+	ReportBody reportBody = new ReportBody();
+	reportBody.setReportId(report.getId());
+	reportBody.setFormat(format);
+
+	ReportGenerator generator;
+
+        try {
+            Class<ReportGenerator> generatorClass = (Class<ReportGenerator>) Thread.currentThread().getContextClassLoader().loadClass(report.getReportGeneratorClass());
+            generator = generatorClass.newInstance();
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to instantiate the generator", ex);
+        }
+	reportBody.setBody(generator.convert(primaryBody.getBody(), format));
+
+	em.persist(reportBody);
     }
 
     public List<ReportDTO> getAll() throws SecurityViolationException {
@@ -142,26 +144,11 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
 
 	List<ReportDTO> result = new LinkedList<ReportDTO>();
         
-        List<Report> reports = getEntityManager().createNamedQuery("Report.findAll")
+        List<Report> reports = em.createNamedQuery("Report.findAll")
                 .getResultList();
         
         for(Report report : reports) {
-            ReportDTO reportDTO = new ReportDTO();
-            
-            reportDTO.setDateTimeGenerated(new DateTime(report.getTimestampGenerated()));
-
-	    List<String> formats = (List<String>)getEntityManager()
-		.createNamedQuery("ReportBody.findFormatsByReportId")
-		.setParameter("reportId", report.getId())
-		.getResultList();
-            reportDTO.setFormats((String[])formats.toArray());
-
-            reportDTO.setId(report.getId());
-            reportDTO.setNote(report.getNote());
-            reportDTO.setTitle(report.getTitle());
-            reportDTO.setGeneratorId(report.getReportGeneratorClass());
-            
-            result.add(reportDTO);
+            result.add(convertToDTO(report));
         }
         
         return result;
@@ -183,7 +170,7 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
 	ReportBody reportBody;
 	
 	try {
-	    reportBody = (ReportBody) getEntityManager()
+	    reportBody = (ReportBody) em
 		.createNamedQuery("ReportBody.findByReportIdAndFormat")
 		.setParameter("reportId", reportId)
 		.setParameter("format", format)
@@ -195,32 +182,74 @@ public class ReportsServiceBean extends BasicBean implements ReportsServiceRemot
 	return reportBody.getBody();	
     }
 
-    public void removeReport(Integer intgr, String string) throws ValidationException, SecurityViolationException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void removeReport(Integer reportId) throws ValidationException, SecurityViolationException {
+	if(!callerHasRole(SecurityRoles.REPORTS_MANAGER)) {
+	    throw new SecurityViolationException(getString("Security.Access.Denied"));
+	}
+	
+	em.createNamedQuery("ReportBody.removeByReportId")
+	    .setParameter("reportId", reportId)
+	    .executeUpdate();
+	
+	em.createNamedQuery("Report.removeById")
+	    .setParameter("id", reportId)
+	    .executeUpdate();	
     }
 
     @Override
     public List<ReportGeneratorDTO> getReportGenerators() throws SecurityViolationException {
-        if (generators == null) {
-            generators = new LinkedList<ReportGeneratorDTO>();
-
-            Iterator<ReportGenerator> it = ServiceLoader.load(ReportGenerator.class).iterator();
-
-            while (it.hasNext()) {
-                ReportGenerator generator = it.next();
-                ReportGeneratorDTO generatorDTO = new ReportGeneratorDTO();
-                generatorDTO.setTitle(generator.getTitle());
-                generatorDTO.setPrimaryFormat(generator.getPrimaryFormat());
-                generatorDTO.setSecondaryFormats(generator.getSecondaryFormats());
-                generatorDTO.setId(generator.getClass().getName());
-                
-                generators.add(generatorDTO);
-            }
-        }
+	LinkedList<ReportGeneratorDTO> generators = new LinkedList<ReportGeneratorDTO>();
+	
+	Iterator<ReportGenerator> it = ServiceLoader.load(ReportGenerator.class).iterator();
+	
+	while (it.hasNext()) {
+	    generators.add(convertToDTO(it.next()));
+	}
 
         return generators;
     }
-    private static List<ReportGeneratorDTO> generators;
-    @Resource
-    private UserTransaction transaction;
+
+    protected ReportGeneratorDTO convertToDTO(ReportGenerator generator) {
+	ReportGeneratorDTO generatorDTO = new ReportGeneratorDTO();
+	generatorDTO.setTitle(generator.getTitle());
+
+	List<String> formats = new LinkedList<String>();
+	formats.add(generator.getPrimaryFormat());
+	formats.addAll(Arrays.asList(generator.getSecondaryFormats()));
+	generatorDTO.setFormats(formats);
+
+	generatorDTO.setId(generator.getClass().getName());	
+	return generatorDTO;
+    }
+
+    protected ReportDTO convertToDTO(Report report) {
+	ReportDTO reportDTO = new ReportDTO();
+
+	reportDTO.setId(report.getId());
+	reportDTO.setNote(report.getNote());
+	reportDTO.setTitle(report.getTitle());
+
+	reportDTO.setDateTimeGenerated(new DateTime(report.getTimestampGenerated()));
+	
+	List<String> formats = (List<String>)em
+	    .createNamedQuery("ReportBody.findFormatsByReportId", String.class)
+	    .setParameter("reportId", report.getId())
+	    .getResultList();
+	
+	reportDTO.setFormats(new java.util.ArrayList(formats));	
+
+
+	ReportGenerator generator;
+
+        try {
+            Class<ReportGenerator> generatorClass = (Class<ReportGenerator>) Thread.currentThread().getContextClassLoader().loadClass(report.getReportGeneratorClass());
+            generator = generatorClass.newInstance();
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to instantiate the generator", ex);
+        }
+
+	reportDTO.setReportGenerator(convertToDTO(generator));
+
+	return reportDTO;
+    }
 }

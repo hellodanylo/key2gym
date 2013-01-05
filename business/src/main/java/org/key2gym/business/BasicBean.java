@@ -32,6 +32,10 @@ import org.key2gym.business.resources.ResourcesManager;
  * @author Danylo Vashchilenko
  */
 public class BasicBean implements BasicInterface {
+
+    static {
+	org.apache.log4j.PropertyConfigurator.configure(System.getProperty("log4j.configuration"));
+    }
     
     protected boolean callerHasRole(String role) {
         return sessionContext.isCallerInRole(role);

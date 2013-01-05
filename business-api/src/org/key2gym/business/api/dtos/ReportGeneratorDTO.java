@@ -6,6 +6,7 @@
 package org.key2gym.business.api.dtos;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -29,24 +30,15 @@ public class ReportGeneratorDTO implements Serializable {
         this.title = title;
     }
 
-    public String getPrimaryFormat() {
-        return primaryFormat;
+    public void setFormats(List<String> formats) {
+        this.formats = formats;
     }
 
-    public void setPrimaryFormat(String primaryFormat) {
-        this.primaryFormat = primaryFormat;
-    }
-
-    public String[] getSecondaryFormats() {
-        return secondaryFormats;
-    }
-
-    public void setSecondaryFormats(String[] secondaryFormats) {
-        this.secondaryFormats = secondaryFormats;
+    public List<String> getFormats() {
+        return formats;
     }
 
     private String id;
     private String title;
-    private String primaryFormat;
-    private String[] secondaryFormats;
+    private List<String> formats;
 }

@@ -61,6 +61,7 @@ public class V4__init_support_for_jdbc_realm implements JdbcMigration {
             stmt.executeUpdate("INSERT INTO group_grp (name, title) VALUES ('manager', 'manager')");
             stmt.executeUpdate("INSERT INTO group_grp (name, title) VALUES ('senior_administrator', 'senior_administrator')");
             stmt.executeUpdate("INSERT INTO group_grp (name, title) VALUES ('junior_administrator', 'junior_administrator')");
+            stmt.executeUpdate("INSERT INTO group_grp (name, title) VALUES ('reports_manager', 'reports_manager')");
 
             /*
              * Creates the administrator-group table.
@@ -99,7 +100,7 @@ public class V4__init_support_for_jdbc_realm implements JdbcMigration {
 
                 if (permissionsLevel.equals(1)) {
                     /*
-                     * Maps 1 to manager and senior_administrator.
+                     * Maps 1 to manager, reports_manager and senior_administrator.
                      */
                     insertStatement.setInt(1, administrator[0]);
                     insertStatement.setInt(2, 1);
@@ -108,6 +109,11 @@ public class V4__init_support_for_jdbc_realm implements JdbcMigration {
 
                     insertStatement.setInt(1, administrator[0]);
                     insertStatement.setInt(2, 2);
+
+                    insertStatement.executeUpdate();
+
+                    insertStatement.setInt(1, administrator[0]);
+                    insertStatement.setInt(2, 4);
 
                     insertStatement.executeUpdate();
 
