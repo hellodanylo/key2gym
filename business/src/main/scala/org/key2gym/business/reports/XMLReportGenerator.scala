@@ -29,7 +29,6 @@ import org.joda.time.DateMidnight
 import org.key2gym.business.api.ValidationException
 import org.key2gym.business.api.spi.report.ReportGenerator
 import org.key2gym.business.resources.ResourcesManager
-import org.key2gym.business.api.reports._
 import org.key2gym.business.entities.DailyRevenue
 import org.apache.log4j.Logger
 import scala.collection.JavaConversions._
