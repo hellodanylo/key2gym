@@ -36,8 +36,13 @@
         </tr>
         <tr>
             <td>connection</td>
-            <td></td>
-            <td>No, but must be specified either in the properties file or as a command-line argument.</td>
+            <td>Specifies the name of the connection to use. The name is a basename of the properties file located in the 'connections' directory.</td>
+            <td>Yes, must be specified either in the properties file or as a command-line argument.</td>
+        </tr>
+        <tr>
+            <td>refreshPeriod</td>
+            <td>The period in milliseconds between data refresh events. As of Key2Gym 3.0.0, some components (like attendances and items tabs) will refresh the data they display on these events, while others won't. If the value is 'off', data refresh events will not be fired.</td>
+            <td>Yes.</td>
         </tr>
     </tbody>
 </table>

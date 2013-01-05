@@ -3,8 +3,7 @@
 
 <section>This page describes how to setup the OpenEJB server to be
 used with Key2Gym. Before you begin you need start the OpenEJB server
-at least once for it to generate default configuration files, which would
-ease the process configuring a lot.</section>
+at least once for it to generate the default configuration files.</section>
 
 <section>
   <ol>
@@ -28,7 +27,10 @@ ease the process configuring a lot.</section>
     </li>
     <li>
       Append the following lines to <code>conf/system.properties</code>:
-<pre><code># Conventional JNDI format for Key2Gym beans
+<pre><code># Makes sure the deployment service is up
+openejb.system.apps=true
+
+# Conventional JNDI format for Key2Gym beans
 openejb.jndiname.format={interfaceClass.simpleName}
 
 # The log4j properties file
@@ -41,7 +43,7 @@ Note that you can change the locale of messages sent by the business tier here.
     </li>
     <li>Create <code>conf/log4j.properties</code> with the following content:
       <pre><code># The root logger defines default properties for all other loggers
-log4j.rootLogger=DefaultConsole, DailyLogFile
+log4j.rootLogger=INFO, DefaultConsole, DailyLogFile
 
 # DefaultConsole is a default appender that prints everything to the console.
 log4j.appender.DefaultConsole=org.apache.log4j.ConsoleAppender
