@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+
+<!--    
+   Copyright 2012-2013 Danylo Vashchilenko
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. 
+-->
+
+<page>
+  <content>
+
+    <div class="well well-large">
+      This page describes how to upgrade the application.
+    </div>
+
+    <div class="header"><h3>2.2.0 - 3.0.0</h3></div>
+
+    <div class="well well-large">
+      <ul>
+        <li>
+	  <b>Client</b>: A fresh install of the client is recommended. 
+	  Make sure you keep the logs, if you need them. The format of 
+	  <code>etc/application.properties</code> and connection properties is now 
+	  almost completely different. Make sure you configure the client properly.
+	</li>
+        <li>
+	  <b>Database</b>: The support of MySQL database is <b>dropped</b>. 
+	  It's been replaced with PostgreSQL. 
+	  Check <a href="./database/installation.html">Database > Installation</a> 
+	  page for instructions on how to setup the PostgreSQL server. In order 
+	  to migrate the database itself you need to perform the following steps:
+	  <p/>
+	  
+	  <ul>
+	    <li>
+	      Excecute the following commands on the database:
+	      <pre>UPDATE order_line_orl SET `iddsc_orl` = NULL WHERE `iddsc_orl` = 0;<br/>
+DELETE FROM `session_ssn`;</pre>
+	    </li>
+	    <li>Generate a compatible dump: 
+	    <pre>mysqldump --skip-opt --no-create-info --compatible=postgresql,ansi --skip-quote-names --default-character-set=utf8 --complete-insert database --tables client_cln ad_source_ads client_profile_cpf administrator_adm client_freeze_cfz key_key attendance_atd item_itm time_split_tsp item_subscription_its discount_dsc order_ord order_line_orl property_pty session_ssn cash_adjustment_cad</pre>
+	    </li>
+	    <li>
+	      Create a new database in PostgreSQL and migrate to version 1. 
+	      Note that the migratio is now done using a standalone tool. 
+	    </li>
+	    <li>Import the generated dump: <code>psql -f mysql_dump.sql</code></li>
+	    <li>Migrate to version 6.</li>
+	    <li>You now have to update sequences to match just imported data. 
+	    We provide you this handy script to help with that:
+	    <pre>CREATE OR REPLACE FUNCTION reset_sequence(tablename text, columnname text, sequence_name text)
+RETURNS void AS
+$BODY$
+DECLARE
+BEGIN
+
+EXECUTE 'SELECT setval( ''' || sequence_name  || ''', ' || '(SELECT MAX(' || columnname || ') FROM ' || tablename || ')' || '+1)';
+
+END;
+
+$BODY$
+LANGUAGE plpgsql;
+       
+select column_name || '_seq', reset_sequence(table_name, column_name, column_name || '_seq') from information_schema.columns where column_default like 'nextval%';
+	    </pre>
+	    </li>
+	    <li>
+	      Time splits now have titles that are displayed in 
+	      appropriate places. You need to set them manually
+	      in the <code>time_split_tsp</code> table.
+	    </li>
+	  </ul>
+	</li>
+	<li>A brand new piece of software is now required: OpenEJB server. 
+	See <a href="./business/index.html">Business</a> section for details.
+	</li>
+      </ul>
+    </div>
+  </content>
+</page>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+
+<!--    
+   Copyright 2012-2013 Danylo Vashchilenko
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. 
+-->
+
+<page>
+  <content>
+    <div class="well well-large">
+      The database has got to have an appropriate schema for the business tier
+      to work with it. The schema defines the format of the data to be kept and
+      processed within the database. In the Key2Gym application the schema management
+      is done using Flyway migration tool shipped with the application.
+      
+      The schema is a subject to change from one version of the application to 
+      another. Therefore, the release notes migth tell you to migrate the schema 
+      after you updated the business tier.
+    </div>
+    <div class="well well-large">
+      <b>IMPORTANT:</b> You should not run the business tier with an old schema, 
+      because it might result in data loss or inconsistency.
+    </div>
+    <div class="well well-large">
+      The schema migration tool is located under the <code>migration</code>
+      folder. The rest of this page will describe the usage of the schema migration
+      tool.
+    </div>
+    
+    <div class="well well-large">
+      Before launching the schema migration tool you need to configure it.
+      
+      The configuration file is <code>conf/flyway.properties</code>. It's
+      well-documented, therefore it should be easy to figure it out.
+      
+      You need to specify the driver, the url, the username, the password and 
+      the database.
+    </div>
+    
+    <div class="well well-large">
+      Once the tool is configured, you can run it as following:
+      <code>./flyway.sh -target=1 migrate</code>
+      This command will migrate the schema to version 1.
+    </div>
+  </content>
+</page>

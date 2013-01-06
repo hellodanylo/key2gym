@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+
+<!--    
+   Copyright 2012-2013 Danylo Vashchilenko
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. 
+-->
+
+<page>
+  <content>
+    <div class="well well-large">
+      <p>
+	Go to <a href="http://openejb.apache.org/downloads.html">Apache 
+	OpenEJB website</a> to obtain a distribution of OpenEJB Standalone. 
+	The program has been intensively tested with OpenEJB 4.5.1, however the
+	later versions should work as well. See the <a href="http://openejb.apache.org/documentation.html">OpenEJB documentation</a>
+	for additional information on installing and configuring the server.
+      </p>
+      <ol>
+	<li>
+	  The server does not require installation, which means 
+	  it's ready to be runned, once you extract the files from the distribution.
+	</li>
+	<li>
+	  Once you have the distribution extracted copy the required libraries to <code>lib/</code>:<br/>
+	  <pre>eclipselink-bin.jar
+joda-time-bin.jar
+joda-convert-bin.jar
+key2gym-business-api.jar
+log4j-bin.jar
+postgresql-connector-jdbc4.jar
+scala-library.jar
+saxon.jar</pre>
+	</li>
+	<li>Copy <code>key2gym-business.jar</code> to <code>apps/</code>.</li>
+      </ol>
+    </div>
+  </content>
+</page>

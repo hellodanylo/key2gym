@@ -1,0 +1,35 @@
+body {
+    /* Gray background */
+    background-color: #d6d9df;
+    /* Some space in the footer */
+    margin-bottom: 20px;
+}
+
+div.header {
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+div, .breadcrumb {
+    margin-left: 10px;
+}
+
+/* Some special blocks. */
+div.header, ul.breadcrumb {
+    margin: 10px;
+    padding: 10px;
+
+    background-color: #37556F;
+    color: white;
+}
+
+.breadcrumb .active, .breadcrumb li a, .breadcrumb li  {
+    color: white;
+    text-shadow: none;
+}
+
+ul.breadcrumb li a {
+    text-decoration: underline;
+}
+

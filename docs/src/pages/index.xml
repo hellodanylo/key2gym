@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+
+<!--    
+   Copyright 2012-2013 Danylo Vashchilenko
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. 
+-->
+
+<page>
+  <content>
+<div class="well">
+    Key2Gym is a free software for running and maintaining gyms and other 
+    membership-based clubs or enterprises. This application has been written 
+    with the ideas of simplicity and powerful functionality in mind.
+    This documentation describes the installation, configuring and administration of the 
+    Key2Gym application.
+</div>
+
+<div class="well">
+    The application consists of 3 tiers: the database tier, the business tier,
+    and the client tier. This documentation is therefore separated
+    into 3 parts. Each part is dedicated to installation, configuration and maintaining
+    of one of the tiers.
+</div>
+
+<!-- <div class="well">
+    <ul>
+        <li>
+            <a href="./general/index.html">1. General</a>
+        </li>
+        <li>
+            <a href="./database/index.html">2. Database</a>
+            <ol>
+                <li><a href="./database/installation.html">2.1. Installation</a></li>
+                <li><a href="./database/schema.html">2.2. Schema</a></li>
+            </ol>
+        </li>
+        <li>
+            <a href="./business/index.html">3. Business</a>
+            <ol>
+                <li><a href="./business/installation.html">3.1. Installation</a></li>
+                <li><a href="./business/configuration.html">3.2. Configuration</a></li>
+                <li><a href="./business/running.html">3.3. Running</a></li>
+            </ol>
+        </li>
+        <li>
+            <a href="./client/index.html">4. Client</a>
+            <ol>
+                <li><a href="./client/installation.html">4.1. Installation</a></li>
+                <li><a href="./client/configuration.html">4.2. Configuration</a></li>
+                <li><a href="./client/running.html">4.3. Running</a></li>
+            </ol>
+        </li>
+	<li><a href="./upgrading.html">5. Upgrading</a></li>
+    </ul>
+</div class="well"> -->
+  </content>
+</page>

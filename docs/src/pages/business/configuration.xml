@@ -1,28 +1,45 @@
-<h1>3. Business</h1>
-<h2>3.2. Configuration</h2>
+<?xml version="1.0" encoding="UTF-8"  ?>
 
-<section>This page describes how to setup the OpenEJB server to be
+<!--    
+   Copyright 2012-2013 Danylo Vashchilenko
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License. 
+-->
+
+<page>
+  <content>
+<div class="well well-large">This page describes how to setup the OpenEJB server to be
 used with Key2Gym. Before you begin you need start the OpenEJB server
-at least once for it to generate the default configuration files.</section>
+at least once for it to generate the default configuration files.</div>
 
-<section>
+<div class="well well-large">
   <ol>
     <li>Create a datasource in <code>conf/openejb.xml</code>:
-      <pre><code>&lt;Resource id="key2gym" type="javax.sql.DataSource"&gt;
+      <pre>&lt;Resource id="key2gym" type="javax.sql.DataSource"&gt;
 	  JdbcDriver org.postgresql.Driver
 	  JdbcUrl jdbc:postgresql://localhost:5432/mydb
 	  UserName myuser
 	  Password mypassword
 	  JtaManaged true
-&lt;/Resource&gt; </code></pre></li>
+&lt;/Resource&gt;</pre></li>
     <li>Change the rest of the <code>conf/openejb.xml</code> as you need.</li>
     <li>Create an authentication realm in <code>conf/login.config</code>:
-      <pre><code>key2gym {
+      <pre>key2gym {
     org.apache.openejb.core.security.jaas.SQLLoginModule required
 	dataSourceName="key2gym"
     	userSelect="SELECT username, password FROM administrator_adm WHERE username = ?"
     	groupSelect="SELECT adm.username, grp.name FROM administrator_adm adm, administrator_group_agr agr, group_grp grp WHERE adm.username = ? AND adm.id_adm = agr.idadm_agr AND agr.idgrp_agr = grp.id_grp";
-};</code></pre>
+};</pre>
       It's also recommended to remove all other authentication realms.
     </li>
     <li>
@@ -43,14 +60,14 @@ Note that you can change the locale of messages sent by the business tier here.
     </li>
     <li>Create <code>conf/log4j.properties</code> with the following content:
       <pre><code># The root logger defines default properties for all other loggers
-log4j.rootLogger=INFO, DefaultConsole, DailyLogFile
+log4j.rootLogger=INFO, Console, DailyLogFile
 
-# DefaultConsole is a default appender that prints everything to the console.
-log4j.appender.DefaultConsole=org.apache.log4j.ConsoleAppender
-log4j.appender.DefaultConsole.layout=org.apache.log4j.PatternLayout
-log4j.appender.DefaultConsole.layout.ConversionPattern=%d [%t] %-5p %c %x - %m%n
+# Console is an appender that prints everything to the console.
+log4j.appender.Console=org.apache.log4j.ConsoleAppender
+log4j.appender.Console.layout=org.apache.log4j.PatternLayout
+log4j.appender.Console.layout.ConversionPattern=%d [%t] %-5p %c %x - %m%n
 
-# DailyLogFile is an appender that keeps a separet log file for each date.
+# DailyLogFile is an appender that keeps a separate log file for each date.
 log4j.appender.DailyLogFile=org.apache.log4j.DailyRollingFileAppender
 log4j.appender.DailyLogFile.file=log/messages.log
 log4j.appender.DailyLogFile.datePattern='.'dd-MM-yyyy
@@ -59,4 +76,6 @@ log4j.appender.DailyLogFile.layout.ConversionPattern=%d [%t] %-5p %c %x - %m%n
 	</code></pre>
     </li>
   </ol>
-</section>
+</div>
+  </content>
+</page>
