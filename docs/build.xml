@@ -24,21 +24,21 @@
     <!-- Prepares the distribution directory. -->
     <mkdir dir="dist" />        
     
-    <build-page uri="index" />
-    <build-page uri="upgrading" />
+    <build-page uri="/index" />
+    <build-page uri="/upgrading" />
 
-    <build-page uri="database/index" />
-    <build-page uri="database/installation" />
-    <build-page uri="database/schema" />
+    <build-page uri="/database/index" />
+    <build-page uri="/database/installation" />
+    <build-page uri="/database/schema" />
 
-    <build-page uri="business/index" />
-    <build-page uri="business/installation" />
-    <build-page uri="business/configuration" />
-    <build-page uri="business/running" />
+    <build-page uri="/business/index" />
+    <build-page uri="/business/installation" />
+    <build-page uri="/business/configuration" />
+    <build-page uri="/business/running" />
 
-    <build-page uri="client/installation" />
-    <build-page uri="client/configuration" />
-    <build-page uri="client/running" />
+    <build-page uri="/client/installation" />
+    <build-page uri="/client/configuration" />
+    <build-page uri="/client/running" />
 
     <!-- Copies stylesheet files. -->
     <copy todir="dist/css">
@@ -67,6 +67,11 @@
   <target name="validate-xml" 
 	  description="Validates the XML schemas and XSL transformations.">
     <schemavalidate file="schemas/page.xsd">
+      <schema namespace="http://www.w3.org/2001/XMLSchema" 
+	      file="${xmlschema.xsd.file}" />
+    </schemavalidate>
+
+    <schemavalidate file="schemas/website.xsd">
       <schema namespace="http://www.w3.org/2001/XMLSchema" 
 	      file="${xmlschema.xsd.file}" />
     </schemavalidate>

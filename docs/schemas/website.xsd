@@ -32,20 +32,21 @@
       <xs:element name="category" type="Category" 
 		  minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
+    <!-- The name of a category should replicate its path: /cat1/cat1.1/page -->
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="title" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="Page">
+    <!-- The name of a page should replicate its path: /cat1/cat1.1/page -->
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="title" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="Map">
     <xs:sequence>
-      <xs:element name="page" type="Page" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="category" type="Category" 
-		  minOccurs="0" maxOccurs="unbounded"/>
+      <!-- The name of this category must be '/'. -->
+      <xs:element name="category" type="Category" minOccurs="1" maxOccurs="1" />
     </xs:sequence>
   </xs:complexType>
 </xs:schema>
