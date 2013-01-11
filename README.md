@@ -1,6 +1,6 @@
 # Key2Gym
 
-![Key2Gym logo](https://raw.github.com/equalsdanny/key2gym/develop/client/src/res/org/key2gym/client/resources/logo-wide.png)
+![Key2Gym logo](https://raw.github.com/equalsdanny/key2gym-img/master/logo-wide.png)
 
 ## Mission
 The Key2Gym's mission is to create an open, excellent user experience providing, scalable, modern, platform-independent application for running small to medium-sized gyms.
