@@ -2,19 +2,35 @@
 
 ![Key2Gym logo](https://raw.github.com/equalsdanny/key2gym/develop/client/src/res/org/key2gym/client/resources/logo-wide.png)
 
-## About
-Key2Gym is a free software for running and maintaining gyms and other membership-based clubs or enterprises.
+## Mission
+The Key2Gym's mission is to create an open, excellent user experience providing, scalable, modern, platform-independent application for running small to medium-sized gyms.
 
-It helps you to:
-* Register new clients (with detailed profile)
-* Check in registered and casual clients
+Key2Gym is an open-source software licensed under Apache License Version 2.0.
+
+## Features
+
+* Register new clients with detailed profile information
+* Control access to the gym with client subscriptions
+* Check registered and casual clients in with support of personal locker keys
 * Record purchases and payments
-* Look up information about clients (profile, money balance, history of attendances, etc)
-* Check out clients
-* See detailed information about the clients
-* See attendances, purchases and payments by date
+* Look up information about clients (profile information, money balance, history of attendances, etc)
+* Check clients out
 * See clients that are in the gym right now
-* Generate and analyze financial and other business reports
+* Track the items available for sale
+* Track attendances and purchases by date in the application
+* Generate financial and business reports in XML, HTML, etc to take away
+
+![Screenshot](https://raw.github.com/equalsdanny/key2gym-img/master/screenshots/main-1.png)
+
+## Requires
+
+* Java 7 SE
+* PostgreSQL 9.2+
+* OpenEJB 4.5.0+
+
+## Community
+
+[Google Group](https://groups.google.com/forum/?hl=ru&fromgroups#!forum/key2gym)
 
 ## Building
 
@@ -32,11 +48,13 @@ You need:
 ## Documentation
 
 The deployment documentation is avaiable in the distribution under the `docs` folder.
+It's also soon will be available online at the project's website.
 
 ## Contributing
 
-This project is currently maintained by 1 person. So all contributions are very welcome.
-Feel free to:
+This project is currently maintained by 1 person. So all contributions are very welcome. If you would like to contribute, you might want to start with talking to other developers at the project's [Google Group](https://groups.google.com/forum/?hl=ru&fromgroups#!forum/key2gym).
+
+Then feel free to:
 
 1. Pick any issue from the `Issues` page
 2. Fork the repository
