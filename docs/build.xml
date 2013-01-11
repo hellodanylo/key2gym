@@ -18,6 +18,7 @@
 
 <project name="Key2Gym - Documentation" default="build" basedir=".">
     
+  <loadproperties srcFile="../private/environment.properties" />
   <loadproperties srcFile="project.properties" />
 
   <target name="build">
@@ -60,18 +61,18 @@
   <target name="validate-website"
 	  description="Validates the website XML file.">
 
-    <schemavalidate file="website.xml" noNamespaceFile="schemas/website.xsd" />
+    <schemavalidate file="website.xml" noNamespaceFile="xsd/website.xsd" />
 
   </target>
 
   <target name="validate-xml" 
 	  description="Validates the XML schemas and XSL transformations.">
-    <schemavalidate file="schemas/page.xsd">
+    <schemavalidate file="xsd/page.xsd">
       <schema namespace="http://www.w3.org/2001/XMLSchema" 
 	      file="${xmlschema.xsd.file}" />
     </schemavalidate>
 
-    <schemavalidate file="schemas/website.xsd">
+    <schemavalidate file="xsd/website.xsd">
       <schema namespace="http://www.w3.org/2001/XMLSchema" 
 	      file="${xmlschema.xsd.file}" />
     </schemavalidate>
@@ -85,11 +86,13 @@
       <validate-page uri="@{uri}" />
 
       <xslt in="src/pages/@{uri}.xml"
-	    style="page.xsl" 
+	    style="xsl/page.xsl" 
 	    out="dist/@{uri}.html"
 	    classpath="../lib/saxon.jar" 
-	    force="true">
+	    force="true"
+	    filedirparameter=".">
 	<param name="page.uri" expression="@{uri}" />
+	<param name="project.path" expression="${project.dir}/docs"/>
       </xslt>
     </sequential>
   </macrodef>
@@ -100,7 +103,7 @@
 
     <sequential>
       <schemavalidate file="src/pages/@{uri}.xml" 
-		      noNamespaceFile="schemas/page.xsd" />
+		      noNamespaceFile="xsd/page.xsd" />
     </sequential>
   </macrodef>
 

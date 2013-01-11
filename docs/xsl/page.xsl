@@ -20,14 +20,16 @@
 		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		xmlns:cmn="http://key2gym.org/documentation/common"
 		exclude-result-prefixes="xsl cmn">
-  
+
   <xsl:import href="common.xsl" />
+
+  <xsl:param name="project.path" />
   
   <xsl:param name="page.uri" />
   <xsl:param name="page.uri.seq" select="cmn:uri-to-uri-seq($page.uri)"/>
 
   <xsl:param name="base.path" select="cmn:relative-path-to-base($page.uri)" />
-  <xsl:param name="website" select="document('website.xml')/website" />
+  <xsl:param name="website" select="document(concat($project.path, '/website.xml'))/website" />
 
   <xsl:param name="style.css.path" select="concat($base.path, '/css/style.css')" />
   <xsl:param name="bootstrap.min.css.path" 
@@ -74,7 +76,7 @@
 	      </div>
 	    </xsl:if>
 	    
-	    <xsl:value-of select="unparsed-text('src/html/footer.html')" 
+	    <xsl:value-of select="unparsed-text(concat($project.path, '/src/html/footer.html'))" 
 			  disable-output-escaping="yes" />
 	    
 	  </div>
