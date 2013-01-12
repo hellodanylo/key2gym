@@ -47,7 +47,7 @@ You need:
 
 ## Documentation
 
-The deployment documentation is avaiable online at [key2gym.org](http://key2gym.org/docs/latest/index.html) and in the distribution under the `docs` folder.
+The deployment documentation is avaiable online at [key2gym.org](http://key2gym.org/documentation/latest/index.html) and in the distribution under the `docs` folder.
 
 ## Contributing
 
