@@ -11,12 +11,13 @@
 	<loadproperties prefix="business-api" srcfile="business-api/project.properties" />
     </target>
     
-    <target name="build" depends="init,doc">
+    <target name="build" depends="init">
         <!-- Builds the required subprojects. -->
         <ant antfile="business/build.xml" target="build" inheritall="false" />
         <ant antfile="client/build.xml" target="build" inheritall="false" />
         <ant antfile="migration/build.xml" target="build" inheritall="false" />
-        
+        <ant antfile="docs/build.xml" target="build" inheritall="false" />        
+
         <!-- Prepares the distribution directory. -->
         <mkdir dir="${dist.dir}" />        
         
@@ -30,6 +31,10 @@
         
         <copy todir="${dist.dir}/migration">
             <fileset dir="migration/${migration.dist.dir}" />
+        </copy>
+
+        <copy todir="${dist.dir}/docs">
+            <fileset dir="docs/dist" />
         </copy>
 
 	<!-- Copies binary dependencies -->
@@ -49,6 +54,11 @@
             <format property="TODAY" pattern="dd MMMM YYYY hh:mm:ss aa" />
         </tstamp>
         <echo output="${dist.dir}/build" message="Key2Gym v${version} (${TODAY})"/>
+
+	<zip destfile="dist/Key2Gym_v${version}.zip">
+	  <fileset dir="dist/" excludes="Key2Gym_*.zip"/>
+	</zip>
+
     </target>
     
     <target name="clean" depends="init">
@@ -56,51 +66,11 @@
         <delete dir="${dist.dir}" />
         
         <!-- Cleans the subprojects. -->
+	<ant antfile="docs/build.xml" target="clean" inheritall="false"/>
         <ant antfile="business/build.xml" target="clean" inheritall="false" />
         <ant antfile="client/build.xml" target="clean" inheritall="false" />
         <ant antfile="migration/build.xml" target="clean" inheritall="false" />
 	<ant antfile="business-api/build.xml" target="clean" inheritall="false" />
-    </target>
-    
-    <macrodef name="build-html" description="Used by doc target to prepare html documentation pages.">
-        <attribute name="path" />
-        <sequential>
-            <!-- Creates the documentation folder in case the project was not built. -->
-            <mkdir dir="${dist.dir}/${doc.dir}" />
-            
-            <!-- Adds header and footer to the final file. -->
-            <concat destfile="${dist.dir}/${doc.dir}/@{path}">
-                <filelist dir="${doc.dir}" files="header.html" />
-                <filelist dir="${doc.dir}" files="@{path}" />
-                <filelist dir="${doc.dir}" files="footer.html" />
-            </concat>
-            
-        </sequential>
-    </macrodef>
-        
-    <target name="doc" depends="init" description="Generates the end-user documentation.">
-        <build-html path="index.html" />
-        <build-html path="upgrading.html" />
-        
-        <build-html path="database-index.html" />
-        <build-html path="database-installation.html" />
-        <build-html path="database-schema.html" />
-             
-        <build-html path="client-index.html" />
-        <build-html path="client-installation.html" />
-        <build-html path="client-configuration.html" />
-        <build-html path="client-running.html" />
-
-        <build-html path="business-index.html" />
-        <build-html path="business-installation.html" />
-        <build-html path="business-configuration.html" />
-        <build-html path="business-running.html" />
-                
-        <!-- Copies stylesheet files. -->
-        <copy todir="${dist.dir}/${doc.dir}">
-            <fileset dir="${doc.dir}" includes="*.css" />
-        </copy>
-        
     </target>
     
     <target name="start-openejb" depends="init">       
