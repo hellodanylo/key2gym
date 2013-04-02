@@ -6,7 +6,6 @@
 	<artifactId>key2gym-business</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
 
-
 	<packaging>pom</packaging>
 
 	<modules>
@@ -14,5 +13,15 @@
 		<module>business-ejb</module>
 		<module>business-ear</module>
 	</modules>
-	
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.openejb</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0-4</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+
 </project>

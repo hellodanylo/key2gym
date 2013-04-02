@@ -5,7 +5,7 @@
 	<groupId>org.key2gym</groupId>
 	<artifactId>key2gym-business-ear</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
-
+	
 	<packaging>ear</packaging>
 
 	<dependencies>
@@ -14,6 +14,7 @@
 			<artifactId>key2gym-business-ejb</artifactId>
 			<version>3.0.0-SNAPSHOT</version>
 			<type>ejb</type>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 
