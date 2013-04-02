@@ -37,12 +37,11 @@ Key2Gym is an open-source software licensed under Apache License Version 2.0.
 You need:
 * JDK 1.7+
 * Ant 1.7.0+
-* Scala 2.9.1+
+* Maven 3+
 
 1. Fork or download the repository.
 2. `cd` to the repository's root folder.
-3. Create `private/environment.properties` following the example [here](https://gist.github.com/4153536).
-4. Run `ant build`.
+4. Run `maven clean install`.
 5. See the documentation on the information about the required runtime environment to run the application. You have to deploy the whole environment to check out all the features.
 
 ## Documentation

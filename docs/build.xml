@@ -18,7 +18,6 @@
 
 <project name="Key2Gym - Documentation" default="build" basedir=".">
     
-  <loadproperties srcFile="../private/environment.properties" />
   <loadproperties srcFile="project.properties" />
 
   <target name="build">

@@ -1,5 +1,11 @@
 .fuse*
 
+# All kind of Eclipse files
+.settings
+.classpath
+.project
+.cache
+
 # Emacs backup files
 *~
 
@@ -9,9 +15,11 @@
 # Emacs lock files
 .\#*
 
-bin/
+# Build artifacts
+target/
 dist/
 
-private/
+# Logs
+log/
+logs/
 
-test-app/

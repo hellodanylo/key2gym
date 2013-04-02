@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+	<id>dist</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+
+	<baseDirectory>.</baseDirectory>
+	
+	<files>
+		<file>
+			<source>flyway.properties</source>
+			<outputDirectory>conf/</outputDirectory>
+		</file>
+	</files>
+
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>jars</outputDirectory>
+			<excludes>
+				<exclude>com.googlecode.flyway:flyway-commandline</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+
+	<fileSets>
+		<fileSet>
+			<directory>sql</directory>
+			<outputDirectory>sql</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/flyway-unpacked/flyway-commandline-2.1.1</directory>
+			<outputDirectory>.</outputDirectory>
+			<excludes>
+				<exclude>**/*.txt</exclude>
+				<exclude>**/flyway.properties</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
+</assembly>
