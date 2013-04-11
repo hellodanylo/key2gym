@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" version="6"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/application_6.xsd">
+	
+	<application-name>key2gym</application-name>
+	
+	<module>
+		<ejb>key2gym-business-ejb-${project.version}.jar</ejb>
+	</module>
+	
+	<module>
+		<java>key2gym-client-${project.version}.jar</java>
+	</module>
+	
+</application>

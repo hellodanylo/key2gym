@@ -23,190 +23,214 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.key2gym.client.resources.ResourcesManager;
 
 /**
  * This is the main class of the application.
- *
+ * 
  * It's responsible for the following tasks:
  * <p/>
- *
- * <ul> 
  * 
- * <li> Initializing Logging system.</li> 
+ * <ul>
  * 
- * <li> Processing command line arguments. </li>
+ * <li>Initializing Logging system.</li>
  * 
- * <li> Reading and applying application properties.</li>
+ * <li>Processing command line arguments.</li>
  * 
- * <li> Choosing connection to use. </li>
+ * <li>Reading and applying application properties.</li>
  * 
- * <li> Launching MainFrame.</li> 
+ * <li>Choosing connection to use.</li>
+ * 
+ * <li>Launching MainFrame.</li>
  * 
  * </ul>
- *
+ * 
  * @author Danylo Vashchilenko
  */
 public class Main {
 
-    private static final Logger logger = Logger.getLogger(Main.class.getName());
-    private static final Properties properties = new Properties();
+	private static final Logger logger = Logger.getLogger(Main.class.getName());
+	private static final Properties properties = new Properties();
 
-    /**
-     * The main method which performs all task as described in class
-     * description.
-     *
-     * @param args an array of arguments
-     */
-    public static void main(String[] args) {
-        /*
-         * Configures the logger using 'etc/logging.properties'.
-         */
-        try (InputStream input = new FileInputStream(PATH_LOGGING_PROPERTIES)) {
-            PropertyConfigurator.configure(input);
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to load logging properties:", ex);
-            return;
-        }
+	/**
+	 * The main method which performs all the task described in the class
+	 * description.
+	 * 
+	 * @param args an array of arguments
+	 */
+	public static void main(String[] args) {
 
-        logger.info("Starting...");
+		/*
+		 * Configures the logger using 'etc/logging.properties' or the default
+		 * logging properties file.
+		 */
+		try (InputStream input = new FileInputStream(PATH_LOGGING_PROPERTIES)) {
+			PropertyConfigurator.configure(input);
+		} catch (IOException ex) {
+			try (InputStream input = Thread.currentThread()
+					.getContextClassLoader()
+					.getResourceAsStream(RESOURCE_DEFAULT_LOGGING_PROPERTIES)) {
+				PropertyConfigurator.configure(input);
 
-        /*
-         * Loads the application properties file and fills the registry.
-         */
-        try (FileInputStream input = new FileInputStream(PATH_APPLICATION_PROPERTIES)) {
-            properties.load(input);
-        } catch (IOException ex) {
-            logger.fatal("Failed to load the application properties file:", ex);
-            return;
-        }
+				/*
+				 * Notify that the default logging properties file has been
+				 * used.
+				 */
+				logger.info("Could not load the logging properties file");
+			} catch (IOException ex2) {
+				throw new RuntimeException(
+						"Failed to initialize logging system", ex2);
+			}
+		}
 
-        /*
-         * Parses command line and fills the registry.
-         */
-        Options options = new Options();
-        options.addOption(ARGUMENT_CONNECTION, true, ARGUMENT_CONNECTION_DESCRIPTION);
+		logger.info("Starting...");
 
-        CommandLine cmd;
-        try {
-            cmd = new GnuParser().parse(options, args);
-        } catch (ParseException ex) {
-            logger.fatal("Failed to parse command line:", ex);
-            return;
-        }
+		/*
+		 * Loads the built-in default client properties file.
+		 */
+		try (InputStream input = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream(RESOURCE_DEFAULT_CLIENT_PROPERTIES)) {
+			Properties defaultProperties = null;
+			defaultProperties = new Properties();
+			defaultProperties.load(input);
+			properties.putAll(defaultProperties);
+		} catch (IOException ex) {
+			throw new RuntimeException(
+					"Failed to load the default client properties file", ex);
+		}
 
-        if (cmd.hasOption(ARGUMENT_CONNECTION)) {
-            properties.put(PROPERTY_CONNECTION, cmd.getOptionValue(ARGUMENT_CONNECTION));
-        }
-        
-        /*
-         * Loads the connection properties file.
-         */
-        if (properties.containsKey(PROPERTY_CONNECTION)) {
-            Properties connectionProperties = new Properties();
-            String fileName = PATH_CONNECTIONS_FOLDER + "/" + properties.getProperty(PROPERTY_CONNECTION) + ".properties";
-            try (FileInputStream input = new FileInputStream(fileName)) {
-                connectionProperties.load(input);
-            } catch (IOException ex) {
-                logger.fatal("Failed to load the application properties file:", ex);
-                return;
-            }
-            
-            /*
-             * Copies the connection.url property.
-             */
-            if(connectionProperties.containsKey(PROPERTY_CONNECTION_URL)) {
-                properties.setProperty(PROPERTY_CONNECTION_URL, connectionProperties.getProperty(PROPERTY_CONNECTION_URL));
-            } else {
-                logger.fatal("The connection properties file ("+properties.getProperty(PROPERTY_CONNECTION) +") does not contain the required property "+connectionProperties.getProperty(PROPERTY_CONNECTION_URL) +"!");
-                return;
-            }
-        } else {
-            logger.fatal("No connection has been specified!");
-            return;
-        }
+		/*
+		 * System context is used to retrieve the domain-wide client properties.
+		 */
+		InitialContext systemContext;
+		try {
+			systemContext = new InitialContext();
+			properties.putAll((Properties) systemContext.lookup("key2gym"));
+			systemContext.close();
+		} catch (NamingException ex) {
+			throw new RuntimeException(
+					"Failed to retrieve the domain-wide properties from the application server",
+					ex);
+		}
 
-        /*
-         * Changes the application's locale.
-         */
-        Locale.setDefault(new Locale(properties.getProperty(PROPERTY_LOCALE_LANGUAGE), properties.getProperty(PROPERTY_LOCALE_COUNTRY)));
+		/*
+		 * Loads the local client properties file.
+		 */
+		try (FileInputStream input = new FileInputStream(
+				PATH_APPLICATION_PROPERTIES)) {
+			Properties localProperties = null;
+			localProperties = new Properties();
+			localProperties.load(input);
+			properties.putAll(localProperties);
+		} catch (IOException ex) {
+			if (logger.isEnabledFor(Level.DEBUG)) {
+				logger.debug("Failed to load the client properties file", ex);
+			} else {
+				logger.info("Could not load the local client properties file");
+			}
 
-        /*
-         * Changes the application's L&F.
-         */
-        String ui = (String) properties.get("ui");
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if (ui.equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            logger.error("Failed to change the L&F:", ex);
-        }
+			/*
+			 * It's okay to start without the local properties file.
+			 */
+		}
+		
+		logger.debug("Effective properties: " + properties);
 
-        logger.info("Started!");
+		if (properties.containsKey(PROPERTY_LOCALE_COUNTRY)
+				&& properties.containsKey(PROPERTY_LOCALE_LANGUAGE)) {
 
-        launchAndWaitMainFrame();
+			/*
+			 * Changes the application's locale.
+			 */
+			Locale.setDefault(new Locale(properties
+					.getProperty(PROPERTY_LOCALE_LANGUAGE), properties
+					.getProperty(PROPERTY_LOCALE_COUNTRY)));
 
-        logger.info("Shutting down!");
-    }
+		} else {
+			logger.debug("Using the default locale");
+		}
 
-    /**
-     * Launches and waits for the MainFrame to close.
-     */
-    private static void launchAndWaitMainFrame() {
-        try {
-            EventQueue.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    MainFrame.getInstance().setVisible(true);
-                }
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            logger.error("Unexpected exception:", ex);
-        }
+		/*
+		 * Changes the application's L&F.
+		 */
+		String ui = properties.getProperty(PROPERTY_UI);
+		try {
+			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
+					.getInstalledLookAndFeels()) {
+				if (ui.equalsIgnoreCase(info.getName())) {
+					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException ex) {
+			logger.error("Failed to change the L&F:", ex);
+		}
 
-        synchronized (MainFrame.getInstance()) {
-            while (MainFrame.getInstance().isVisible()) {
-                try {
-                    MainFrame.getInstance().wait();
-                } catch (InterruptedException ex) {
-                    logger.error("Unexpected exception:", ex);
-                }
-            }
-        }
-    }
-    /*
-     * Environment files.
-     */
-    private static final String PATH_APPLICATION_PROPERTIES = "etc/application.properties";
-    private static final String PATH_LOGGING_PROPERTIES = "etc/logging.properties";
-    private static final String PATH_CONNECTIONS_FOLDER = "etc/connections";
-    /*
-     * Command-line arguments.
-     */
-    private static final String ARGUMENT_CONNECTION = "connection";
-    private static final String ARGUMENT_CONNECTION_DESCRIPTION = "the name of the connection to use.";
+		logger.info("Started!");
 
-    /*
-     * Application registry properties.
-     */
-    public static final String PROPERTY_LOCALE_COUNTRY = "locale.country";
-    public static final String PROPERTY_LOCALE_LANGUAGE = "locale.language";
-    public static final String PROPERTY_CONNECTION = "connection";
-    public static final String PROPERTY_REFRESH_PERIOD = "refreshPeriod";
-    public static final String PROPERTY_CONNECTION_URL = "connection.url";
+		launchAndWaitMainFrame();
 
-    public static Properties getProperties() {
-        return properties;
-    }
+		logger.info("Shutting down!");
+	}
+
+	/**
+	 * Launches and waits for the MainFrame to close.
+	 */
+	private static void launchAndWaitMainFrame() {
+		try {
+			EventQueue.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					MainFrame.getInstance().setVisible(true);
+				}
+			});
+		} catch (InterruptedException | InvocationTargetException ex) {
+			logger.error("Unexpected exception:", ex);
+		}
+
+		synchronized (MainFrame.getInstance()) {
+			while (MainFrame.getInstance().isVisible()) {
+				try {
+					MainFrame.getInstance().wait();
+				} catch (InterruptedException ex) {
+					logger.error("Unexpected exception:", ex);
+				}
+			}
+		}
+	}
+
+	/*
+	 * Environment files.
+	 */
+	private static final String PATH_APPLICATION_PROPERTIES = "etc/application.properties";
+	private static final String PATH_LOGGING_PROPERTIES = "etc/logging.properties";
+	private static final String RESOURCE_DEFAULT_CLIENT_PROPERTIES = "org/key2gym/client/resources/default.properties";
+	private static final String RESOURCE_DEFAULT_LOGGING_PROPERTIES = "org/key2gym/client/resources/default-logging.properties";
+	/*
+	 * Command-line arguments.
+	 */
+	/*
+	 * Application registry properties.
+	 */
+	public static final String PROPERTY_LOCALE_COUNTRY = "locale.country";
+	public static final String PROPERTY_LOCALE_LANGUAGE = "locale.language";
+	public static final String PROPERTY_REFRESH_PERIOD = "client.refreshPeriod";
+	public static final String PROPERTY_UI = "client.ui";
+
+	public static Properties getProperties() {
+		return properties;
+	}
 }

@@ -6,6 +6,15 @@
 	<artifactId>key2gym-client</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
 
+	<packaging>app-client</packaging>
+
+	<repositories>
+		<repository>
+			<id>EclipseLink</id>
+			<url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.key2gym</groupId>
@@ -38,9 +47,10 @@
 			<version>1.2.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.openejb</groupId>
-			<artifactId>openejb-client</artifactId>
-			<version>4.5.1</version>
+			<groupId>org.glassfish.security</groupId>
+			<artifactId>security</artifactId>
+			<version>3.1.1</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -82,29 +92,46 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
-
-				<executions>
-					<execution>
-						<id>create-bundle</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-acr-plugin</artifactId>
+				<version>1.0</version>
+				<extensions>true</extensions>
 				<configuration>
 					<archive>
 						<manifest>
 							<mainClass>org.key2gym.client.Main</mainClass>
 						</manifest>
 					</archive>
-					<descriptors>
-						<descriptor>src/main/assembly/src.xml</descriptor>
-					</descriptors>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>native2ascii-maven-plugin</artifactId>
+				<version>1.0-beta-1</version>
+				<executions>
+					<execution>
+						<phase>compile-classes</phase>
+						<goals>
+							<goal>native2ascii</goal>
+						</goals>
+						<configuration>
+							<encoding>UTF8</encoding>
+							<src>${project.build.resources.resource.directory}</src>
+							<dest>target/classes</dest>
+							<includes>
+								<include>**/*.properties</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

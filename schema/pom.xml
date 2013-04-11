@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.key2gym</groupId>
-	<artifactId>key2gym-schema</artifactId>
+	<artifactId>key2gym-database-schema</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
 
 	<dependencies>
@@ -19,6 +19,12 @@
 			<version>2.1.1</version>
 			<type>zip</type>
 			<classifier>dist</classifier>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>

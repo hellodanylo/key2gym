@@ -21,63 +21,65 @@ import org.apache.log4j.Logger;
 
 /**
  * Notifies the observers at the data refresh rate.
- *
- * This class will read the configuration and notify the observers
- * at the rate specified in the application's configuration.
  * 
- * The notification is done on the timer's thread, therefore observers
- * should return as quickly as possible.
+ * This class will read the configuration and notify the observers at the rate
+ * specified in the application's configuration.
+ * 
+ * The notification is done on the timer's thread, therefore observers should
+ * return as quickly as possible.
  */
 public class DataRefreshPulse extends Observable {
-    protected DataRefreshPulse() {
+	protected DataRefreshPulse() {
 
-	logger = Logger.getLogger(DataRefreshPulse.class);
+		logger = Logger.getLogger(DataRefreshPulse.class);
 
-	String refreshPeriod = Main.getProperties().getProperty(Main.PROPERTY_REFRESH_PERIOD);
+		String refreshPeriod = Main.getProperties().getProperty(
+				Main.PROPERTY_REFRESH_PERIOD);
 
-	/* If the data refresh feature is disabled, returns. */
-	if(refreshPeriod.equals("off")) {
-	    logger.debug("Date refresh feature is disabled.");
-	    return;
+		/* If the data refresh feature is disabled, returns. */
+		if (refreshPeriod.equals("off")) {
+			logger.debug("Date refresh feature is disabled.");
+			return;
+		}
+
+		timer = new Timer("DataRefreshPulse-Timer", true);
+
+		try {
+			timer.scheduleAtFixedRate(new DataRefreshTimerTask(), new Date(),
+					Long.valueOf(refreshPeriod));
+
+			logger.debug("Will pulse with the following period: "
+					+ refreshPeriod);
+
+		} catch (NumberFormatException ex) {
+			logger.error("Data refresh property is invalid. Won't refresh.", ex);
+		}
 	}
 
-        timer = new Timer("DataRefreshPulse-Timer", true);
+	private class DataRefreshTimerTask extends TimerTask {
+		@Override
+		public void run() {
+			logger.trace("Pulsing!");
 
-        try {
-	    timer.scheduleAtFixedRate(new DataRefreshTimerTask(), 
-					new Date(), Long.valueOf(refreshPeriod));
-
-	    logger.debug("Will pulse with the following period: " + refreshPeriod);
-
-	} catch(NumberFormatException ex) {
-	    logger.error("Data refresh property is invalid. Won't refresh.", ex);
-	}
-    }
-
-    private class DataRefreshTimerTask extends TimerTask {
-	@Override
-	public void run() {
-	    logger.trace("Pulsing!");
-
-	    setChanged();
-	    notifyObservers(null);
-	}
-    }
-
-    private Timer timer;
-    private Logger logger;
-
-    /**
-     * Singleton instance.
-     */
-    private static DataRefreshPulse instance;
-
-    public static DataRefreshPulse getInstance() {
-
-	if(instance == null) {
-	    instance = new DataRefreshPulse();
+			setChanged();
+			notifyObservers(null);
+		}
 	}
 
-	return instance;
-    }
+	private Timer timer;
+	private Logger logger;
+
+	/**
+	 * Singleton instance.
+	 */
+	private static DataRefreshPulse instance;
+
+	public static DataRefreshPulse getInstance() {
+
+		if (instance == null) {
+			instance = new DataRefreshPulse();
+		}
+
+		return instance;
+	}
 }

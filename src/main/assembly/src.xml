@@ -18,7 +18,7 @@
 		<dependencySet>
 			<outputDirectory>server</outputDirectory>
 			<includes>
-				<include>org.key2gym:key2gym-business</include>
+				<include>org.key2gym:key2gym-ear</include>
 			</includes>
 		</dependencySet>
 		<dependencySet>

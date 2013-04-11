@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glassfish-application-client>
+
+	<java-web-start-access>
+		<context-root>key2gym/client</context-root>
+		<vendor>::org/key2gym/client/resources/logo.png::Key2Gym</vendor>
+	</java-web-start-access>
+
+</glassfish-application-client>
