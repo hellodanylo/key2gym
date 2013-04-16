@@ -15,19 +15,33 @@
  */
 package org.key2gym.client.panels.forms;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
-import javax.swing.*;
-import org.jdesktop.beansbinding.*;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import org.jdesktop.beansbinding.AutoBinding;
+import org.jdesktop.beansbinding.BeanProperty;
+import org.jdesktop.beansbinding.Binding;
+import org.jdesktop.beansbinding.BindingGroup;
+import org.jdesktop.beansbinding.Bindings;
+import org.jdesktop.beansbinding.Converter;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.CashAdjustmentDTO;
-import org.key2gym.client.util.FormBindingListener;
 import org.key2gym.client.UserExceptionHandler;
+import org.key2gym.client.util.FormBindingListener;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *

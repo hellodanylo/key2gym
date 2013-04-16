@@ -16,9 +16,9 @@
 package org.key2gym.client.actions;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import org.apache.log4j.Logger;
+
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;

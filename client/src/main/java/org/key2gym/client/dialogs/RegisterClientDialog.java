@@ -15,23 +15,36 @@
  */
 package org.key2gym.client.dialogs;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.key2gym.business.api.*;
-import org.key2gym.business.api.dtos.*;
-import org.key2gym.business.api.remote.*;
+
+import org.key2gym.business.api.SecurityRoles;
+import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
+import org.key2gym.business.api.dtos.ClientDTO;
+import org.key2gym.business.api.dtos.ClientProfileDTO;
+import org.key2gym.business.api.services.AdministratorsService;
+import org.key2gym.business.api.services.ClientProfilesService;
+import org.key2gym.business.api.services.ClientsService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.panels.forms.ClientFormPanel;
 import org.key2gym.client.panels.forms.ClientProfileFormPanel;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -45,11 +58,11 @@ public class RegisterClientDialog extends AbstractDialog {
     public RegisterClientDialog(JFrame parent) throws SecurityViolationException {
         super(parent, true);
 
-        clientsService = ContextManager.lookup(ClientsServiceRemote.class);
+        clientsService = ContextManager.lookup(ClientsService.class);
         client = clientsService.getTemplateClient();
         isClientRegistered = false;
 
-        clientProfilesService = ContextManager.lookup(ClientProfilesServiceRemote.class);
+        clientProfilesService = ContextManager.lookup(ClientProfilesService.class);
         clientProfile = new ClientProfileDTO();
 
         buildDialog();
@@ -142,7 +155,7 @@ public class RegisterClientDialog extends AbstractDialog {
         try {
             if (!isClientRegistered) {
                 Integer clientId = clientsService.registerClient(client, 
-								 ContextManager.lookup(AdministratorsServiceRemote.class)
+								 ContextManager.lookup(AdministratorsService.class)
 								 .getCurrent().getRoles().contains(SecurityRoles.MANAGER));
                 client.setId(clientId);
                 isClientRegistered = true;
@@ -202,10 +215,10 @@ public class RegisterClientDialog extends AbstractDialog {
     /*
      * Business
      */
-    private ClientsServiceRemote clientsService;
+    private ClientsService clientsService;
     private ClientDTO client;
     private Boolean isClientRegistered;
-    private ClientProfilesServiceRemote clientProfilesService;
+    private ClientProfilesService clientProfilesService;
     private ClientProfileDTO clientProfile;
 
     /*

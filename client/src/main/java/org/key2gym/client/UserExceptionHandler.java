@@ -15,11 +15,13 @@
  */
 package org.key2gym.client;
 
+import static org.key2gym.client.resources.ResourcesManager.getString;
+
 import java.awt.Component;
-import java.util.ResourceBundle;
+
 import javax.swing.FocusManager;
 import javax.swing.JOptionPane;
-import static org.key2gym.client.resources.ResourcesManager.*;
+
 import org.key2gym.business.api.UserException;
 
 /**

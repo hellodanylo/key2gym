@@ -15,30 +15,44 @@
  */
 package org.key2gym.client.dialogs;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
-import javax.swing.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ServiceLoader;
+
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.JFileChooser;
-import org.apache.log4j.*;
-import org.joda.time.DateMidnight;
+
+import org.apache.log4j.Logger;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.ReportDTO;
 import org.key2gym.business.api.dtos.ReportGeneratorDTO;
-import org.key2gym.business.api.remote.ReportsServiceRemote;
+import org.key2gym.business.api.services.ReportsService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.MainFrame;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.panels.forms.ReportInputFormPanel;
-import org.key2gym.client.report.spi.*;
+import org.key2gym.client.report.spi.ReportHandler;
+import org.key2gym.client.report.spi.ReportInputSource;
 import org.key2gym.client.util.ReportsTableModel;
 import org.key2gym.client.util.ReportsTableModel.Column;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -52,7 +66,7 @@ public class ManageReportsDialog extends AbstractDialog {
     public ManageReportsDialog(JFrame parent) throws SecurityViolationException {
         super(parent, true);
         
-        service = ContextManager.lookup(ReportsServiceRemote.class);
+        service = ContextManager.lookup(ReportsService.class);
 
         initComponents();
         buildDialog();
@@ -273,7 +287,7 @@ public class ManageReportsDialog extends AbstractDialog {
             }
 
             try {
-                ContextManager.lookup(ReportsServiceRemote.class).generateReport(generator.getId(), formDialog.getFormPanel().getForm());
+                ContextManager.lookup(ReportsService.class).generateReport(generator.getId(), formDialog.getFormPanel().getForm());
             } catch (UserException ex) {
                 UserExceptionHandler.getInstance().processException(ex);
             }
@@ -418,7 +432,7 @@ public class ManageReportsDialog extends AbstractDialog {
 
     private void loadReports() {
         try {
-            reports = ContextManager.lookup(ReportsServiceRemote.class).getAll();
+            reports = ContextManager.lookup(ReportsService.class).getAll();
         } catch (SecurityViolationException ex) {
             UserExceptionHandler.getInstance().processException(ex);
             return;
@@ -449,7 +463,7 @@ public class ManageReportsDialog extends AbstractDialog {
      * Business
      */
     private List<ReportDTO> reports;
-    private ReportsServiceRemote service;
+    private ReportsService service;
 
     /*
      * Presentation

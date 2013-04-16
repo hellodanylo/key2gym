@@ -15,8 +15,6 @@
  */
 package org.key2gym.client.dialogs;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -27,25 +25,44 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.business.api.dtos.KeyDTO;
-import org.key2gym.business.api.remote.AttendancesServiceRemote;
-import org.key2gym.business.api.remote.ClientsServiceRemote;
-import org.key2gym.business.api.remote.KeysServiceRemote;
+import org.key2gym.business.api.services.AttendancesService;
+import org.key2gym.business.api.services.ClientsService;
+import org.key2gym.business.api.services.KeysService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.colors.Palette;
 import org.key2gym.client.panels.forms.ClientFormPanel;
 import org.key2gym.client.panels.forms.ClientFormPanel.Column;
 import org.key2gym.client.renderers.KeyListCellRenderer;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -58,7 +75,7 @@ public class CheckInDialog extends AbstractDialog {
      */
     public CheckInDialog(JFrame parent) throws BusinessException, SecurityViolationException {
         super(parent, true);
-        clientsService = ContextManager.lookup(ClientsServiceRemote.class);
+        clientsService = ContextManager.lookup(ClientsService.class);
         
         buildDialog();
 
@@ -158,7 +175,7 @@ public class CheckInDialog extends AbstractDialog {
         panel.add(label, CC.xy(1, 1));
 
         keysComboBox = new JComboBox();
-        List keys = ContextManager.lookup(KeysServiceRemote.class).getKeysAvailable();
+        List keys = ContextManager.lookup(KeysService.class).getKeysAvailable();
         if (keys.isEmpty()) {
             throw new BusinessException(getString("Message.NoKeyIsAvailable"));
         }
@@ -379,7 +396,7 @@ public class CheckInDialog extends AbstractDialog {
     protected void onOkActionPerformed(ActionEvent e) {
 
         Integer selectedKeyId;
-        AttendancesServiceRemote attendancesService = ContextManager.lookup(AttendancesServiceRemote.class);
+        AttendancesService attendancesService = ContextManager.lookup(AttendancesService.class);
 
         try {
 
@@ -505,7 +522,7 @@ public class CheckInDialog extends AbstractDialog {
     /*
      * Business
      */
-    private ClientsServiceRemote clientsService;
+    private ClientsService clientsService;
     /*
      * Session variables
      */

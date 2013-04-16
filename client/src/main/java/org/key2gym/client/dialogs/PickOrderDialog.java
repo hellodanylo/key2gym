@@ -15,25 +15,35 @@
  */
 package org.key2gym.client.dialogs;
 
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.ValidationException;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.WindowConstants;
+
 import org.joda.time.DateMidnight;
+import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.dtos.KeyDTO;
-import org.key2gym.business.api.remote.AttendancesServiceRemote;
-import org.key2gym.business.api.remote.KeysServiceRemote;
-import org.key2gym.business.api.remote.OrdersServiceRemote;
+import org.key2gym.business.api.services.AttendancesService;
+import org.key2gym.business.api.services.KeysService;
+import org.key2gym.business.api.services.OrdersService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.renderers.KeyListCellRenderer;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -49,9 +59,9 @@ public class PickOrderDialog extends AbstractDialog {
     public PickOrderDialog(JFrame parent) throws SecurityViolationException {
         super(parent, true);
         
-        keysService = ContextManager.lookup(KeysServiceRemote.class);
-        attendancesService = ContextManager.lookup(AttendancesServiceRemote.class);
-        ordersService = ContextManager.lookup(OrdersServiceRemote.class);
+        keysService = ContextManager.lookup(KeysService.class);
+        attendancesService = ContextManager.lookup(AttendancesService.class);
+        ordersService = ContextManager.lookup(OrdersService.class);
 
         initComponents();
         buildDialog();
@@ -254,9 +264,9 @@ public class PickOrderDialog extends AbstractDialog {
     /*
      * Business
      */
-    private AttendancesServiceRemote attendancesService;
-    private KeysServiceRemote keysService;
-    private OrdersServiceRemote ordersService;
+    private AttendancesService attendancesService;
+    private KeysService keysService;
+    private OrdersService ordersService;
     /*
      * Session variables
      */

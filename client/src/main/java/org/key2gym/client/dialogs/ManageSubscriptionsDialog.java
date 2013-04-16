@@ -15,26 +15,36 @@
  */
 package org.key2gym.client.dialogs;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
+
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.SubscriptionDTO;
-import org.key2gym.business.api.remote.SubscriptionsServiceRemote;
+import org.key2gym.business.api.services.SubscriptionsService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.factories.FormPanelDialogsFactory;
 import org.key2gym.client.util.SubscriptionsTableModel;
 import org.key2gym.client.util.SubscriptionsTableModel.Column;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -48,7 +58,7 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
     public ManageSubscriptionsDialog(JFrame parent) throws SecurityViolationException {
         super(parent, true);
 
-        subscriptionsService = ContextManager.lookup(SubscriptionsServiceRemote.class);
+        subscriptionsService = ContextManager.lookup(SubscriptionsService.class);
         subscriptions = subscriptionsService.getAllSubscriptions();
 
         initComponents();
@@ -230,7 +240,7 @@ public class ManageSubscriptionsDialog extends AbstractDialog {
      * Business
      */
     private List<SubscriptionDTO> subscriptions;
-    private SubscriptionsServiceRemote subscriptionsService;
+    private SubscriptionsService subscriptionsService;
     /*
      * Presentation
      */

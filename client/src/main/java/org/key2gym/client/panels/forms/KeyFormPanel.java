@@ -15,13 +15,19 @@
  */
 package org.key2gym.client.panels.forms;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
 import javax.swing.JTextField;
-import org.jdesktop.beansbinding.*;
+
+import org.jdesktop.beansbinding.AutoBinding;
+import org.jdesktop.beansbinding.BeanProperty;
+import org.jdesktop.beansbinding.Binding;
+import org.jdesktop.beansbinding.BindingGroup;
+import org.jdesktop.beansbinding.Bindings;
 import org.key2gym.business.api.dtos.KeyDTO;
 import org.key2gym.client.util.FormBindingListener;
 import org.key2gym.client.util.IntegerToStringConverter;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *

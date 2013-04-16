@@ -16,6 +16,7 @@
 package org.key2gym.client.actions;
 
 import java.awt.event.ActionEvent;
+
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.dialogs.OpenSessionDialog;
 

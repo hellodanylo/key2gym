@@ -16,8 +16,10 @@
 package org.key2gym.client.util;
 
 import java.awt.Component;
+
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+
 import org.key2gym.business.api.dtos.ReportGeneratorDTO;
 
 /**

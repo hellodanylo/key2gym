@@ -15,9 +15,6 @@
  */
 package org.key2gym.client.dialogs;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -28,8 +25,25 @@ import java.awt.event.FocusEvent;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
-import javax.swing.*;
-import org.key2gym.business.api.BusinessException;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.WindowConstants;
+
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
@@ -39,11 +53,11 @@ import org.key2gym.business.api.dtos.DiscountDTO;
 import org.key2gym.business.api.dtos.ItemDTO;
 import org.key2gym.business.api.dtos.OrderDTO;
 import org.key2gym.business.api.dtos.OrderLineDTO;
-import org.key2gym.business.api.remote.AttendancesServiceRemote;
-import org.key2gym.business.api.remote.ClientsServiceRemote;
-import org.key2gym.business.api.remote.DiscountsServiceRemote;
-import org.key2gym.business.api.remote.ItemsServiceRemote;
-import org.key2gym.business.api.remote.OrdersServiceRemote;
+import org.key2gym.business.api.services.AttendancesService;
+import org.key2gym.business.api.services.ClientsService;
+import org.key2gym.business.api.services.DiscountsService;
+import org.key2gym.business.api.services.ItemsService;
+import org.key2gym.business.api.services.OrdersService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.colors.Palette;
@@ -51,6 +65,10 @@ import org.key2gym.client.renderers.DiscountListCellRenderer;
 import org.key2gym.client.renderers.ItemListCellRenderer;
 import org.key2gym.client.util.MutableListModel;
 import org.key2gym.client.util.OrderLinesTableModel;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * The dialog for viewing and editing an order.
@@ -83,11 +101,11 @@ public class EditOrderDialog extends AbstractDialog {
     public EditOrderDialog(JFrame parent) {
         super(parent, true);
 
-        clientsService = ContextManager.lookup(ClientsServiceRemote.class);
-        attendancesService = ContextManager.lookup(AttendancesServiceRemote.class);
-        itemsService = ContextManager.lookup(ItemsServiceRemote.class);
-        discountsService = ContextManager.lookup(DiscountsServiceRemote.class);
-        ordersService = ContextManager.lookup(OrdersServiceRemote.class);
+        clientsService = ContextManager.lookup(ClientsService.class);
+        attendancesService = ContextManager.lookup(AttendancesService.class);
+        itemsService = ContextManager.lookup(ItemsService.class);
+        discountsService = ContextManager.lookup(DiscountsService.class);
+        ordersService = ContextManager.lookup(OrdersService.class);
 
         fullPaymentForced = false;
 
@@ -580,11 +598,11 @@ public class EditOrderDialog extends AbstractDialog {
     /*
      * Business
      */
-    private ClientsServiceRemote clientsService;
-    private AttendancesServiceRemote attendancesService;
-    private ItemsServiceRemote itemsService;
-    private DiscountsServiceRemote discountsService;
-    private OrdersServiceRemote ordersService;
+    private ClientsService clientsService;
+    private AttendancesService attendancesService;
+    private ItemsService itemsService;
+    private DiscountsService discountsService;
+    private OrdersService ordersService;
     private Integer orderId;
     /*
      * Components

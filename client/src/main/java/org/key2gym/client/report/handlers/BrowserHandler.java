@@ -17,12 +17,15 @@
 package org.key2gym.client.report.handlers;
 
 import java.awt.Desktop;
-import java.io.*;
-import org.key2gym.client.UserExceptionHandler;
-import org.key2gym.client.resources.ResourcesManager;
-import org.key2gym.client.report.spi.ReportHandler;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.ReportDTO;
+import org.key2gym.client.UserExceptionHandler;
+import org.key2gym.client.report.spi.ReportHandler;
 import org.key2gym.client.resources.ResourcesManager;
 
 /**

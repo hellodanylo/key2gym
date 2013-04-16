@@ -15,21 +15,26 @@
  */
 package org.key2gym.client.panels.forms;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
 import java.util.ResourceBundle;
+
 import javax.swing.JTextField;
+
 import org.jdesktop.beansbinding.AutoBinding;
 import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.Binding;
 import org.jdesktop.beansbinding.BindingGroup;
 import org.jdesktop.beansbinding.Bindings;
+import org.joda.time.DateMidnight;
+import org.joda.time.Interval;
+import org.joda.time.ReadableInterval;
 import org.key2gym.client.report.spi.ReportInputSource;
 import org.key2gym.client.resources.ResourcesManager;
+import org.key2gym.client.util.BindableMutableInterval;
 import org.key2gym.client.util.DateTimeToStringConverter;
 import org.key2gym.client.util.FormBindingListener;
-import org.key2gym.client.util.BindableMutableInterval;
-import org.joda.time.*;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *

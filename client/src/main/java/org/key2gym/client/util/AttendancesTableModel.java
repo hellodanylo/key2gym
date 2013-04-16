@@ -19,7 +19,9 @@ import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javax.swing.table.AbstractTableModel;
+
 import org.key2gym.business.api.dtos.AttendanceDTO;
 
 /**

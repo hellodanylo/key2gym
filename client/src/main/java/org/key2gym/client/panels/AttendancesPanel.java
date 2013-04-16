@@ -15,26 +15,32 @@
  */
 package org.key2gym.client.panels;
 
-import org.key2gym.client.renderers.AttendancesTableCellRenderer;
-import org.key2gym.client.util.AttendancesTableModel;
-import org.key2gym.client.util.AttendancesTableModel.Column;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.FocusEvent;
-import java.util.*;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.ResourceBundle;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
 import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
-import org.key2gym.business.api.remote.AttendancesServiceRemote;
+import org.key2gym.business.api.services.AttendancesService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.DataRefreshPulse;
+import org.key2gym.client.renderers.AttendancesTableCellRenderer;
+import org.key2gym.client.util.AttendancesTableModel;
+import org.key2gym.client.util.AttendancesTableModel.Column;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -46,7 +52,7 @@ public class AttendancesPanel extends JPanel {
      * Creates new AttendancesPanel.
      */
     public AttendancesPanel() {
-        attendancesService = ContextManager.lookup(AttendancesServiceRemote.class);
+        attendancesService = ContextManager.lookup(AttendancesService.class);
         strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
 
         initComponents();
@@ -218,5 +224,5 @@ public class AttendancesPanel extends JPanel {
     /*
      * Business
      */
-    private AttendancesServiceRemote attendancesService;
+    private AttendancesService attendancesService;
 }

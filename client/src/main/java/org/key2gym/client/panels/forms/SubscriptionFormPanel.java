@@ -15,23 +15,37 @@
  */
 package org.key2gym.client.panels.forms;
 
-import org.key2gym.business.api.ValidationException;
-import org.key2gym.client.util.FormBindingListener;
-import org.key2gym.client.renderers.TimeSplitListCellRenderer;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.*;
-import org.jdesktop.beansbinding.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.SpinnerNumberModel;
+
+import org.jdesktop.beansbinding.AutoBinding;
+import org.jdesktop.beansbinding.BeanProperty;
+import org.jdesktop.beansbinding.Binding;
+import org.jdesktop.beansbinding.BindingGroup;
+import org.jdesktop.beansbinding.Bindings;
+import org.jdesktop.beansbinding.Converter;
+import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.SubscriptionDTO;
 import org.key2gym.business.api.dtos.TimeSplitDTO;
-import org.key2gym.business.api.remote.TimeSplitsServiceRemote;
+import org.key2gym.business.api.services.TimeSplitsService;
 import org.key2gym.client.ContextManager;
+import org.key2gym.client.renderers.TimeSplitListCellRenderer;
+import org.key2gym.client.util.FormBindingListener;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -44,7 +58,7 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
      */
     public SubscriptionFormPanel() {
 
-        timeSplits = ContextManager.lookup(TimeSplitsServiceRemote.class).getAll();
+        timeSplits = ContextManager.lookup(TimeSplitsService.class).getAll();
         if (timeSplits.isEmpty()) {
             throw new RuntimeException("There is not any time splits found.");
         }

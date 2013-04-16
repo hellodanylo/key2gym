@@ -16,12 +16,13 @@
 
 package org.key2gym.client.report.handlers;
 
-import java.awt.Component;
 import java.io.UnsupportedEncodingException;
+
 import javax.swing.JTextArea;
+
+import org.key2gym.business.api.dtos.ReportDTO;
 import org.key2gym.client.MainFrame;
 import org.key2gym.client.report.spi.ReportHandler;
-import org.key2gym.business.api.dtos.ReportDTO;
 import org.key2gym.client.resources.ResourcesManager;
 
 /**

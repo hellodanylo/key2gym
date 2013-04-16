@@ -17,13 +17,12 @@ package org.key2gym.client.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import javax.swing.JOptionPane;
+
 import javax.swing.KeyStroke;
-import org.apache.log4j.Logger;
+
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
-import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.MainFrame;
 
 /**

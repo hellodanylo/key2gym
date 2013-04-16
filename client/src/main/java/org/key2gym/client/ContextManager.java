@@ -25,10 +25,14 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.remote.AdministratorsServiceRemote;
+import org.key2gym.business.api.services.AdministratorsService;
 import org.key2gym.client.resources.ResourcesManager;
-
-import com.sun.appserv.security.ProgrammaticLogin;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Manages the contexts used by the application.
@@ -50,6 +54,7 @@ import com.sun.appserv.security.ProgrammaticLogin;
  * 
  * @author Danylo Vashchilenko
  */
+@Deprecated
 public class ContextManager extends Observable {
 
 	static {
@@ -57,103 +62,60 @@ public class ContextManager extends Observable {
 	}
 
 	protected ContextManager() {
-		programmaticLogin = new ProgrammaticLogin();
+
 	}
 
 	public void login(String username, String password)
 			throws ValidationException {
 
-		Logger logger = Logger.getLogger(ContextManager.class);
+		if (shadowAuthentication != null) {
+			throw new IllegalStateException(
+					"There is already a primary and a shadow contexts.");
+		}
 
 		logger.debug("Log in attempt: " + username);
 
-		try {
-			programmaticLogin.login(username, hashWithSHA256(password)
-					.toCharArray());
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to login", e);
-		}
-
-		InitialContext newContext;
-		try {
-			newContext = new InitialContext();
-		} catch (NamingException ex) {
-			throw new RuntimeException("Failed to create InitialContext", ex);
-		}
+		Authentication request = new UsernamePasswordAuthenticationToken(
+				username, password);
+		Authentication result = Main.getContext()
+				.getBean("authenticationManager", AuthenticationManager.class)
+				.authenticate(request);
 
 		try {
-			doLookup(AdministratorsServiceRemote.class, newContext).ping();
-		} catch (Exception ex) {
+			SecurityContextHolder.getContext().setAuthentication(result);
+		} catch (BadCredentialsException ex) {
 			Logger.getLogger(ContextManager.class).info(
 					"Authentication failed for the user: " + username, ex);
 			throw new ValidationException(ResourcesManager.getStrings()
 					.getString("Message.LoggingInFailed"));
 		}
 
-		if (context == null) {
-			context = newContext;
-		} else if (shadowContext == null) {
-			shadowContext = context;
-			context = newContext;
+		if (authentication == null) {
+			authentication = result;
 		} else {
-			throw new IllegalStateException(
-					"There is already a primary and a shadow contexts.");
+			shadowAuthentication = authentication;
+			authentication = result;
 		}
 
 		setChanged();
 		notifyObservers();
 	}
 
-	/**
-	 * Hashes the password with SHA-256.
-	 * 
-	 * @password the password to hash
-	 */
-	private String hashWithSHA256(String password) {
-
-		MessageDigest md;
-		try {
-			md = MessageDigest.getInstance("SHA-256"); // NOI18N
-		} catch (NoSuchAlgorithmException ex) {
-			throw new RuntimeException(ex);
-		}
-		try {
-			md.update(String.valueOf(password).getBytes("UTF-8")); // NOI18N
-		} catch (UnsupportedEncodingException ex) {
-			throw new RuntimeException(ex);
-		}
-
-		byte byteData[] = md.digest();
-
-		/*
-		 * Converts the bytes to a hex string
-		 */
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < byteData.length; i++) {
-			sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16)
-					.substring(1));
-		}
-
-		return sb.toString();
-	}
-
 	public void logout() {
-		try {
-			context.close();
-		} catch (NamingException ex) {
-			Logger.getLogger(ContextManager.class).error(
-					"Failed to close the context!", ex);
+
+		if (shadowAuthentication != null) {
+			authentication = shadowAuthentication;
+			shadowAuthentication = null;
+		} else if (authentication != null) {
+			authentication = null;
+		} else {
+			throw new RuntimeException("No authentication is available.");
 		}
 
-		if (shadowContext != null) {
-			context = shadowContext;
-			shadowContext = null;
-		} else {
-			context = null;
-		}
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		setChanged();
-		notifyObservers(context);
+		notifyObservers(authentication);
 	}
 
 	/**
@@ -165,67 +127,28 @@ public class ContextManager extends Observable {
 	 *            the class of the type to lookup
 	 * @return an instance of the EJB
 	 */
+	@Deprecated
 	public static <T> T lookup(Class<T> clazz) {
-		return instance.doLookup(clazz, instance.context);
+		return instance.doLookup(clazz);
 	}
 
-	public static <T> T lookup(String jndiName) {
-		return instance.doLookup(jndiName);
-	}
-
-	protected <T> T doLookup(Class<T> clazz, InitialContext context) {
-
-		/*
-		 * If no context is available (e.g. no current user), throws a runtime
-		 * exception.
-		 */
-		if (context == null) {
-			throw new IllegalStateException("No context is available");
-		}
-
-		try {
-			Logger.getLogger(ContextManager.class).debug(
-					"Looking up: " + clazz.getSimpleName());
-			
-			// TODO: add jndi name caching
-			return (T) context.lookup("java:global/key2gym/business/"
-					+ clazz.getSimpleName().replaceAll("Remote", "Bean") + "!"
-					+ clazz.getName());
-		} catch (NamingException ex) {
-			throw new RuntimeException("Failed to lookup an EJB: ", ex);
-		} catch (ClassCastException ex) {
-			throw new RuntimeException("");
-		}
-	}
-
-	protected <T> T doLookup(String jndiName) {
-
-		/*
-		 * If no context is available (e.g. no current user), throws a runtime
-		 * exception.
-		 */
-		if (context == null) {
-			throw new IllegalStateException("No context is available");
-		}
-
-		try {
-			return (T) instance.context.lookup(jndiName);
-		} catch (NamingException ex) {
-			throw new RuntimeException("Resource not available", ex);
-		}
+	protected <T> T doLookup(Class<T> clazz) {
+		return Main.getContext().getBean(clazz.getName(), clazz);
 	}
 
 	public boolean isContextAvailable() {
-		return context != null;
+		return authentication != null;
 	}
 
 	public boolean hasShadowContext() {
-		return shadowContext != null;
+		return shadowAuthentication != null;
 	}
 
 	public static ContextManager getInstance() {
 		return instance;
 	}
+
+	private Logger logger = Logger.getLogger(ContextManager.class);
 
 	private static ContextManager instance;
 	/**
@@ -233,7 +156,7 @@ public class ContextManager extends Observable {
 	 * 
 	 * This context used for all lookups.
 	 */
-	private InitialContext context;
+	private Authentication authentication = null;
 	/**
 	 * The shadow context.
 	 * 
@@ -241,9 +164,5 @@ public class ContextManager extends Observable {
 	 * primary context becomes the shadow context and the second context becomes
 	 * the new primary context.
 	 */
-	private InitialContext shadowContext;
-	/**
-	 * Used to perform authentication.
-	 */
-	private ProgrammaticLogin programmaticLogin;
+	private Authentication shadowAuthentication = null;
 }

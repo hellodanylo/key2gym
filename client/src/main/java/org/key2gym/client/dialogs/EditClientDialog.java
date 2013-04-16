@@ -15,9 +15,6 @@
  */
 package org.key2gym.client.dialogs;
 
-import org.key2gym.business.api.ValidationException;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -25,21 +22,46 @@ import java.awt.event.ItemListener;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+
 import org.joda.time.DateMidnight;
-import org.key2gym.business.api.*;
+import org.key2gym.business.api.SecurityRoles;
+import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.UserException;
+import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.business.api.dtos.ClientProfileDTO;
 import org.key2gym.business.api.dtos.OrderDTO;
 import org.key2gym.business.api.dtos.OrderLineDTO;
-import org.key2gym.business.api.remote.*;
+import org.key2gym.business.api.services.AdministratorsService;
+import org.key2gym.business.api.services.AttendancesService;
+import org.key2gym.business.api.services.ClientProfilesService;
+import org.key2gym.business.api.services.ClientsService;
+import org.key2gym.business.api.services.FreezesService;
+import org.key2gym.business.api.services.OrdersService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.panels.forms.ClientFormPanel;
@@ -47,6 +69,9 @@ import org.key2gym.client.panels.forms.ClientFormPanel.Column;
 import org.key2gym.client.panels.forms.ClientProfileFormPanel;
 import org.key2gym.client.util.AttendancesTableModel;
 import org.key2gym.client.util.FreezesTableModel;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * This dialog allows user to view and edit the client's information. Features
@@ -88,11 +113,11 @@ public class EditClientDialog extends AbstractDialog {
     public EditClientDialog(JFrame parent) throws SecurityViolationException, SecurityViolationException {
         super(parent, true);
 
-        clientsService = ContextManager.lookup(ClientsServiceRemote.class);
-        clientProfilesService = ContextManager.lookup(ClientProfilesServiceRemote.class);
-        attendancesService = ContextManager.lookup(AttendancesServiceRemote.class);
-        freezesService = ContextManager.lookup(FreezesServiceRemote.class);
-        ordersService = ContextManager.lookup(OrdersServiceRemote.class);
+        clientsService = ContextManager.lookup(ClientsService.class);
+        clientProfilesService = ContextManager.lookup(ClientProfilesService.class);
+        attendancesService = ContextManager.lookup(AttendancesService.class);
+        freezesService = ContextManager.lookup(FreezesService.class);
+        ordersService = ContextManager.lookup(OrdersService.class);
 
         client = new ClientDTO();
         clientProfile = new ClientProfileDTO();
@@ -296,7 +321,7 @@ public class EditClientDialog extends AbstractDialog {
             /*
              * Updates the client
              */
-            clientsService.updateClient(client, ContextManager.lookup(AdministratorsServiceRemote.class).getCurrent().getRoles().contains(SecurityRoles.MANAGER));
+            clientsService.updateClient(client, ContextManager.lookup(AdministratorsService.class).getCurrent().getRoles().contains(SecurityRoles.MANAGER));
 
             /*
              * Updates the profile, it the check box was selected.
@@ -471,11 +496,11 @@ public class EditClientDialog extends AbstractDialog {
     /*
      * Business services
      */
-    private ClientsServiceRemote clientsService;
-    private ClientProfilesServiceRemote clientProfilesService;
-    private AttendancesServiceRemote attendancesService;
-    private FreezesServiceRemote freezesService;
-    private OrdersServiceRemote ordersService;
+    private ClientsService clientsService;
+    private ClientProfilesService clientProfilesService;
+    private AttendancesService attendancesService;
+    private FreezesService freezesService;
+    private OrdersService ordersService;
     /*
      * Presentation
      */

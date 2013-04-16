@@ -16,11 +16,12 @@
 package org.key2gym.client.actions;
 
 import java.awt.event.ActionEvent;
+
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.CashAdjustmentDTO;
-import org.key2gym.business.api.remote.CashServiceRemote;
+import org.key2gym.business.api.services.CashService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.dialogs.AbstractDialog;
 import org.key2gym.client.dialogs.FormDialog;
@@ -45,7 +46,7 @@ public class ManageCashAction extends BasicAction {
             return;
         }
 
-        CashAdjustmentDTO cashAdjustment = ContextManager.lookup(CashServiceRemote.class).getAdjustmentByDate(pickDateDialog.getDate());
+        CashAdjustmentDTO cashAdjustment = ContextManager.lookup(CashService.class).getAdjustmentByDate(pickDateDialog.getDate());
         FormDialog dialog = FormPanelDialogsFactory.createCashAdjustmentEditor(getFrame(), cashAdjustment);
         dialog.setVisible(true);
 

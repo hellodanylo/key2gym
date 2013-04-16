@@ -15,18 +15,22 @@
  */
 package org.key2gym.client.panels;
 
-import org.key2gym.client.util.ItemsTableModel;
 import java.awt.BorderLayout;
-import java.util.*;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+
 import org.apache.log4j.Logger;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.dtos.ItemDTO;
-import org.key2gym.business.api.remote.ItemsServiceRemote;
+import org.key2gym.business.api.services.ItemsService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.DataRefreshPulse;
+import org.key2gym.client.util.ItemsTableModel;
 
 /**
  *
@@ -38,7 +42,7 @@ public class ItemsPanel extends javax.swing.JPanel {
      * Creates new ItemsPanel
      */
     public ItemsPanel() {
-        itemsService = ContextManager.lookup(ItemsServiceRemote.class);
+        itemsService = ContextManager.lookup(ItemsService.class);
 
         initComponents();
         buildPanel();
@@ -151,7 +155,7 @@ public class ItemsPanel extends javax.swing.JPanel {
     /*
      * Business
      */
-    private ItemsServiceRemote itemsService;
+    private ItemsService itemsService;
     /*
      * Presentation
      */

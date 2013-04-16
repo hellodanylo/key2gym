@@ -16,17 +16,19 @@
 package org.key2gym.client.factories;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.Action;
+
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.CashAdjustmentDTO;
 import org.key2gym.business.api.dtos.ItemDTO;
 import org.key2gym.business.api.dtos.KeyDTO;
 import org.key2gym.business.api.dtos.SubscriptionDTO;
-import org.key2gym.business.api.remote.CashServiceRemote;
-import org.key2gym.business.api.remote.ItemsServiceRemote;
-import org.key2gym.business.api.remote.KeysServiceRemote;
-import org.key2gym.business.api.remote.SubscriptionsServiceRemote;
+import org.key2gym.business.api.services.CashService;
+import org.key2gym.business.api.services.ItemsService;
+import org.key2gym.business.api.services.KeysService;
+import org.key2gym.business.api.services.SubscriptionsService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.dialogs.FormDialog;
@@ -55,9 +57,9 @@ public class FormDialogActionsFactory {
 
                 try {
                     if (item.getId() == null) {
-                        ContextManager.lookup(ItemsServiceRemote.class).addItem(item);
+                        ContextManager.lookup(ItemsService.class).addItem(item);
                     } else {
-                        ContextManager.lookup(ItemsServiceRemote.class).updateItem(item);
+                        ContextManager.lookup(ItemsService.class).updateItem(item);
                     }
                 } catch (ValidationException|SecurityViolationException ex) {
                     UserExceptionHandler.getInstance().processException(ex);
@@ -82,9 +84,9 @@ public class FormDialogActionsFactory {
 
                 try {
                     if (subscription.getId() == null) {
-                        ContextManager.lookup(SubscriptionsServiceRemote.class).addSubscription(subscription);
+                        ContextManager.lookup(SubscriptionsService.class).addSubscription(subscription);
                     } else {
-                        ContextManager.lookup(SubscriptionsServiceRemote.class).updateSubscription(subscription);
+                        ContextManager.lookup(SubscriptionsService.class).updateSubscription(subscription);
                     }
                 } catch (ValidationException | SecurityViolationException ex) {
                     UserExceptionHandler.getInstance().processException(ex);
@@ -109,9 +111,9 @@ public class FormDialogActionsFactory {
 
                 try {
                     if (key.getId() == null) {
-                        ContextManager.lookup(KeysServiceRemote.class).addKey(key);
+                        ContextManager.lookup(KeysService.class).addKey(key);
                     } else {
-                        ContextManager.lookup(KeysServiceRemote.class).updateKey(key);
+                        ContextManager.lookup(KeysService.class).updateKey(key);
                     }
                 } catch (ValidationException | SecurityViolationException ex) {
                     UserExceptionHandler.getInstance().processException(ex);
@@ -135,7 +137,7 @@ public class FormDialogActionsFactory {
                 }
 
                 try {
-                    ContextManager.lookup(CashServiceRemote.class).recordCashAdjustment(cashAdjustment);
+                    ContextManager.lookup(CashService.class).recordCashAdjustment(cashAdjustment);
                 } catch (ValidationException | SecurityViolationException ex) {
                     UserExceptionHandler.getInstance().processException(ex);
                     return;

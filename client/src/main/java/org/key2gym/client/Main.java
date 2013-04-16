@@ -22,20 +22,18 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.key2gym.client.resources.ResourcesManager;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * This is the main class of the application.
@@ -114,7 +112,7 @@ public class Main {
 		/*
 		 * System context is used to retrieve the domain-wide client properties.
 		 */
-		InitialContext systemContext;
+		/*InitialContext systemContext;
 		try {
 			systemContext = new InitialContext();
 			properties.putAll((Properties) systemContext.lookup("key2gym"));
@@ -123,7 +121,8 @@ public class Main {
 			throw new RuntimeException(
 					"Failed to retrieve the domain-wide properties from the application server",
 					ex);
-		}
+		}*/
+		// TODO: replace with web-based domain properties?
 
 		/*
 		 * Loads the local client properties file.
@@ -178,6 +177,11 @@ public class Main {
 				| IllegalAccessException | UnsupportedLookAndFeelException ex) {
 			logger.error("Failed to change the L&F:", ex);
 		}
+		
+		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
+		
+		// Gets the services context
+		context = new ClassPathXmlApplicationContext("META-INF/services.xml");
 
 		logger.info("Started!");
 
@@ -233,4 +237,10 @@ public class Main {
 	public static Properties getProperties() {
 		return properties;
 	}
+	
+	public static ApplicationContext getContext() {
+		return context;
+	}
+	
+	private static ApplicationContext context;
 }

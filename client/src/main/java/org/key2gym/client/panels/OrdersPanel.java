@@ -15,33 +15,39 @@
  */
 package org.key2gym.client.panels;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.ResourceBundle;
+
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
+
 import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.dtos.OrderDTO;
-import org.key2gym.business.api.remote.CashServiceRemote;
-import org.key2gym.business.api.remote.OrdersServiceRemote;
+import org.key2gym.business.api.services.CashService;
+import org.key2gym.business.api.services.OrdersService;
 import org.key2gym.client.ContextManager;
+import org.key2gym.client.DataRefreshPulse;
 import org.key2gym.client.actions.BasicAction;
 import org.key2gym.client.actions.EditOrderAction;
 import org.key2gym.client.renderers.OrdersTableCellRenderer;
 import org.key2gym.client.util.OrdersTableModel;
 import org.key2gym.client.util.OrdersTableModel.Column;
-import org.key2gym.client.DataRefreshPulse;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -53,8 +59,8 @@ public class OrdersPanel extends javax.swing.JPanel {
      * Creates new form OrdersPanel
      */
     public OrdersPanel() {
-        ordersService = ContextManager.lookup(OrdersServiceRemote.class);
-        cashService = ContextManager.lookup(CashServiceRemote.class);
+        ordersService = ContextManager.lookup(OrdersService.class);
+        cashService = ContextManager.lookup(CashService.class);
         strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
 
         initComponents();
@@ -231,8 +237,8 @@ public class OrdersPanel extends javax.swing.JPanel {
     /*
      * Business
      */
-    private OrdersServiceRemote ordersService;
-    private CashServiceRemote cashService;
+    private OrdersService ordersService;
+    private CashService cashService;
 
     /*
      * Presentation

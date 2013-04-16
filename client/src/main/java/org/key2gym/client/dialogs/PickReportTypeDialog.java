@@ -15,22 +15,25 @@
  */
 package org.key2gym.client.dialogs;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.dtos.ReportGeneratorDTO;
-import org.key2gym.business.api.remote.ReportsServiceRemote;
+import org.key2gym.business.api.services.ReportsService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.util.ReportGeneratorCellRenderer;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -56,7 +59,7 @@ public class PickReportTypeDialog extends AbstractDialog {
         reportTypeLabel = new JLabel(getString("Label.ReportType"));
 
         reportTypesList = new JComboBox();
-        reportTypesList.setModel(new DefaultComboBoxModel(ContextManager.lookup(ReportsServiceRemote.class).getReportGenerators().toArray()));
+        reportTypesList.setModel(new DefaultComboBoxModel(ContextManager.lookup(ReportsService.class).getReportGenerators().toArray()));
         reportTypesList.setRenderer(new ReportGeneratorCellRenderer());
         
         okButton = new JButton(getOkAction());

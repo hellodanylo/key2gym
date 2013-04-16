@@ -17,7 +17,9 @@
 package org.key2gym.client.dialogs.actions;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.ImageIcon;
+
 import org.key2gym.client.dialogs.AbstractDialog;
 
 /**

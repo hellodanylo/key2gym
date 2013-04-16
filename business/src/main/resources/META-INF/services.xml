@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<import resource="datasource.xml" />
+
+	<context:annotation-config />
+	<context:component-scan base-package="org.key2gym.business.services" />
+
+	<security:global-method-security
+		jsr250-annotations="enabled" />
+
+	<bean id="userDetailsService"
+		class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+		<property name="usersByUsernameQuery"
+			value="select username, password, 'true' as enabled from administrator_adm where username = ?" />
+		<property name="authoritiesByUsernameQuery"
+			value="select username, groupname as authority from v_administrator_groups where username = ?" />
+		<property name="rolePrefix" value="" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="passwordEncoder"
+		class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+		<constructor-arg value="256" />
+	</bean>
+
+	<bean id="authenticationProvider"
+		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<property name="userDetailsService" ref="userDetailsService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="saltSource">
+			<null />
+		</property>
+	</bean>
+
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider
+			ref="authenticationProvider" />
+	</security:authentication-manager>
+
+
+	<bean id="entityManagerFactory" class="javax.persistence.Persistence"
+		factory-method="createEntityManagerFactory">
+		<constructor-arg value="key2gym" />
+		<constructor-arg>
+			<map>
+				<entry key="javax.persistence.nonJtaDataSource" value-ref="dataSource" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean name="entityManager" factory-bean="entityManagerFactory"
+		factory-method="createEntityManager" />
+
+</beans>

@@ -15,25 +15,34 @@
  */
 package org.key2gym.client.dialogs;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
-import org.key2gym.business.api.UserException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.ItemDTO;
-import org.key2gym.business.api.remote.ItemsServiceRemote;
+import org.key2gym.business.api.services.ItemsService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.factories.FormPanelDialogsFactory;
 import org.key2gym.client.util.ItemsTableModel;
 import org.key2gym.client.util.ItemsTableModel.Column;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -174,7 +183,7 @@ public class ManageItemsDialog extends AbstractDialog {
             return;
         }
 
-        ItemsServiceRemote itemsService = ContextManager.lookup(ItemsServiceRemote.class);
+        ItemsService itemsService = ContextManager.lookup(ItemsService.class);
 
         for (int index : itemsTable.getSelectedRows()) {
             try {
@@ -202,7 +211,7 @@ public class ManageItemsDialog extends AbstractDialog {
 
     private void refreshTable() {
 	try { 
-	    items = ContextManager.lookup(ItemsServiceRemote.class).getPureItems(); 
+	    items = ContextManager.lookup(ItemsService.class).getPureItems(); 
 	} catch (SecurityViolationException ex) {
 	    UserExceptionHandler.getInstance().processException(ex);
 	    getCloseAction().actionPerformed(null);

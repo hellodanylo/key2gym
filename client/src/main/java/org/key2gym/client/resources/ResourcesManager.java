@@ -15,9 +15,8 @@
  */
 package org.key2gym.client.resources;
 
-import java.util.*;
-import java.text.*;
-import org.key2gym.client.Main;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 /**
  *

@@ -15,8 +15,8 @@
  */
 package org.key2gym.client.highlighters;
 
-import java.awt.Color;
 import javax.swing.JTextField;
+
 import org.joda.time.DateMidnight;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;

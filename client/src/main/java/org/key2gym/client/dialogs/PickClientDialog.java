@@ -15,9 +15,6 @@
  */
 package org.key2gym.client.dialogs;
 
-import org.key2gym.business.api.ValidationException;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Window;
@@ -27,15 +24,32 @@ import java.awt.event.KeyEvent;
 import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumn;
+
 import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.ClientDTO;
-import org.key2gym.business.api.remote.ClientsServiceRemote;
+import org.key2gym.business.api.services.ClientsService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.util.ClientsTableModel;
 import org.key2gym.client.util.ClientsTableModel.Column;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -51,7 +65,7 @@ public class PickClientDialog extends AbstractDialog {
         initComponents();
         buildDialog();
         
-        clientsService = ContextManager.lookup(ClientsServiceRemote.class);
+        clientsService = ContextManager.lookup(ClientsService.class);
 
         idRadioButton.doClick();
     }
@@ -336,7 +350,7 @@ public class PickClientDialog extends AbstractDialog {
     /*
      * Business
      */
-    private ClientsServiceRemote clientsService;
+    private ClientsService clientsService;
 
     /*
      * Session variables

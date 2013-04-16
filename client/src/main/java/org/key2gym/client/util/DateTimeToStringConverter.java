@@ -15,14 +15,15 @@
  */
 package org.key2gym.client.util;
 
-import org.key2gym.business.api.ValidationException;
-import java.text.MessageFormat;
+import static org.key2gym.client.resources.ResourcesManager.getString;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import org.jdesktop.beansbinding.Converter;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
-import static org.key2gym.client.resources.ResourcesManager.*;
+import org.key2gym.business.api.ValidationException;
 
 /**
  *

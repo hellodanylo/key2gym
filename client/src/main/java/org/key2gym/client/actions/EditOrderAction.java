@@ -16,12 +16,14 @@
 package org.key2gym.client.actions;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.ImageIcon;
+
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.remote.OrdersServiceRemote;
+import org.key2gym.business.api.services.OrdersService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.MainFrame;
 import org.key2gym.client.dialogs.AbstractDialog;
@@ -43,7 +45,7 @@ public class EditOrderAction extends BasicAction {
 
     @Override
     public void onActionPerformed(ActionEvent e) throws BusinessException, ValidationException, SecurityViolationException {
-        OrdersServiceRemote ordersService = ContextManager.lookup(OrdersServiceRemote.class);
+        OrdersService ordersService = ContextManager.lookup(OrdersService.class);
 
         Integer orderId;
 

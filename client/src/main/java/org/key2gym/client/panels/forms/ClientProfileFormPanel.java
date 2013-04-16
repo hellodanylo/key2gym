@@ -15,24 +15,37 @@
  */
 package org.key2gym.client.panels.forms;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.*;
-import org.jdesktop.beansbinding.*;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+
+import org.jdesktop.beansbinding.AutoBinding;
+import org.jdesktop.beansbinding.BeanProperty;
+import org.jdesktop.beansbinding.Binding;
+import org.jdesktop.beansbinding.BindingGroup;
+import org.jdesktop.beansbinding.Bindings;
+import org.jdesktop.beansbinding.Converter;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.dtos.AdSourceDTO;
 import org.key2gym.business.api.dtos.ClientProfileDTO;
 import org.key2gym.business.api.dtos.ClientProfileDTO.FitnessExperience;
 import org.key2gym.business.api.dtos.ClientProfileDTO.Sex;
-import org.key2gym.business.api.remote.AdSourcesServiceRemote;
+import org.key2gym.business.api.services.AdSourcesService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.renderers.AdSourceCellRenderer;
 import org.key2gym.client.renderers.FitnessExperienceListCellRenderer;
 import org.key2gym.client.util.DateMidnightToStringConverter;
 import org.key2gym.client.util.FormBindingListener;
 import org.key2gym.client.util.SexListCellRenderer;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -44,7 +57,7 @@ public class ClientProfileFormPanel extends JPanel {
      * Creates new form ClientProfileFormPanel
      */
     public ClientProfileFormPanel() throws SecurityViolationException {
-        adSourcesService = ContextManager.lookup(AdSourcesServiceRemote.class);
+        adSourcesService = ContextManager.lookup(AdSourcesService.class);
         adSources = adSourcesService.getAdSources();
 
         initComponents();
@@ -279,7 +292,7 @@ public class ClientProfileFormPanel extends JPanel {
      * Business
      */
     private ClientProfileDTO clientProfile;
-    private AdSourcesServiceRemote adSourcesService;
+    private AdSourcesService adSourcesService;
     /*
      * Presentation
      */

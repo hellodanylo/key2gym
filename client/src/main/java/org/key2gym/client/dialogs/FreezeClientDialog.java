@@ -15,17 +15,29 @@
  */
 package org.key2gym.client.dialogs;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextArea;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.remote.FreezesServiceRemote;
+import org.key2gym.business.api.services.FreezesService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 
 /**
@@ -39,7 +51,7 @@ public class FreezeClientDialog extends AbstractDialog {
      */
     public FreezeClientDialog(JFrame parent) {
         super(parent, true);
-        freezesService = ContextManager.lookup(FreezesServiceRemote.class);
+        freezesService = ContextManager.lookup(FreezesService.class);
         
         buildDialog();
         
@@ -109,7 +121,7 @@ public class FreezeClientDialog extends AbstractDialog {
     /*
      * Business services
      */
-    private FreezesServiceRemote freezesService;
+    private FreezesService freezesService;
                   
     private JButton cancelButton;
     private JSpinner daysSpinner;

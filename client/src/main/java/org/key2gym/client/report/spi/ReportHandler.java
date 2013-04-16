@@ -5,7 +5,6 @@
 
 package org.key2gym.client.report.spi;
 
-import java.awt.Component;
 import org.key2gym.business.api.dtos.ReportDTO;
 
 /**

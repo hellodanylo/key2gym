@@ -16,6 +16,7 @@
 package org.key2gym.client.highlighters;
 
 import java.awt.Color;
+
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;

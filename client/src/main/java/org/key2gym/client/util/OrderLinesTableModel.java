@@ -18,7 +18,9 @@ package org.key2gym.client.util;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javax.swing.table.AbstractTableModel;
+
 import org.key2gym.business.api.dtos.OrderLineDTO;
 
 /**

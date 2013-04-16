@@ -15,22 +15,27 @@
  */
 package org.key2gym.client.dialogs;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ServiceLoader;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
-import java.util.*;
+
 import org.key2gym.business.api.UserException;
 import org.key2gym.client.report.spi.ReportHandler;
-import org.key2gym.client.ContextManager;
 import org.key2gym.client.util.ReportHandlerCellRenderer;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *

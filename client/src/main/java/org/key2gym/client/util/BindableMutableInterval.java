@@ -16,7 +16,9 @@
 
 package org.key2gym.client.util;
 
-import org.joda.time.*;
+import org.joda.time.DateTime;
+import org.joda.time.MutableInterval;
+import org.joda.time.ReadableInstant;
 
 /*
  * A thin wrapper over MutableInterval to conform it to JavaBeans specification

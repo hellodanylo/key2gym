@@ -15,8 +15,8 @@
  */
 package org.key2gym.client.highlighters;
 
-import java.awt.Color;
 import javax.swing.JTextField;
+
 import org.key2gym.client.colors.Palette;
 
 /**

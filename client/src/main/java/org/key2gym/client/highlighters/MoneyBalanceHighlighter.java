@@ -16,7 +16,9 @@
 package org.key2gym.client.highlighters;
 
 import java.math.BigDecimal;
+
 import javax.swing.JTextField;
+
 import org.key2gym.client.colors.Palette;
 
 /**

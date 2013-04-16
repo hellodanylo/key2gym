@@ -15,28 +15,39 @@
  */
 package org.key2gym.client.dialogs;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import org.joda.time.DateMidnight;
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.UserException;
-import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.FreezeDTO;
-import org.key2gym.business.api.remote.FreezesServiceRemote;
+import org.key2gym.business.api.services.FreezesService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.UserExceptionHandler;
 import org.key2gym.client.util.FreezesTableModel;
 import org.key2gym.client.util.FreezesTableModel.Column;
+
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  *
@@ -49,7 +60,7 @@ public class ManageFreezesDialog extends AbstractDialog {
      */
     public ManageFreezesDialog(JFrame parent) {
         super(parent, true);
-        freezesService = ContextManager.lookup(FreezesServiceRemote.class);
+        freezesService = ContextManager.lookup(FreezesService.class);
 
         buildDialog();
     }
@@ -238,7 +249,7 @@ public class ManageFreezesDialog extends AbstractDialog {
     /*
      * Business
      */
-    private FreezesServiceRemote freezesService;
+    private FreezesService freezesService;
     private JTable freezesTable;
     private JTextArea noteTextArea;
     private JButton closeButton;

@@ -19,8 +19,10 @@ import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.util.ResourceBundle;
+
 import javax.swing.FocusManager;
 import javax.swing.JOptionPane;
+
 import org.apache.log4j.Logger;
 import org.key2gym.client.resources.ResourcesManager;
 

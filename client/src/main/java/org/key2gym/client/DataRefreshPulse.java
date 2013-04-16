@@ -16,7 +16,11 @@
 
 package org.key2gym.client;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.apache.log4j.Logger;
 
 /**

@@ -15,18 +15,18 @@
  */
 package org.key2gym.client.util;
 
-import java.text.MessageFormat;
+import static org.key2gym.client.resources.ResourcesManager.getString;
+
 import java.util.HashSet;
-import java.util.ResourceBundle;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
 import org.jdesktop.beansbinding.Binding;
 import org.jdesktop.beansbinding.Binding.SyncFailure;
 import org.jdesktop.beansbinding.BindingListener;
 import org.jdesktop.beansbinding.PropertyStateEvent;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.client.UserExceptionHandler;
-import static org.key2gym.client.resources.ResourcesManager.*;
-import org.apache.log4j.Logger;
 
 /**
  *

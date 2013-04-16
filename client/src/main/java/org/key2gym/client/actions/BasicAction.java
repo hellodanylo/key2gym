@@ -19,10 +19,12 @@ import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
+
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+
 import org.apache.log4j.Logger;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;

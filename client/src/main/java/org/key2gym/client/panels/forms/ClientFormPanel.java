@@ -15,28 +15,42 @@
  */
 package org.key2gym.client.panels.forms;
 
-import org.key2gym.client.util.MoneyBigDecimalToStringConverter;
-import org.key2gym.client.util.DateMidnightToStringConverter;
-import org.key2gym.client.util.IntegerToStringConverter;
-import org.key2gym.client.util.FormBindingListener;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.Sizes;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.text.JTextComponent;
-import org.jdesktop.beansbinding.*;
-import org.key2gym.client.ContextManager;
-import org.key2gym.business.api.*;
-import org.key2gym.business.api.remote.*;
+
+import org.jdesktop.beansbinding.AutoBinding;
+import org.jdesktop.beansbinding.BeanProperty;
+import org.jdesktop.beansbinding.Binding;
+import org.jdesktop.beansbinding.BindingGroup;
+import org.jdesktop.beansbinding.Bindings;
+import org.key2gym.business.api.SecurityRoles;
 import org.key2gym.business.api.dtos.ClientDTO;
+import org.key2gym.business.api.services.AdministratorsService;
+import org.key2gym.client.ContextManager;
 import org.key2gym.client.highlighters.AttendancesBalanceHighlighter;
 import org.key2gym.client.highlighters.ExpirationDateHighlighter;
 import org.key2gym.client.highlighters.MoneyBalanceHighlighter;
+import org.key2gym.client.util.DateMidnightToStringConverter;
+import org.key2gym.client.util.FormBindingListener;
+import org.key2gym.client.util.IntegerToStringConverter;
+import org.key2gym.client.util.MoneyBigDecimalToStringConverter;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.Sizes;
 
 /**
  *
@@ -45,7 +59,7 @@ import org.key2gym.client.highlighters.MoneyBalanceHighlighter;
 public class ClientFormPanel extends JPanel {
 
     public ClientFormPanel(List<Column> columnsList) {
-        isPriviliged = ContextManager.lookup(AdministratorsServiceRemote.class)
+        isPriviliged = ContextManager.lookup(AdministratorsService.class)
 	    .getCurrent().getRoles().contains(SecurityRoles.MANAGER);
         this.columnsList = columnsList;
 

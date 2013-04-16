@@ -15,11 +15,12 @@
  */
 package org.key2gym.client.actions;
 
-import org.key2gym.client.dialogs.AboutDialog;
 import java.awt.event.ActionEvent;
+
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
+import org.key2gym.client.dialogs.AboutDialog;
 
 /**
  *

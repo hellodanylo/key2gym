@@ -15,38 +15,65 @@
  */
 package org.key2gym.client;
 
-import org.key2gym.client.actions.RegisterClientAction;
-import org.key2gym.client.actions.ManageCashAction;
-import org.key2gym.client.actions.OpenItemsWindowAction;
-import org.key2gym.client.actions.FreezeClientAction;
-import org.key2gym.client.actions.CheckInAction;
-import org.key2gym.client.actions.OpenAttendancesWindowAction;
-import org.key2gym.client.actions.OpenOrdersWindowAction;
-import org.key2gym.client.actions.ToggleShadowSessionAction;
-import org.key2gym.client.actions.ManageItemsAction;
-import org.key2gym.client.actions.ManageKeysAction;
-import org.key2gym.client.actions.AboutAction;
-import org.key2gym.client.actions.ManageFreezesAction;
-import org.key2gym.client.actions.ToggleSessionAction;
-import org.key2gym.client.actions.CheckOutAction;
-import org.key2gym.client.actions.EditOrderAction;
-import org.key2gym.client.actions.ManageSubscriptionsAction;
-import org.key2gym.client.actions.EditClientAction;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 import org.apache.log4j.Logger;
 import org.joda.time.DateMidnight;
-import org.key2gym.business.api.*;
-import org.key2gym.business.api.remote.*;
-import org.key2gym.business.api.dtos.*;
+import org.key2gym.business.api.SecurityViolationException;
+import org.key2gym.business.api.dtos.AdministratorDTO;
+import org.key2gym.business.api.dtos.AttendanceDTO;
+import org.key2gym.business.api.dtos.OrderDTO;
+import org.key2gym.business.api.services.AdministratorsService;
+import org.key2gym.client.actions.AboutAction;
+import org.key2gym.client.actions.CheckInAction;
+import org.key2gym.client.actions.CheckOutAction;
+import org.key2gym.client.actions.EditClientAction;
+import org.key2gym.client.actions.EditOrderAction;
+import org.key2gym.client.actions.FreezeClientAction;
+import org.key2gym.client.actions.ManageCashAction;
+import org.key2gym.client.actions.ManageFreezesAction;
+import org.key2gym.client.actions.ManageItemsAction;
+import org.key2gym.client.actions.ManageKeysAction;
 import org.key2gym.client.actions.ManageReportsAction;
+import org.key2gym.client.actions.ManageSubscriptionsAction;
+import org.key2gym.client.actions.OpenAttendancesWindowAction;
+import org.key2gym.client.actions.OpenItemsWindowAction;
+import org.key2gym.client.actions.OpenOrdersWindowAction;
+import org.key2gym.client.actions.RegisterClientAction;
+import org.key2gym.client.actions.ToggleSessionAction;
+import org.key2gym.client.actions.ToggleShadowSessionAction;
 import org.key2gym.client.panels.AttendancesPanel;
 import org.key2gym.client.panels.CloseableTabPanel;
 import org.key2gym.client.panels.ItemsPanel;
@@ -432,7 +459,7 @@ public class MainFrame extends JFrame {
 
                 workspacesTabbedPane.setSelectedComponent(attendancesPanels.get(new DateMidnight()));
 
-                AdministratorDTO administrator = ContextManager.lookup(AdministratorsServiceRemote.class)
+                AdministratorDTO administrator = ContextManager.lookup(AdministratorsService.class)
 		    .getCurrent();
                 setTitle(MessageFormat.format(strings.getString("Title.Key2Gym.withAdministrator"), new Object[]{administrator.getFullName()}));
 
@@ -460,6 +487,10 @@ public class MainFrame extends JFrame {
          */
         if (ContextManager.getInstance().isContextAvailable()) {
             ContextManager.getInstance().logout();
+            
+            if (ContextManager.getInstance().isContextAvailable()) {
+                ContextManager.getInstance().logout();
+            }
         }
 
         /*

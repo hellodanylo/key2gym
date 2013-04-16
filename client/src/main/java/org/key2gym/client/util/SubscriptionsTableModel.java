@@ -18,10 +18,12 @@ package org.key2gym.client.util;
 
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javax.swing.table.AbstractTableModel;
+
 import org.key2gym.business.api.dtos.SubscriptionDTO;
 import org.key2gym.business.api.dtos.TimeSplitDTO;
-import org.key2gym.business.api.remote.TimeSplitsServiceRemote;
+import org.key2gym.business.api.services.TimeSplitsService;
 import org.key2gym.client.ContextManager;
 
 /**
@@ -39,7 +41,7 @@ public class SubscriptionsTableModel extends AbstractTableModel {
     
     public SubscriptionsTableModel(Column[] columns) {
         this.columns = columns;
-        timeRanges = ContextManager.lookup(TimeSplitsServiceRemote.class).getAll();
+        timeRanges = ContextManager.lookup(TimeSplitsService.class).getAll();
     }
     
     public void setSubscriptions(List<SubscriptionDTO> subscriptions) {

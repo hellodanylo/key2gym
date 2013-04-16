@@ -16,6 +16,7 @@
 package org.key2gym.client.panels.forms;
 
 import java.util.ResourceBundle;
+
 import javax.swing.JPanel;
 
 /**

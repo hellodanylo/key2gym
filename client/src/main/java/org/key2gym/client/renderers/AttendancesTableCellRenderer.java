@@ -17,9 +17,11 @@ package org.key2gym.client.renderers;
 
 import java.awt.Color;
 import java.awt.Component;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+
 import org.key2gym.client.util.AttendancesTableModel;
 
 /**
