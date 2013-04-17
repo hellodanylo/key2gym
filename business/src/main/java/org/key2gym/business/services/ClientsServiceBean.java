@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.NoResultException;
 
 import org.joda.time.DateMidnight;
@@ -32,7 +33,6 @@ import org.key2gym.business.api.Validator;
 import org.key2gym.business.api.dtos.ClientDTO;
 import org.key2gym.business.api.services.ClientsService;
 import org.key2gym.business.entities.Client;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import scala.math.BigDecimal;
@@ -43,7 +43,7 @@ import scala.math.BigDecimal$;
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.ClientsService")
-@Secured({ SecurityRoles.JUNIOR_ADMINISTRATOR,
+@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
 public class ClientsServiceBean extends BasicBean implements ClientsService {
 
@@ -102,6 +102,9 @@ public class ClientsServiceBean extends BasicBean implements ClientsService {
 
         em.persist(newClient);
         em.flush();
+        
+        if(true)
+        	throw new RuntimeException();
 
         return newClient.getId();
     }

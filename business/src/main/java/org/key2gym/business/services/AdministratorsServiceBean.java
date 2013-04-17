@@ -16,9 +16,9 @@
 package org.key2gym.business.services;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.NoResultException;
 
 import org.key2gym.business.api.SecurityRoles;
@@ -27,8 +27,6 @@ import org.key2gym.business.api.dtos.AdministratorDTO;
 import org.key2gym.business.api.services.AdministratorsService;
 import org.key2gym.business.entities.Group;
 import org.key2gym.persistence.Administrator;
-
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,7 +34,7 @@ import org.springframework.stereotype.Service;
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.AdministratorsService")
-@Secured({ SecurityRoles.JUNIOR_ADMINISTRATOR,
+@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 		SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
 public class AdministratorsServiceBean extends BasicBean implements
 		AdministratorsService {

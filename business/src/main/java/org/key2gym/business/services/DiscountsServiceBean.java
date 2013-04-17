@@ -21,11 +21,12 @@ package org.key2gym.business.services;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.key2gym.business.api.SecurityRoles;
 import org.key2gym.business.api.dtos.DiscountDTO;
 import org.key2gym.business.api.services.DiscountsService;
 import org.key2gym.persistence.Discount;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,7 +34,7 @@ import org.springframework.stereotype.Service;
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.DiscountsService")
-@Secured({ SecurityRoles.JUNIOR_ADMINISTRATOR,
+@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
 public class DiscountsServiceBean extends BasicBean implements DiscountsService {
     

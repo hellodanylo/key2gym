@@ -19,6 +19,7 @@ package org.key2gym.business.services;
 
 import java.text.MessageFormat;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -34,7 +35,6 @@ import org.key2gym.business.api.services.ClientProfilesService;
 import org.key2gym.business.entities.Client;
 import org.key2gym.persistence.AdSource;
 import org.key2gym.persistence.ClientProfile;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 /**
@@ -42,7 +42,7 @@ import org.springframework.stereotype.Service;
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.ClientProfilesService")
-@Secured({ SecurityRoles.JUNIOR_ADMINISTRATOR,
+@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
 public class ClientProfilesServiceBean extends BasicBean implements ClientProfilesService {
 

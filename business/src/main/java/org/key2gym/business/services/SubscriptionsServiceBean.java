@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.NoResultException;
 
 import org.key2gym.business.api.BusinessException;
@@ -33,7 +34,6 @@ import org.key2gym.business.api.services.SubscriptionsService;
 import org.key2gym.business.entities.Item;
 import org.key2gym.business.entities.ItemSubscription;
 import org.key2gym.business.entities.TimeSplit;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,7 +41,7 @@ import org.springframework.stereotype.Service;
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.SubscriptionsService")
-@Secured({ SecurityRoles.JUNIOR_ADMINISTRATOR,
+@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
 public class SubscriptionsServiceBean extends BasicBean implements SubscriptionsService {
 

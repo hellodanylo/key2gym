@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityRoles;
@@ -29,13 +31,11 @@ import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.FreezeDTO;
 import org.key2gym.business.api.services.AdministratorsService;
-import org.key2gym.business.api.services.AttendancesService;
 import org.key2gym.business.api.services.FreezesService;
 import org.key2gym.business.entities.Client;
 import org.key2gym.persistence.Administrator;
 import org.key2gym.persistence.ClientFreeze;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 /**
@@ -43,7 +43,7 @@ import org.springframework.stereotype.Service;
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.FreezesService")
-@Secured({ SecurityRoles.JUNIOR_ADMINISTRATOR,
+@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
 public class FreezesServiceBean extends BasicBean implements FreezesService {
 

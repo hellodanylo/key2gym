@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.ejb.EJB;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 
@@ -42,7 +42,6 @@ import org.key2gym.business.entities.TimeSplit;
 import org.key2gym.persistence.OrderLine;
 import org.key2gym.persistence.Property;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 /**
@@ -50,7 +49,7 @@ import org.springframework.stereotype.Service;
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.AttendancesService")
-@Secured({ SecurityRoles.JUNIOR_ADMINISTRATOR,
+@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
 public class AttendancesServiceBean extends BasicBean implements AttendancesService {
     

@@ -18,6 +18,7 @@ package org.key2gym.business.services;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -27,15 +28,14 @@ import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AdSourceDTO;
 import org.key2gym.business.api.services.AdSourcesService;
 import org.key2gym.persistence.AdSource;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
-@Service("org.key2gym.business.api.services.AdSourcesServiceBean")
-@Secured({ SecurityRoles.JUNIOR_ADMINISTRATOR,
+@Service("org.key2gym.business.api.services.AdSourcesService")
+@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
 public class AdSourcesServiceBean extends BasicBean implements AdSourcesService {
 

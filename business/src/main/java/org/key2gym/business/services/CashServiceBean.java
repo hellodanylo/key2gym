@@ -19,6 +19,7 @@ package org.key2gym.business.services;
 
 import java.math.BigDecimal;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.LockModeType;
 
 import org.joda.time.DateMidnight;
@@ -28,7 +29,6 @@ import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.CashAdjustmentDTO;
 import org.key2gym.business.api.services.CashService;
 import org.key2gym.persistence.CashAdjustment;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,7 +36,7 @@ import org.springframework.stereotype.Service;
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.CashService")
-@Secured({ SecurityRoles.JUNIOR_ADMINISTRATOR,
+@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
 public class CashServiceBean extends BasicBean implements CashService {
 

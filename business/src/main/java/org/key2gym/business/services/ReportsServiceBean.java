@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceLoader;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.NoResultException;
 
 import org.joda.time.DateTime;
@@ -34,7 +35,6 @@ import org.key2gym.business.api.services.ReportsService;
 import org.key2gym.business.api.spi.report.ReportGenerator;
 import org.key2gym.persistence.Report;
 import org.key2gym.persistence.ReportBody;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 /**
@@ -42,7 +42,7 @@ import org.springframework.stereotype.Service;
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.ReportsService")
-@Secured({ SecurityRoles.MANAGER })
+@RolesAllowed({ SecurityRoles.MANAGER })
 public class ReportsServiceBean extends BasicBean implements ReportsService {
 
 	@Override
