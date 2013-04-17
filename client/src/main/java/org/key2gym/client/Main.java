@@ -23,16 +23,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.Properties;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -180,14 +178,14 @@ public class Main {
 		
 		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
 		
-		// Gets the services context
-		context = new ClassPathXmlApplicationContext("META-INF/services.xml");
+		// Loads the client application context
+		context = new ClassPathXmlApplicationContext("META-INF/client.xml");
 
 		logger.info("Started!");
-
 		launchAndWaitMainFrame();
-
 		logger.info("Shutting down!");
+		
+		context.close();
 	}
 
 	/**
@@ -242,5 +240,5 @@ public class Main {
 		return context;
 	}
 	
-	private static ApplicationContext context;
+	private static AbstractApplicationContext context;
 }

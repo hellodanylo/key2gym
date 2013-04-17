@@ -33,7 +33,7 @@ import org.key2gym.client.DataRefreshPulse;
 import org.key2gym.client.util.ItemsTableModel;
 
 /**
- *
+ * 
  * @author Danylo Vashchilenko
  */
 public class ItemsPanel extends javax.swing.JPanel {
@@ -47,7 +47,7 @@ public class ItemsPanel extends javax.swing.JPanel {
         initComponents();
         buildPanel();
 
-	DataRefreshPulse.getInstance().addObserver(new DataRefreshObserver());
+        DataRefreshPulse.getInstance().addObserver(new DataRefreshObserver());
     }
 
     /**
@@ -60,16 +60,14 @@ public class ItemsPanel extends javax.swing.JPanel {
         /*
          * Columns of the items table
          */
-        ItemsTableModel.Column[] itemsTableColumns =
-                new ItemsTableModel.Column[]{
-            ItemsTableModel.Column.TITLE,
-            ItemsTableModel.Column.QUANTITY,
-            ItemsTableModel.Column.PRICE,
-            ItemsTableModel.Column.BARCODE};
+        ItemsTableModel.Column[] itemsTableColumns = new ItemsTableModel.Column[] {
+                ItemsTableModel.Column.TITLE, ItemsTableModel.Column.QUANTITY,
+                ItemsTableModel.Column.PRICE, ItemsTableModel.Column.BARCODE };
 
         itemsTableModel = new ItemsTableModel(itemsTableColumns);
         itemsTable.setModel(itemsTableModel);
-        itemsTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        itemsTable
+                .setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         itemsScrollPane = new javax.swing.JScrollPane();
         itemsScrollPane.setViewportView(itemsTable);
@@ -85,7 +83,9 @@ public class ItemsPanel extends javax.swing.JPanel {
 
     /**
      * Sets the items group to display.
-     * @param items the new items group
+     * 
+     * @param items
+     *            the new items group
      */
     public void setItems(ItemsGroup items) throws SecurityViolationException {
         this.itemsGroup = items;
@@ -101,7 +101,8 @@ public class ItemsPanel extends javax.swing.JPanel {
     /**
      * Reloads the data.
      * 
-     * @throws SecurityViolationException if the access to the current date was denied 
+     * @throws SecurityViolationException
+     *             if the access to the current date was denied
      */
     private void refreshData() throws SecurityViolationException {
         if (itemsGroup.equals(ItemsGroup.ALL)) {
@@ -111,7 +112,8 @@ public class ItemsPanel extends javax.swing.JPanel {
         } else if (itemsGroup.equals(ItemsGroup.PURE)) {
             items = itemsService.getPureItems();
         } else {
-            throw new RuntimeException("This ItemsGroup has not been yet implemented.");
+            throw new RuntimeException(
+                    "This ItemsGroup has not been yet implemented.");
         }
     }
 
@@ -119,18 +121,19 @@ public class ItemsPanel extends javax.swing.JPanel {
         itemsTableModel.setItems(items);
     }
 
-
     /**
-     * Used to refresh the attendances at the data refresh rate.
+     * Used to refresh the items at the data refresh rate.
+     * 
+     * TODO: do proper SecurityViolationException handling (e.g. closing itself)
      */
     private class DataRefreshObserver implements Observer {
 
         @Override
-	public void update(Observable observable, Object arg) {
+        public void update(Observable observable, Object arg) {
 
-	    if(itemsGroup == null) {
-		return;
-	    }
+            if (itemsGroup == null || !ContextManager.getInstance().isContextAvailable()) {
+                return;
+            }
 
             /*
              * Loads the data synchronously on the timer's thread.
@@ -138,7 +141,8 @@ public class ItemsPanel extends javax.swing.JPanel {
             try {
                 refreshData();
             } catch (SecurityViolationException ex) {
-                Logger.getLogger(AttendancesPanel.class).error("Failed to refresh the items!", ex);
+                Logger.getLogger(AttendancesPanel.class).error(
+                        "Failed to refresh the items!", ex);
             }
 
             /*
@@ -152,6 +156,7 @@ public class ItemsPanel extends javax.swing.JPanel {
             });
         }
     }
+
     /*
      * Business
      */

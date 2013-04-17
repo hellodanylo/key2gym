@@ -43,7 +43,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**
- *
+ * 
  * @author Danylo Vashchilenko
  */
 public class AttendancesPanel extends JPanel {
@@ -53,12 +53,13 @@ public class AttendancesPanel extends JPanel {
      */
     public AttendancesPanel() {
         attendancesService = ContextManager.lookup(AttendancesService.class);
-        strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
+        strings = ResourceBundle
+                .getBundle("org/key2gym/client/resources/Strings");
 
         initComponents();
         buildPanel();
 
-	DataRefreshPulse.getInstance().addObserver(new DataRefreshObserver());
+        DataRefreshPulse.getInstance().addObserver(new DataRefreshObserver());
     }
 
     /**
@@ -75,19 +76,15 @@ public class AttendancesPanel extends JPanel {
         /*
          * Columns of the attendances journal
          */
-        Column[] attendancesTableColumns =
-                new Column[]{
-            Column.BEGIN,
-            Column.ID,
-            Column.CLIENT_ID,
-            Column.CLIENT_FULL_NAME,
-            Column.KEY,
-            Column.END
-        };
+        Column[] attendancesTableColumns = new Column[] { Column.BEGIN,
+                Column.ID, Column.CLIENT_ID, Column.CLIENT_FULL_NAME,
+                Column.KEY, Column.END };
 
-        attendancesTableModel = new AttendancesTableModel(attendancesTableColumns);
+        attendancesTableModel = new AttendancesTableModel(
+                attendancesTableColumns);
         attendancesTable.setModel(attendancesTableModel);
-        attendancesTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        attendancesTable
+                .setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         attendancesTable.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -99,7 +96,8 @@ public class AttendancesPanel extends JPanel {
         /*
          * This renderer highlights open attendances
          */
-        attendancesTable.setDefaultRenderer(String.class, new AttendancesTableCellRenderer());
+        attendancesTable.setDefaultRenderer(String.class,
+                new AttendancesTableCellRenderer());
 
         /*
          * Attendances counter
@@ -113,7 +111,9 @@ public class AttendancesPanel extends JPanel {
      * Builds the panel by placing components on it.
      */
     private void buildPanel() {
-        FormLayout layout = new FormLayout("5dlu, default, 3dlu, fill:default, default:grow", "5dlu, default, 3dlu, fill:default:grow");
+        FormLayout layout = new FormLayout(
+                "5dlu, default, 3dlu, fill:default, default:grow",
+                "5dlu, default, 3dlu, fill:default:grow");
         setLayout(layout);
 
         add(new JLabel(strings.getString("Label.Attendances")), CC.xy(2, 2));
@@ -123,7 +123,9 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Called when the attendances table looses its focus.
-     * @param evt the focus event
+     * 
+     * @param evt
+     *            the focus event
      */
     private void attendancesTableFocusLost(FocusEvent evt) {
         attendancesTable.clearSelection();
@@ -131,6 +133,7 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Returns currently selected attendance.
+     * 
      * @return the selected attendance or null, if none is selected
      */
     public AttendanceDTO getSelectedAttendance() {
@@ -143,6 +146,7 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Gets the current journal's date.
+     * 
      * @return the date
      */
     public DateMidnight getDate() {
@@ -151,8 +155,11 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Sets the current journal's date.
-     * @param date the date to use
-     * @throws SecurityViolationException if the access to the date was denied
+     * 
+     * @param date
+     *            the date to use
+     * @throws SecurityViolationException
+     *             if the access to the date was denied
      */
     public void setDate(DateMidnight date) throws SecurityViolationException {
         this.date = date;
@@ -168,7 +175,8 @@ public class AttendancesPanel extends JPanel {
     /**
      * Reloads the data.
      * 
-     * @throws SecurityViolationException if the access to the current date was denied 
+     * @throws SecurityViolationException
+     *             if the access to the current date was denied
      */
     private void refreshData() throws SecurityViolationException {
         attendances = attendancesService.findAttendancesByDate(date);
@@ -181,15 +189,17 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Used to refresh the attendances at the data refresh rate.
+     * 
+     * TODO: do proper SecurityViolationException handling (e.g. closing itself)
      */
     private class DataRefreshObserver implements Observer {
 
         @Override
-	public void update(Observable observable, Object arg) {
+        public void update(Observable observable, Object arg) {
 
-	    if(date == null) {
-		return;
-	    }
+            if (date == null || !ContextManager.getInstance().isContextAvailable()) {
+                return;
+            }
 
             /*
              * Loads the attendances synchronously on the timer's thread.
@@ -197,7 +207,8 @@ public class AttendancesPanel extends JPanel {
             try {
                 refreshData();
             } catch (SecurityViolationException ex) {
-                Logger.getLogger(AttendancesPanel.class).error("Failed to refresh the attendances!", ex);
+                Logger.getLogger(AttendancesPanel.class).error(
+                        "Failed to refresh the attendances!", ex);
             }
 
             /*
@@ -211,6 +222,7 @@ public class AttendancesPanel extends JPanel {
             });
         }
     }
+
     /*
      * Presentation
      */

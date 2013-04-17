@@ -50,7 +50,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**
- *
+ * 
  * @author Danylo Vashchilenko
  */
 public class OrdersPanel extends javax.swing.JPanel {
@@ -61,12 +61,13 @@ public class OrdersPanel extends javax.swing.JPanel {
     public OrdersPanel() {
         ordersService = ContextManager.lookup(OrdersService.class);
         cashService = ContextManager.lookup(CashService.class);
-        strings = ResourceBundle.getBundle("org/key2gym/client/resources/Strings");
+        strings = ResourceBundle
+                .getBundle("org/key2gym/client/resources/Strings");
 
         initComponents();
         buildPanel();
 
-	DataRefreshPulse.getInstance().addObserver(new DataRefreshObserver());
+        DataRefreshPulse.getInstance().addObserver(new DataRefreshObserver());
     }
 
     private void initComponents() {
@@ -85,18 +86,14 @@ public class OrdersPanel extends javax.swing.JPanel {
         /*
          * This renderer highlights orders with payment due
          */
-        ordersTable.setDefaultRenderer(String.class, new OrdersTableCellRenderer());
+        ordersTable.setDefaultRenderer(String.class,
+                new OrdersTableCellRenderer());
 
         /*
          * Columns of the orders table
          */
-        Column[] сolumns =
-                new Column[]{
-            Column.ID,
-            Column.SUBJECT,
-            Column.TOTAL,
-            Column.PAID
-        };
+        Column[] сolumns = new Column[] { Column.ID, Column.SUBJECT,
+                Column.TOTAL, Column.PAID };
 
         ordersTableModel = new OrdersTableModel(сolumns);
         ordersTable.setModel(ordersTableModel);
@@ -104,13 +101,14 @@ public class OrdersPanel extends javax.swing.JPanel {
         /*
          * Sets appropriate sizes of the columns.
          */
-        int[] widths = new int[]{50, 200, 50, 50};
+        int[] widths = new int[] { 50, 200, 50, 50 };
         TableColumn column;
         for (int i = 0; i < widths.length; i++) {
             column = ordersTable.getColumnModel().getColumn(i);
             column.setPreferredWidth(widths[i]);
         }
-        ordersTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        ordersTable
+                .setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         ordersTable.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -125,15 +123,18 @@ public class OrdersPanel extends javax.swing.JPanel {
         ordersTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1) {
-                    new EditOrderAction().actionPerformed(new ActionEvent(this, 0, BasicAction.ACTION_CONTEXT));
+                if (e.getClickCount() > 1
+                        && e.getButton() == MouseEvent.BUTTON1) {
+                    new EditOrderAction().actionPerformed(new ActionEvent(this,
+                            0, BasicAction.ACTION_CONTEXT));
                 }
             }
         });
     }
 
     private void buildPanel() {
-        FormLayout layout = new FormLayout("5dlu, default, 3dlu, fill:default, 3dlu, default, 3dlu, fill:default, default:grow",
+        FormLayout layout = new FormLayout(
+                "5dlu, default, 3dlu, fill:default, 3dlu, default, 3dlu, fill:default, default:grow",
                 "5dlu, default, 3dlu, fill:default:grow");
         setLayout(layout);
 
@@ -147,8 +148,9 @@ public class OrdersPanel extends javax.swing.JPanel {
 
     /**
      * Called when the orders table looses the focus.
-     *
-     * @param evt the focus event
+     * 
+     * @param evt
+     *            the focus event
      */
     private void financialActivitiesTableFocusLost(FocusEvent evt) {
         ordersTable.clearSelection();
@@ -166,8 +168,11 @@ public class OrdersPanel extends javax.swing.JPanel {
 
     /**
      * Sets the current journal's date.
-     * @param date the date to use
-     * @throws SecurityViolationException if the access to the date was denied
+     * 
+     * @param date
+     *            the date to use
+     * @throws SecurityViolationException
+     *             if the access to the date was denied
      */
     public void setDate(DateMidnight date) throws SecurityViolationException {
         this.date = date;
@@ -187,7 +192,8 @@ public class OrdersPanel extends javax.swing.JPanel {
     /**
      * Reloads the data.
      * 
-     * @throws SecurityViolationException if the access to the current date was denied 
+     * @throws SecurityViolationException
+     *             if the access to the current date was denied
      */
     private void refreshData() throws SecurityViolationException {
         orders = ordersService.findAllByDate(date);
@@ -202,16 +208,18 @@ public class OrdersPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Used to refresh the attendances at the data refresh rate.
+     * Used to refresh the orders at the data refresh rate.
+     * 
+     * TODO: do proper SecurityViolationException handling (e.g. closing itself)
      */
     private class DataRefreshObserver implements Observer {
 
         @Override
-	public void update(Observable observable, Object arg) {
+        public void update(Observable observable, Object arg) {
 
-	    if(date == null) {
-		return;
-	    }
+            if (date == null || !ContextManager.getInstance().isContextAvailable()) {
+                return;
+            }
 
             /*
              * Loads the data synchronously on the timer's thread.
@@ -219,7 +227,8 @@ public class OrdersPanel extends javax.swing.JPanel {
             try {
                 refreshData();
             } catch (SecurityViolationException ex) {
-                Logger.getLogger(AttendancesPanel.class).error("Failed to refresh the attendances!", ex);
+                Logger.getLogger(AttendancesPanel.class).error(
+                        "Failed to refresh the attendances!", ex);
             }
 
             /*

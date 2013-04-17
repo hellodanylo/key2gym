@@ -5,10 +5,11 @@
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="contextManager" class="org.key2gym.client.ContextManager" />
+	<import resource="services.xml"/>
 	
-	<bean id="dataRefreshPulse" class="org.key2gym.client.DataRefreshPulse">
-		<constructor-arg ref="contextManager"/>
-	</bean>
+	<context:annotation-config/>
 
+	<bean id="contextManager" class="org.key2gym.client.ContextManager" />
+	<bean id="dataRefreshPulse" class="org.key2gym.client.DataRefreshPulse"/>
+	
 </beans>

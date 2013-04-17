@@ -21,6 +21,8 @@ import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.annotation.PreDestroy;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -33,7 +35,7 @@ import org.apache.log4j.Logger;
  * return as quickly as possible.
  */
 public class DataRefreshPulse extends Observable {
-	protected DataRefreshPulse() {
+	public DataRefreshPulse() {
 
 		logger = Logger.getLogger(DataRefreshPulse.class);
 
@@ -69,21 +71,16 @@ public class DataRefreshPulse extends Observable {
 			notifyObservers(null);
 		}
 	}
+	
+	@PreDestroy
+	public void shutdown() {
+	    timer.cancel();
+	}
+	
+	public static DataRefreshPulse getInstance() {
+		return Main.getContext().getBean(DataRefreshPulse.class);
+	}
 
 	private Timer timer;
 	private Logger logger;
-
-	/**
-	 * Singleton instance.
-	 */
-	private static DataRefreshPulse instance;
-
-	public static DataRefreshPulse getInstance() {
-
-		if (instance == null) {
-			instance = new DataRefreshPulse();
-		}
-
-		return instance;
-	}
 }
