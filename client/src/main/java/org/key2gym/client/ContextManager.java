@@ -15,23 +15,15 @@
  */
 package org.key2gym.client;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Observable;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.services.AdministratorsService;
 import org.key2gym.client.resources.ResourcesManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -54,14 +46,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * 
  * @author Danylo Vashchilenko
  */
-@Deprecated
+
 public class ContextManager extends Observable {
 
-	static {
-		instance = new ContextManager();
-	}
-
-	protected ContextManager() {
+	public ContextManager() {
 
 	}
 
@@ -129,10 +117,6 @@ public class ContextManager extends Observable {
 	 */
 	@Deprecated
 	public static <T> T lookup(Class<T> clazz) {
-		return instance.doLookup(clazz);
-	}
-
-	protected <T> T doLookup(Class<T> clazz) {
 		return Main.getContext().getBean(clazz.getName(), clazz);
 	}
 
@@ -145,12 +129,11 @@ public class ContextManager extends Observable {
 	}
 
 	public static ContextManager getInstance() {
-		return instance;
+		return Main.getContext().getBean(ContextManager.class);
 	}
 
 	private Logger logger = Logger.getLogger(ContextManager.class);
 
-	private static ContextManager instance;
 	/**
 	 * The primary context.
 	 * 
