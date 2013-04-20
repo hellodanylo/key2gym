@@ -19,8 +19,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.key2gym.business.api.SecurityRoles;
 import org.key2gym.business.api.SecurityViolationException;
@@ -46,7 +46,7 @@ public class AdSourcesServiceBean extends BasicBean implements AdSourcesService 
             throw new SecurityViolationException(getString("Security.Access.Denied"));
         }
 
-        List<AdSource> adSources = (List<AdSource>) entityManager.createNamedQuery("AdSource.findAll") //NOI18N
+        List<AdSource> adSources = (List<AdSource>) em.createNamedQuery("AdSource.findAll") //NOI18N
                 .getResultList();
         List<Integer> result = new LinkedList<Integer>();
 
@@ -64,7 +64,7 @@ public class AdSourcesServiceBean extends BasicBean implements AdSourcesService 
             throw new SecurityViolationException(getString("Security.Access.Denied"));
         }
 
-        List<AdSource> adSources = entityManager.createNamedQuery("AdSource.findAll").getResultList(); //NOI18N
+        List<AdSource> adSources = em.createNamedQuery("AdSource.findAll").getResultList(); //NOI18N
         List<AdSourceDTO> adSourceDTOs = new LinkedList<AdSourceDTO>();
 
         for (AdSource adSource : adSources) {
@@ -85,7 +85,7 @@ public class AdSourcesServiceBean extends BasicBean implements AdSourcesService 
             throw new NullPointerException("The ad source's ID is null."); // NOI18N
         }
 
-        AdSource adSource = entityManager.find(AdSource.class, adSourceId);
+        AdSource adSource = em.find(AdSource.class, adSourceId);
 
         if (adSource == null) {
             throw new ValidationException(getString("Invalid.AdSource.ID"));
@@ -102,6 +102,4 @@ public class AdSourcesServiceBean extends BasicBean implements AdSourcesService 
 
         return dto;
     }
-    @PersistenceContext(unitName = "PU")
-    private EntityManager entityManager;
 }

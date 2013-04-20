@@ -59,7 +59,16 @@ public class DataRefreshPulse extends Observable {
 
 		} catch (NumberFormatException ex) {
 			logger.error("Data refresh property is invalid. Won't refresh.", ex);
+			timer.cancel();
 		}
+	}
+	
+	/**
+	 * Notifies all observers to refresh their data.
+	 */
+	public void fireRefreshEvent() {
+	    setChanged();
+        notifyObservers(null);
 	}
 
 	private class DataRefreshTimerTask extends TimerTask {
@@ -67,14 +76,15 @@ public class DataRefreshPulse extends Observable {
 		public void run() {
 			logger.trace("Pulsing!");
 
-			setChanged();
-			notifyObservers(null);
+			fireRefreshEvent();
 		}
 	}
 	
 	@PreDestroy
 	public void shutdown() {
-	    timer.cancel();
+	    if(timer != null) {
+	        timer.cancel();
+	    }
 	}
 	
 	public static DataRefreshPulse getInstance() {

@@ -49,103 +49,106 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class ContextManager extends Observable {
 
-	public ContextManager() {
+    public ContextManager() {
 
-	}
+    }
 
-	public void login(String username, String password)
-			throws ValidationException {
+    public void login(String username, String password)
+            throws ValidationException {
 
-		if (shadowAuthentication != null) {
-			throw new IllegalStateException(
-					"There is already a primary and a shadow contexts.");
-		}
+        if (shadowAuthentication != null) {
+            throw new IllegalStateException(
+                    "There is already a primary and a shadow authentication.");
+        }
 
-		logger.debug("Log in attempt: " + username);
+        logger.debug("Log in attempt: " + username);
 
-		Authentication request = new UsernamePasswordAuthenticationToken(
-				username, password);
-		Authentication result = Main.getContext()
-				.getBean("authenticationManager", AuthenticationManager.class)
-				.authenticate(request);
+        Authentication request = new UsernamePasswordAuthenticationToken(
+                username, password);
+        Authentication result;
 
-		try {
-			SecurityContextHolder.getContext().setAuthentication(result);
-		} catch (BadCredentialsException ex) {
-			Logger.getLogger(ContextManager.class).info(
-					"Authentication failed for the user: " + username, ex);
-			throw new ValidationException(ResourcesManager.getStrings()
-					.getString("Message.LoggingInFailed"));
-		}
+        try {
+            result = Main.getContext()
+                    .getBean("authenticationManager", AuthenticationManager.class)
+                    .authenticate(request);
 
-		if (authentication == null) {
-			authentication = result;
-		} else {
-			shadowAuthentication = authentication;
-			authentication = result;
-		}
+        } catch (BadCredentialsException ex) {
+            Logger.getLogger(ContextManager.class).info(
+                    "Authentication failed for the user: " + username, ex);
+            throw new ValidationException(ResourcesManager.getStrings()
+                    .getString("Message.LoggingInFailed"));
+        }
 
-		setChanged();
-		notifyObservers();
-	}
+        if (authentication == null) {
+            authentication = result;
+        } else {
+            shadowAuthentication = authentication;
+            authentication = result;
+        }
+        
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-	public void logout() {
+        setChanged();
+        notifyObservers();
+    }
 
-		if (shadowAuthentication != null) {
-			authentication = shadowAuthentication;
-			shadowAuthentication = null;
-		} else if (authentication != null) {
-			authentication = null;
-		} else {
-			throw new RuntimeException("No authentication is available.");
-		}
+    public void logout() {
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (shadowAuthentication != null) {
+            authentication = shadowAuthentication;
+            shadowAuthentication = null;
+        } else if (authentication != null) {
+            authentication = null;
+        } else {
+            throw new RuntimeException("No authentication is available.");
+        }
 
-		setChanged();
-		notifyObservers(authentication);
-	}
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-	/**
-	 * Looks up the EJB using the current context.
-	 * 
-	 * @param <T>
-	 *            the type to lookup
-	 * @param clazz
-	 *            the class of the type to lookup
-	 * @return an instance of the EJB
-	 */
-	@Deprecated
-	public static <T> T lookup(Class<T> clazz) {
-		return Main.getContext().getBean(clazz.getName(), clazz);
-	}
+        setChanged();
+        notifyObservers(authentication);
+    }
 
-	public boolean isContextAvailable() {
-		return authentication != null;
-	}
+    /**
+     * Looks up the EJB using the current context.
+     * 
+     * @param <T>
+     *            the type to lookup
+     * @param clazz
+     *            the class of the type to lookup
+     * @return an instance of the EJB
+     */
+    @Deprecated
+    public static <T> T lookup(Class<T> clazz) {
+        return Main.getContext().getBean(clazz.getName(), clazz);
+    }
 
-	public boolean hasShadowContext() {
-		return shadowAuthentication != null;
-	}
+    public boolean isContextAvailable() {
+        return authentication != null;
+    }
 
-	public static ContextManager getInstance() {
-		return Main.getContext().getBean(ContextManager.class);
-	}
+    public boolean hasShadowContext() {
+        return shadowAuthentication != null;
+    }
 
-	private Logger logger = Logger.getLogger(ContextManager.class);
+    public static ContextManager getInstance() {
+        return Main.getContext().getBean(ContextManager.class);
+    }
 
-	/**
-	 * The primary context.
-	 * 
-	 * This context used for all lookups.
-	 */
-	private Authentication authentication = null;
-	/**
-	 * The shadow context.
-	 * 
-	 * The user can open a second session without closing the first one. The
-	 * primary context becomes the shadow context and the second context becomes
-	 * the new primary context.
-	 */
-	private Authentication shadowAuthentication = null;
+    private Logger logger = Logger.getLogger(ContextManager.class);
+
+    /**
+     * The primary authentication.
+     * 
+     * This authentication used for all lookups.
+     */
+    private Authentication authentication = null;
+    /**
+     * The shadow authentication.
+     * 
+     * The user can open a second session without closing the first one. The
+     * primary authentication becomes the shadow authentication and the second
+     * authentication becomes the new primary authentication.
+     */
+    private Authentication shadowAuthentication = null;
 }

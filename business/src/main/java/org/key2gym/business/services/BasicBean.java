@@ -17,6 +17,7 @@ package org.key2gym.business.services;
  */
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.key2gym.business.api.services.BasicService;
 import org.key2gym.business.resources.ResourcesManager;
@@ -30,11 +31,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * @author Danylo Vashchilenko
  */
 public class BasicBean implements BasicService {
-
-	static {
-		org.apache.log4j.PropertyConfigurator.configure(System
-				.getProperty("log4j.configuration"));
-	}
 
 	protected boolean callerHasRole(String role) {
 		return SecurityContextHolder.getContext().getAuthentication() != null
@@ -65,7 +61,6 @@ public class BasicBean implements BasicService {
 		return SecurityContextHolder.getContext().getAuthentication().getName();
 	}
 
-	@Autowired
-	@Qualifier("entityManager")
+	@PersistenceContext
 	protected EntityManager em;
 }

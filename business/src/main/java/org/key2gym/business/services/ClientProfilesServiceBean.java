@@ -20,8 +20,6 @@ package org.key2gym.business.services;
 import java.text.MessageFormat;
 
 import javax.annotation.security.RolesAllowed;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.Instant;
@@ -83,7 +81,7 @@ public class ClientProfilesServiceBean extends BasicBean implements ClientProfil
         AdSource adSource = null;
 
         if (clientProfile.getAdSourceId() != null) {
-            adSource = entityManager.find(AdSource.class, clientProfile.getAdSourceId());
+            adSource = em.find(AdSource.class, clientProfile.getAdSourceId());
 
             if (adSource == null) {
                 throw new ValidationException(getString("Invalid.AdSource.ID"));
@@ -111,13 +109,13 @@ public class ClientProfilesServiceBean extends BasicBean implements ClientProfil
                 clientProfile.getWeight(),
                 adSource);
 
-        if (entityManager.find(ClientProfile.class, clientProfile.getClientId()) == null) {
-            entityManager.persist(entityClientProfile);
+        if (em.find(ClientProfile.class, clientProfile.getClientId()) == null) {
+            em.persist(entityClientProfile);
         } else {
-            entityManager.merge(entityClientProfile);
+            em.merge(entityClientProfile);
         }
 
-        entityManager.flush();
+        em.flush();
     }
 
     /**
@@ -147,7 +145,7 @@ public class ClientProfilesServiceBean extends BasicBean implements ClientProfil
             throw new NullPointerException("The id is null."); //NOI18N
         }
 
-        Client client = entityManager.find(Client.class, id);
+        Client client = em.find(Client.class, id);
 
         if (client == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
@@ -157,8 +155,8 @@ public class ClientProfilesServiceBean extends BasicBean implements ClientProfil
             throw new BusinessException(getString("BusinessRule.Client.HasNoProfile"));
         }
 
-        entityManager.remove(client.getClientProfile());
-        entityManager.flush();
+        em.remove(client.getClientProfile());
+        em.flush();
     }
 
     @Override
@@ -168,7 +166,7 @@ public class ClientProfilesServiceBean extends BasicBean implements ClientProfil
             throw new NullPointerException("The id is null."); //NOI18N
         }
 
-        ClientProfile clientProfile = entityManager.find(ClientProfile.class, id);
+        ClientProfile clientProfile = em.find(ClientProfile.class, id);
 
         if (clientProfile == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
@@ -244,7 +242,4 @@ public class ClientProfilesServiceBean extends BasicBean implements ClientProfil
             }
         };
     }
-    
-    @PersistenceContext(unitName = "PU")
-    private EntityManager entityManager;
 }

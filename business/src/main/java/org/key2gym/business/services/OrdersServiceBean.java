@@ -44,6 +44,7 @@ import org.key2gym.persistence.Discount;
 import org.key2gym.persistence.OrderLine;
 import org.key2gym.persistence.Property;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
@@ -52,6 +53,7 @@ import org.springframework.stereotype.Service;
 @Service("org.key2gym.business.api.services.OrdersService")
 @RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
+@Transactional
 public class OrdersServiceBean extends BasicBean implements OrdersService {
 
     @Override
@@ -76,7 +78,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         /*
          * Finds the client.
          */
-        client = getEntityManager().find(Client.class, clientId);
+        client = em.find(Client.class, clientId);
 
         if (client == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
@@ -87,7 +89,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
          * today.
          */
         try {
-            order = (OrderEntity) getEntityManager().createNamedQuery("OrderEntity.findByClientAndDateRecorded") //NOI18N
+            order = (OrderEntity) em.createNamedQuery("OrderEntity.findByClientAndDateRecorded") //NOI18N
                     .setParameter("client", client) //NOI18N
                     .setParameter("dateRecorded", date.toDate()) //NOI18N
                     .setMaxResults(1).getSingleResult();
@@ -100,8 +102,8 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
 
                 order = OrderEntity.apply(client);
 
-                getEntityManager().persist(order);
-                getEntityManager().flush();
+                em.persist(order);
+                em.flush();
 
                 return order.getId();
             }
@@ -127,7 +129,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         OrderEntity order;
 
         try {
-            client = (Client) getEntityManager().createNamedQuery("Client.findByCard") //NOI18N
+            client = (Client) em.createNamedQuery("Client.findByCard") //NOI18N
                     .setParameter("card", card) //NOI18N
                     .setMaxResults(1).getSingleResult();
         } catch (NoResultException ex) {
@@ -135,7 +137,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         }
 
         try {
-            order = (OrderEntity) getEntityManager().createNamedQuery("OrderEntity.findByClientAndDateRecorded") //NOI18N
+            order = (OrderEntity) em.createNamedQuery("OrderEntity.findByClientAndDateRecorded") //NOI18N
                     .setParameter("client", client) //NOI18N
                     .setParameter("dateRecorded", getToday()) //NOI18N
                     .setMaxResults(1).getSingleResult();
@@ -148,8 +150,8 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
 
                 order = OrderEntity.apply(client);
 
-                getEntityManager().persist(order);
-                getEntityManager().flush();
+                em.persist(order);
+                em.flush();
 
                 return order.getId();
             }
@@ -171,7 +173,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         Attendance attendance = null;
         OrderEntity order = null;
 
-        attendance = (Attendance) getEntityManager().find(Attendance.class, attendanceId);
+        attendance = (Attendance) em.find(Attendance.class, attendanceId);
 
         if (attendance == null) {
             throw new ValidationException(getString("Invalid.Attendance.ID"));
@@ -182,7 +184,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         }
 
         try {
-            order = (OrderEntity) getEntityManager().createNamedQuery("OrderEntity.findByAttendance") //NOI18N
+            order = (OrderEntity) em.createNamedQuery("OrderEntity.findByAttendance") //NOI18N
                     .setParameter("attendance", attendance) //NOI18N
                     .setMaxResults(1).getSingleResult();
 
@@ -207,7 +209,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         OrderEntity order;
 
         try {
-            order = (OrderEntity) getEntityManager().createNamedQuery("OrderEntity.findDefaultByDateRecorded") //NOI18N
+            order = (OrderEntity) em.createNamedQuery("OrderEntity.findDefaultByDateRecorded") //NOI18N
                     .setParameter("dateRecorded", new Date()) //NOI18N
                     .setMaxResults(1).getSingleResult();
             return order.getId();
@@ -219,8 +221,8 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
 
                 order = OrderEntity.apply();
 
-                getEntityManager().persist(order);
-                getEntityManager().flush();
+                em.persist(order);
+                em.flush();
 
                 return order.getId();
             }
@@ -240,7 +242,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
             throw new SecurityViolationException(getString("Security.Access.Denied"));
         }
 
-        List<OrderEntity> orders = getEntityManager().createNamedQuery("OrderEntity.findByDateRecordedOrderByIdDesc") //NOI18N
+        List<OrderEntity> orders = em.createNamedQuery("OrderEntity.findByDateRecordedOrderByIdDesc") //NOI18N
                 .setParameter("dateRecorded", date.toDate()) //NOI18N
                 .getResultList();
 
@@ -273,13 +275,13 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
             throw new ValidationException(getString("Invalid.DateRange.BeginningAfterEnding"));
         }
 
-        Client client = getEntityManager().find(Client.class, id);
+        Client client = em.find(Client.class, id);
 
         if (client == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
         }
 
-        List<OrderEntity> financialActivities = getEntityManager().createNamedQuery("OrderEntity.findByClientAndDateRecordedRangeOrderByDateRecordedDesc") //NOI18N
+        List<OrderEntity> financialActivities = em.createNamedQuery("OrderEntity.findByClientAndDateRecordedRangeOrderByDateRecordedDesc") //NOI18N
                 .setParameter("client", client) //NOI18N
                 .setParameter("rangeBegin", begin.toDate()) //NOI18N
                 .setParameter("rangeEnd", end.toDate()) //NOI18N
@@ -321,7 +323,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         Item item;
         Discount discount;
 
-        order = getEntityManager().find(OrderEntity.class, orderId, LockModeType.OPTIMISTIC);
+        order = em.find(OrderEntity.class, orderId, LockModeType.OPTIMISTIC);
 
         if (order == null) {
             throw new ValidationException(getString("Invalid.Order.ID"));
@@ -342,7 +344,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
             throw new ValidationException(getString("Invalid.OrderLine.Quantity"));
         }
 
-        item = getEntityManager().find(Item.class, itemId);
+        item = em.find(Item.class, itemId);
 
         if (item == null) {
             throw new ValidationException(getString("Invalid.Item.ID"));
@@ -355,7 +357,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         if (discountId == null) {
             discount = null;
         } else {
-            discount = getEntityManager().find(Discount.class, discountId);
+            discount = em.find(Discount.class, discountId);
 
             if (discount == null) {
                 throw new ValidationException(getString("Invalid.Discount.ID"));
@@ -405,9 +407,9 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
 
         Query query;
         if (discount == null) {
-            query = getEntityManager().createNamedQuery("OrderLine.findByOrderAndItemAndNoDiscount");
+            query = em.createNamedQuery("OrderLine.findByOrderAndItemAndNoDiscount");
         } else {
-            query = getEntityManager().createNamedQuery("OrderLine.findByOrderAndItemAndDiscount")
+            query = em.createNamedQuery("OrderLine.findByOrderAndItemAndDiscount")
                     .setParameter("discount", discount);
         }
 
@@ -431,7 +433,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
             orderLine.setOrder(order);
             orderLine.setQuantity(quantity);
             orderLine.setDiscount(discount);
-            getEntityManager().persist(orderLine);
+            em.persist(orderLine);
 
             List<OrderLine> orderLines = order.getOrderLines();
             if (orderLines == null) {
@@ -475,7 +477,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         OrderLine orderLine;
         Item item;
 
-        orderLine = getEntityManager().find(OrderLine.class, orderLineId);
+        orderLine = em.find(OrderLine.class, orderLineId);
 
         if (orderLine == null) {
             throw new ValidationException(getString("Invalid.OrderLine.ID"));
@@ -496,7 +498,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
             throw new BusinessException(getString("BusinessRule.Order.Casual.SubscriptionCanNotBeRemoved"));
         }
 
-        Property timeRangeMismatch = getEntityManager().find(Property.class, "time_range_mismatch_penalty_item_id");
+        Property timeRangeMismatch = em.find(Property.class, "time_range_mismatch_penalty_item_id");
         if (orderLine.getItem().getId() == timeRangeMismatch.getInteger()) {
             throw new BusinessException(getString("BusinessRule.Order.OrderLineForceAndCanNotBeRemoved"));
         }
@@ -530,7 +532,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         if (orderLine.getQuantity() == 0) {
             // EntityManager won't remove this relationship upon EntityManager.remove call
             order.getOrderLines().remove(orderLine);
-            getEntityManager().remove(orderLine);
+            em.remove(orderLine);
         }
     }
 
@@ -549,7 +551,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
             throw new NullPointerException("The amount is null."); //NOI18N
         }
 
-        OrderEntity order = getEntityManager().find(OrderEntity.class, orderId, LockModeType.OPTIMISTIC);
+        OrderEntity order = em.find(OrderEntity.class, orderId, LockModeType.OPTIMISTIC);
 
         if (order == null) {
             throw new ValidationException(getString("Invalid.Order.ID"));
@@ -588,7 +590,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
             throw new SecurityViolationException(getString("Security.Access.Denied"));
         }
 
-        BigDecimal result = (BigDecimal) getEntityManager().createNamedQuery("OrderEntity.sumPaymentsForDateRecorded") //NOI18N
+        BigDecimal result = (BigDecimal) em.createNamedQuery("OrderEntity.sumPaymentsForDateRecorded") //NOI18N
                 .setParameter("dateRecorded", date.toDate()) //NOI18N
                 .getSingleResult();
 
@@ -609,7 +611,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
             throw new NullPointerException("The id is null."); //NOI18N
         }
 
-        OrderEntity order = getEntityManager().find(OrderEntity.class, id);
+        OrderEntity order = em.find(OrderEntity.class, id);
 
         if (order == null) {
             throw new ValidationException(getString("Invalid.Order.ID"));
@@ -631,7 +633,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
             throw new NullPointerException("The orderId is null."); //NOI18N
         }
 
-        OrderEntity order = getEntityManager().find(OrderEntity.class,
+        OrderEntity order = em.find(OrderEntity.class,
                 orderId);
 
         if (order == null) {

@@ -229,8 +229,8 @@ public class Main {
 	 */
 	public static final String PROPERTY_LOCALE_COUNTRY = "locale.country";
 	public static final String PROPERTY_LOCALE_LANGUAGE = "locale.language";
-	public static final String PROPERTY_REFRESH_PERIOD = "client.refreshPeriod";
-	public static final String PROPERTY_UI = "client.ui";
+	public static final String PROPERTY_REFRESH_PERIOD = "refreshPeriod";
+	public static final String PROPERTY_UI = "ui";
 
 	public static Properties getProperties() {
 		return properties;

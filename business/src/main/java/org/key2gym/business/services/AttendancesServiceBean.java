@@ -32,6 +32,7 @@ import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.services.AttendancesService;
+import org.key2gym.business.api.services.OrdersService;
 import org.key2gym.business.entities.Attendance;
 import org.key2gym.business.entities.Client;
 import org.key2gym.business.entities.Item;
@@ -43,6 +44,7 @@ import org.key2gym.persistence.OrderLine;
 import org.key2gym.persistence.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -51,14 +53,19 @@ import org.springframework.stereotype.Service;
 @Service("org.key2gym.business.api.services.AttendancesService")
 @RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
+@Transactional
 public class AttendancesServiceBean extends BasicBean implements AttendancesService {
-    
+    @Transactional
     @Override
     public Integer checkInRegisteredClient(Integer clientId, Integer keyId)
 	throws BusinessException, ValidationException, SecurityViolationException {
 
         if (!callerHasAnyRole(SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER)) {
             throw new SecurityViolationException(getString("Security.Operation.Denied"));
+        }
+        
+        if(!em.getTransaction().isActive()) {
+            throw new RuntimeException("Transaction not active");
         }
 
         Client client;
@@ -478,5 +485,5 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
     }
 
     @Autowired
-    private OrdersServiceBean ordersService;
+    private OrdersService ordersService;
 }
