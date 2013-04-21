@@ -76,7 +76,7 @@ class Attendance extends Serializable {
   def getDatetimeEnd = datetimeEnd
 
   def isOpen: Boolean = datetimeEnd == Attendance.datetimeEndUnknown
-  def close = datetimeEnd = Attendance.datetimeEndUnknown
+  def close = this.datetimeEnd = new Date()
 
   def getKey = key
   def setKey(key: Key) = this.key = key

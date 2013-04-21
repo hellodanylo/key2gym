@@ -55,17 +55,13 @@ import org.springframework.transaction.annotation.Transactional;
 	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
 @Transactional
 public class AttendancesServiceBean extends BasicBean implements AttendancesService {
-    @Transactional
+
     @Override
     public Integer checkInRegisteredClient(Integer clientId, Integer keyId)
 	throws BusinessException, ValidationException, SecurityViolationException {
 
         if (!callerHasAnyRole(SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER)) {
             throw new SecurityViolationException(getString("Security.Operation.Denied"));
-        }
-        
-        if(!em.getTransaction().isActive()) {
-            throw new RuntimeException("Transaction not active");
         }
 
         Client client;
@@ -401,7 +397,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                     OrderLine targetOrderLine = null;
                     
                     /*
-                     * Attemps to find the right order line first.
+                     * Attempts to find the right order line first.
                      */
                     for(OrderLine orderLine : order.getOrderLines()) {
                         if(orderLine.getItem().getId() == itemId) {
@@ -411,7 +407,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                     
                     /*
                      * Creates an order line, if it does not exists, and applies
-                     * the penlaties.
+                     * the penalties.
                      */
                     if(targetOrderLine == null) {
                         targetOrderLine = new OrderLine();
