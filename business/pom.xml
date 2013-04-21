@@ -112,6 +112,11 @@
 			<artifactId>spring-tx</artifactId>
 			<version>3.2.2.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.5.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -168,6 +173,27 @@
 						<goals>
 							<goal>test</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>native2ascii-maven-plugin</artifactId>
+				<version>1.0-beta-1</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>native2ascii</goal>
+						</goals>
+						<configuration>
+							<encoding>UTF8</encoding>
+							<src>${project.build.resources.resource.directory}</src>
+							<dest>target/classes</dest>
+							<includes>
+								<include>**/*.properties</include>
+							</includes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

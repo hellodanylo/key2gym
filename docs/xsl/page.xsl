@@ -76,7 +76,7 @@
 	      </div>
 	    </xsl:if>
 	    
-	    <xsl:value-of select="unparsed-text(concat($project.path, '/src/html/footer.html'))" 
+	    <xsl:value-of select="unparsed-text(concat($project.path, '/src/main/html/footer.html'))" 
 			  disable-output-escaping="yes" />
 	    
 	  </div>

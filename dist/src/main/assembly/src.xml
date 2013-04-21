@@ -22,6 +22,13 @@
 			</includes>
 			<unpack>true</unpack>
 		</dependencySet>
+		<dependencySet>
+			<outputDirectory>docs</outputDirectory>
+			<includes>
+				<include>org.key2gym:key2gym-docs</include>
+			</includes>
+			<unpack>true</unpack>
+		</dependencySet>
 	</dependencySets>
 
 	<fileSets>
@@ -30,7 +37,7 @@
 			<outputDirectory>.</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>../docs/dist</directory>
+			<directory>docs/dist</directory>
 			<outputDirectory>docs</outputDirectory>
 		</fileSet>
 	</fileSets>

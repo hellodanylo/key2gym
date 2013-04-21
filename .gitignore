@@ -17,9 +17,10 @@
 
 # Build artifacts
 target/
-dist/
 
 # Logs
 log/
 logs/
 
+# Private developers' files
+private/

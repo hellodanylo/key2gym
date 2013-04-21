@@ -22,7 +22,7 @@
 
   <target name="build">
     <!-- Prepares the distribution directory. -->
-    <mkdir dir="dist" />        
+    <mkdir dir="target/dist" />        
     
     <build-page uri="/index" />
     <build-page uri="/upgrading" />
@@ -41,13 +41,13 @@
     <build-page uri="/client/running" />
 
     <!-- Copies stylesheet files. -->
-    <copy todir="dist/css">
-      <fileset dir="src/css" />
+    <copy todir="target/dist/css">
+      <fileset dir="src/main/css" />
     </copy>
 
     <!-- Copies image files. -->
-    <copy todir="dist/img">
-      <fileset dir="src/img" />
+    <copy todir="target/dist/img">
+      <fileset dir="src/main/img" />
     </copy>
     
   </target>
@@ -84,14 +84,14 @@
     <sequential>
       <validate-page uri="@{uri}" />
 
-      <xslt in="src/pages/@{uri}.xml"
+      <xslt in="src/main/pages/@{uri}.xml"
 	    style="xsl/page.xsl" 
-	    out="dist/@{uri}.html"
+	    out="target/dist/@{uri}.html"
 	    classpath="../lib/saxon.jar" 
 	    force="true"
 	    filedirparameter=".">
 	<param name="page.uri" expression="@{uri}" />
-	<param name="project.path" expression="${project.dir}/docs"/>
+	<param name="project.path" expression="${project.dir}"/>
       </xslt>
     </sequential>
   </macrodef>
@@ -101,7 +101,7 @@
     <attribute name="uri" />
 
     <sequential>
-      <schemavalidate file="src/pages/@{uri}.xml" 
+      <schemavalidate file="src/main/pages/@{uri}.xml" 
 		      noNamespaceFile="xsd/page.xsd" />
     </sequential>
   </macrodef>

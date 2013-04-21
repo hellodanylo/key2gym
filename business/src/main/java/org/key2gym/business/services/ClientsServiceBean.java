@@ -102,9 +102,6 @@ public class ClientsServiceBean extends BasicBean implements ClientsService {
 
         em.persist(newClient);
         em.flush();
-        
-        if(true)
-        	throw new RuntimeException();
 
         return newClient.getId();
     }

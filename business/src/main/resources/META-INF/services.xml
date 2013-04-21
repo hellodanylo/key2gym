@@ -11,10 +11,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<!-- This context expects the data source bean being provided in an external 
-		application context file in order to be independent from the environment. 
-		By convention, this file is to be located in datasource.xml relatively to 
-		this file. -->
-	<import resource="datasource.xml" />
+		application context file in order to be independent from the environment. -->
 
 	<!-- Services -->
 	<context:annotation-config />
@@ -35,9 +32,8 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-	<tx:annotation-driven transaction-manager="transactionManager" />
 
-<!-- <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="*" />
 		</tx:attributes>
@@ -46,8 +42,8 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 	<aop:config>
 		<aop:pointcut id="serviceTransactionPointcut"
 			expression="execution(* org.key2gym.business.services.*.*(..))" />
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceTransactionPointcut" />
-	</aop:config> -->
+		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="serviceTransactionPointcut" />
+	</aop:config>
 
 	<!-- Security -->
 	<security:global-method-security
