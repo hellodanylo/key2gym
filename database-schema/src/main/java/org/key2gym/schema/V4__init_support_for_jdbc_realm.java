@@ -141,6 +141,20 @@ public class V4__init_support_for_jdbc_realm implements JdbcMigration {
                 insertStatement.close();
             }
         }
+        
+        try {
+            stmt = connection.createStatement();
+            
+            stmt.executeUpdate("CREATE VIEW v_administrator_groups AS " +
+                    "SELECT username, name as groupname " + 
+                    "FROM administrator_adm, administrator_group_agr, group_grp " +
+                    "WHERE id_adm = idadm_agr AND idgrp_agr = id_grp;");
+            
+        } finally {
+            if(stmt != null) {
+                stmt.close();
+            }
+        }
 
     }
 }
