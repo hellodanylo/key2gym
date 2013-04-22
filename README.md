@@ -26,7 +26,6 @@ Key2Gym is an open-source software licensed under Apache License Version 2.0.
 
 * Java 7 SE
 * PostgreSQL 9.2+
-* OpenEJB 4.5.0+
 
 ## Community
 
