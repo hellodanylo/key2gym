@@ -45,11 +45,6 @@
       <fileset dir="src/main/css" />
     </copy>
 
-    <!-- Copies image files. -->
-    <copy todir="target/dist/img">
-      <fileset dir="src/main/img" />
-    </copy>
-    
   </target>
   
   <target name="clean">
