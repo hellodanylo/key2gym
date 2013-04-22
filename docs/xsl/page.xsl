@@ -24,6 +24,7 @@
   <xsl:import href="common.xsl" />
 
   <xsl:param name="project.path" />
+  <xsl:param name="file.separator" />
   
   <xsl:param name="page.uri" />
   <xsl:param name="page.uri.seq" select="cmn:uri-to-uri-seq($page.uri)"/>
@@ -76,7 +77,7 @@
 	      </div>
 	    </xsl:if>
 	    
-	    <xsl:value-of select="unparsed-text(concat($project.path, '/src/main/html/footer.html'))" 
+	    <xsl:value-of select="unparsed-text(cmn:make-url('/src/main/html/footer.html'))" 
 			  disable-output-escaping="yes" />
 	    
 	  </div>

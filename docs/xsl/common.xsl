@@ -336,4 +336,14 @@
     
   </xsl:template>
   
+  <xsl:function name="cmn:make-url" as="xs:string">
+    <!-- URL of the resources relative to the project's path. -->
+    <xsl:param name="relative-url" as="xs:string"/>
+    
+    <!-- Builds an URI by concatenating the project's path and
+         replacing \s (in case the build is Windows-based) with /s -->
+    <xsl:value-of select="concat('file:', replace($project.path, '\\', '/'), $relative-url)"/>
+    
+  </xsl:function>
+  
 </xsl:stylesheet>

@@ -83,7 +83,7 @@
     
     <sequential>
       <validate-page uri="@{uri}" />
-
+    	
       <xslt in="src/main/pages/@{uri}.xml"
 	    style="xsl/page.xsl" 
 	    out="target/dist/@{uri}.html"
@@ -92,6 +92,7 @@
 	    filedirparameter=".">
 	<param name="page.uri" expression="@{uri}" />
 	<param name="project.path" expression="${project.dir}"/>
+    <param name="file.separator" expression="${file.separator}"/>
       </xslt>
     </sequential>
   </macrodef>
