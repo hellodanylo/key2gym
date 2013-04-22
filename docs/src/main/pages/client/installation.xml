@@ -33,11 +33,7 @@
 
     <div class="well well-large">
       <ol>
-        <li>Copy the client subfolder from the distribution.</li>
-	<li>
-	  Copy library files listed in <code>client/lib/runtime-deps.txt</code> 
-	  from <code>lib/</code> to <code>client/lib/</code>
-	</li>
+        <li>Copy the client sub-folder from the distribution.</li>
         <li>
 	  Configure the client as explained on the 
 	  <a href="./configuration.html">Client > Configuration</a> page.

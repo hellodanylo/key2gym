@@ -27,29 +27,6 @@
       To run the client you use a startup script located in the client's root 
       directory. Here is an example:
       <pre>./key2gym-client.sh</pre>
-
-      The following is the table of available command-line arguments:
-      <p/>
-
-      <table class="table">
-	<thead>
-	  <tr>
-	    <th>Argument</th>
-	    <th>Description</th>
-	    <th>Example</th>
-	  </tr>
-	</thead>
-	<tbody>
-	  <tr>
-	    <td>connection</td>
-	    <td>
-	      Specifies which connection to use. The value of this option
-	      is the connection's name.
-	    </td>
-	    <td>./key2gym.sh --connection=default</td>
-	  </tr>
-	</tbody>
-      </table>
     </div>
   </content>
 </page>

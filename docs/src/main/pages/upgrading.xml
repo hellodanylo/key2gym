@@ -23,15 +23,15 @@
       This page describes how to upgrade the application.
     </div>
 
-    <div class="header"><h3>2.2.0 - 3.0.0</h3></div>
+    <div class="header"><h3>Older than 3.0.0 - 3.0.0</h3></div>
 
     <div class="well well-large">
       <ul>
         <li>
 	  <b>Client</b>: A fresh install of the client is recommended. 
 	  Make sure you keep the logs, if you need them. The format of 
-	  <code>etc/application.properties</code> and connection properties is now 
-	  almost completely different. Make sure you configure the client properly.
+	  <code>etc/application.properties</code> is now almost completely different.
+      Make sure you configure the client properly.
 	</li>
         <li>
 	  <b>Database</b>: The support of MySQL database is <b>dropped</b>. 
@@ -48,13 +48,13 @@
 DELETE FROM `session_ssn`;</pre>
 	    </li>
 	    <li>Generate a compatible dump: 
-	    <pre>mysqldump --skip-opt --no-create-info --compatible=postgresql,ansi --skip-quote-names --default-character-set=utf8 --complete-insert database --tables client_cln ad_source_ads client_profile_cpf administrator_adm client_freeze_cfz key_key attendance_atd item_itm time_split_tsp item_subscription_its discount_dsc order_ord order_line_orl property_pty session_ssn cash_adjustment_cad</pre>
+	    <pre>mysqldump --skip-opt --no-create-info --compatible=postgresql,ansi --skip-quote-names --default-character-set=utf8 --complete-insert database --tables client_cln ad_source_ads client_profile_cpf administrator_adm client_freeze_cfz key_key attendance_atd item_itm time_split_tsp item_subscription_its discount_dsc order_ord order_line_orl property_pty session_ssn cash_adjustment_cad >mysql_dump.sql</pre>
 	    </li>
 	    <li>
 	      Create a new database in PostgreSQL and migrate to version 1. 
-	      Note that the migratio is now done using a standalone tool. 
+	      Note that the migration is now done using a stand-alone tool. 
 	    </li>
-	    <li>Import the generated dump: <code>psql -f mysql_dump.sql</code></li>
+	    <li>Import the generated dump: <code>psql -q -f mysql_dump.sql</code></li>
 	    <li>Migrate to version 6.</li>
 	    <li>You now have to update sequences to match just imported data. 
 	    We provide you this handy script to help with that:
@@ -80,9 +80,6 @@ select column_name || '_seq', reset_sequence(table_name, column_name, column_nam
 	      in the <code>time_split_tsp</code> table.
 	    </li>
 	  </ul>
-	</li>
-	<li>A brand new piece of software is now required: OpenEJB server. 
-	See <a href="./business/index.html">Business</a> section for details.
 	</li>
       </ul>
     </div>

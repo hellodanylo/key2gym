@@ -21,7 +21,7 @@
     <div class="well well-large">
       Go to <a href="http://www.postgresql.org/">PostgreSQL website</a> to obtain 
       a distribution of PostgreSQL server. The program has been intensively
-      tested with PostgreSQL 9.1, however the later version should work as well. 
+      tested with PostgreSQL 9.1, however the later versions should work as well. 
       If you are running Linux/Unix/BSD, we suggest you to install the PostgreSQL 
       server from the official repository. 
       See the <a href="http://www.postgresql.org/docs/9.1/static/index.html">PostgreSQL documentation</a>, 
@@ -37,8 +37,8 @@ postgres=# ALTER SCHEMA public OWNER TO myuser;
       </pre>
 
       Note that you also need to modify <code>pg_hba.conf</code> to accept 
-      TCP/IP connections from the hosts, where the business tier is going to be run. 
-      For example, if the business tier is going to be located on the same host 
+      TCP/IP connections from the hosts, where the client application is going to be run. 
+      For example, if the client application is going to be located on the same host 
       as the database server, you need to have the following configuration file:
       <pre>host     mydatabase     myuser     127.0.0.1/32    password</pre>
 

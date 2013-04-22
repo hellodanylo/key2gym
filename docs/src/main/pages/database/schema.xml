@@ -19,21 +19,21 @@
 <page>
   <content>
     <div class="well well-large">
-      The database has got to have an appropriate schema for the business tier
+      The database has got to have an appropriate schema for the client application
       to work with it. The schema defines the format of the data to be kept and
       processed within the database. In the Key2Gym application the schema management
       is done using Flyway migration tool shipped with the application.
       
       The schema is a subject to change from one version of the application to 
-      another. Therefore, the release notes migth tell you to migrate the schema 
-      after you updated the business tier.
+      another. Therefore, the release notes will tell you to migrate the schema 
+      after you updated the application.
     </div>
     <div class="well well-large">
-      <b>IMPORTANT:</b> You should not run the business tier with an old schema, 
+      <b>IMPORTANT:</b> You should not run the application with an old schema, 
       because it might result in data loss or inconsistency.
     </div>
     <div class="well well-large">
-      The schema migration tool is located under the <code>migration</code>
+      The schema migration tool is located under the <code>database-schema</code>
       folder. The rest of this page will describe the usage of the schema migration
       tool.
     </div>
@@ -44,8 +44,9 @@
       The configuration file is <code>conf/flyway.properties</code>. It's
       well-documented, therefore it should be easy to figure it out.
       
-      You need to specify the driver, the url, the username, the password and 
-      the database.
+      You need to specify the JDBC URL, the user name, the password and 
+      the database. For PostgreSQL JDBC URLs have the following format:
+      <code>jdbc:postgresql://host:port/database</code>.
     </div>
     
     <div class="well well-large">

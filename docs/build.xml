@@ -30,12 +30,7 @@
     <build-page uri="/database/index" />
     <build-page uri="/database/installation" />
     <build-page uri="/database/schema" />
-
-    <build-page uri="/business/index" />
-    <build-page uri="/business/installation" />
-    <build-page uri="/business/configuration" />
-    <build-page uri="/business/running" />
-
+  	
     <build-page uri="/client/installation" />
     <build-page uri="/client/configuration" />
     <build-page uri="/client/running" />

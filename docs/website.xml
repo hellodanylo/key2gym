@@ -27,12 +27,6 @@
 	<page name="/database/installation" title="Installation"/>
 	<page name="/database/schema" title="Schema" />
       </category>
-      <category name="/business" title="Business">
-	<page name="/business/index" title="Table of Contents" />
-	<page name="/business/installation" title="Installation"/>
-	<page name="/business/configuration" title="Configuration" />
-	<page name="/business/running" title="Running" />
-      </category>
       <category name="/client" title="Client">
 	<page name="/client/installation" title="Installation"/>
 	<page name="/client/configuration" title="Configuration" />

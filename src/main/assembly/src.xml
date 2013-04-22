@@ -16,7 +16,7 @@
 			<unpack>true</unpack>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>schema</outputDirectory>
+			<outputDirectory>database-schema</outputDirectory>
 			<includes>
 				<include>org.key2gym:key2gym-database-schema</include>
 			</includes>
