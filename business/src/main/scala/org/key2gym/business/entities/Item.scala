@@ -37,7 +37,7 @@ import java.text.MessageFormat
     new NamedQuery(name = "Item.findPure", 
 		   query = "SELECT i FROM Item i WHERE i.id NOT IN (SELECT s.item.id FROM ItemSubscription s)"),
     new NamedQuery(name = "Item.findAvailable", 
-		   query = "SELECT i FROM Item i WHERE i.quantity IS NULL OR i.quantity > 0"),
+		   query = "SELECT i FROM Item i WHERE i.quantity IS NULL OR i.quantity > 0 ORDER BY i.title"),
     new NamedQuery(name = "Item.findPureAvailable", 
 		   query = "SELECT i FROM Item i WHERE (i.quantity is NULL OR i.quantity > 0) AND i.id NOT IN (SELECT s.item.id FROM ItemSubscription s)"),
     new NamedQuery(name = "Item.findById", 
