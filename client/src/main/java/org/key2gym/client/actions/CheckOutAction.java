@@ -70,6 +70,13 @@ public class CheckOutAction extends BasicAction {
         Integer attendanceId = pickAttendanceDialog.getAttendanceId();
 
         if (pickAttendanceDialog.isEditOrderDialogRequested()) {
+        	
+        	/*
+        	 * If the user requested order,
+        	 * let's recalculate penalties for him.
+        	 */
+        	attendancesService.recalculatePenalties(attendanceId);
+        	
             Integer orderId;
             Boolean isCasual;
 

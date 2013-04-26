@@ -68,6 +68,16 @@ public interface AttendancesService extends BasicService {
     Integer checkInRegisteredClient(Integer clientId, Integer keyId) throws BusinessException, ValidationException, SecurityViolationException;
 
     /**
+     * Recalculates the penalties for the given attendance.
+     * 
+     * @param attendanceId the attendance's ID
+     * @throws BusinessException if the attendance is closed
+     * @throws ValidationException if the attendance's ID is invalid
+     * @throws SecurityViolationException if access to the attendance is denied
+     */
+    void recalculatePenalties(Integer attendanceId) throws BusinessException, ValidationException, SecurityViolationException;
+    
+    /**
      * Checks out a client. <p>
      *
      * <ul>

@@ -323,39 +323,25 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
 
         return attendance.getClient() == null;
     }
+    
+    
 
     @Override
-    public void checkOut(Integer attendanceId) throws BusinessException, ValidationException, SecurityViolationException {
-
-        if (!callerHasAnyRole(SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER)) {
-            throw new SecurityViolationException(getString("Security.Operation.Denied"));
-        }
-
+	public void recalculatePenalties(Integer attendanceId)
+			throws BusinessException, ValidationException, SecurityViolationException {
+		
         if (attendanceId == null) {
             throw new NullPointerException("The attendanceId is null."); //NOI18N
         }
         Attendance attendance = getEntityManager().find(Attendance.class, attendanceId, LockModeType.OPTIMISTIC);
-
-        if (attendance == null) {
-            throw new ValidationException(getString("Invalid.Attendance.ID"));
-        }
-
-        if (!attendance.isOpen()) {
-            throw new BusinessException(getString("BusinessRule.Attendance.AlreadyClosed"));
-        }
-
         OrderEntity order = attendance.getOrder();
-
-        /*
-         * If there is an order associated with the attendance, the attendance
-         * is anonymous, and, therefore, the order should have a full payment.
-         */
-        if (order != null) {
-            if (order.getTotal().compareTo(order.getPayment()) != 0) {
-                throw new BusinessException(getString("BusinessRule.Attendance.Casual.ExactPaymentRequiredToClose"));
-            }
-        }
         
+        doRecalculatePenalties(attendance, order);
+		
+	}
+    
+    protected void doRecalculatePenalties(Attendance attendance, OrderEntity order) throws SecurityViolationException, ValidationException {
+    	
         /*
          * Registered clients-specific logic
          */
@@ -368,14 +354,14 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
 
             List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>)
 		getEntityManager()
-		.createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
+		.createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc", ItemSubscription.class) //NOI18N
                     .setParameter("client", attendance.getClient()) //NOI18N
                     .getResultList();
 
             if (!itemSubscriptions.isEmpty()) {
                 itemSubscription = itemSubscriptions.get(0);
 
-		List<TimeSplit> timeSplits = getEntityManager().createNamedQuery("TimeSplit.findAll") //NOI18N
+		List<TimeSplit> timeSplits = getEntityManager().createNamedQuery("TimeSplit.findAll", TimeSplit.class) //NOI18N
 		    .getResultList();
 
                 /*
@@ -422,7 +408,42 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                     }                    
                 }
             }
+        }      
+    }
+
+	@Override
+    public void checkOut(Integer attendanceId) throws BusinessException, ValidationException, SecurityViolationException {
+
+        if (!callerHasAnyRole(SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER)) {
+            throw new SecurityViolationException(getString("Security.Operation.Denied"));
         }
+
+        if (attendanceId == null) {
+            throw new NullPointerException("The attendanceId is null."); //NOI18N
+        }
+        Attendance attendance = getEntityManager().find(Attendance.class, attendanceId, LockModeType.OPTIMISTIC);
+
+        if (attendance == null) {
+            throw new ValidationException(getString("Invalid.Attendance.ID"));
+        }
+
+        if (!attendance.isOpen()) {
+            throw new BusinessException(getString("BusinessRule.Attendance.AlreadyClosed"));
+        }
+
+        OrderEntity order = attendance.getOrder();
+
+        /*
+         * If there is an order associated with the attendance, the attendance
+         * is anonymous, and, therefore, the order should have a full payment.
+         */
+        if (order != null) {
+            if (order.getTotal().compareTo(order.getPayment()) != 0) {
+                throw new BusinessException(getString("BusinessRule.Attendance.Casual.ExactPaymentRequiredToClose"));
+            }
+        }
+        
+        doRecalculatePenalties(attendance, order);
 
         attendance.close();
     }
