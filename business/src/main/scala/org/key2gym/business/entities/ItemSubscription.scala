@@ -27,7 +27,7 @@ import org.key2gym.persistence._
 @Entity
 @Table(name = "item_subscription_its")
 @NamedQueries(Array(
-    new NamedQuery(name = "ItemSubscription.findAll", query = "SELECT i FROM ItemSubscription i"),
+    new NamedQuery(name = "ItemSubscription.findAll", query = "SELECT i FROM ItemSubscription i ORDER BY i.item.title"),
     new NamedQuery(name = "ItemSubscription.findById", query = "SELECT i FROM ItemSubscription i WHERE i.id = :id"),
     new NamedQuery(name = "ItemSubscription.findByUnits", query = "SELECT i FROM ItemSubscription i WHERE i.units = :units"),
     new NamedQuery(name = "ItemSubscription.findByTermDays", query = "SELECT i FROM ItemSubscription i WHERE i.termDays = :termDays"),
