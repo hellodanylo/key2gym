@@ -43,7 +43,7 @@ import org.key2gym.business.resources.ResourcesManager.getString
     new NamedQuery(name = "Client.findByFullNameExact", 
 		   query = "SELECT c FROM Client c WHERE c.fullName = :fullName"),
     new NamedQuery(name = "Client.findByFullNameNotExact", 
-		 query = "SELECT c FROM Client c WHERE LOCATE(:fullName, c.fullName) != 0"),
+		 query = "SELECT c FROM Client c WHERE UPPER(c.fullName) LIKE CONCAT('%', UPPER(:fullName), '%')"),
     new NamedQuery(name = "Client.findByRegistrationDate", 
 		   query = "SELECT c FROM Client c WHERE c.registrationDate = :registrationDate"),
     new NamedQuery(name = "Client.findByAttendancesBalance", 
