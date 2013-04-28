@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.key2gym</groupId>
-	<version>3.0.0-RC6</version>
+	<version>3.0.0-RC7</version>
 	<artifactId>key2gym-business</artifactId>
 
 	<packaging>jar</packaging>
@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>org.key2gym</groupId>
 			<artifactId>key2gym-business-api</artifactId>
-			<version>3.0.0-RC6</version>
+			<version>3.0.0-RC7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.scala-lang</groupId>
