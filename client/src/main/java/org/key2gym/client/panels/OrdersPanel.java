@@ -227,9 +227,11 @@ public class OrdersPanel extends javax.swing.JPanel {
             try {
                 refreshData();
             } catch (SecurityViolationException ex) {
-                Logger.getLogger(AttendancesPanel.class).error(
-                        "Failed to refresh the attendances!", ex);
+                Logger.getLogger(OrdersPanel.class).error(
+                        "Failed to refresh the orders!", ex);
             }
+            
+            final int selection = ordersTable.getSelectedRow();
 
             /*
              * Updates the GUI asynchronously on the Swing thread.
@@ -238,6 +240,7 @@ public class OrdersPanel extends javax.swing.JPanel {
                 @Override
                 public void run() {
                     refreshGUI();
+                    ordersTable.getSelectionModel().setSelectionInterval(selection, selection);
                 }
             });
         }

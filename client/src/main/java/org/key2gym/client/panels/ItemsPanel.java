@@ -141,7 +141,7 @@ public class ItemsPanel extends javax.swing.JPanel {
             try {
                 refreshData();
             } catch (SecurityViolationException ex) {
-                Logger.getLogger(AttendancesPanel.class).error(
+                Logger.getLogger(ItemsPanel.class).error(
                         "Failed to refresh the items!", ex);
             }
 
