@@ -47,8 +47,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * 
  * <li>Reading and applying application properties.</li>
  * 
- * <li>Choosing connection to use.</li>
- * 
  * <li>Launching MainFrame.</li>
  * 
  * </ul>
@@ -94,7 +92,7 @@ public class Main {
 		logger.info("Starting...");
 
 		/*
-		 * Loads the built-in default client properties file.
+		 * Loads the built-in default properties file.
 		 */
 		try (InputStream input = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(RESOURCE_DEFAULT_CLIENT_PROPERTIES)) {
@@ -106,21 +104,6 @@ public class Main {
 			throw new RuntimeException(
 					"Failed to load the default client properties file", ex);
 		}
-
-		/*
-		 * System context is used to retrieve the domain-wide client properties.
-		 */
-		/*InitialContext systemContext;
-		try {
-			systemContext = new InitialContext();
-			properties.putAll((Properties) systemContext.lookup("key2gym"));
-			systemContext.close();
-		} catch (NamingException ex) {
-			throw new RuntimeException(
-					"Failed to retrieve the domain-wide properties from the application server",
-					ex);
-		}*/
-		// TODO: replace with web-based domain properties?
 
 		/*
 		 * Loads the local client properties file.
