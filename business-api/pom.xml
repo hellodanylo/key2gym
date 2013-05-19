@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.key2gym</groupId>
-	<version>3.0.0-RC7</version>
+	<version>3.0.0-RC8</version>
 	<artifactId>key2gym-business-api</artifactId>
     
     <properties>
