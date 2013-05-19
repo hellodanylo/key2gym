@@ -53,7 +53,7 @@ public class ContextManager extends Observable {
 
     }
 
-    public void login(String username, String password)
+    public synchronized void login(String username, String password)
             throws ValidationException {
 
         if (shadowAuthentication != null) {
@@ -92,7 +92,7 @@ public class ContextManager extends Observable {
         notifyObservers();
     }
 
-    public void logout() {
+    public synchronized void logout() {
 
         if (shadowAuthentication != null) {
             authentication = shadowAuthentication;
@@ -142,7 +142,7 @@ public class ContextManager extends Observable {
      * 
      * This authentication used for all lookups.
      */
-    private Authentication authentication = null;
+    private volatile Authentication authentication = null;
     /**
      * The shadow authentication.
      * 
@@ -150,5 +150,5 @@ public class ContextManager extends Observable {
      * primary authentication becomes the shadow authentication and the second
      * authentication becomes the new primary authentication.
      */
-    private Authentication shadowAuthentication = null;
+    private volatile Authentication shadowAuthentication = null;
 }

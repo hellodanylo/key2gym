@@ -240,5 +240,5 @@ public class Main {
 		return context;
 	}
 	
-	private static AbstractApplicationContext context;
+	private volatile static AbstractApplicationContext context;
 }
