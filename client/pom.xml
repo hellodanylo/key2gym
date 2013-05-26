@@ -4,7 +4,7 @@
 
 	<groupId>org.key2gym</groupId>
 	<artifactId>key2gym-client</artifactId>
-	<version>3.0.0-RC8</version>
+	<version>developer-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
     
@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>org.key2gym</groupId>
 			<artifactId>key2gym-business</artifactId>
-			<version>3.0.0-RC8</version>
+			<version>developer-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
