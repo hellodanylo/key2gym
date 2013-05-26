@@ -67,7 +67,7 @@ public class ItemsPanel extends javax.swing.JPanel {
         itemsTableModel = new ItemsTableModel(itemsTableColumns);
         itemsTable.setModel(itemsTableModel);
         itemsTable
-                .setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                .setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         itemsScrollPane = new javax.swing.JScrollPane();
         itemsScrollPane.setViewportView(itemsTable);
@@ -118,7 +118,14 @@ public class ItemsPanel extends javax.swing.JPanel {
     }
 
     private void refreshGUI() {
+    	// Remembers the selection to restore it later.
+    	// The selection is lost because we reload the data into the table.
+    	int selection = itemsTable.getSelectedRow();
+
         itemsTableModel.setItems(items);
+        
+        // Restores the selection
+        itemsTable.getSelectionModel().setSelectionInterval(selection, selection);
     }
 
     /**

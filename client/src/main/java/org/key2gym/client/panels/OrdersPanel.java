@@ -29,7 +29,9 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicTreeUI.SelectionModelPropertyChangeHandler;
 import javax.swing.table.TableColumn;
 
 import org.apache.log4j.Logger;
@@ -108,7 +110,7 @@ public class OrdersPanel extends javax.swing.JPanel {
             column.setPreferredWidth(widths[i]);
         }
         ordersTable
-                .setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                .setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         ordersTable.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -202,9 +204,16 @@ public class OrdersPanel extends javax.swing.JPanel {
     }
 
     private void refreshGUI() {
+    	// Remembers the selection to restore it later.
+    	// The selection is lost because we reload the data into the table.
+    	int selection = ordersTable.getSelectedRow();
+    	
         ordersTableModel.setOrders(orders);
         totalTextField.setText(total.toPlainString());
         cashTextField.setText(cash.toPlainString());
+        
+        // Restores the selection
+        ordersTable.getSelectionModel().setSelectionInterval(selection, selection);
     }
 
     /**
@@ -230,8 +239,6 @@ public class OrdersPanel extends javax.swing.JPanel {
                 Logger.getLogger(OrdersPanel.class).error(
                         "Failed to refresh the orders!", ex);
             }
-            
-            final int selection = ordersTable.getSelectedRow();
 
             /*
              * Updates the GUI asynchronously on the Swing thread.
@@ -240,7 +247,6 @@ public class OrdersPanel extends javax.swing.JPanel {
                 @Override
                 public void run() {
                     refreshGUI();
-                    ordersTable.getSelectionModel().setSelectionInterval(selection, selection);
                 }
             });
         }

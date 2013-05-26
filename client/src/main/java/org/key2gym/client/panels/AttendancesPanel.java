@@ -84,7 +84,7 @@ public class AttendancesPanel extends JPanel {
                 attendancesTableColumns);
         attendancesTable.setModel(attendancesTableModel);
         attendancesTable
-                .setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+                .setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         attendancesTable.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -183,8 +183,15 @@ public class AttendancesPanel extends JPanel {
     }
 
     private void refreshGUI() {
+    	// Remembers the selection to restore it later.
+    	// The selection is lost because we reload the data into the table.
+    	int selection = attendancesTable.getSelectedRow();
+    	
         attendancesTableModel.setAttendances(attendances);
         attendancesCountTextField.setText(String.valueOf(attendances.size()));
+
+        // Restores the selection
+        attendancesTable.getSelectionModel().setSelectionInterval(selection, selection);
     }
 
     /**

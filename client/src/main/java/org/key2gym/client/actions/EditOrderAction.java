@@ -23,6 +23,7 @@ import org.joda.time.DateMidnight;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
+import org.key2gym.business.api.dtos.OrderDTO;
 import org.key2gym.business.api.services.OrdersService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.MainFrame;
@@ -50,7 +51,16 @@ public class EditOrderAction extends BasicAction {
         Integer orderId;
 
         if (e.getActionCommand().equals(ACTION_CONTEXT)) {
-            orderId = MainFrame.getInstance().getSelectedOrder().getId();
+            OrderDTO order = MainFrame.getInstance().getSelectedOrder();
+            
+            /*
+             * It is possible that the selection has already been discarded.
+             */
+            if(order == null) {
+            	return;
+            }
+        	
+        	orderId = order.getId();
         } else {
             PickOrderDialog pickOrderDialog = new PickOrderDialog(getFrame());
             pickOrderDialog.setVisible(true);
