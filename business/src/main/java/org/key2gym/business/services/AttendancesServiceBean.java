@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 
 import org.joda.time.DateMidnight;
@@ -33,13 +32,8 @@ import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.services.AttendancesService;
 import org.key2gym.business.api.services.OrdersService;
-import org.key2gym.business.entities.Attendance;
-import org.key2gym.business.entities.Client;
-import org.key2gym.business.entities.Item;
-import org.key2gym.business.entities.ItemSubscription;
-import org.key2gym.business.entities.Key;
-import org.key2gym.business.entities.OrderEntity;
-import org.key2gym.business.entities.TimeSplit;
+import org.key2gym.business.entities.*;
+import org.key2gym.business.resources.ResourcesManager;
 import org.key2gym.persistence.OrderLine;
 import org.key2gym.persistence.Property;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,18 +41,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.AttendancesService")
-@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
-	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
+@RolesAllowed({SecurityRoles.JUNIOR_ADMINISTRATOR,
+        SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER})
 @Transactional
 public class AttendancesServiceBean extends BasicBean implements AttendancesService {
 
     @Override
     public Integer checkInRegisteredClient(Integer clientId, Integer keyId)
-	throws BusinessException, ValidationException, SecurityViolationException {
+            throws BusinessException, ValidationException, SecurityViolationException {
 
         if (!callerHasAnyRole(SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER)) {
             throw new SecurityViolationException(getString("Security.Operation.Denied"));
@@ -78,7 +71,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new NullPointerException("The keyId is null."); //NOI18N
         }
 
-        client = (Client) getEntityManager().find(Client.class, clientId, LockModeType.OPTIMISTIC);
+        client = getEntityManager().find(Client.class, clientId);
         if (client == null) {
             throw new ValidationException(getString("Invalid.Client.ID"));
         }
@@ -106,46 +99,14 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             throw new BusinessException(getString("BusinessRule.Client.SubscriptionExpired"));
         }
 
-        client.setAttendancesBalance((Integer) (client.getAttendancesBalance() - 1));
+        client.setAttendancesBalance(client.getAttendancesBalance() - 1);
 
         /*
          * Builds an attendance record.
          */
         Attendance attendance = Attendance.apply(key, client);
 
-        /*
-         * Finds the client's current subscription.
-         */
-        ItemSubscription itemSubscription;
-
-        List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>) 
-	    getEntityManager()
-	    .createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc") //NOI18N
-	    .setParameter("client", client) //NOI18N
-	    .getResultList();
-
-        if (!itemSubscriptions.isEmpty()) {
-            itemSubscription = itemSubscriptions.get(0);
-
-	    List<TimeSplit> splits = (List<TimeSplit>)getEntityManager()
-		.createNamedQuery("TimeSplit.findAll")
-		.getResultList();
-            /*
-             * Calculates the quantity of penalties to apply.
-             */
-            int penalties = itemSubscription.getTimeSplit().calculatePenalties(splits, new LocalTime());
-
-            /*
-             * If there are penalties to apply, does it.
-             */
-            if (penalties > 0) {
-                
-                Integer orderId = ordersService.findByClientIdAndDate(clientId, new DateMidnight(), true);
-                Integer itemId = getEntityManager().find(Property.class, "time_range_mismatch_penalty_item_id").getInteger();
-
-                ordersService.addPurchase(orderId, itemId, null, penalties);
-            }
-        }
+        doCalculatePenalties(attendance);
 
         getEntityManager().persist(attendance);
         client.getAttendances().add(attendance);
@@ -188,11 +149,11 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
 
         ItemSubscription itemSubscription;
 
-	List<TimeSplit> timeSplits = getEntityManager()
-	    .createNamedQuery("TimeSplit.findAll") //NOI18N
-	    .getResultList();
-	
-	TimeSplit currentTimeSplit = TimeSplit.selectTimeSplitForTime(timeSplits, new LocalTime());
+        List<TimeSplit> timeSplits = getEntityManager()
+                .createNamedQuery("TimeSplit.findAll") //NOI18N
+                .getResultList();
+
+        TimeSplit currentTimeSplit = TimeSplit.selectTimeSplitForTime(timeSplits, timeSource.getLocalTime());
 
         if (currentTimeSplit == null) {
             throw new BusinessException(getString("BusinessRule.Attendance.Casual.SubscriptionNotAvailable"));
@@ -200,7 +161,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
 
         try {
             itemSubscription = (ItemSubscription) getEntityManager()
-		.createNamedQuery("ItemSubscription.findCasualByTimeSplit") //NOI18N
+                    .createNamedQuery("ItemSubscription.findCasualByTimeSplit") //NOI18N
                     .setParameter("timeSplit", currentTimeSplit) //NOI18N
                     .getSingleResult();
         } catch (NoResultException ex) {
@@ -210,9 +171,9 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         OrderLine orderLine = new OrderLine();
         orderLine.setItem(itemSubscription.getItem());
         orderLine.setOrder(order);
-        orderLine.setQuantity((Integer) 1);
+        orderLine.setQuantity(1);
 
-        List<OrderLine> orderLines = new LinkedList<OrderLine>();
+        List<OrderLine> orderLines = new LinkedList<>();
         orderLines.add(orderLine);
         order.setOrderLines(orderLines);
 
@@ -323,53 +284,54 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
 
         return attendance.getClient() == null;
     }
-    
-    
+
 
     @Override
-	public void recalculatePenalties(Integer attendanceId)
-			throws BusinessException, ValidationException, SecurityViolationException {
-		
+    public void recalculatePenalties(Integer attendanceId)
+            throws BusinessException, ValidationException, SecurityViolationException {
+
         if (attendanceId == null) {
             throw new NullPointerException("The attendanceId is null."); //NOI18N
         }
-        Attendance attendance = getEntityManager().find(Attendance.class, attendanceId, LockModeType.OPTIMISTIC);
-        OrderEntity order = attendance.getOrder();
-        
-        doRecalculatePenalties(attendance, order);
-		
-	}
-    
-    protected void doRecalculatePenalties(Attendance attendance, OrderEntity order) throws SecurityViolationException, ValidationException {
-    	
+
+        Attendance attendance = getEntityManager().find(Attendance.class, attendanceId);
+
+        if (attendance == null) {
+            throw new ValidationException(ResourcesManager.getString("Invalid.Attendance.ID"));
+        }
+
+        doCalculatePenalties(attendance);
+    }
+
+    protected void doCalculatePenalties(Attendance attendance) throws SecurityViolationException, ValidationException, BusinessException {
+
         /*
-         * Registered clients-specific logic
+         * Penalties are only supported with registered clients.
          */
-        if(attendance.getClient() != null) {
+        if (attendance.getClient() != null) {
             
             /*
              * Finds the client's current subscription.
              */
             ItemSubscription itemSubscription;
 
-            List<ItemSubscription> itemSubscriptions = (List<ItemSubscription>)
-		getEntityManager()
-		.createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc", ItemSubscription.class) //NOI18N
+            List<ItemSubscription> itemSubscriptions = getEntityManager()
+                    .createNamedQuery("ItemSubscription.findByClientOrderByDateRecordedDesc", ItemSubscription.class) //NOI18N
                     .setParameter("client", attendance.getClient()) //NOI18N
                     .getResultList();
 
             if (!itemSubscriptions.isEmpty()) {
                 itemSubscription = itemSubscriptions.get(0);
 
-		List<TimeSplit> timeSplits = getEntityManager().createNamedQuery("TimeSplit.findAll", TimeSplit.class) //NOI18N
-		    .getResultList();
+                List<TimeSplit> timeSplits = getEntityManager().createNamedQuery("TimeSplit.findAll", TimeSplit.class) //NOI18N
+                        .getResultList();
 
                 /*
                  * Calculates the quantity of penalties to apply.
                  */
                 int penalties = itemSubscription
-		    .getTimeSplit()
-		    .calculatePenalties(timeSplits, new LocalTime());
+                        .getTimeSplit()
+                        .calculatePenalties(timeSplits, timeSource.getLocalTime());
 
                 /*
                  * If there are penalties to apply, does it.
@@ -379,9 +341,9 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                     Integer orderId = ordersService.findByClientIdAndDate(attendance.getClient().getId(), new DateMidnight(), true);
                     Integer itemId = getEntityManager().find(Property.class, "time_range_mismatch_penalty_item_id").getInteger();
 
-                    order = getEntityManager().find(OrderEntity.class, orderId, LockModeType.OPTIMISTIC);
+                    OrderEntity order = getEntityManager().find(OrderEntity.class, orderId);
                     OrderLine targetOrderLine = null;
-                    
+
                     /*
                      * Attempts to find the right order line first.
                      */
@@ -390,7 +352,9 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                             targetOrderLine = orderLine;
                         }
                     }
-                    
+
+                    Item penaltyItem = getEntityManager().find(Item.class, itemId);
+
                     /*
                      * Creates an order line, if it does not exists, and applies
                      * the penalties.
@@ -398,20 +362,26 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
                     if(targetOrderLine == null) {
                         targetOrderLine = new OrderLine();
                         targetOrderLine.setDiscount(null);
-                        targetOrderLine.setItem(getEntityManager().find(Item.class, itemId));
+                        targetOrderLine.setItem(penaltyItem);
                         targetOrderLine.setOrder(order);
                         targetOrderLine.setQuantity(penalties);
                         getEntityManager().persist(targetOrderLine);
                         order.getOrderLines().add(targetOrderLine);
+
+                        order.getClient().charge(penaltyItem, penalties, null);
                     } else {
+                        // We only need to charge penalties that what were not yet charged
+                        int newPenalties = penalties - targetOrderLine.getQuantity();
+                        order.getClient().charge(penaltyItem, newPenalties, null);
+
                         targetOrderLine.setQuantity(penalties);
-                    }                    
+                    }
                 }
             }
-        }      
+        }
     }
 
-	@Override
+    @Override
     public void checkOut(Integer attendanceId) throws BusinessException, ValidationException, SecurityViolationException {
 
         if (!callerHasAnyRole(SecurityRoles.JUNIOR_ADMINISTRATOR, SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER)) {
@@ -421,7 +391,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
         if (attendanceId == null) {
             throw new NullPointerException("The attendanceId is null."); //NOI18N
         }
-        Attendance attendance = getEntityManager().find(Attendance.class, attendanceId, LockModeType.OPTIMISTIC);
+        Attendance attendance = getEntityManager().find(Attendance.class, attendanceId);
 
         if (attendance == null) {
             throw new ValidationException(getString("Invalid.Attendance.ID"));
@@ -441,9 +411,9 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
             if (order.getTotal().compareTo(order.getPayment()) != 0) {
                 throw new BusinessException(getString("BusinessRule.Attendance.Casual.ExactPaymentRequiredToClose"));
             }
+        } else {
+            doCalculatePenalties(attendance);
         }
-        
-        doRecalculatePenalties(attendance, order);
 
         attendance.close();
     }
@@ -503,4 +473,7 @@ public class AttendancesServiceBean extends BasicBean implements AttendancesServ
 
     @Autowired
     private OrdersService ordersService;
+
+    @Autowired
+    private TimeSource timeSource;
 }

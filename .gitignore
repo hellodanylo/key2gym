@@ -16,6 +16,10 @@
 # Emacs lock files
 .\#*
 
+# Idea project files
+*.iml
+.idea
+
 # Build artifacts
 target/
 

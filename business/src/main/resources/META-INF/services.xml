@@ -78,4 +78,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 			ref="authenticationProvider" />
 	</security:authentication-manager>
 
+
+    <!-- Misc. -->
+    <bean id="timeSource" class="org.key2gym.business.services.RealTimeSource"/>
 </beans>

@@ -141,7 +141,7 @@ public interface OrdersService extends BasicService {
      * @param itemId the item's ID
      * @param discountId the discount's ID
      * @param quantity the quantity
-     * @throws BusinessException if the called does not have required security roles
+     * @throws BusinessException if current business rules restrict this operation
      * @throws ValidationException if either of the IDs provided is invalid or the quantity isn't positive
      * @throws SecurityViolationException if the caller does not have required roles
      */

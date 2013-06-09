@@ -47,12 +47,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.OrdersService")
-@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
-	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
+@RolesAllowed({SecurityRoles.JUNIOR_ADMINISTRATOR,
+        SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER})
 @Transactional
 public class OrdersServiceBean extends BasicBean implements OrdersService {
 
@@ -333,7 +332,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
          * Performs additional roles checks.
          */
         Boolean managerRoleRequired = (order.getAttendance() != null
-				       && !order.getAttendance().isOpen())
+                && !order.getAttendance().isOpen())
                 || !isToday(order.getDate());
 
         if (managerRoleRequired && !callerHasRole(SecurityRoles.MANAGER)) {
@@ -383,10 +382,10 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
          */
         if (order.getClient() != null) {
             Client client = order.getClient();
-	    client.charge(item, quantity, discount);
+            client.charge(item, quantity, discount);
 
             if (item.getItemSubscription() != null) {
-		client.activate(item.getItemSubscription());
+                client.activate(item.getItemSubscription());
             }
         }
 
@@ -399,7 +398,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         }
 
         /*
-         * Attemps to find an appropriate order line.
+         * Attempts to find an appropriate order line.
          * Due to JPQL limitations we need a separate query,
          * when the order line's discount is null. Criteria API?
          */
@@ -437,7 +436,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
 
             List<OrderLine> orderLines = order.getOrderLines();
             if (orderLines == null) {
-                orderLines = new LinkedList<OrderLine>();
+                orderLines = new LinkedList<>();
                 order.setOrderLines(orderLines);
             }
             orderLines.add(orderLine);
@@ -487,7 +486,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         item = orderLine.getItem();
 
         Boolean managerRoleRequired = (order.getAttendance() != null
-				       && !order.getAttendance().isOpen())
+                && !order.getAttendance().isOpen())
                 || !isToday(order.getDate());
 
         if (managerRoleRequired && !callerHasRole(SecurityRoles.MANAGER)) {
@@ -500,7 +499,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
 
         Property timeRangeMismatch = em.find(Property.class, "time_range_mismatch_penalty_item_id");
         if (orderLine.getItem().getId() == timeRangeMismatch.getInteger()) {
-            throw new BusinessException(getString("BusinessRule.Order.OrderLineForceAndCanNotBeRemoved"));
+            throw new BusinessException(getString("BusinessRule.Order.OrderLineForcedAndCanNotBeRemoved"));
         }
 
         /*
@@ -508,11 +507,11 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
          */
         if (order.getClient() != null) {
             Client client = order.getClient();
-	    client.uncharge(item, quantity, orderLine.getDiscount());
+            client.uncharge(item, quantity, orderLine.getDiscount());
 
-	    if(item.getItemSubscription() != null) {
-		client.deactivate(item.getItemSubscription());
-	    }
+            if (item.getItemSubscription() != null) {
+                client.deactivate(item.getItemSubscription());
+            }
         }
 
         /*
@@ -558,14 +557,14 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         }
 
         Boolean managerRoleRequired = (order.getAttendance() != null
-				       && !order.getAttendance().isOpen())
+                && !order.getAttendance().isOpen())
                 || !isToday(order.getDate());
 
         if (managerRoleRequired && !callerHasRole(SecurityRoles.MANAGER)) {
             throw new SecurityViolationException(getString("Security.Operation.Denied"));
         }
 
-	order.recordPayment(amount);
+        order.recordPayment(amount);
 
         /*
          * If the order is associted with a client, 
@@ -574,7 +573,7 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
          */
         if (order.getClient() != null) {
             Client client = order.getClient();
-	    client.transfer(new scala.math.BigDecimal(amount));
+            client.transfer(new scala.math.BigDecimal(amount));
         }
     }
 
@@ -737,37 +736,4 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         DateMidnight tomorrow = today.plusDays(1);
         return today.getMillis() <= date.getTime() && tomorrow.getMillis() > date.getTime();
     }
-
-    /**
-     * Gets whether the expiration date has passed.
-     * 
-     * @param expirationDate the date to check
-     * @return true, if the expiration date has passed
-     */
-    public boolean hasExpired(Date expirationDate) {
-        return !new Date().before(expirationDate);
-    }
-
-    /**
-     * Shifts the date according to the subscription's term.
-     * 
-     * @param itemSubscription the subscription to use
-     * @param date the date to start with
-     * @param forward if true, the date will be shifted into the future
-     * @return the shifted date
-     */
-    public Date rollExpirationDate(ItemSubscription itemSubscription, Date date, Boolean forward) {
-        Calendar expirationDate = new GregorianCalendar();
-        expirationDate.setTime(date);
-
-        expirationDate.roll(Calendar.YEAR, forward ? itemSubscription.getTermYears() : -itemSubscription.getTermYears());
-        expirationDate.roll(Calendar.MONTH, forward ? itemSubscription.getTermMonths() : -itemSubscription.getTermMonths());
-        expirationDate.roll(Calendar.DATE, forward ? itemSubscription.getTermDays() : -itemSubscription.getTermDays());
-
-        //getLogger().trace("rollExpirationDate " + itemSubscription.getItem().getTitle() + date + ", " + forward + " = " + expirationDate.getTime());
-        
-        return expirationDate.getTime();
-    }
-    
-    private static final Integer MONEY_MAX_PRESICION = 6;
 }
