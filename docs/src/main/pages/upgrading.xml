@@ -23,6 +23,16 @@
       This page describes how to upgrade the application.
     </div>
 
+      <div class="header"><h3>3.0.X - 3.1.0</h3></div>
+
+      <div class="well well-large">
+          <ul>
+              <li>
+                  <b>Database</b>: Migrate database to schema revision 7.
+              </li>
+          </ul>
+      </div>
+
     <div class="header"><h3>Older than 3.0.0 - 3.0.0</h3></div>
 
     <div class="well well-large">
