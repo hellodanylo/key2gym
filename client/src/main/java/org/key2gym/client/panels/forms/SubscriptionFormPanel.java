@@ -22,13 +22,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.swing.AbstractAction;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 
 import org.jdesktop.beansbinding.AutoBinding;
 import org.jdesktop.beansbinding.BeanProperty;
@@ -76,6 +70,7 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
         titleTextField = new JTextField();
         priceTextField = new JTextField();
         barcodeTextField = new JTextField();
+        this.frozenCheckBox = new JCheckBox();
 
         /*
          * Units
@@ -117,6 +112,9 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, strings, this);
 
         builder.appendI15d("Label.Title", titleTextField);
+        builder.nextLine();
+
+        builder.appendI15d("Label.Frozen", this.frozenCheckBox);
         builder.nextLine();
 
         builder.appendI15d("Label.Price", priceTextField);
@@ -167,25 +165,17 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
     public void setForm(SubscriptionDTO subscription) {
         this.subscription = subscription;
 
-        if (subscription == null) {
-            titleTextField.setEnabled(false);
-            barcodeTextField.setEnabled(false);
-            priceTextField.setEnabled(false);
-            unitsSpinner.setEnabled(false);
-            daysSpinner.setEnabled(false);
-            monthsSpinner.setEnabled(false);
-            yearsSpinner.setEnabled(false);
-            timeSplitComboBox.setEnabled(false);
-        } else {
-            titleTextField.setEnabled(true);
-            barcodeTextField.setEnabled(true);
-            priceTextField.setEnabled(true);
-            unitsSpinner.setEnabled(true);
-            daysSpinner.setEnabled(true);
-            monthsSpinner.setEnabled(true);
-            yearsSpinner.setEnabled(true);
-            timeSplitComboBox.setEnabled(true);
-        }
+        boolean enabled = subscription != null;
+
+        titleTextField.setEnabled(enabled);
+        barcodeTextField.setEnabled(enabled);
+        priceTextField.setEnabled(enabled);
+        unitsSpinner.setEnabled(enabled);
+        daysSpinner.setEnabled(enabled);
+        monthsSpinner.setEnabled(enabled);
+        yearsSpinner.setEnabled(enabled);
+        timeSplitComboBox.setEnabled(enabled);
+        this.frozenCheckBox.setEnabled(enabled);
 
         if (bindingGroup == null) {
             formBindingListener = new FormBindingListener();
@@ -198,6 +188,14 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
             Binding binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE,
                     subscription, BeanProperty.create("title"), titleTextField, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"), "title");
             binding.setSourceNullValue("");
+            bindingGroup.addBinding(binding);
+
+            /**
+             * Frozen
+             */
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE,
+                    subscription, BeanProperty.create("frozen"), frozenCheckBox, BeanProperty.create("selected"), "frozen");
+            binding.setSourceNullValue(false);
             bindingGroup.addBinding(binding);
 
             /**
@@ -376,4 +374,5 @@ public class SubscriptionFormPanel extends FormPanel<SubscriptionDTO> {
     private JTextField titleTextField;
     private JSpinner unitsSpinner;
     private JSpinner yearsSpinner;
+    private JCheckBox frozenCheckBox;
 }

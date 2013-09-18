@@ -189,6 +189,7 @@ class ItemsServiceBean extends BasicBean with ItemsService {
     entityItem.setTitle(item.getTitle())
     entityItem.setQuantity(item.getQuantity())
     entityItem.setPrice(item.getPrice())
+    entityItem.setFrozen(item.getFrozen());;
   }
   
   @throws(classOf[ValidationException]) 
@@ -233,6 +234,7 @@ class ItemsServiceBean extends BasicBean with ItemsService {
     result.setPrice(item.getPrice().setScale(2))
     result.setQuantity(item.getQuantity())
     result.setTitle(item.getTitle())
+    result.setFrozen(item.isFrozen());
     
     result
   }

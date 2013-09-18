@@ -103,7 +103,15 @@ public class SubscriptionDTO implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
+    public Boolean getFrozen() {
+        return frozen;
+    }
+
+    public void setFrozen(Boolean frozen) {
+        this.frozen = frozen;
+    }
+
     private Integer id;
     private String title;
     private Long barcode;
@@ -114,4 +122,5 @@ public class SubscriptionDTO implements Serializable {
     private Integer termMonths;
     private Integer termYears;
     private Integer timeSplitId;
+    private Boolean frozen;
 }

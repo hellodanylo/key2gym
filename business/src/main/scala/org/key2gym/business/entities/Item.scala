@@ -19,11 +19,9 @@ import java.io.Serializable
 import java.math.BigDecimal
 import java.util.List
 import javax.persistence._
-import scala.collection.JavaConversions._
 import org.key2gym.business.api.ValidationException
 import org.key2gym.business.resources.ResourcesManager.getString
 import org.key2gym.persistence._
-import java.text.MessageFormat
 
 /**
  *
@@ -37,9 +35,9 @@ import java.text.MessageFormat
     new NamedQuery(name = "Item.findPure", 
 		   query = "SELECT i FROM Item i WHERE i.id NOT IN (SELECT s.item.id FROM ItemSubscription s) ORDER BY i.title"),
     new NamedQuery(name = "Item.findAvailable", 
-		   query = "SELECT i FROM Item i WHERE i.quantity IS NULL OR i.quantity > 0 ORDER BY i.title"),
+		   query = "SELECT i FROM Item i WHERE (i.quantity IS NULL OR i.quantity > 0) AND NOT i.frozen ORDER BY i.title"),
     new NamedQuery(name = "Item.findPureAvailable", 
-		   query = "SELECT i FROM Item i WHERE (i.quantity is NULL OR i.quantity > 0) AND i.id NOT IN (SELECT s.item.id FROM ItemSubscription s) ORDER BY i.title"),
+		   query = "SELECT i FROM Item i WHERE (i.quantity IS NULL OR i.quantity > 0) AND NOT i.frozen AND i.id NOT IN (SELECT s.item.id FROM ItemSubscription s) ORDER BY i.title"),
     new NamedQuery(name = "Item.findById", 
 		   query = "SELECT i FROM Item i WHERE i.id = :id"),
     new NamedQuery(name = "Item.findByBarcode", 
@@ -71,6 +69,10 @@ class Item extends Serializable {
   @Basic(optional = true)
   @Column(name = "quantity")
   protected var quantity: java.lang.Integer = _
+
+  @Basic(optional = true)
+  @Column(name = "frozen")
+  protected var frozen: java.lang.Boolean = _
   
   @Basic(optional = false)
   @Column(name = "price")
@@ -172,7 +174,7 @@ class Item extends Serializable {
    *
    * The barcode should not be negative.
    *
-   * @param quantity the new barocode
+   * @param barcode the new barcode
    * @throws ValidationException if the barcode is not valid
    */  
   def setBarcode(barcode: java.lang.Long) {
@@ -224,6 +226,15 @@ class Item extends Serializable {
     }
     
     this.quantity = quantity
+  }
+
+  def isFrozen(): java.lang.Boolean = this.frozen
+
+  def setFrozen(frozen: java.lang.Boolean) {
+    if(frozen == null)
+      throw new NullPointerException("The frozen is null.");
+
+    this.frozen = frozen
   }
   
   def getOrderLines(): List[OrderLine] = this.orderLines

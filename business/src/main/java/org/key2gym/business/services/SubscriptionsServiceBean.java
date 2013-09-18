@@ -37,12 +37,11 @@ import org.key2gym.business.entities.TimeSplit;
 import org.springframework.stereotype.Service;
 
 /**
- *
  * @author Danylo Vashchilenko
  */
 @Service("org.key2gym.business.api.services.SubscriptionsService")
-@RolesAllowed({ SecurityRoles.JUNIOR_ADMINISTRATOR,
-	SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER })
+@RolesAllowed({SecurityRoles.JUNIOR_ADMINISTRATOR,
+        SecurityRoles.SENIOR_ADMINISTRATOR, SecurityRoles.MANAGER})
 public class SubscriptionsServiceBean extends BasicBean implements SubscriptionsService {
 
     @Override
@@ -58,24 +57,25 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
             throw new NullPointerException("The subscription is null.");
         }
 
-	Item entityItem = new Item();
-	entityItem.setBarcode(subscription.getBarcode());
-	
-	if(subscription.getBarcode() != null) {
-	    try {
-		em.createNamedQuery("Item.findByBarcode")
-		    .setParameter("barcode", subscription.getBarcode())
-		    .getSingleResult();
-		    
-		throw new ValidationException(getString("Invalid.Item.Barcode.AlreadyInUse"));
-	    } catch(NoResultException ex) {
-		// the barcode is unique - fine!  
-	    }
-	}
-	
-	entityItem.setTitle(subscription.getTitle());
-	entityItem.setQuantity(subscription.getQuantity());
-	entityItem.setPrice(subscription.getPrice());
+        Item entityItem = new Item();
+        entityItem.setBarcode(subscription.getBarcode());
+
+        if (subscription.getBarcode() != null) {
+            try {
+                em.createNamedQuery("Item.findByBarcode")
+                        .setParameter("barcode", subscription.getBarcode())
+                        .getSingleResult();
+
+                throw new ValidationException(getString("Invalid.Item.Barcode.AlreadyInUse"));
+            } catch (NoResultException ex) {
+                // the barcode is unique - fine!
+            }
+        }
+
+        entityItem.setTitle(subscription.getTitle());
+        entityItem.setFrozen(subscription.getFrozen());
+        entityItem.setQuantity(subscription.getQuantity());
+        entityItem.setPrice(subscription.getPrice());
 
         validateTerm(subscription.getTermDays());
         validateTerm(subscription.getTermMonths());
@@ -96,10 +96,10 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
         ItemSubscription entityItemSubscription = new ItemSubscription();
         entityItemSubscription.setUnits(subscription.getUnits());
         entityItemSubscription.setTermDays(subscription.getTermDays());
-	entityItemSubscription.setTermMonths(subscription.getTermMonths());
-	entityItemSubscription.setTermYears(subscription.getTermYears());
+        entityItemSubscription.setTermMonths(subscription.getTermMonths());
+        entityItemSubscription.setTermYears(subscription.getTermYears());
         entityItemSubscription.setTimeSplit(timeSplit);
-	entityItemSubscription.setItem(entityItem);
+        entityItemSubscription.setItem(entityItem);
 
         em.persist(entityItem);
         em.flush();
@@ -131,6 +131,7 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
             subscriptionDTO.setTermYears(itemSubscription.getTermYears());
             subscriptionDTO.setTimeSplitId(itemSubscription.getTimeSplit().getId());
             subscriptionDTO.setUnits(itemSubscription.getUnits());
+            subscriptionDTO.setFrozen(itemSubscription.getItem().isFrozen());
 
             result.add(subscriptionDTO);
         }
@@ -152,7 +153,7 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
         }
 
         if (subscription.getId() == null) {
-	    throw new NullPointerException("The subcription.getId() is null.");
+            throw new NullPointerException("The subscription.getId() is null.");
         }
 
         if (em.find(ItemSubscription.class, subscription.getId()) == null) {
@@ -160,28 +161,29 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
         }
 
         Item entityItem = em.find(Item.class, subscription.getId());
-	if(entityItem == null) {
+        if (entityItem == null) {
             throw new ValidationException(MessageFormat.format(
                     getString("IDInvalid.withName"),
                     getString("ID.Subscription")));
-	}
+        }
 
-	if(subscription.getBarcode() != null && !subscription.getBarcode().equals(entityItem.getBarcode())) {
-	    try {
-		em.createNamedQuery("Item.findByBarcode")
-		    .setParameter("barcode", subscription.getBarcode())
-		    .getSingleResult();
-		
-		throw new ValidationException(getString("Invalid.Item.Barcode.AlreadyInUse"));
-	    } catch(NoResultException ex) {
-		// the barcode is unique - fine!  
-	    }
-	}
+        if (subscription.getBarcode() != null && !subscription.getBarcode().equals(entityItem.getBarcode())) {
+            try {
+                em.createNamedQuery("Item.findByBarcode")
+                        .setParameter("barcode", subscription.getBarcode())
+                        .getSingleResult();
 
-	entityItem.setBarcode(subscription.getBarcode());
-	entityItem.setTitle(subscription.getTitle());
-	entityItem.setQuantity(subscription.getQuantity());
-	entityItem.setPrice(subscription.getPrice());
+                throw new ValidationException(getString("Invalid.Item.Barcode.AlreadyInUse"));
+            } catch (NoResultException ex) {
+                // the barcode is unique - fine!
+            }
+        }
+
+        entityItem.setBarcode(subscription.getBarcode());
+        entityItem.setTitle(subscription.getTitle());
+        entityItem.setQuantity(subscription.getQuantity());
+        entityItem.setPrice(subscription.getPrice());
+        entityItem.setFrozen(subscription.getFrozen());
 
         validateTerm(subscription.getTermDays());
         validateTerm(subscription.getTermMonths());
@@ -198,11 +200,11 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
                     getString("ID.TimeSplit")));
         }
 
-	ItemSubscription entityItemSubscription = em.find(ItemSubscription.class, subscription.getId());
+        ItemSubscription entityItemSubscription = em.find(ItemSubscription.class, subscription.getId());
         entityItemSubscription.setUnits(subscription.getUnits());
         entityItemSubscription.setTermDays(subscription.getTermDays());
-	entityItemSubscription.setTermMonths(subscription.getTermMonths());
-	entityItemSubscription.setTermYears(subscription.getTermYears());
+        entityItemSubscription.setTermMonths(subscription.getTermMonths());
+        entityItemSubscription.setTermYears(subscription.getTermYears());
         entityItemSubscription.setTimeSplit(timeSplit);
     }
 
@@ -257,7 +259,7 @@ public class SubscriptionsServiceBean extends BasicBean implements Subscriptions
                     getString("Field.Term")));
         }
     }
-    
+
     // TODO: do proper lookup here
     private ItemsService itemsService;
 

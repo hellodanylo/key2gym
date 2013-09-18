@@ -83,11 +83,20 @@ public class ItemDTO implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
+    public Boolean getFrozen() {
+        return frozen;
+    }
+
+    public void setFrozen(Boolean frozen) {
+        this.frozen = frozen;
+    }
+
     private Integer id;
     private String title;
     private Long barcode;
     private Integer quantity;
     private BigDecimal price;
     private Boolean itemSubscription;
+    private Boolean frozen;
 }

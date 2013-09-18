@@ -364,6 +364,13 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
         }
 
         /*
+         * Frozen items can not be ordered.
+         */
+        if(item.isFrozen()) {
+            throw new ValidationException(getString("BusinessRule.Order.ItemFrozen"));
+        }
+
+        /*
          * Checks the item's quantity, if it's countable.
          */
         Integer currentQuantity = item.getQuantity();
@@ -399,8 +406,6 @@ public class OrdersServiceBean extends BasicBean implements OrdersService {
 
         /*
          * Attempts to find an appropriate order line.
-         * Due to JPQL limitations we need a separate query,
-         * when the order line's discount is null. Criteria API?
          */
         OrderLine orderLine;
 

@@ -21,9 +21,7 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import javax.swing.AbstractAction;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import org.jdesktop.beansbinding.AutoBinding;
 import org.jdesktop.beansbinding.BeanProperty;
@@ -61,6 +59,7 @@ public class ItemFormPanel extends FormPanel<ItemDTO> {
         priceTextField = new JTextField(30);
         titleTextField = new JTextField(30);
         quantityTextField = new JTextField(30);
+        this.frozenCheckBox = new JCheckBox();
     }
 
     /**
@@ -73,6 +72,8 @@ public class ItemFormPanel extends FormPanel<ItemDTO> {
         builder.appendI15d("Label.Title", titleTextField);
         builder.nextLine();
         builder.appendI15d("Label.Quantity", quantityTextField);
+        builder.nextLine();
+        builder.appendI15d("Label.Frozen", this.frozenCheckBox);
         builder.nextLine();
         builder.appendI15d("Label.Price", priceTextField);
         builder.nextLine();
@@ -99,17 +100,13 @@ public class ItemFormPanel extends FormPanel<ItemDTO> {
     public void setForm(ItemDTO item) {
         this.item = item;
 
-        if (item == null) {
-            titleTextField.setEnabled(false);
-            barcodeTextField.setEnabled(false);
-            quantityTextField.setEnabled(false);
-            priceTextField.setEnabled(false);
-        } else {
-            titleTextField.setEnabled(true);
-            barcodeTextField.setEnabled(true);
-            quantityTextField.setEnabled(true);
-            priceTextField.setEnabled(true);
-        }
+        boolean enabled = item != null;
+
+        titleTextField.setEnabled(enabled);
+        barcodeTextField.setEnabled(enabled);
+        quantityTextField.setEnabled(enabled);
+        priceTextField.setEnabled(enabled);
+        this.frozenCheckBox.setEnabled(enabled);
 
         if (bindingGroup == null) {
             formBindingListener = new FormBindingListener();
@@ -123,6 +120,15 @@ public class ItemFormPanel extends FormPanel<ItemDTO> {
                     item, BeanProperty.create("title"), titleTextField, BeanProperty.create("text"), "title");
             binding.setSourceUnreadableValue("");
             binding.setSourceNullValue("");
+            bindingGroup.addBinding(binding);
+
+            /**
+             * Frozen
+             */
+            binding = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_ONCE,
+                    item, BeanProperty.create("frozen"), frozenCheckBox, BeanProperty.create("selected"), "frozen");
+            binding.setSourceUnreadableValue(false);
+            binding.setSourceNullValue(false);
             bindingGroup.addBinding(binding);
 
             /**
@@ -258,6 +264,7 @@ public class ItemFormPanel extends FormPanel<ItemDTO> {
     private ResourceBundle strings;
     private BindingGroup bindingGroup;
     private FormBindingListener formBindingListener;
+    private JCheckBox frozenCheckBox;
     private JTextField barcodeTextField;
     private JTextField priceTextField;
     private JTextField quantityTextField;
