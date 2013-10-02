@@ -15,7 +15,10 @@
  */
 package org.key2gym.client.panels;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -35,6 +38,9 @@ import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.services.AttendancesService;
 import org.key2gym.client.ContextManager;
 import org.key2gym.client.DataRefreshPulse;
+import org.key2gym.client.actions.BasicAction;
+import org.key2gym.client.actions.EditClientAction;
+import org.key2gym.client.actions.EditOrderAction;
 import org.key2gym.client.renderers.AttendancesTableCellRenderer;
 import org.key2gym.client.util.AttendancesTableModel;
 import org.key2gym.client.util.AttendancesTableModel.Column;
@@ -43,7 +49,6 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**
- * 
  * @author Danylo Vashchilenko
  */
 public class AttendancesPanel extends JPanel {
@@ -76,9 +81,9 @@ public class AttendancesPanel extends JPanel {
         /*
          * Columns of the attendances journal
          */
-        Column[] attendancesTableColumns = new Column[] { Column.BEGIN,
+        Column[] attendancesTableColumns = new Column[]{Column.BEGIN,
                 Column.ID, Column.CLIENT_ID, Column.CLIENT_FULL_NAME,
-                Column.KEY, Column.END };
+                Column.KEY, Column.END};
 
         attendancesTableModel = new AttendancesTableModel(
                 attendancesTableColumns);
@@ -98,6 +103,21 @@ public class AttendancesPanel extends JPanel {
          */
         attendancesTable.setDefaultRenderer(String.class,
                 new AttendancesTableCellRenderer());
+
+        /*
+         * Opens the selected attendance's client on double left-click.
+         */
+        attendancesTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() > 1
+                        && e.getButton() == MouseEvent.BUTTON1
+                        && getSelectedAttendance().getClientId() != null) {
+                    new EditClientAction().actionPerformed(new ActionEvent(this,
+                            0, BasicAction.ACTION_CONTEXT));
+                }
+            }
+        });
 
         /*
          * Attendances counter
@@ -123,9 +143,8 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Called when the attendances table looses its focus.
-     * 
-     * @param evt
-     *            the focus event
+     *
+     * @param evt the focus event
      */
     private void attendancesTableFocusLost(FocusEvent evt) {
         attendancesTable.clearSelection();
@@ -133,7 +152,7 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Returns currently selected attendance.
-     * 
+     *
      * @return the selected attendance or null, if none is selected
      */
     public AttendanceDTO getSelectedAttendance() {
@@ -146,7 +165,7 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Gets the current journal's date.
-     * 
+     *
      * @return the date
      */
     public DateMidnight getDate() {
@@ -155,11 +174,9 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Sets the current journal's date.
-     * 
-     * @param date
-     *            the date to use
-     * @throws SecurityViolationException
-     *             if the access to the date was denied
+     *
+     * @param date the date to use
+     * @throws SecurityViolationException if the access to the date was denied
      */
     public void setDate(DateMidnight date) throws SecurityViolationException {
         this.date = date;
@@ -174,19 +191,18 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Reloads the data.
-     * 
-     * @throws SecurityViolationException
-     *             if the access to the current date was denied
+     *
+     * @throws SecurityViolationException if the access to the current date was denied
      */
     private void refreshData() throws SecurityViolationException {
         attendances = attendancesService.findAttendancesByDate(date);
     }
 
     private void refreshGUI() {
-    	// Remembers the selection to restore it later.
-    	// The selection is lost because we reload the data into the table.
-    	int selection = attendancesTable.getSelectedRow();
-    	
+        // Remembers the selection to restore it later.
+        // The selection is lost because we reload the data into the table.
+        int selection = attendancesTable.getSelectedRow();
+
         attendancesTableModel.setAttendances(attendances);
         attendancesCountTextField.setText(String.valueOf(attendances.size()));
 
@@ -196,7 +212,7 @@ public class AttendancesPanel extends JPanel {
 
     /**
      * Used to refresh the attendances at the data refresh rate.
-     * 
+     * <p/>
      * TODO: do proper SecurityViolationException handling (e.g. closing itself)
      */
     private class DataRefreshObserver implements Observer {

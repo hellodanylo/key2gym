@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
+import org.key2gym.client.MainFrame;
 import org.key2gym.client.dialogs.AbstractDialog;
 import org.key2gym.client.dialogs.EditClientDialog;
 import org.key2gym.client.dialogs.PickClientDialog;
@@ -41,18 +42,26 @@ public class EditClientAction extends BasicAction {
     @Override
     public void onActionPerformed(ActionEvent e) throws BusinessException, ValidationException, SecurityViolationException {
 
-        final PickClientDialog pickClientDialog = new PickClientDialog(getFrame());
-        pickClientDialog.setVisible(true);
+        final int clientId;
 
-        if (pickClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
-            return;
+        if(e.getActionCommand().equals(BasicAction.ACTION_CONTEXT)) {
+            clientId = MainFrame.getInstance().getSelectedAttendance().getClientId();
+        } else {
+            PickClientDialog pickClientDialog = new PickClientDialog(getFrame());
+            pickClientDialog.setVisible(true);
+
+            if (pickClientDialog.getResult().equals(AbstractDialog.Result.CANCEL)) {
+                return;
+            }
+
+            clientId = pickClientDialog.getClientId();
         }
 
         final EditClientDialog editClientDialog = new EditClientDialog(getFrame());
         new Thread() {
             @Override
             public void run() {
-                editClientDialog.setClientId(pickClientDialog.getClientId());
+                editClientDialog.setClientId(clientId);
             }
         }.start();
         editClientDialog.setVisible(true);

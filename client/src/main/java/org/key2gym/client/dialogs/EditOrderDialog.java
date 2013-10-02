@@ -26,23 +26,7 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.UserException;
@@ -142,6 +126,10 @@ public class EditOrderDialog extends AbstractDialog {
         subjectTextField = new JTextField();
         subjectTextField.setEditable(false);
         builder.appendI15d("Label.Subject", subjectTextField);
+
+        this.editClientAction = new EditClientAction();
+        this.editClientButton = new JButton(this.editClientAction);
+        builder.append(new JLabel(), this.editClientButton);
 
         dateTextField = new JTextField();
         dateTextField.setEditable(false);
@@ -375,6 +363,8 @@ public class EditOrderDialog extends AbstractDialog {
                 } else {
                     subject = getString("Text.Other");
                 }
+
+                this.editClientAction.setEnabled(false);
             } else {
                 ClientDTO client;
                 client = clientsService.getById(order.getClientId());
@@ -383,6 +373,8 @@ public class EditOrderDialog extends AbstractDialog {
                             client.getFullName(),
                             client.getId()
                         });
+
+                this.editClientAction.setEnabled(true);
             }
             subjectTextField.setText(subject);
             subjectTextField.getCaret().setDot(0);
@@ -505,6 +497,32 @@ public class EditOrderDialog extends AbstractDialog {
         };
     }
 
+    private class EditClientAction extends AbstractAction {
+
+        public EditClientAction() {
+            putValue(AbstractAction.NAME, getString("Button.Open"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            EditClientDialog dialog = null;
+            try {
+                dialog = new EditClientDialog(null);
+            } catch (SecurityViolationException ex) {
+                throw new RuntimeException("Expected to be able to open the client dialog", ex);
+            }
+
+            dialog.setClientId(order.getClientId());
+            dialog.setVisible(true);
+
+            try {
+                updateGUI(false);
+            } catch (ValidationException|SecurityViolationException ex) {
+                throw new RuntimeException("Expected valid ID and security clearance", ex);
+            }
+        }
+    }
+
     /**
      * Processes an OK button click.
      *
@@ -618,6 +636,8 @@ public class EditOrderDialog extends AbstractDialog {
     private JTextField paidTextField;
     private JTextField paymentTextField;
     private JTextField subjectTextField;
+    private JButton editClientButton;
+    private EditClientAction editClientAction;
     private JTextField totalTextField;
     private JSpinner quantitySpinner;
 }

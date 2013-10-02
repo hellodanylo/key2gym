@@ -110,13 +110,14 @@ public class ContextManager extends Observable {
     }
 
     /**
-     * Looks up the EJB using the current context.
-     * 
+     * Looks up the bean using the current context.
+     *
+     * @deprecated Use Main.getContext.getBean instead
      * @param <T>
      *            the type to lookup
      * @param clazz
      *            the class of the type to lookup
-     * @return an instance of the EJB
+     * @return an instance of the bean
      */
     @Deprecated
     public static <T> T lookup(Class<T> clazz) {
