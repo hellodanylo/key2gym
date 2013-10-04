@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.persistence;
+package org.key2gym.business.entities;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -283,7 +283,7 @@ public class ClientProfile implements Serializable {
 
     @Override
     public String toString() {
-        return "org.key2gym.persistence.ClientProfile[ id=" + id + " ]";
+        return "org.key2gym.business.entities.ClientProfile[ id=" + id + " ]";
     }
 
     public Date getBirthday() {

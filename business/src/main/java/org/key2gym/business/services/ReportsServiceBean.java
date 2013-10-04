@@ -33,8 +33,8 @@ import org.key2gym.business.api.dtos.ReportDTO;
 import org.key2gym.business.api.dtos.ReportGeneratorDTO;
 import org.key2gym.business.api.services.ReportsService;
 import org.key2gym.business.api.spi.report.ReportGenerator;
-import org.key2gym.persistence.Report;
-import org.key2gym.persistence.ReportBody;
+import org.key2gym.business.entities.Report;
+import org.key2gym.business.entities.ReportBody;
 import org.springframework.stereotype.Service;
 
 /**

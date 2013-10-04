@@ -28,7 +28,7 @@ import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.CashAdjustmentDTO;
 import org.key2gym.business.api.services.CashService;
-import org.key2gym.persistence.CashAdjustment;
+import org.key2gym.business.entities.CashAdjustment;
 import org.springframework.stereotype.Service;
 
 /**

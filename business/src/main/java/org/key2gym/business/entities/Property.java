@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.persistence;
+package org.key2gym.business.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -95,7 +95,7 @@ public class Property implements Serializable {
 
     @Override
     public String toString() {
-        return "org.key2gym.persistence.Property[ id=" + id + " ]";
+        return "org.key2gym.business.entities.Property[ id=" + id + " ]";
     }
 
 }

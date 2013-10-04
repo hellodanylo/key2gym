@@ -15,7 +15,6 @@
  */
 package org.key2gym.business.entities
 
-import java.math.BigDecimal
 import java.util.Date
 import javax.persistence._
 import javax.xml.bind.annotation._

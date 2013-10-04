@@ -1,8 +1,6 @@
 package org.key2gym.business.entities
 
-import java.sql.Time
 import org.joda.time.LocalTime
-import org.key2gym.business.entities.TimeSplit
 import org.scalatest._
 
 class TimeSplitSuite extends FunSuite with BeforeAndAfter {

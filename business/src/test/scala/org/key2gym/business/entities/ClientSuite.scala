@@ -2,7 +2,6 @@ package org.key2gym.business.entities
 
 import org.scalatest._
 import org.joda.time._
-import org.key2gym.persistence._
 import scala.math.BigDecimal
 
 class ClientSuite extends FunSuite with BeforeAndAfter {

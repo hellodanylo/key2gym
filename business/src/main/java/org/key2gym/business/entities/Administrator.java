@@ -13,12 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.persistence;
+package org.key2gym.business.entities;
 
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.*;
-import org.key2gym.business.entities.*;
 
 /**
  *
@@ -194,6 +193,6 @@ public class Administrator implements Serializable {
 
     @Override
     public String toString() {
-        return "org.key2gym.persistence.Administrator[ id=" + id + " ]";
+        return "org.key2gym.business.entities.Administrator[ id=" + id + " ]";
     }
 }

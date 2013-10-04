@@ -16,27 +16,24 @@ package org.key2gym.business.services;
  * the License.
  */
 
-import java.text.MessageFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import org.joda.time.DateMidnight;
+import org.key2gym.business.api.*;
+import org.key2gym.business.api.dtos.ClientDTO;
+import org.key2gym.business.api.dtos.Debtor;
+import org.key2gym.business.api.services.ClientsService;
+import org.key2gym.business.entities.Client;
+import org.key2gym.business.resources.ResourcesManager;
+import org.springframework.stereotype.Service;
+import scala.math.BigDecimal;
+import scala.math.BigDecimal$;
 
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.NoResultException;
-
-import org.joda.time.DateMidnight;
-import org.key2gym.business.api.BusinessException;
-import org.key2gym.business.api.SecurityRoles;
-import org.key2gym.business.api.SecurityViolationException;
-import org.key2gym.business.api.ValidationException;
-import org.key2gym.business.api.Validator;
-import org.key2gym.business.api.dtos.ClientDTO;
-import org.key2gym.business.api.services.ClientsService;
-import org.key2gym.business.entities.Client;
-import org.springframework.stereotype.Service;
-
-import scala.math.BigDecimal;
-import scala.math.BigDecimal$;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -243,6 +240,31 @@ public class ClientsServiceBean extends BasicBean implements ClientsService {
 	    originalClient.setExpirationDate(client.getExpirationDate().toDate());
 	}
 
+    }
+
+    @Override
+    public List<Debtor> findDebtors() throws SecurityViolationException {
+
+        if(!callerHasAnyRole(SecurityRoles.MANAGER)) {
+            throw new SecurityViolationException(ResourcesManager.getString("Security.Access.Denied"));
+        }
+
+        List<org.key2gym.business.entities.Debtor> debtors =
+                em.createNamedQuery("Debtor.findAll", org.key2gym.business.entities.Debtor.class)
+                .getResultList();
+
+        List<Debtor> result = new ArrayList<>(debtors.size());
+
+        for(org.key2gym.business.entities.Debtor debtor: debtors) {
+            Debtor resultDebtor = new Debtor();
+            resultDebtor.setClientId(debtor.getClientId());
+            resultDebtor.setClientFullName(debtor.getFullName());
+            resultDebtor.setMoneyBalance(debtor.getMoneyBalance());
+            resultDebtor.setLastAttendance(debtor.getLastAttendance());
+            result.add(resultDebtor);
+        }
+
+        return result;
     }
 
     @Override

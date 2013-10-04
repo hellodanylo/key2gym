@@ -16,9 +16,7 @@
 package org.key2gym.business.services;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,11 +36,10 @@ import org.key2gym.business.api.services.OrdersService;
 import org.key2gym.business.entities.Attendance;
 import org.key2gym.business.entities.Client;
 import org.key2gym.business.entities.Item;
-import org.key2gym.business.entities.ItemSubscription;
 import org.key2gym.business.entities.OrderEntity;
-import org.key2gym.persistence.Discount;
-import org.key2gym.persistence.OrderLine;
-import org.key2gym.persistence.Property;
+import org.key2gym.business.entities.Discount;
+import org.key2gym.business.entities.OrderLine;
+import org.key2gym.business.entities.Property;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

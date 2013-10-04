@@ -26,7 +26,7 @@ import javax.annotation.security.RolesAllowed;
 import org.key2gym.business.api.SecurityRoles;
 import org.key2gym.business.api.dtos.DiscountDTO;
 import org.key2gym.business.api.services.DiscountsService;
-import org.key2gym.persistence.Discount;
+import org.key2gym.business.entities.Discount;
 import org.springframework.stereotype.Service;
 
 /**

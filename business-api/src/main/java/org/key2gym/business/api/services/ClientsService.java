@@ -20,6 +20,7 @@ import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.ClientDTO;
+import org.key2gym.business.api.dtos.Debtor;
 
 /**
  *
@@ -137,5 +138,15 @@ public interface ClientsService extends BasicService {
      * @throws ValidationException if any of the required properties is invalid
      */
     void updateClient(ClientDTO client, Boolean useSecuredProperties) throws SecurityViolationException, ValidationException;
+
+    /**
+     * Finds all debtors.
+     *
+     * A debtor is a client with a negative balance.
+     *
+     * @return the list of all debtors
+     * @throws SecurityViolationException if the caller does not have MANAGER role
+     */
+    List<Debtor> findDebtors() throws SecurityViolationException;
     
 }

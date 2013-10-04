@@ -18,10 +18,8 @@ package org.key2gym.business.entities
 import java.io.Serializable
 import scala.math.BigDecimal
 import javax.persistence._
-import java.lang.Integer
 import java.util._
 import org.joda.time.DateMidnight
-import org.key2gym.persistence._
 import org.key2gym.business.api.ValidationException
 import org.key2gym.business.resources.ResourcesManager.getString
 

@@ -17,8 +17,6 @@ package org.key2gym.business.entities
 
 import java.io.Serializable
 import javax.persistence._
-import javax.xml.bind.annotation.XmlRootElement
-import org.key2gym.persistence._
 
 /**
  *

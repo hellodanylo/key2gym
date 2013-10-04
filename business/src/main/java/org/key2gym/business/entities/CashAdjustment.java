@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.persistence;
+package org.key2gym.business.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -109,7 +109,7 @@ public class CashAdjustment implements Serializable {
 
     @Override
     public String toString() {
-        return "org.key2gym.persistence.CashAdjustment[ dateRecorded=" + dateRecorded + " ]";
+        return "org.key2gym.business.entities.CashAdjustment[ dateRecorded=" + dateRecorded + " ]";
     }
 
 }

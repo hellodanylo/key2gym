@@ -19,15 +19,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.key2gym.business.api.SecurityRoles;
 import org.key2gym.business.api.SecurityViolationException;
 import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AdSourceDTO;
 import org.key2gym.business.api.services.AdSourcesService;
-import org.key2gym.persistence.AdSource;
+import org.key2gym.business.entities.AdSource;
 import org.springframework.stereotype.Service;
 
 /**

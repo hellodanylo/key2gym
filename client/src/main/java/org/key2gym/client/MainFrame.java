@@ -56,24 +56,7 @@ import org.key2gym.business.api.dtos.AdministratorDTO;
 import org.key2gym.business.api.dtos.AttendanceDTO;
 import org.key2gym.business.api.dtos.OrderDTO;
 import org.key2gym.business.api.services.AdministratorsService;
-import org.key2gym.client.actions.AboutAction;
-import org.key2gym.client.actions.CheckInAction;
-import org.key2gym.client.actions.CheckOutAction;
-import org.key2gym.client.actions.EditClientAction;
-import org.key2gym.client.actions.EditOrderAction;
-import org.key2gym.client.actions.FreezeClientAction;
-import org.key2gym.client.actions.ManageCashAction;
-import org.key2gym.client.actions.ManageFreezesAction;
-import org.key2gym.client.actions.ManageItemsAction;
-import org.key2gym.client.actions.ManageKeysAction;
-import org.key2gym.client.actions.ManageReportsAction;
-import org.key2gym.client.actions.ManageSubscriptionsAction;
-import org.key2gym.client.actions.OpenAttendancesWindowAction;
-import org.key2gym.client.actions.OpenItemsWindowAction;
-import org.key2gym.client.actions.OpenOrdersWindowAction;
-import org.key2gym.client.actions.RegisterClientAction;
-import org.key2gym.client.actions.ToggleSessionAction;
-import org.key2gym.client.actions.ToggleShadowSessionAction;
+import org.key2gym.client.actions.*;
 import org.key2gym.client.panels.AttendancesPanel;
 import org.key2gym.client.panels.CloseableTabPanel;
 import org.key2gym.client.panels.ItemsPanel;
@@ -135,6 +118,7 @@ public class MainFrame extends JFrame {
         editOrderAction = new EditOrderAction();
         openAttendancesWindowAction = new OpenAttendancesWindowAction();
         openOrdersWindowAction = new OpenOrdersWindowAction();
+        this.openDebtorsWindowAction = new OpenDebtorsWindowAction();
         editClientAction = new EditClientAction();
         checkOutAction = new CheckOutAction();
         checkInAction = new CheckInAction();
@@ -230,6 +214,7 @@ public class MainFrame extends JFrame {
         JMenuItem attendancesWindowMenuItem = new JMenuItem();
         JMenuItem ordersWindowMenuItem = new JMenuItem();
         JMenuItem itemsWindowMenuItem = new JMenuItem();
+        JMenuItem debtorsWindowMenuItem = new JMenuItem();
         JMenu helpMenu = new JMenu();
         JMenuItem helpAboutMenuItem = new JMenuItem();
 
@@ -312,6 +297,9 @@ public class MainFrame extends JFrame {
 
         itemsWindowMenuItem.setAction(openItemsWindowAction);
         windowMenu.add(itemsWindowMenuItem);
+
+        debtorsWindowMenuItem.setAction(openDebtorsWindowAction);
+        windowMenu.add(debtorsWindowMenuItem);
 
         menuBar.add(windowMenu);
 
@@ -528,6 +516,7 @@ public class MainFrame extends JFrame {
     private OpenAttendancesWindowAction openAttendancesWindowAction;
     private OpenItemsWindowAction openItemsWindowAction;
     private OpenOrdersWindowAction openOrdersWindowAction;
+    private OpenDebtorsWindowAction openDebtorsWindowAction;
     private RegisterClientAction registerClientAction;
     private ToggleShadowSessionAction toggleRaisedAdministratorAction;
     private ToggleSessionAction toggleSessionAction;

@@ -15,22 +15,15 @@
  */
 package org.key2gym.business.reports
 
-import java.io.ByteArrayOutputStream
-import java.math.BigDecimal
 import java.io._
-import java.util.List
 import javax.persistence.EntityManager
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.JAXBException
 import javax.xml.bind.Marshaller
 import javax.xml.transform._
 import javax.xml.transform.stream._
-import org.joda.time.DateMidnight
-import org.key2gym.business.api.ValidationException
 import org.key2gym.business.api.spi.report.ReportGenerator
 import org.key2gym.business.resources.ResourcesManager
-import org.key2gym.business.entities.DailyRevenue
-import org.apache.log4j.Logger
 import scala.collection.JavaConversions._
 
 /**

@@ -15,7 +15,6 @@
  */
 package org.key2gym.business.reports.attendances.monthly
 
-import java.util.List
 import javax.persistence.EntityManager
 import org.joda.time.ReadableInterval
 import org.key2gym.business.api.ValidationException

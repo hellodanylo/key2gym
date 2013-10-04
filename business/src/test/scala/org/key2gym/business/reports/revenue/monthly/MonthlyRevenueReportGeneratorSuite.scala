@@ -3,8 +3,6 @@ package org.key2gym.business.reports.revenue.monthly
 import org.scalatest._
 import org.joda.time._
 import org.key2gym.business.api.ValidationException
-import org.key2gym.business.api.spi.report.ReportGenerator
-import scala.math.BigDecimal
 
 class MonthlyRevenueReportGeneratorSuite extends FunSuite with BeforeAndAfter {
  

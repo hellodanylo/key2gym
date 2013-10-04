@@ -33,8 +33,8 @@ import org.key2gym.business.api.dtos.FreezeDTO;
 import org.key2gym.business.api.services.AdministratorsService;
 import org.key2gym.business.api.services.FreezesService;
 import org.key2gym.business.entities.Client;
-import org.key2gym.persistence.Administrator;
-import org.key2gym.persistence.ClientFreeze;
+import org.key2gym.business.entities.Administrator;
+import org.key2gym.business.entities.ClientFreeze;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

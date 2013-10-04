@@ -18,7 +18,6 @@ package org.key2gym.business.services
 
 import java.util.LinkedList
 import java.util.List
-import javax.annotation.security._
 import javax.persistence.NoResultException
 import org.key2gym.business.api._
 import org.key2gym.business.api.dtos.KeyDTO

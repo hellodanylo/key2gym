@@ -13,55 +13,51 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.persistence;
+
+package org.key2gym.business.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Danylo Vashchilenko
  */
 @Entity
-@Table(name = "discount_dsc")
+@Table(name = "ad_source_ads")
 @NamedQueries({
-    @NamedQuery(name = "Discount.findAll", query = "SELECT d FROM Discount d"),
-    @NamedQuery(name = "Discount.findById", query = "SELECT d FROM Discount d WHERE d.id = :id"),
-    @NamedQuery(name = "Discount.findByPercent", query = "SELECT d FROM Discount d WHERE d.percent = :percent"),
-    @NamedQuery(name = "Discount.findByTitle", query = "SELECT d FROM Discount d WHERE d.title = :title")})
-@SequenceGenerator(name="id_dsc_seq", allocationSize = 1)
-public class Discount implements Serializable {
-
+    @NamedQuery(name = "AdSource.findAll", query = "SELECT a FROM AdSource a"),
+    @NamedQuery(name = "AdSource.findById", query = "SELECT a FROM AdSource a WHERE a.id = :id")})
+@SequenceGenerator(name="id_ads_seq", allocationSize = 1)
+public class AdSource implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="id_ads_seq")
     @Basic(optional = false)
-    @Column(name = "id_dsc", columnDefinition="TINYINT UNSIGNED")
+    @Column(name = "id_ads", columnDefinition="TINYINT UNSIGNED NOT NULL")
     private Integer id;
     
     @Basic(optional = false)
-    @Column(name = "percent", columnDefinition="TINYINT UNSIGNED NOT NULL")
-    private Integer percent;
-    
-    @Basic(optional = false)
+    @Lob
     @Column(name = "title", columnDefinition="TINYTEXT NOT NULL")
     private String title;
     
-    @OneToMany(mappedBy = "discount")
-    private Collection<OrderLine> orderLineCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "adSource")
+    private List<ClientProfile> clientProfileList;
 
-    public Discount() {
+    public AdSource() {
     }
 
-    public Discount(Integer idDsc) {
-        this.id = idDsc;
+    public AdSource(Integer id) {
+        this.id = id;
     }
 
-    public Discount(Integer idDsc, Integer percent, String title) {
-        this.id = idDsc;
-        this.percent = percent;
+    public AdSource(Integer id, String title) {
+        this.id = id;
         this.title = title;
     }
 
@@ -69,16 +65,8 @@ public class Discount implements Serializable {
         return id;
     }
 
-    public void setIdDsc(Integer idDsc) {
-        this.id = idDsc;
-    }
-
-    public Integer getPercent() {
-        return percent;
-    }
-
-    public void setPercent(Integer percent) {
-        this.percent = percent;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -89,14 +77,15 @@ public class Discount implements Serializable {
         this.title = title;
     }
 
-    public Collection<OrderLine> getOrderLineCollection() {
-        return orderLineCollection;
+    @XmlTransient
+    public List<ClientProfile> getClientProfileList() {
+        return clientProfileList;
     }
 
-    public void setOrderLineCollection(Collection<OrderLine> orderLineCollection) {
-        this.orderLineCollection = orderLineCollection;
+    public void setClientProfileList(List<ClientProfile> clientProfileList) {
+        this.clientProfileList = clientProfileList;
     }
-   
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -107,10 +96,10 @@ public class Discount implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Discount)) {
+        if (!(object instanceof AdSource)) {
             return false;
         }
-        Discount other = (Discount) object;
+        AdSource other = (AdSource) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -119,6 +108,7 @@ public class Discount implements Serializable {
 
     @Override
     public String toString() {
-        return "org.key2gym.persistence.Discount[ id=" + id + " ]";
+        return "census.persistence.AdSource[ id=" + id + " ]";
     }
+    
 }

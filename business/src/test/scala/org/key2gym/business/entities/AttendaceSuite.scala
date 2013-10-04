@@ -1,9 +1,7 @@
 package org.key2gym.business.entities
 
 import org.scalatest.BeforeAndAfter
-import org.key2gym.persistence.Discount
 import org.scalatest.FunSuite
-import org.joda.time.DateMidnight
 
 class AttendaceSuite extends FunSuite with BeforeAndAfter {
  

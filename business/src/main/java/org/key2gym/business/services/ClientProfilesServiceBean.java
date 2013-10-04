@@ -31,8 +31,8 @@ import org.key2gym.business.api.Validator;
 import org.key2gym.business.api.dtos.ClientProfileDTO;
 import org.key2gym.business.api.services.ClientProfilesService;
 import org.key2gym.business.entities.Client;
-import org.key2gym.persistence.AdSource;
-import org.key2gym.persistence.ClientProfile;
+import org.key2gym.business.entities.AdSource;
+import org.key2gym.business.entities.ClientProfile;
 import org.springframework.stereotype.Service;
 
 /**

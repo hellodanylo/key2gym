@@ -15,14 +15,7 @@
  */
 package org.key2gym.business.entities;
 
-import java.io.Serializable
-import java.util.List
 import javax.persistence._
-import javax.xml.bind.annotation.XmlRootElement
-import javax.xml.bind.annotation.XmlTransient
-import scala.reflect._
-import org.key2gym.business.api.ValidationException
-import org.key2gym.business.resources.ResourcesManager
 
 /**
  *

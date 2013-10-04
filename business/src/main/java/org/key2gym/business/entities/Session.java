@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.key2gym.persistence;
+package org.key2gym.business.entities;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -123,7 +123,7 @@ public class Session implements Serializable {
 
     @Override
     public String toString() {
-        return "org.key2gym.persistence.Session[ idSsn=" + id + " ]";
+        return "org.key2gym.business.entities.Session[ idSsn=" + id + " ]";
     }
 
 }

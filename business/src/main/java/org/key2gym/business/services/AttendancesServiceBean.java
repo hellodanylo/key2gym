@@ -24,7 +24,6 @@ import javax.persistence.NoResultException;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
 import org.key2gym.business.api.BusinessException;
 import org.key2gym.business.api.SecurityRoles;
 import org.key2gym.business.api.SecurityViolationException;
@@ -34,8 +33,8 @@ import org.key2gym.business.api.services.AttendancesService;
 import org.key2gym.business.api.services.OrdersService;
 import org.key2gym.business.entities.*;
 import org.key2gym.business.resources.ResourcesManager;
-import org.key2gym.persistence.OrderLine;
-import org.key2gym.persistence.Property;
+import org.key2gym.business.entities.OrderLine;
+import org.key2gym.business.entities.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

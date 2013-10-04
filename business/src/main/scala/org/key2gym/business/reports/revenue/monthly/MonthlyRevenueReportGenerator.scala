@@ -15,8 +15,6 @@
  */
 package org.key2gym.business.reports.revenue.monthly
 
-import java.math.BigDecimal
-import java.util.List
 import javax.persistence.EntityManager
 import org.joda.time.ReadableInterval
 import org.key2gym.business.api.ValidationException

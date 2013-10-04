@@ -26,7 +26,7 @@ import org.key2gym.business.api.ValidationException;
 import org.key2gym.business.api.dtos.AdministratorDTO;
 import org.key2gym.business.api.services.AdministratorsService;
 import org.key2gym.business.entities.Group;
-import org.key2gym.persistence.Administrator;
+import org.key2gym.business.entities.Administrator;
 import org.springframework.stereotype.Service;
 
 /**

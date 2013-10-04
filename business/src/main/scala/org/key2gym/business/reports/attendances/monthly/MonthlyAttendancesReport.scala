@@ -18,7 +18,6 @@ package org.key2gym.business.reports.attendances.monthly
 import annotation.target.field 
 import org.key2gym.business.entities.MonthlyAttendances
 import java.util.Date
-import java.util.LinkedList
 import java.util.List
 import javax.xml.bind.annotation._
 

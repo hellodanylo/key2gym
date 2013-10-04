@@ -29,9 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.plaf.basic.BasicTreeUI.SelectionModelPropertyChangeHandler;
 import javax.swing.table.TableColumn;
 
 import org.apache.log4j.Logger;
@@ -114,7 +112,7 @@ public class OrdersPanel extends javax.swing.JPanel {
         ordersTable.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
-                financialActivitiesTableFocusLost(evt);
+                ordersTableFocusLost(evt);
             }
         });
         ordersTableScrollPane.setViewportView(ordersTable);
@@ -154,7 +152,7 @@ public class OrdersPanel extends javax.swing.JPanel {
      * @param evt
      *            the focus event
      */
-    private void financialActivitiesTableFocusLost(FocusEvent evt) {
+    private void ordersTableFocusLost(FocusEvent evt) {
         ordersTable.clearSelection();
     }
 
