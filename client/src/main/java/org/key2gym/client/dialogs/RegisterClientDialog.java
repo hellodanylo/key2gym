@@ -21,12 +21,7 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -154,6 +149,19 @@ public class RegisterClientDialog extends AbstractDialog {
 
         try {
             if (!isClientRegistered) {
+
+                /*
+                 * Confirms no card during the registration.
+                 */
+                if(client.getCard() == null) {
+                    int result = JOptionPane.showConfirmDialog(this, getString("Message.ConfirmNoCardDuringRegistration"),
+                            getString("Title.RegisterClient"), JOptionPane.YES_NO_OPTION);
+
+                    if(result == JOptionPane.NO_OPTION) {
+                        return;
+                    }
+                }
+
                 Integer clientId = clientsService.registerClient(client, 
 								 ContextManager.lookup(AdministratorsService.class)
 								 .getCurrent().getRoles().contains(SecurityRoles.MANAGER));
