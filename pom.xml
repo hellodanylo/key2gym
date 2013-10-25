@@ -4,7 +4,7 @@
 
 	<groupId>org.key2gym</groupId>
 	<artifactId>key2gym</artifactId>
-	<version>3.2.0</version>
+	<version>3.3.0</version>
 	
 	<packaging>pom</packaging>
 
@@ -24,21 +24,21 @@
        <dependency>
             <groupId>org.key2gym</groupId>
             <artifactId>key2gym-client</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
             <type>zip</type>
             <classifier>dist</classifier>
         </dependency>
         <dependency>
             <groupId>org.key2gym</groupId>
             <artifactId>key2gym-database-schema</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
             <type>zip</type>
             <classifier>dist</classifier>
         </dependency>
         <dependency>
             <groupId>org.key2gym</groupId>
             <artifactId>key2gym-docs</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
             <type>zip</type>
             <classifier>dist</classifier>
         </dependency>
